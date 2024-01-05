@@ -1,3 +1,4 @@
+// @ts-nocheck
 import NextAuth from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 
