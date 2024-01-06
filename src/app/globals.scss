@@ -4,6 +4,7 @@
 @import "../styles/card.scss";
 @import "../styles/auspy.scss";
 @import "../styles/text.scss";
+@import "../styles/button.scss";
 
 :root {
   --border: #132341;
@@ -21,7 +22,8 @@
 body {
   background-color: var(--bg);
   color: var(--text);
-  @apply fcc;
+  @apply fcc w-screen;
+  overflow-x: hidden;
 }
 
 html {

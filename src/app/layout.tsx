@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Poppins, Bebas_Neue } from "next/font/google";
+import { Poppins, Bebas_Neue } from "next/font/google";
 import "./globals.scss";
 import { getServerSession } from "next-auth";
 import SessionProvider from "@/components/SessionProvider";
 import Navbar from "@/components/Navbar";
+import Header from "@/components/Header";
 
-const inter = Inter({ subsets: ["latin"] });
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -34,13 +34,12 @@ export default async function RootLayout({
       <head>
         <title>{metadata.title as React.ReactNode}</title>
         <meta name="description" content={metadata.description} />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
       <body>
         <SessionProvider session={session}>
-          <main className="max-w-screen-xl border-2 border-black mx-auto">
-            <Navbar />
-            {children}
-          </main>
+          <Header />
+          {children}
         </SessionProvider>
       </body>
     </html>
