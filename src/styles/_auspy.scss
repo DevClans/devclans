@@ -1,0 +1,18 @@
+@tailwind components;
+@layer components {
+  .fcc {
+    @apply flex flex-col items-center;
+  }
+  .fccc {
+    @apply fcc justify-center;
+  }
+  .gcc {
+    @apply grid items-center justify-center;
+  }
+
+  .container {
+    max-width: 1440px;
+    padding-inline: 30px;
+    width: 100%;
+  }
+}
