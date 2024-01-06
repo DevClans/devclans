@@ -1,0 +1,13 @@
+{
+    "version": 2,
+    "builds": [
+      { "src": "prisma/**", "use": "@prisma/cli" },
+      { "src": "public/**", "use": "@vercel/static" },
+      { "src": "api/**/*", "use": "@vercel/node" }
+    ],
+    "routes": [
+      { "src": "/api/auth/[...nextauth]", "dest": "/api/auth/[...nextauth]" },
+      { "src": "/(.*)", "dest": "/$1" }
+    ]
+  }
+  
