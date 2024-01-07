@@ -1,0 +1,15 @@
+:root {
+  --toastify-color-info: var(--primary) !important;
+  --toastify-text-color-dark: var(--heading) !important;
+}
+
+.Toastify__progress-bar {
+  height: 2px !important;
+  background: linear-gradient(
+    180deg,
+    #78a5fd 0%,
+    #3076ff 28.5%,
+    #003eb6 62%,
+    rgba(9, 26, 59, 0.54) 100%
+  ) !important;
+}
