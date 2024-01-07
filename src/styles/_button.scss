@@ -22,7 +22,7 @@
 #btnHero {
   display: inline-flex;
   height: 60px;
-  padding: 28px 174px;
+  padding: 0px 174px;
   justify-content: center;
   align-items: center;
   gap: 10px;
@@ -34,6 +34,8 @@
     0px 1px 13.1px 0px rgba(47, 103, 215, 0.25) inset,
     0px 2px 13.1px 0px rgba(47, 103, 215, 0.25) inset;
   backdrop-filter: blur(8.449999809265137px);
+  color: rgba(225, 235, 255, 0.8);
+  text-transform: capitalize;
 }
 
 button {

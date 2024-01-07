@@ -3,7 +3,6 @@ import { Poppins, Bebas_Neue } from "next/font/google";
 import "./globals.scss";
 import { getServerSession } from "next-auth";
 import SessionProvider from "@/components/SessionProvider";
-import Navbar from "@/components/Navbar";
 import Header from "@/components/Header";
 
 const poppins = Poppins({
