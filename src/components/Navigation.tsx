@@ -42,11 +42,9 @@ const Navigation = () => {
       }}
     >
       {navigation.map(({ href, name }, index) => (
-        <>
-          <Link key={index} href={href}>
-            {name}
-          </Link>
-        </>
+        <Link key={index} href={href}>
+          {name}
+        </Link>
       ))}
     </div>
   );

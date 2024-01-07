@@ -32,7 +32,7 @@ export default async function RootLayout({
     <html lang="en" className={`${poppins.variable} ${bebas_neue.variable}`}>
       <head>
         <title>{metadata.title as React.ReactNode}</title>
-        <meta name="description" content={metadata.description} />
+        <meta name="description" content={metadata.description as string} />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
       <body>
