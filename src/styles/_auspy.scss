@@ -15,7 +15,12 @@
   .frcsb {
     @apply frc justify-between;
   }
-
+  .frfssb {
+    @apply flex flex-row items-start justify-between;
+  }
+  .w100 {
+    width: 100%;
+  }
   .container {
     max-width: 1440px;
     padding-inline: 30px;
@@ -24,6 +29,23 @@
   @media screen and (max-width: 768px) {
     .container {
       padding-inline: 10px;
+    }
+  }
+
+  input::placeholder {
+    opacity: 0.4;
+  }
+
+  .fs0 {
+    flex-shrink: 0;
+  }
+  // RESPONSIVE BUTTON GROUP
+  .btnRow {
+    @apply frcsb overflow-visible w100;
+  }
+  @media screen and (max-width: 768px) {
+    .btnRow {
+      @apply frc gap-3 overflow-scroll;
     }
   }
 }

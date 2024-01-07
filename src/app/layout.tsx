@@ -6,6 +6,8 @@ import SessionProvider from "@/components/SessionProvider";
 import Header from "@/components/Header";
 import { authOptions } from "@/utils/auth";
 import { ToastContainer } from "react-toastify";
+import Image from "next/image";
+import LightRays from "@/components/LightRays";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -40,6 +42,7 @@ export default async function RootLayout({
       <body>
         <SessionProvider session={session}>
           <Header />
+          <LightRays />
           {children}
         </SessionProvider>
         <ToastContainer

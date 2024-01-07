@@ -6,10 +6,16 @@
 @import "../styles/text.scss";
 @import "../styles/button.scss";
 @import "../styles/animations/heroBtnAnimate.scss";
-@import "../styles//toastify.scss";
+@import "../styles/toastify.scss";
+@import "../styles/lines.scss";
 
 :root {
   --border: #132341;
+  --gradBorder: radial-gradient(
+    1513559.1% 8250.02% at 50% 0.04%,
+    #132341 0%,
+    rgba(19, 35, 65, 0) 100%
+  );
   --primary: #457be3;
   --priDark: #3e75e3;
   --priDarker: #284f9c;
