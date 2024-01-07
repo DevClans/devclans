@@ -33,14 +33,14 @@ const ButtonLogin = () => {
   };
 
   return (
-    <>
+    <div>
       <button onClick={session ? handleLogout : handleLogin} id="btnLogin">
         {session ? "Logout" : "Login"}
       </button>
       <ToastContainer
         theme="dark"
       />
-    </>
+    </div>
   );
 };
 
