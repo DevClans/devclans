@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "../styles/card.scss";
+@import "../styles/auspy.scss";
+@import "../styles/text.scss";
+@import "../styles/button.scss";
+@import "../styles/animations/heroBtnAnimate.scss";
+
+:root {
+  --border: #132341;
+  --primary: #457be3;
+  --priDark: #3e75e3;
+  --priDarker: #284f9c;
+  --subH: #596b91;
+  --heading: #e2e8ff;
+  --cardBg: #081121;
+  --text: #e2e8ff8c;
+  --highlight: #e1ebffbf;
+  --bg: #010816;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  @apply fcc w-screen;
+  overflow-x: hidden;
+}
+
+html {
+  font-family: var(--poppins);
+}
+
+button {
+  color: var(--highlight);
+}

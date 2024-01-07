@@ -1,9 +1,19 @@
-import Image from 'next/image'
+import Image from "next/image";
+import Hero from "@/components/home/Hero";
 
 export default function Home() {
   return (
-    <main className="text-center my-10">
-      <h1 className='font-bold text-4xl'>DevClans</h1>
-    </main>
-  )
+    <>
+      <div className="mt-20" />
+      <Hero />
+      {/* LIGHT RAYS */}
+      <div
+        style={{
+          zIndex: -1,
+        }}
+      >
+        <Image priority src={"/homeHeroBg.png"} alt="home background" fill />
+      </div>
+    </>
+  );
 }
