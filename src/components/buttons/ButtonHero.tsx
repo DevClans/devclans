@@ -1,4 +1,3 @@
-import { MuiIconButton } from "../mui/muiComponents";
 import Link from "next/link";
 import { ArrowRightAltRounded } from "../mui/muiIcons";
 
