@@ -4,6 +4,7 @@ import "./globals.scss";
 import { getServerSession } from "next-auth";
 import SessionProvider from "@/components/SessionProvider";
 import Header from "@/components/Header";
+import { authOptions } from "./utils/auth";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -27,7 +28,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   return (
     <html lang="en" className={`${poppins.variable} ${bebas_neue.variable}`}>
       <head>
