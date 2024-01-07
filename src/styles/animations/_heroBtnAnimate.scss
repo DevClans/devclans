@@ -1,0 +1,100 @@
+.hero-preview-animation-line {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  animation: hero-preview-animation-line 15s linear infinite;
+  bottom: 0%;
+  left: 0px;
+  background: linear-gradient(
+    180deg,
+    #78a5fd 0%,
+    #3076ff 28.5%,
+    #003eb6 62%,
+    rgba(9, 26, 59, 0.54) 100%
+  );
+}
+
+.hero-animation-glow {
+  background: linear-gradient(
+    180deg,
+    #78a5fd 0%,
+    #3076ff 28.5%,
+    #003eb6 62%,
+    rgba(9, 26, 59, 0.54) 100%
+  );
+  bottom: 0px;
+  left: 0px;
+  position: absolute;
+  z-index: -10;
+  filter: blur(25px);
+  animation: hero-preview-animation-line 15s linear infinite;
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+}
+
+// #btnHeroContainer:hover {
+//   @apply fccc;
+//   .hero-animation-glow {
+//     animation-play-state: paused;
+//     // height: 100%;
+//     // width: 100%;
+//     // rotate: 0deg;
+//     bottom: 0;
+//     left: 0;
+//   }
+//   .hero-preview-animation-line {
+//     animation-play-state: paused;
+//     opacity: 0;
+//   }
+//   #btnHero {
+//   }
+// }
+
+@keyframes hero-preview-animation-line {
+  // bottom left
+  from {
+    transform: translateZ(0) translate(0px, 25px);
+  }
+  1% {
+    transform: translateZ(0) translate(-25px, 25px);
+  }
+  //   top left
+  10% {
+    transform: translateZ(0) translate(-25px, 0px);
+  }
+
+  11% {
+    transform: translateZ(0) translate(-25px, -30px) rotate(90deg);
+  }
+  //   top right
+  50% {
+    transform: translateZ(0) translate(477px, -30px) rotate(90deg);
+  }
+  51% {
+    transform: translateZ(0) translate(502px, -30px) rotate(180deg);
+  }
+  //   bottom right
+  60% {
+    transform: translateZ(0) translate(502px, 00px) rotate(180deg);
+  }
+  61% {
+    transform: translateZ(0) translate(502px, 25px) rotate(270deg);
+  }
+  //   bottom left
+  to {
+    transform: translateZ(0) translate(0px, 25px) rotate(270deg);
+  }
+}
+.hero-preview-animation {
+  padding: 1px;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: 10px;
+}
