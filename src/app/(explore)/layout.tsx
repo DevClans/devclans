@@ -1,5 +1,10 @@
 const layout = ({ children }: { children: React.ReactNode }) => {
-  return <>layout {children}</>;
+  return (
+    <>
+      {/* filter results */}
+      {children}
+    </>
+  );
 };
 
 export default layout;
