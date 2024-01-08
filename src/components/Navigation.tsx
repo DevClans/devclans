@@ -1,16 +1,16 @@
 import Link from "next/link";
 const navigation = [
-  {
-    name: "Home",
-    href: "/",
-  },
+  // {
+  //   name: "Home",
+  //   href: "/",
+  // },
   {
     name: "Find Projects",
-    href: "/",
+    href: "/projects",
   },
   {
     name: "Find Coder Bhai",
-    href: "/",
+    href: "/users",
   },
   {
     name: "About 100xDevs",

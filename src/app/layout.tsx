@@ -4,7 +4,10 @@ import "./globals.scss";
 import { getServerSession } from "next-auth";
 import SessionProvider from "@/components/SessionProvider";
 import Header from "@/components/Header";
-import { authOptions } from "./utils/auth";
+import { authOptions } from "@/utils/auth";
+import { ToastContainer } from "react-toastify";
+import Image from "next/image";
+import LightRays from "@/components/LightRays";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -39,8 +42,20 @@ export default async function RootLayout({
       <body>
         <SessionProvider session={session}>
           <Header />
+          <LightRays />
           {children}
         </SessionProvider>
+        <ToastContainer
+          theme="dark"
+          toastStyle={{
+            border: "1px solid var(--border, #132341)",
+            background: "var(--cardBg, #081121)",
+            borderRadius: 10,
+            boxShadow:
+              "0px 4px 5.3px 0px rgba(20, 26, 37, 0.20) inset, 0px -4px 3px 0px rgba(6, 12, 24, 0.10) inset, 0px 10px 20px 0px rgba(1, 8, 22, 0.80)",
+          }}
+          toastClassName={"card"}
+        />
       </body>
     </html>
   );

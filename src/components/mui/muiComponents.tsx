@@ -1,4 +1,9 @@
-import { IconButton } from "@mui/material";
+import {
+  IconButton,
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
+} from "@mui/material";
 
 // COMPONENTS
-export { IconButton as MuiIconButton };
+export { IconButton as MuiIconButton, Checkbox, FormGroup, FormControlLabel };
