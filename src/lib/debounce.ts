@@ -4,7 +4,7 @@ export const debounce = (
   immediate: boolean = false
 ): ((...args: any[]) => void) => {
   let timeout: NodeJS.Timeout | null = null;
-  return function (...args: any[]) {
+  return function (this: any, ...args: any[]) {
     const context = this;
     const later = () => {
       console.log("later");
