@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-async function handler(req: Request | NextRequest ,{ params }:{ params : { user: string }}) {
+async function handler(req: NextRequest,{ params }:{ params : { user: string }}) {
     
     const user  = params.user;
     if (!user || typeof user !== 'string') {
