@@ -1,7 +1,7 @@
 "use client"
 import { useSession } from 'next-auth/react';
 
-const page = () => {
+const Page = () => {
   const { data: session } = useSession();
 
   // Check if the user is authenticated
@@ -29,4 +29,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
