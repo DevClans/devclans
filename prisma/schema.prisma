@@ -41,9 +41,16 @@ model Project {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String?
+  githubUrl   String?
   ownerId     String
   owner       User     @relation(fields: [ownerId], references: [id])
   members     String[] @default([]) // Store user IDs as strings
+  neededProficiency String[]
+  teamSize    Int
+  skills      String[]
+  topics      String[] // Add any additional fields as needed
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model User {
@@ -51,12 +58,13 @@ model User {
   name          String?
   email         String?   @unique
   emailVerified DateTime?
-  discordId     String?    @unique
   image         String?
   accounts      Account[]
   sessions      Session[]
+  discordId     String?    @unique
+  githubId      String?    @unique
   skills        String[]
-  projects      Project[]
+  projectsOwned Project[]
 }
 
 model VerificationToken {
