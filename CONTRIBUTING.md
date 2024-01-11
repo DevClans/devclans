@@ -1,5 +1,5 @@
 
-# Contribution Guidelines
+## Contribution Guidelines
 this is how you can contribute to our project and vision:
 
 ## Steps to follow
