@@ -25,11 +25,25 @@ export async function GET(req: NextRequest, res: NextResponse) {
       const contributingResponse = await axios.get(contributingUrl);
       const contributingContent = Buffer.from(contributingResponse.data.content, 'base64').toString();
 
+        // Fetch languages used
+        const languagesUrl = `https://api.github.com/repos/sidxh/devclans/languages`;
+        const languagesResponse = await axios.get(languagesUrl);
+        const languages = languagesResponse.data;
+
+        // Calculate the total number of bytes
+        const totalBytes:any = Object.values(languages).reduce((acc:any, bytes) => acc + bytes, 0);
+
+        // Calculate the percentage for each language
+        const languagePercentages = Object.fromEntries(
+        Object.entries(languages).map(([language, bytes]:any) => [language, (bytes / totalBytes) * 100])
+        );
+
       return NextResponse.json({
         id: project.id,
         name: project.name,
         readme: readmeContent,
         contributing: contributingContent,
+        languages: languagePercentages,
         // Add more fields as needed
       });
     } catch (error) {
