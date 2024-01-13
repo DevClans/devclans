@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { NextApiRequest } from 'next';
 const prisma = new PrismaClient();
 
-async function handler(req:NextApiRequest,{ params }:{ params : { user: string, project: string }}) {
+async function handler(req:Request,{ params }:{ params : { user: string, project: string }}) {
     
     const  { user, project }  = params;
   
