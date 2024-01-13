@@ -13,7 +13,7 @@ async function handler(req:NextApiRequest,{ params }:{ params : { user: string }
    
     const u = await prisma.user.findUnique({
         where: {
-          discordId : user,
+          id : user,
         },
       });
       
