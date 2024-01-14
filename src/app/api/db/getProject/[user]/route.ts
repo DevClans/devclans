@@ -4,6 +4,7 @@ import { NextApiRequest } from 'next';
 const prisma = new PrismaClient();
 
 async function handler(req:Request,{ params }:{ params : { user: string }}) {
+  const x=0;
     
     const user  = params.user;
     if (!user || typeof user !== 'string') {

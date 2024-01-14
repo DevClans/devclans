@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function handler(req: Request) {
+  const x=0;
 
     const { name, email, discordId } =  await req.json()
       try {
