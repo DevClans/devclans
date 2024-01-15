@@ -8,6 +8,7 @@
 @import "../styles/animations/heroBtnAnimate.scss";
 @import "../styles/toastify.scss";
 @import "../styles/lines.scss";
+@import "../styles/detailsTag.scss";
 
 :root {
   --border: #132341;
@@ -25,13 +26,13 @@
   --text: #e2e8ff8c;
   --highlight: #e1ebffbf;
   --bg: #010816;
+  --cardBg2: #020b1c;
+  --yellowDark: #a4a622;
 }
 
 body {
   background-color: var(--bg);
   color: var(--text);
-  @apply fcc w-screen;
-  overflow-x: hidden;
 }
 
 html {
