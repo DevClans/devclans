@@ -1,5 +1,6 @@
 :root {
   --toastify-color-info: var(--primary) !important;
+  --toastify-color-success: var(--green) !important;
   --toastify-text-color-dark: var(--heading) !important;
 }
 
@@ -12,4 +13,9 @@
     #003eb6 62%,
     rgba(9, 26, 59, 0.54) 100%
   ) !important;
+}
+
+.Toastify__progress-bar--success {
+  height: 2px !important;
+  background: var(--green) !important;
 }
