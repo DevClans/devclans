@@ -33,7 +33,7 @@ const LookingForMembers = () => {
       <BottomBar
         text={
           <>
-            Tell cohort friends about this opportunity <LinkShare />
+            Tell cohort friends about this opportunity <LinkShare href={"/"} />
           </>
         }
       />

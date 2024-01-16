@@ -5,8 +5,7 @@ import {
   FormControlLabel,
 } from "@/components/mui/muiComponents";
 import SliderInputBar from "./sliders/SliderInputBar";
-import Link from "next/link";
-import { FilterSidebarProps, SliderProps } from "@/types";
+import { FilterChipProps, FilterSidebarProps, SliderProps } from "@/types";
 
 const CheckboxGrp = ({
   data,
@@ -35,11 +34,14 @@ const CheckboxGrp = ({
                 />
               ) : (
                 data.map(({ label }, i) => {
+                  const labelString = label?.toString().toLowerCase();
                   const checkked = Boolean(
-                    filters[key?.toLowerCase()] &&
-                      label?.toLowerCase() in filters[key]
+                    filters[key?.toLowerCase()] && labelString in filters[key]
                   );
-                  const currentFilter = { key, label };
+                  const currentFilter: FilterChipProps = {
+                    key,
+                    label: labelString,
+                  };
                   // console.log("checked", filters[key]);
                   const onChange = (
                     e: React.SyntheticEvent<Element, Event>,
@@ -56,7 +58,7 @@ const CheckboxGrp = ({
                   return (
                     <FormControlLabel
                       onChange={onChange}
-                      key={i + label}
+                      key={i + labelString}
                       control={
                         // <button
                         //   onClick={(e) => {

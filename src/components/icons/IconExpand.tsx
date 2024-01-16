@@ -12,8 +12,8 @@ const IconExpand = ({
     style={style}
     xmlns="http://www.w3.org/2000/svg"
     className={className}
-    width={width || "20"}
-    height={height || "20"}
+    width={width || size || "20"}
+    height={height || size || "20"}
     fill="none"
     viewBox={`0 0 ${width || size || 20} ${height || size || 20}`}
   >

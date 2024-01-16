@@ -6,7 +6,7 @@ export type ButtonProps = {
   active?: boolean;
   onClick?: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    label: string
+    label: string | number
   ) => void;
   color?: string;
   activeIcon?: React.ReactNode;

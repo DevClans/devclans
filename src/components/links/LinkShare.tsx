@@ -1,12 +1,13 @@
+import { LinkProps } from "@/types/link.types";
 import LinkWithIcon from "./LinkWithIcon";
 import IosShareOutlinedIcon from "@mui/icons-material/IosShareOutlined";
 // opens a modal to share the project
-const LinkShare = () => {
+const LinkShare = ({ href }: LinkProps) => {
   return (
     <>
       <LinkWithIcon
         text="Share"
-        href="/"
+        href={href || "/"}
         isBold={true}
         icon={
           <IosShareOutlinedIcon

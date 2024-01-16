@@ -6,7 +6,6 @@ import SessionProvider from "@/components/SessionProvider";
 import Header from "@/components/Header";
 import { authOptions } from "@/utils/auth";
 import { ToastContainer } from "react-toastify";
-import Image from "next/image";
 import LightRays from "@/components/LightRays";
 
 const poppins = Poppins({
@@ -28,8 +27,10 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode;
+  modal?: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
   return (
@@ -41,6 +42,7 @@ export default async function RootLayout({
       </head>
       <body>
         <SessionProvider session={session}>
+          {modal}
           <Header />
           <LightRays />
           {children}

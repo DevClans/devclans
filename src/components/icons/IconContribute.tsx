@@ -8,8 +8,8 @@ const IconContribute = ({
 }: SvgProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={width || "20"}
-    height={height || "20"}
+    width={width || size || "20"}
+    height={height || size || "20"}
     fill="none"
     viewBox={`0 0 ${width || size || 20} ${height || size || 20}`}
   >

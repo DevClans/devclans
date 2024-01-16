@@ -4,6 +4,7 @@ import { skills } from "@/lib/skills";
 import { BookmarkProps } from "@/types/mongo/bookmark.types";
 import { ProjectProps } from "@/types/mongo/project.types";
 import mongoose from "mongoose";
+import { contactMethods } from "@/lib/contactMethods";
 
 const userSchema = new mongoose.Schema<UserProps>(
   {
@@ -38,7 +39,7 @@ const userSchema = new mongoose.Schema<UserProps>(
     },
     contactMethod: {
       type: String,
-      enum: ["discord", "email", "whatsapp", "telegram", "twitter"],
+      enum: contactMethods,
       default: "discord",
     },
     socials: {

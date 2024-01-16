@@ -1,9 +1,4 @@
 import {
-  IconCollapse,
-  LinkShare,
-  LookingForMembers,
-  IconGithub,
-  IconWithBg,
   LightLine,
   ProjectHero,
   ProjectDetails,
