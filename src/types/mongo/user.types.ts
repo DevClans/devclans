@@ -1,3 +1,4 @@
+import { contactMethodsMap } from "@/lib/contactMethods";
 import { skills } from "@/lib/skills";
 import mongoose, { Document } from "mongoose";
 
@@ -23,3 +24,10 @@ export interface UserProps extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export type ContactDetailsProps = {
+  name: string;
+  contactId: string;
+  contactMethod: keyof typeof contactMethodsMap;
+  icon?: any;
+};

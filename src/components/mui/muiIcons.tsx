@@ -4,6 +4,7 @@ import {
   IosShareRounded,
   FavoriteBorderRounded,
   FavoriteRounded,
+  CloseRounded,
 } from "@mui/icons-material";
 
 // ICONS
@@ -13,4 +14,5 @@ export {
   IosShareRounded,
   FavoriteBorderRounded,
   FavoriteRounded,
+  CloseRounded,
 };
