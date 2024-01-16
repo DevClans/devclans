@@ -1,23 +1,23 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import { UserModel } from "@/models/models";
+import dbConnect from "@/utils/mongoose.config";
+import { NextRequest, NextResponse } from "next/server";
 
-async function handler(req: NextRequest,{ params }:{ params : { user: string }}) {
-    
-    const user  = params.user;
-    if (!user || typeof user !== 'string') {
-        return NextResponse.json({ message: 'Invalid user parameter' });
-      }
+async function handler(
+  req: NextRequest,
+  { params }: { params: { user: string } }
+) {
+  await dbConnect();
 
-   
-    const u = await prisma.user.findUnique({
-        where: {
-          discordId : user,
-        },
-      });
-      
-     
-      return  NextResponse.json(u);
+  const user = params.user;
+  if (!user || typeof user !== "string") {
+    return NextResponse.json({ message: "Invalid user parameter" });
+  }
+
+  const u = await UserModel.findById({
+    id: user,
+  });
+
+  return NextResponse.json(u);
 }
 
-export { handler as GET }
+export { handler as GET };

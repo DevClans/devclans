@@ -1,9 +1,10 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import { NextResponse } from "next/server";
+import dbConnect from "@/utils/mongoose.config";
+import { ProjectModel } from "@/models/models";
 
 async function handler(req: Request) {
-    const project = await prisma.project.findMany();
-    return  NextResponse.json(project);
+  await dbConnect();
+  const project = await ProjectModel.find({});
+  return NextResponse.json(project);
 }
-export { handler as GET}
+export { handler as GET };

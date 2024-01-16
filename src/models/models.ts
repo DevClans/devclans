@@ -1,123 +1,11 @@
-const mongoose = require("mongoose");
-const skills = [
-  "HTML",
-  "CSS",
-  "JavaScript",
-  "Python",
-  "Java",
-  "C",
-  "C++",
-  "C#",
-  "PHP",
-  "SQL",
-  "Ruby",
-  "Rust",
-  "Go",
-  "Swift",
-  "Kotlin",
-  "TypeScript",
-  "Assembly",
-  "Perl",
-  "Scala",
-  "R",
-  "VBA",
-  "Objective-C",
-  "Lua",
-  "Dart",
-  "Haskell",
-  "Julia",
-  "MATLAB",
-  "PowerShell",
-  "Groovy",
-  "Visual Basic",
-  "Delphi",
-  "RPG",
-  "COBOL",
-  "Ada",
-  "Fortran",
-  "Scratch",
-  "Bash",
-  "Lisp",
-  "LabVIEW",
-  "Transact-SQL",
-  "PL/SQL",
-  "Apex",
-  "D",
-  "Scheme",
-  "Prolog",
-  "ABAP",
-  "F#",
-  "Logo",
-  "Alice",
-  "COBOL",
-  "Erlang",
-  "OpenEdge ABL",
-  "ML",
-  "Racket",
-  "Smalltalk",
-  "Tcl",
-  "Verilog",
-  "Awk",
-  "AutoLISP",
-  "AutoIt",
-  "Elixir",
-  "Forth",
-  "Hack",
-  "J",
-  "Julia",
-  "LiveScript",
-  "MQL4",
-  "MQL5",
-  "Nim",
-  "Pascal",
-  "PostScript",
-  "Rexx",
-  "Ring",
-  "RPG",
-  "Rust",
-  "SAS",
-  "SPSS",
-  "Standard ML",
-  "Turing",
-  "VBScript",
-  "VHDL",
-  "Z shell",
-  "Crystal",
-  "Dylan",
-  "Eiffel",
-  "Elm",
-  "Fantom",
-  "Forth",
-  "IDL",
-  "Io",
-  "Korn shell",
-  "Maple",
-  "Mathematica",
-  "Objective-C",
-  "OCaml",
-  "Oz",
-  "Pike",
-  "Processing",
-  "Pure Data",
-  "Q",
-  "REALbasic",
-  "S",
-  "Sather",
-  "Seed7",
-  "Self",
-  "Simula",
-  "Smalltalk",
-  "Standard ML",
-  "SuperCollider",
-  "Tcl",
-  "Vala",
-  "Verilog",
-  "VHDL",
-  "XQuery",
-  "Z shell",
-];
+import { UserProps } from "./../types/mongo/user.types";
+import { LikeProps } from "./../types/mongo/like.types";
+import { skills } from "@/lib/skills";
+import { BookmarkProps } from "@/types/mongo/bookmark.types";
+import { ProjectProps } from "@/types/mongo/project.types";
+import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema<UserProps>(
   {
     discordId: { type: String, required: true },
     githubId: { type: String, required: true },
@@ -127,25 +15,25 @@ const userSchema = new mongoose.Schema(
     phone: {
       type: String,
       validate: {
-        validator: function (value) {
+        validator: function (value: string) {
           return /^[0-9]{10}$/.test(value);
         },
-        message: (props) => `${props.value} is not a valid phone number!`,
+        message: (props: any) => `${props.value} is not a valid phone number!`,
       },
       required: function () {
-        return this.contactMethod === "whatsapp";
+        return (this as any).contactMethod === "whatsapp";
       },
     },
     email: {
       type: String,
       validate: {
-        validator: function (value) {
+        validator: function (value: string) {
           return /\S+@\S+\.\S+/.test(value);
         },
-        message: (props) => `${props.value} is not a valid email address!`,
+        message: (props: any) => `${props.value} is not a valid email address!`,
       },
       required: function () {
-        return this.contactMethod === "email";
+        return (this as any).contactMethod === "email";
       },
     },
     contactMethod: {
@@ -157,14 +45,14 @@ const userSchema = new mongoose.Schema(
       twitter: {
         type: String,
         required: function () {
-          return this.contactMethod === "twitter";
+          return (this as any).contactMethod === "twitter";
         },
         default: "",
       },
       telegram: {
         type: String,
         required: function () {
-          return this.contactMethod === "telegram";
+          return (this as any).contactMethod === "telegram";
         },
         default: "",
       },
@@ -187,25 +75,25 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const likeSchema = new mongoose.Schema(
+const likeSchema = new mongoose.Schema<LikeProps>(
   {
     user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
     project: { type: mongoose.Types.ObjectId, ref: "Project", required: true },
-    timestamp: { type: Date, default: Date.now },
+    // timestamp: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );
 
-const bookmarkSchema = new mongoose.Schema(
+const bookmarkSchema = new mongoose.Schema<BookmarkProps>(
   {
     user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
     project: { type: mongoose.Types.ObjectId, ref: "Project", required: true },
-    timestamp: { type: Date, default: Date.now },
+    // timestamp: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );
 
-const projectSchema = new mongoose.Schema(
+const projectSchema = new mongoose.Schema<ProjectProps>(
   {
     title: { type: String, required: true },
     desc: { type: String, required: true },
@@ -265,4 +153,4 @@ const ProjectModel = mongoose.model("Project", projectSchema);
 const LikeModel = mongoose.model("Like", likeSchema);
 const BookmarkModel = mongoose.model("Bookmark", bookmarkSchema);
 
-module.exports = { UserModel, ProjectModel, LikeModel, BookmarkModel };
+export { UserModel, ProjectModel, LikeModel, BookmarkModel };
