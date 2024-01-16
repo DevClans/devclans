@@ -20,6 +20,10 @@ export interface UserProps extends Document {
   skills: Array<(typeof skills)[number]>;
   ownedProjects: mongoose.Types.ObjectId[];
   contributedProjects: mongoose.Types.ObjectId[];
+  currentCompany?: string;
+  careerGoal?: string;
+  proudAchievement?: string;
+  recentWork? : string;
   createdAt: Date;
   updatedAt: Date;
 }

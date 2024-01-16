@@ -4,7 +4,7 @@ export const contactMethods = [
   "whatsapp",
   "telegram",
   "twitter",
-];
+] as const;
 
 export const contactMethodsMap = {
   discord: (username: string) => `https://discord.com/users/${username}`,

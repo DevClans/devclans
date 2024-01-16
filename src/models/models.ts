@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema<UserProps>(
     githubId: { type: String, required: true },
     username: { type: String },
     avatar: { type: String },
-    bio: { type: String }, // describe yourself to cohort folks
+    bio: { type: String, maxlength: 180 }, // describe yourself to cohort folks
     phone: {
       type: String,
       validate: {
@@ -72,6 +72,10 @@ const userSchema = new mongoose.Schema<UserProps>(
     contributedProjects: [
       { type: mongoose.Types.ObjectId, ref: "Project", default: [] },
     ],
+    currentCompany: { type: String },
+    careerGoal: { type: String, enum: ['remote', 'faang', 'startup'] },
+    proudAchievement: { type: String },
+    recentWork: { type: String },
   },
   { timestamps: true }
 );

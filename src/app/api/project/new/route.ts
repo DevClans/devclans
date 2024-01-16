@@ -1,40 +1,60 @@
-import { NextResponse } from "next/server";
-import dbConnect from "@/utils/mongoose.config";
-import { ProjectModel, UserModel } from "@/models/models";
 
-async function handler(req: Request) {
-  await dbConnect();
-  const { userId, projectName, projectDescription } = await req.json();
+import { z } from 'zod';
+import { NextRequest, NextResponse } from 'next/server';
+import { ProjectModel } from '@/models/models';
 
-  try {
-    const user = await UserModel.findById({
-      id: userId,
-    });
+const schema = z.object({
+  title: z.string(),
+  desc: z.string(),
+  topics: z.array(z.string()),
+  githubLink: z.string(),
+  skills: z.array(z.string()).optional(),
+  projectLinks: z.array(z.string()).optional(),
+  projectDetails: z.object({
+    problem: z.string(),
+    challenges: z.array(
+      z.object({
+        title: z.string(),
+        desc: z.string(),
+        solution: z.string(),
+      })
+    ),
+    futureGoals: z.array(
+      z.object({
+        title: z.string(),
+        desc: z.string(),
+        needHelp: z.boolean(),
+      })
+    ),
+    memberReq: z.array(
+      z.object({
+        title: z.string(),
+        desc: z.string(),
+      })
+    ),
+  }).optional(),
+  team: z.array(z.string()).optional(),
+  needMembers: z.enum(['professional', 'student', 'beginner']).optional(),
+  imgs: z.array(z.string()).optional(),
+  video: z.string().optional(),
+  devStage: z.enum(['idea', 'development', 'alpha', 'beta', 'production']).optional(),
+  published: z.boolean(),
+});
 
-    if (!user) {
-      return NextResponse.json({ message: "User not found" });
+export default async function handler(req: NextRequest, res: NextResponse) {
+  if (req.method === 'POST') {
+    try {
+      const data = schema.parse(req.body);
+
+      // Update the project in the database
+      await ProjectModel.create(data);
+
+      return NextResponse.json({ success: true });
+    } catch (error) {
+      console.error('Error creating project:', error);
+      return NextResponse.json({ error: 'Invalid data' });
     }
-
-    const createdProject = await ProjectModel.create({
-      name: projectName,
-      description: projectDescription,
-      ownerId: userId,
-      members: [userId], // Assuming the owner is also a member initially
-    });
-    const updatedUser = await UserModel.updateOne(
-      { _id: userId },
-      { $push: { projects: createdProject._id } }
-    );
-
-    return NextResponse.json({
-      message: "Project created and associated with user successfully",
-      user: updatedUser,
-      project: createdProject,
-    });
-  } catch (error) {
-    console.error("Error creating project for user:", error);
-    return NextResponse.json({ message: "Internal Server Error" });
   }
-}
 
-export { handler as POST };
+  return NextResponse.json({ error: 'Method not allowed' });
+}
