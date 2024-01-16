@@ -9,5 +9,7 @@ const colors = {
   text: "#E2E8FF8C",
   highlight: "#E1EBFFBF",
   bg: "#010816",
+  yellowDark: "#A4A622",
+  cardBg2: "#020b1c",
 };
 export default colors;

@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from 'react';
-import ReactMarkdown from 'react-markdown';
+import { useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 
 // Function to generate a random hex color
 const getRandomColor = () => {
-  const letters = '0123456789ABCDEF';
-  let color = '#';
+  const letters = "0123456789ABCDEF";
+  let color = "#";
   for (let i = 0; i < 6; i++) {
     color += letters[Math.floor(Math.random() * 16)];
   }
   return color;
 };
 
-const ProjectDetails = ({ projectId }:any) => {
+const ProjectData = ({ projectId }: any) => {
   const [projectData, setProjectData] = useState(null);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const ProjectDetails = ({ projectId }:any) => {
         const data = await response.json();
         setProjectData(data);
       } catch (error) {
-        console.error('Error fetching project details:', error);
+        console.error("Error fetching project details:", error);
       }
     };
 
@@ -36,13 +36,18 @@ const ProjectDetails = ({ projectId }:any) => {
     }
 
     const languagesObject = (projectData as { languages: any }).languages;
-    const totalBytes:any = Object.values(languagesObject).reduce((acc: any, percentage: any) => acc + percentage, 0);
+    const totalBytes: any = Object.values(languagesObject).reduce(
+      (acc: any, percentage: any) => acc + percentage,
+      0
+    );
 
-    const languages = Object.entries(languagesObject).map(([language, percentage]: any) => ({
-      name: language,
-      percentage: (percentage / totalBytes) * 100,
-      color: getRandomColor(), // Assuming you have a function to generate random colors
-    }));
+    const languages = Object.entries(languagesObject).map(
+      ([language, percentage]: any) => ({
+        name: language,
+        percentage: (percentage / totalBytes) * 100,
+        color: getRandomColor(), // Assuming you have a function to generate random colors
+      })
+    );
 
     return (
       <div>
@@ -68,24 +73,27 @@ const ProjectDetails = ({ projectId }:any) => {
       </div>
     );
   };
-  
+
   return (
     <div>
-      <h1 className='my-10'>Project Details</h1>
+      <h1 className="my-10">Project Details</h1>
       {projectData ? (
         <div>
-            <div className='grid grid-cols-2 gap-10'>
-                <div className='border-2 border-white rounded-lg'>
-                    <h2>README.md</h2>
-                    <ReactMarkdown>{(projectData as { readme: string }).readme}</ReactMarkdown>
-                </div>     
-                <div className='border-2 border-white rounded-lg'>
-                    <h2>CONTRIBUTING.md</h2>
-                    <ReactMarkdown>{(projectData as { contributing: string }).contributing}</ReactMarkdown>
-                </div>
-            {renderLanguages()}
-
+          <div className="grid grid-cols-2 gap-10">
+            <div className="border-2 border-white rounded-lg">
+              <h2>README.md</h2>
+              <ReactMarkdown>
+                {(projectData as { readme: string }).readme}
+              </ReactMarkdown>
             </div>
+            <div className="border-2 border-white rounded-lg">
+              <h2>CONTRIBUTING.md</h2>
+              <ReactMarkdown>
+                {(projectData as { contributing: string }).contributing}
+              </ReactMarkdown>
+            </div>
+            {renderLanguages()}
+          </div>
         </div>
       ) : (
         <p>Loading...</p>
@@ -94,4 +102,4 @@ const ProjectDetails = ({ projectId }:any) => {
   );
 };
 
-export default ProjectDetails;
+export default ProjectData;

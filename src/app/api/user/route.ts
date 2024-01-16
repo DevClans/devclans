@@ -1,9 +1,8 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import { NextResponse } from "next/server";
+import { UserModel } from "@/models/models";
 
 async function handler(req: Request) {
-    const user = await prisma.user.findMany();
-    return NextResponse.json(user);
+  const user = await UserModel.find({});
+  return NextResponse.json(user);
 }
-export { handler as GET}
+export { handler as GET };

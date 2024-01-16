@@ -5,8 +5,8 @@ const IconWeb = ({ color = "inherit", size, width, height }: SvgProps) => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
-      width={width || "20"}
-      height={height || "20"}
+      width={width || size || "20"}
+      height={height || size || "20"}
       viewBox={`0 0 ${width || size || 20} ${height || size || 20}`}
     >
       <path
