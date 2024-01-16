@@ -1,21 +1,20 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import { NextApiRequest } from 'next';
-const prisma = new PrismaClient();
+
+import dbConnect from '@/lib/dbConnect';
+import { ProjectModel } from "@/model/schema";
 
 async function handler(req:Request,{ params }:{ params : { user: string }}) {
-  const x=0;
-    
+    await dbConnect();    
     const user  = params.user;
     if (!user || typeof user !== 'string') {
         return NextResponse.json({ message: 'Invalid user parameter' });
       }
 
    
-    const project = await prisma.project.findMany({
-        where: {
-          ownerId : user,
-        },
+    const project = await ProjectModel.find({
+    
+          owner : user,
+    
       });
       
      

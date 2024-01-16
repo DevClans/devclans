@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import dbConnect from '@/lib/dbConnect';
+import { UserModel } from "@/model/schema";
 
 async function handler(req: Request) {
-    const x=0;
+    await dbConnect();
 
-    const user = await prisma.user.findMany();
+    const user = await UserModel.find();
     return  NextResponse.json(user);
 }
 export { handler as GET}

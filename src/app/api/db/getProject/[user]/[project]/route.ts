@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import { NextApiRequest } from 'next';
-const prisma = new PrismaClient();
+
+import dbConnect from '@/lib/dbConnect';
+import { ProjectModel } from "@/model/schema";
 
 async function handler(req:Request,{ params }:{ params : { user: string, project: string }}) {
-  const x=0;
+    await dbConnect();
     
     const  { user, project }  = params;
   
@@ -13,11 +13,11 @@ async function handler(req:Request,{ params }:{ params : { user: string, project
       }
 
    
-    const projects = await prisma.project.findMany({
-        where: {
-          ownerId : user,
-          id: project
-        },
+    const projects = await ProjectModel.find({
+
+          owner : user,
+          _id: project
+ 
       });
       
      

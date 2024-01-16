@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import { NextApiRequest } from 'next';
-const prisma = new PrismaClient();
+import dbConnect from '@/lib/dbConnect';
+import { UserModel } from "@/model/schema";
 
 async function handler(req:Request,{ params }:{ params : { user: string }}) {
-  const x=0;
+    await dbConnect();
     
     const user  = params.user;
     if (!user || typeof user !== 'string') {
@@ -12,11 +11,9 @@ async function handler(req:Request,{ params }:{ params : { user: string }}) {
       }
 
    
-    const u = await prisma.user.findUnique({
-        where: {
-          id : user,
-        },
-      });
+    const u = await UserModel.find({
+      username : user
+    });
       
      
       return  NextResponse.json(u);

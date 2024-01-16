@@ -1,26 +1,29 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+
+
+import dbConnect from '@/lib/dbConnect';
+import { UserModel } from "@/model/schema";
+
 
 async function handler(req: Request) {
-  const x=0;
+  console.log("before connection");
+  await dbConnect();
+  console.log("connected");
 
-    const { name, email, discordId } =  await req.json()
+    const { name, email, discordId, username,githubId } =  await req.json()
       try {
   
-    console.log("Creating user using", name, email, discordId);
+    console.log("Creating user using", name, email, discordId,username,githubId);
     
-    const user = await prisma.user.create({
-      data: { name, email, discordId },
+    const user = new UserModel({
+    name, email, discordId ,username,githubId
     });
-    
+    await user.save();
     return NextResponse.json(user)
   } catch (error) {
     console.error('Error creating user:', error);
    return NextResponse.json({message: error})
-  } finally {
-    await prisma.$disconnect();
-  }
+  } 
 }
 
 export { handler as POST};
