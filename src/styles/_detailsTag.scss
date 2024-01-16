@@ -1,0 +1,41 @@
+details > summary {
+  list-style: none;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+details {
+  max-height: 80px; /* Set a max-height value just enough to show the summary */
+  overflow: hidden; /* Hide the rest of the content */
+  transition: max-height 400ms ease-out; /* Animate the change */
+}
+
+details[open] {
+  max-height: 274px; /* Reveal the content */
+  summary {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  .hideOnOpen {
+    display: none;
+  }
+  .showOnOpen {
+    display: block;
+  }
+}
+summary {
+  @apply card frcsb;
+  // border-top-right-radius: 20px;
+  border-radius: 20px;
+  padding: 18px 20px;
+}
+
+details > div,
+.detailsDiv {
+  @apply card flex flex-col items-start;
+  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  padding: 10px 20px;
+  background-color: var(--cardBg2);
+  border-top: 0;
+}

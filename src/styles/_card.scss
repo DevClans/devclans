@@ -1,8 +1,13 @@
-.card {
+.card,
+.card2 {
   border: 1px solid var(--border, #132341);
   background: var(--cardBg, #081121);
   box-shadow: 0px 4px 5.3px 0px rgba(20, 26, 37, 0.2) inset,
     0px -4px 3px 0px rgba(6, 12, 24, 0.1) inset;
+}
+.card2 {
+  background: var(--cardBg2, #020b1c);
+  border-radius: 20px;
 }
 
 .heroCard {
