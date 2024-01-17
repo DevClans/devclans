@@ -5,6 +5,7 @@ import {
   FavoriteBorderRounded,
   FavoriteRounded,
   CloseRounded,
+  BookmarkRounded,
 } from "@mui/icons-material";
 
 // ICONS
@@ -15,4 +16,5 @@ export {
   FavoriteBorderRounded,
   FavoriteRounded,
   CloseRounded,
+  BookmarkRounded,
 };

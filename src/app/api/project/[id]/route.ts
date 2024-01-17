@@ -2,20 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 import { ProjectModel } from "@/models/models";
 import dbConnect from "@/utils/mongoose.config";
+import { Types } from "mongoose";
 
 export async function GET(req: NextRequest, res: NextResponse) {
   const id = "65a020a5b054aafa7b2ef51c";
   try {
     await dbConnect();
+    console.log("Fetching project details for id:", id);
     const project = await ProjectModel.findById({
-      id: String(id),
+      id: new Types.ObjectId(id),
     });
 
     if (!project) {
       return NextResponse.json({ message: "Project not found" });
     }
+    console.log("Project found in MDB:", project);
 
-    // Fetch README content
+    // Fetch README contentsrc/app/api/project/[id]/route.ts
     const readmeUrl = `https://api.github.com/repos/sidxh/devclans/readme`;
     const readmeResponse = await axios.get(readmeUrl);
     const readmeContent = Buffer.from(

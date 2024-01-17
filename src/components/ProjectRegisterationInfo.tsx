@@ -1,31 +1,33 @@
 'use client'
+import { ProjectInputProps } from '@/types/mongo/project.types';
 import { useState } from 'react';
 // import { useRouter } from 'next/router';
-
-const CreateProject = () => {
-  const [formData, setFormData] = useState({
+const dummyData:ProjectInputProps = 
+    {
     title: '',
     desc: '',
-    topics: '',
+    topics: [''],
     githubLink: '',
-    skills: '',
-    projectLinks: '',
+    techStack:[],
+    projectLinks: [''],
     projectDetails: {
       problem: '',
       challenges: [{ title: '', desc: '', solution: '' }],
       futureGoals: [{ title: '', desc: '', needHelp: false }],
       memberReq: [{ title: '', desc: '' }],
     } as any,
-    team: '',
+    team: [],
     needMembers: 'professional',
-    imgs: '',
+    imgs: [],
     video: '',
     devStage: 'idea',
     published: false,
-  });
+  }
 
+const CreateProject = () => {
+  const [formData, setFormData] = useState<ProjectInputProps>(dummyData);
+  
 //   const router = useRouter();
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -43,7 +45,7 @@ const CreateProject = () => {
   ) => {
     const { name, value } = e.target;
     setFormData((prevData) => {
-      const newProjectDetails = [...prevData.projectDetails[key]];
+      const newProjectDetails = [...(prevData as any).projectDetails[key]];
       newProjectDetails[index] = { ...newProjectDetails[index], [name]: value };
       return { ...prevData, projectDetails: { ...prevData.projectDetails, [key]: newProjectDetails } };
     });
@@ -82,12 +84,14 @@ const CreateProject = () => {
         <br />
         <label>
           GitHub Link:
-          <input type="text" name="githubLink" value={formData.githubLink} onChange={handleChange} />
+          <input type="text" name="githubLink" value={formData.githubLink} onChange={handleChange} /a.
+          const dummyData = {
+            >
         </label>
         <br />
         <label>
           Skills (comma-separated, optional):
-          <input type="text" name="skills" value={formData.skills} onChange={handleArrayChange} />
+          <input type="text" name="techStack"[]lue={formData.techStack}[]Change={handleArrayChange} />
         </label>
         <br />
         <label>
@@ -99,7 +103,7 @@ const CreateProject = () => {
           Project Details - Problem:
           <input
             name="problem"
-            value={formData.projectDetails.problem}
+            value={formDatprojectDetails.problem}
             onChange={(e) => handleProjectDetailsChange(e, 0, 'problem')}
           ></input>
         </label>

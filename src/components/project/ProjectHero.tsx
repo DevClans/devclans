@@ -5,6 +5,8 @@ import {
   ProjectStage,
   IosShareRounded,
   ButtonLike,
+  BookmarkRounded,
+  ButtonBookmark,
 } from "@/components";
 import ProductImg from "@/components/project/ProjectImg";
 import { ImageProps } from "@/types";
@@ -45,10 +47,7 @@ const ProjectHero = () => {
               label="share"
               icon={<IosShareRounded fontSize="small" />}
             />
-            <ButtonIcon
-              label={0}
-              icon={<BookmarkBorderOutlined fontSize="small" />}
-            />
+            <ButtonBookmark />
             <ButtonLike />
           </div>
         </div>

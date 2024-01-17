@@ -15,7 +15,7 @@ const ButtonLike = () => {
         active={liked}
         setActive={setLiked}
         label={likeCount.toString()}
-        activeIcon={<FavoriteRounded fontSize="small" />}
+        activeIcon={<FavoriteRounded color="primary" fontSize="small" />}
         icon={<FavoriteBorderRounded fontSize="small" />}
       />
     </>

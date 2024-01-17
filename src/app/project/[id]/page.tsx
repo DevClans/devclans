@@ -4,11 +4,13 @@ import {
   ProjectDetails,
   ProjectSidebar,
   AboutTheRepo,
+  ProjectData,
 } from "@/components";
 
-const page = ({ params }: { params: { id: string } }) => {
+const page = async ({ params }: { params: { id: string } }) => {
   const id = params.id;
-
+  const data = await ProjectData(id);
+  console.log(data);
   return (
     <>
       <LightLine />
