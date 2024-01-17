@@ -2,7 +2,7 @@
 import { ExpandDetailsBoxProps } from "@/types/toggleList.types";
 import { IconCollapse, IconExpand, IconReadme } from "@/components";
 import colors from "@/lib/colors";
-
+import ReactMarkdown from "react-markdown";
 const ExpandDetailsBox = ({
   heading,
   data,
@@ -28,18 +28,20 @@ const ExpandDetailsBox = ({
           <IconExpand className="" color={colors.subH} />
         )}
       </summary>
-      <div className="px-5 py-[10px]">
+      <div className={`p-5 ${isActive ? "pt-0" : ""}`}>
         {isActive ? (
-          data.map((item, i) => (
-            <div key={i}>
-              <h3 className="text-highlight gap-[5px]">
-                {item.title || "title"}
-              </h3>
-              <p>{item.desc || "some desc"}</p>
-            </div>
-          ))
+          <ReactMarkdown className={`markdown fcfs gap-2`}>
+            {data}
+          </ReactMarkdown>
         ) : (
-          <p>{"some data"}</p>
+          <>
+            {/* <ReactMarkdown>{data.substring(0, 100)}</ReactMarkdown>
+            <p className=" text-highlight mt-1">Expand for more details</p> */}
+            <p className="">
+              <span className="capitalize">{heading}</span> of projectname{" "}
+            </p>
+            <p className="text-highlight mt-1">Expand for more details</p>
+          </>
         )}
       </div>
     </div>

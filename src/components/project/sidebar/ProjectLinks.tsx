@@ -6,7 +6,8 @@ import copyToClipboard from "@/lib/copyToClipboard";
 const ProjectLinks = () => {
   const links: ListItemProps[] = [
     {
-      text: "https://github.com/username/repo",
+      text: "username/repo",
+      href: "https://github.com/username/repo",
       startIcon: <IconGithub />,
       endIcon: <IconLink />,
       onEndIconClick: async (text: string) => {

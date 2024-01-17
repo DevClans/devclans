@@ -36,8 +36,8 @@ const ProjectTeam = () => {
       <div className="p-5 gap-[5px] fcfs pt-0">
         <LightLine />
         <div className="mt-[10px]" />
-        <h4>Want to connect to the project team?</h4>
-        <p>
+        <h3>Want to connect to the project team?</h3>
+        <p className="">
           {`We're here to make it easy for you! Let us link you up with the team's
           favorite social media accounts for smooth communication. 😎`}
         </p>

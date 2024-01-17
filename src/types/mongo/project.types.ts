@@ -1,11 +1,11 @@
 import mongoose, { Document } from "mongoose";
 import { UserProps } from "./user.types";
 
-export type ProjectProps = Document & {
+export type ProjectProps = {
   title: string;
   desc: string;
-  owner: mongoose.Types.ObjectId | UserProps;
-  contributors: mongoose.Types.ObjectId[] | UserProps[];
+  owner: mongoose.Types.ObjectId | Partial<UserProps>;
+  contributors: mongoose.Types.ObjectId[] | Partial<UserProps>[];
   topics: string[];
   techStack: string[];
   githubLink: string;
@@ -29,7 +29,7 @@ export type ProjectProps = Document & {
       desc: string;
     }[];
   };
-  team: mongoose.Types.ObjectId[] | UserProps[];
+  team: mongoose.Types.ObjectId[] | Partial<UserProps>[];
   needMembers: "professional" | "student" | "beginner" | null;
   imgs: string[];
   video: string;
@@ -69,4 +69,9 @@ export type ProjectInputProps = {
   video: string;
   devStage: "idea" | "development" | "alpha" | "beta" | "production";
   published: boolean;
+};
+
+export type ProjectFilesProps = {
+  readme: string;
+  contributing: string;
 };

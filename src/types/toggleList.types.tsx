@@ -15,6 +15,7 @@ export type ProjectDetailsItemProps = {
   data: string | ToogleListItemProps[];
 };
 
-export type ExpandDetailsBoxProps = ToogleListItemProps & {
+export type ExpandDetailsBoxProps = ProjectDetailsItemProps & {
   icon?: React.ReactNode;
+  data: string;
 } & BooleanStateProps;

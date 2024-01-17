@@ -6,9 +6,14 @@ import {
 } from "@/components";
 import { useState } from "react";
 
-const ButtonLike = () => {
+const ButtonLike = ({
+  likesCount,
+}: {
+  likesCount: number;
+  isLiked?: boolean;
+}) => {
   const [liked, setLiked] = useState(false);
-  const likeCount = 0;
+  const likeCount = likesCount + (liked ? 1 : 0);
   return (
     <>
       <ButtonIcon

@@ -27,7 +27,11 @@ const ButtonConnect = () => {
   const { handleOpen, Modal } = useModalConnect({ isActive: open, team });
   return (
     <>
-      <ButtonBlue onClick={handleOpen} label="Ask a question to Member(s)" />
+      <ButtonBlue
+        style={{ height: 44 }}
+        onClick={handleOpen}
+        label="Ask a question to Member(s)"
+      />
       <Modal text="" />
     </>
   );

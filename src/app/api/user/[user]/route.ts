@@ -1,4 +1,4 @@
-import { UserModel } from "@/models/models";
+import { UserModel } from "@/mongodb/models";
 import dbConnect from "@/utils/mongoose.config";
 import { NextRequest, NextResponse } from "next/server";
 

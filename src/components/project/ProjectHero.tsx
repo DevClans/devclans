@@ -1,54 +1,39 @@
 import {
-  BookmarkBorderOutlined,
   ButtonIcon,
   Chip,
   ProjectStage,
   IosShareRounded,
   ButtonLike,
-  BookmarkRounded,
   ButtonBookmark,
 } from "@/components";
 import ProductImg from "@/components/project/ProjectImg";
-import { ImageProps } from "@/types";
+import { ProjectProps } from "@/types/mongo/project.types";
 
-const ProjectHero = () => {
+const ProjectHero = ({
+  techStack = ["react", "nextjs", "typescript", "tailwindcss"],
+  imgs,
+  devStage,
+  title,
+  likesCount,
+  bookmarkCount,
+  desc,
+}: ProjectProps) => {
   const data = {
-    title: "Project Title",
-    desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
+    title,
+    desc,
   };
-  const imgs: ImageProps[] = [
-    {
-      src: "/homeHero.png",
-      alt: "project",
-      height: 255,
-      width: 428,
-    },
-    {
-      src: "/homeHero.png",
-      alt: "project",
-      height: 255,
-      width: 428,
-    },
-    {
-      src: "/homeHero.png",
-      alt: "project",
-      height: 255,
-      width: 428,
-    },
-  ];
-  const techStack = ["react", "nextjs", "typescript", "tailwindcss"];
   return (
     <div className="card2 py-[30px] w100 fcfs gap-[30px] px-5">
       <div className="gap-5 fcfs w100">
         <div className="frcsb w100">
-          <ProjectStage />
+          <ProjectStage stage={devStage} />
           <div className="frc gap-[10px]">
             <ButtonIcon
               label="share"
               icon={<IosShareRounded fontSize="small" />}
             />
-            <ButtonBookmark />
-            <ButtonLike />
+            <ButtonBookmark bookmarksCount={bookmarkCount} />
+            <ButtonLike likesCount={likesCount} />
           </div>
         </div>
         <h1 className="text-4xl">{data.title}</h1>
@@ -61,10 +46,10 @@ const ProjectHero = () => {
         </div>
       </div>
       {/* images */}
-      <div className="relative">
+      <div className="relative w100">
         <div className="frc gap-2 w100 scrollbar">
-          {imgs.map((img, i) => (
-            <ProductImg key={i} {...img} />
+          {imgs?.map((img, i) => (
+            <ProductImg key={i} src={img} />
           ))}
         </div>
         <div
