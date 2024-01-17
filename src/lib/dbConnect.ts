@@ -7,7 +7,7 @@ declare global {
   };
 }
 
-const MONGODB_URI = process.env.DATABASE_URL;
+const MONGODB_URI = process.env.MONGO_URL;
 
 if (!MONGODB_URI) {
   throw new Error(

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import dbConnect from '@/lib/dbConnect';
-import { ProjectModel } from "@/model/schema";
+import { ProjectModel, UserModel } from "@/model/schema";
 
 async function handler(req:Request,{ params }:{ params : { user: string, project: string }}) {
     await dbConnect();
@@ -11,12 +11,13 @@ async function handler(req:Request,{ params }:{ params : { user: string, project
     if (!user || typeof user !== 'string') {
         return NextResponse.json({ message: 'Invalid user parameter' });
       }
+      const u = await UserModel.find({username:user})
 
    
     const projects = await ProjectModel.find({
 
-          owner : user,
-          _id: project
+          owner : u,
+          title: project
  
       });
       
