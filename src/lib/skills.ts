@@ -114,4 +114,4 @@ export const skills = [
   "VHDL",
   "XQuery",
   "Z shell",
-];
+] as const;
