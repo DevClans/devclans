@@ -1,11 +1,3 @@
-export const contactMethods = [
-  "discord",
-  "email",
-  "whatsapp",
-  "telegram",
-  "twitter",
-] as const;
-
 export const contactMethodsMap = {
   discord: (username: string) => `https://discord.com/users/${username}`,
   whatsapp: (username: string, text?: string) =>
@@ -16,3 +8,8 @@ export const contactMethodsMap = {
       text || ""
     }`,
 };
+
+export const contactMethods = Object.keys(contactMethodsMap);
+
+export type contactMethodsType = keyof typeof contactMethodsMap;
+// "discord" | "email" | "whatsapp" | "telegram" | "twitter"

@@ -1,37 +1,14 @@
 import { ListItemProps } from "@/types/list.types";
-import { Avatar, LightLine, SidebarList, ButtonConnect } from "@/components";
-import LinkGithub from "../links/LinkGithub";
-import colors from "@/lib/colors";
+import { LightLine, SidebarList, ButtonConnect } from "@/components";
 
-const ProjectTeam = () => {
-  const name = "Rahul Tripathi";
-  const links: ListItemProps[] = [
-    {
-      text: name,
-      href: "/user/" + name.toLowerCase().replace(/\s+/g, ""),
-      startIcon: (
-        <Avatar
-          style={{
-            border: "2px solid var(--border)",
-            background: colors.cardBg,
-            color: colors.highlight,
-            height: "40px",
-          }}
-          alt={name}
-        >
-          {name && name[0]}
-        </Avatar>
-      ),
-      endIcon: <LinkGithub href={"/"} />,
-    },
-  ];
+const ProjectTeam = ({ list }: { list: ListItemProps[] }) => {
   return (
     <div className="card2 w100">
       <SidebarList
         needIconBg={false}
         onlyList={true}
         heading="project team"
-        list={links}
+        list={list}
       />
       <div className="p-5 gap-[5px] fcfs pt-0">
         <LightLine />

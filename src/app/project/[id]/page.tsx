@@ -7,22 +7,22 @@ import {
   ProjectData,
 } from "@/components";
 import { FetchProjectProps } from "@/types/fetch.types";
+import { UserTeamItemProps } from "@/types/mongo/user.types";
+import { convertProjectDetails } from "@/utils/convertProjectDetails";
 
-const page = async ({ params }: { params: { id: string } }) => {
+const Page = async ({ params }: { params: { id: string } }) => {
   const id = params.id;
   const {
     projectData,
     renderLanguages,
   }: { projectData: FetchProjectProps | null; renderLanguages: any } =
     await ProjectData(id);
-  if (!projectData) {
-    return <>No Project Found With Id {id}</>;
-  }
-  const { data, files, languages } = projectData as FetchProjectProps;
+  const { data, files, languages } = (projectData as FetchProjectProps) || {};
+  // console.log("data for id", id, "=> ", data);
+  const convertedProjectDetails = convertProjectDetails(data?.projectDetails);
   if (!data) {
     return <>No data Found With Id {id}</>;
   }
-  console.log("data for id", id, "=> ", data);
   return (
     <>
       <LightLine />
@@ -30,13 +30,15 @@ const page = async ({ params }: { params: { id: string } }) => {
         <div className="w100 fcc gap-[30px]">
           <ProjectHero {...data} />
           <AboutTheRepo {...files} />
-          <ProjectDetails />
+          {convertedProjectDetails && (
+            <ProjectDetails data={convertedProjectDetails} />
+          )}
         </div>
         {/* sidebar */}
-        <ProjectSidebar />
+        <ProjectSidebar team={data.team as UserTeamItemProps[]} />
       </div>
     </>
   );
 };
 
-export default page;
+export default Page;

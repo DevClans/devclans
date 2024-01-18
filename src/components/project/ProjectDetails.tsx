@@ -4,7 +4,7 @@ import {
   ToogleListItemProps,
 } from "@/types/toggleList.types";
 
-const ProjectDetails = () => {
+const ProjectDetails = ({ data }: { data: ProjectDetailsItemProps[] }) => {
   const toogleData: ToogleListItemProps = {
     heading: "readme.md",
     data: [
@@ -15,7 +15,7 @@ const ProjectDetails = () => {
     ],
   };
 
-  const dummydata: ProjectDetailsItemProps[] = [
+  const dummydata: ProjectDetailsItemProps[] = data || [
     {
       heading: "The Problem We Solve",
       data: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
@@ -27,8 +27,8 @@ const ProjectDetails = () => {
   ];
   return (
     <div className="w100 fcfs p-5 card2">
-      <h2 className="mb-5">Project Details</h2>
-      <div className="w100 fcc gap-5">
+      <h2 className="mb-7 ">Project Details</h2>
+      <div className="w100 fcc gap-7">
         {dummydata.map((item, index) => (
           <ProjectDetailsItem {...item} key={index} />
         ))}

@@ -1,4 +1,4 @@
-import { UserProps } from "../types/mongo/user.types";
+import { UserMongoProps, UserProps } from "../types/mongo/user.types";
 import { LikeProps } from "../types/mongo/like.types";
 import { skills } from "@/lib/skills";
 import { BookmarkProps } from "@/types/mongo/bookmark.types";
@@ -8,10 +8,10 @@ import { contactMethods } from "@/lib/contactMethods";
 import { devStages } from "@/lib/devStages";
 import { memberLevels } from "@/lib/memberLevel";
 
-const userSchema = new mongoose.Schema<UserProps>(
+const userSchema = new mongoose.Schema<UserMongoProps>(
   {
     discordId: { type: String, required: true },
-    githubId: { type: String, required: true },
+    githubAccessToken: { type: String, required: true },
     username: { type: String },
     avatar: { type: String },
     bio: { type: String, maxlength: 180 }, // describe yourself to cohort folks
@@ -108,7 +108,7 @@ const projectSchema = new mongoose.Schema<ProjectProps>(
     contributors: [{ type: mongoose.Types.ObjectId, ref: "User", default: [] }],
     topics: [{ type: String, default: [] }], // ml, android
     techStack: [{ type: String, default: [] }], // tech: html, css
-    githubLink: { type: String, default: "" },
+    repoName: { type: String, default: "" },
     likesCount: { type: Number, default: 0 },
     bookmarkCount: { type: Number, default: 0 },
     projectLinks: [{ type: String, default: [] }],

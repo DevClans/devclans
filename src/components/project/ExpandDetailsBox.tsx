@@ -30,9 +30,7 @@ const ExpandDetailsBox = ({
       </summary>
       <div className={`p-5 ${isActive ? "pt-0" : ""}`}>
         {isActive ? (
-          <ReactMarkdown className={`markdown fcfs gap-2`}>
-            {data}
-          </ReactMarkdown>
+          <ReactMarkdown className={`markdown`}>{data}</ReactMarkdown>
         ) : (
           <>
             {/* <ReactMarkdown>{data.substring(0, 100)}</ReactMarkdown>

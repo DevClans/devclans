@@ -61,6 +61,13 @@ li {
   text-transform: capitalize;
 }
 
+.h1 {
+  @apply h;
+  font-size: 36px;
+  background: unset;
+  -webkit-text-fill-color: unset;
+  font-weight: 600;
+}
 h4 {
   @apply h;
   font-size: 12px;
@@ -85,7 +92,7 @@ h5 {
 h2 {
   @apply h;
   color: var(--heading, #e2e8ff);
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 600;
 }
 
@@ -104,6 +111,7 @@ pre {
 }
 
 .markdown {
+  @apply fcfs gap-2;
   h1 {
     margin-top: 25px;
     margin-bottom: 5px;
