@@ -13,8 +13,10 @@ const SearchBar = () => {
       className="relative card frc gap-3 w-full frcsb"
       style={{
         borderRadius: "20px",
-        backdropFilter: "blur(27.100000381469727px)",
+        // backdropFilter: "blur(27.100000381469727px)",
         padding: 15,
+        background:
+          "linear-gradient(0deg, rgba(231, 239, 255, 0.04) 0%, rgba(230, 239, 255, 0.00) 100%, rgba(231, 239, 255, 0.00) 100%), rgba(2, 12, 32, 0.08)",
         height: 66,
         boxSizing: "border-box",
       }}

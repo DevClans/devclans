@@ -18,7 +18,9 @@ const CheckboxGrp = ({
       {data.map(
         ({ heading, key, title, type, data, ...sliderProps }, index) => (
           <div key={index}>
-            <Text type="semi16">{heading || title}</Text>
+            <Text type="semi16" textClass=" text-sm font-medium">
+              {heading || title}
+            </Text>
             <FormGroup>
               {/* this component can use slider as well as checkbox */}
               {type == "slider" ? (
@@ -71,6 +73,7 @@ const CheckboxGrp = ({
                         //   // }}
                         // >
                         <Checkbox
+                          size="small"
                           style={{
                             color: "inherit",
                           }}

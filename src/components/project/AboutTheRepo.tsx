@@ -1,34 +1,25 @@
 "use client";
 import { ExpandDetailsBox, IconContribute, IconReadme } from "@/components";
 import colors from "@/lib/colors";
+import { ProjectFilesProps } from "@/types/mongo/project.types";
 import { ExpandDetailsBoxProps } from "@/types/toggleList.types";
 import { useState } from "react";
 
-const AboutTheRepo = () => {
+const AboutTheRepo = ({ readme, contributing }: ProjectFilesProps) => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const anyOpen = open || open1;
   const items: ExpandDetailsBoxProps[] = [
     {
       heading: "readme.md",
-      data: [
-        {
-          title: "title",
-          desc: "desc",
-        },
-      ],
+      data: readme,
       isActive: open,
       icon: <IconReadme color={colors.text} />,
       setActive: setOpen,
     },
     {
       heading: "Contribute.md",
-      data: [
-        {
-          title: "title",
-          desc: "desc",
-        },
-      ],
+      data: contributing,
       isActive: open1,
       icon: <IconContribute color={colors.text} />,
       setActive: setOpen1,

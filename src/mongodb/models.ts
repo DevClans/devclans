@@ -1,15 +1,17 @@
-import { UserProps } from "./../types/mongo/user.types";
-import { LikeProps } from "./../types/mongo/like.types";
+import { UserMongoProps, UserProps } from "../types/mongo/user.types";
+import { LikeProps } from "../types/mongo/like.types";
 import { skills } from "@/lib/skills";
 import { BookmarkProps } from "@/types/mongo/bookmark.types";
 import { ProjectProps } from "@/types/mongo/project.types";
 import mongoose from "mongoose";
 import { contactMethods } from "@/lib/contactMethods";
+import { devStages } from "@/lib/devStages";
+import { memberLevels } from "@/lib/memberLevel";
 
-const userSchema = new mongoose.Schema<UserProps>(
+const userSchema = new mongoose.Schema<UserMongoProps>(
   {
     discordId: { type: String, required: true },
-    githubId: { type: String, required: true },
+    githubAccessToken: { type: String, required: true },
     username: { type: String },
     avatar: { type: String },
     bio: { type: String, maxlength: 180 }, // describe yourself to cohort folks
@@ -73,7 +75,7 @@ const userSchema = new mongoose.Schema<UserProps>(
       { type: mongoose.Types.ObjectId, ref: "Project", default: [] },
     ],
     currentCompany: { type: String },
-    careerGoal: { type: String, enum: ['remote', 'faang', 'startup'] },
+    careerGoal: { type: String, enum: ["remote", "faang", "startup"] },
     proudAchievement: { type: String },
     recentWork: { type: String },
   },
@@ -106,7 +108,7 @@ const projectSchema = new mongoose.Schema<ProjectProps>(
     contributors: [{ type: mongoose.Types.ObjectId, ref: "User", default: [] }],
     topics: [{ type: String, default: [] }], // ml, android
     techStack: [{ type: String, default: [] }], // tech: html, css
-    githubLink: { type: String, default: "" },
+    repoName: { type: String, default: "" },
     likesCount: { type: Number, default: 0 },
     bookmarkCount: { type: Number, default: 0 },
     projectLinks: [{ type: String, default: [] }],
@@ -138,14 +140,14 @@ const projectSchema = new mongoose.Schema<ProjectProps>(
     team: [{ type: mongoose.Types.ObjectId, ref: "User", default: [] }],
     needMembers: {
       type: String,
-      enum: ["professional", "student", "beginner", null],
+      enum: memberLevels,
       default: null,
     },
     imgs: [{ type: String, default: [] }],
     video: { type: String, default: "" },
     devStage: {
       type: String,
-      enum: ["idea", "development", "alpha", "beta", "production"],
+      enum: devStages,
       default: "idea",
     },
     published: { type: Boolean, default: false },
@@ -153,9 +155,11 @@ const projectSchema = new mongoose.Schema<ProjectProps>(
   { timestamps: true }
 );
 
-const UserModel = mongoose.model("User", userSchema);
-const ProjectModel = mongoose.model("Project", projectSchema);
-const LikeModel = mongoose.model("Like", likeSchema);
-const BookmarkModel = mongoose.model("Bookmark", bookmarkSchema);
+const UserModel = mongoose.models.User || mongoose.model("User", userSchema);
+const ProjectModel =
+  mongoose.models.Project || mongoose.model("Project", projectSchema);
+const LikeModel = mongoose.models.Like || mongoose.model("Like", likeSchema);
+const BookmarkModel =
+  mongoose.models.Bookmark || mongoose.model("Bookmark", bookmarkSchema);
 
 export { UserModel, ProjectModel, LikeModel, BookmarkModel };
