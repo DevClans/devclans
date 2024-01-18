@@ -1,20 +1,18 @@
+import { FetchProjectDetailsItemProps } from "./mongo/project.types";
 import { BooleanStateProps } from "./state.types";
 
 export type ToogleListItemProps = {
-  heading: string;
+  heading: string; // heading like challenge name, or future goal name
   open?: boolean;
-  data: {
-    title: string;
-    desc: string;
-  }[];
-  // icon?: React.ReactNode;
+  data: Omit<FetchProjectDetailsItemProps, "solution" | "needHelp">; // title like desc,solution,needHelp
 };
 
 export type ProjectDetailsItemProps = {
-  heading: string;
+  heading: string; // heaing like challenges, problem we solve
   data: string | ToogleListItemProps[];
 };
 
-export type ExpandDetailsBoxProps = ToogleListItemProps & {
+export type ExpandDetailsBoxProps = ProjectDetailsItemProps & {
   icon?: React.ReactNode;
+  data: string;
 } & BooleanStateProps;

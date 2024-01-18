@@ -86,10 +86,10 @@ const createDummyData = async () => {
       // Save the project to the database
       await dummyProject
         .save()
-        .then((project) => {
+        .then((project: any) => {
           console.log("Dummy project created:", project);
         })
-        .catch((error) => {
+        .catch((error: any) => {
           console.error("Error creating dummy project:", error);
         });
 
@@ -103,10 +103,10 @@ const createDummyData = async () => {
       const dummyBookmark = new BookmarkModel(dummyBookmarkData);
       await dummyBookmark
         .save()
-        .then((bookmark) => {
+        .then((bookmark: any) => {
           console.log("Dummy bookmark created:", bookmark);
         })
-        .catch((error) => {
+        .catch((error: any) => {
           console.error("Error creating dummy bookmark:", error);
         });
       const dummyLikeData = {
@@ -119,10 +119,10 @@ const createDummyData = async () => {
       const dummyLike = new LikeModel(dummyLikeData);
       await dummyLike
         .save()
-        .then((bookmark) => {
+        .then((bookmark: any) => {
           console.log("Dummy bookmark created:", bookmark);
         })
-        .catch((error) => {
+        .catch((error: any) => {
           console.error("Error creating dummy bookmark:", error);
         });
     })

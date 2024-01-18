@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/utils/mongoose.config";
-import { ProjectModel } from "@/models/models";
+import { ProjectModel } from "@/mongodb/models";
 
 async function handler(req: Request) {
   await dbConnect();

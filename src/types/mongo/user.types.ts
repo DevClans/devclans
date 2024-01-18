@@ -1,16 +1,12 @@
+import { contactMethodsMap, contactMethodsType } from "@/lib/contactMethods";
 import { skills } from "@/lib/skills";
-import mongoose, { Document } from "mongoose";
+import mongoose from "mongoose";
 
 // Define the User interface extending mongoose.Document
-export interface UserProps extends Document {
-  discordId: string;
-  githubId: string;
-  username?: string;
-  avatar?: string;
+export interface UserProps extends UserTeamItemProps {
   bio?: string;
   phone?: string;
   email?: string;
-  contactMethod: "discord" | "email" | "whatsapp" | "telegram" | "twitter";
   socials: {
     twitter: string;
     telegram: string;
@@ -23,7 +19,29 @@ export interface UserProps extends Document {
   currentCompany?: string;
   careerGoal?: string;
   proudAchievement?: string;
-  recentWork? : string;
+  recentWork?: string;
   createdAt: Date;
   updatedAt: Date;
+  githubAccessToken?: string;
 }
+
+export type UserMongoProps = Omit<UserProps, "githubId">;
+
+export type ContactDetailsProps = {
+  name: string;
+  contactId: string;
+  contactMethod: keyof typeof contactMethodsMap;
+  icon?: any;
+};
+
+export type UserTeamItemProps = {
+  githubId: string;
+  discordId: string;
+  username?: string;
+  avatar?: string;
+  _id: mongoose.Types.ObjectId;
+  contactMethod: contactMethodsType;
+  contactMethodId: string;
+};
+
+export type UserTeamProps = { team: UserTeamItemProps[] };

@@ -1,13 +1,14 @@
 import colors from "@/lib/colors";
 import IconDevelop from "../icons/IconDevelop";
+import { DevStagesType } from "@/lib/devStages";
 
 const ProjectStage = ({
-  text,
+  stage,
   color,
   icon,
 }: {
   color?: string;
-  text?: string;
+  stage?: DevStagesType;
   icon?: React.ReactNode;
 }) => {
   return (
@@ -26,7 +27,7 @@ const ProjectStage = ({
       }}
     >
       {icon || <IconDevelop color={colors.border} size={16} />}
-      {text || "Development Stage"}
+      {stage || "Development Stage"}
     </div>
   );
 };

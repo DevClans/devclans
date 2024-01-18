@@ -8,7 +8,7 @@ const LinkGithub = ({ href }: LinkProps) => {
     <>
       <LinkWithIcon
         text="Github"
-        href={href || "/"}
+        href={"https://github.com" + href || "/"}
         icon={<IconOpenInNew color={colors.highlight} size={14} />}
       />
     </>

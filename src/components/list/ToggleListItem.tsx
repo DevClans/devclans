@@ -17,9 +17,14 @@ const ToggleListItem = ({
           <IconCollapse className="hidden showOnOpen" color={colors.subH} />
           <IconExpand className="hideOnOpen" color={colors.subH} />
         </summary>
-        <div>
+        <div
+          className="markdown p-5"
+          style={{
+            gap: "20px",
+          }}
+        >
           {data.map((item, i) => (
-            <div key={i}>
+            <div key={i} className="markdown">
               <h3 className="text-highlight gap-[5px]">
                 {item.title || "title"}
               </h3>

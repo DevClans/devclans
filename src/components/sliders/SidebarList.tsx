@@ -12,7 +12,7 @@ const SidebarList = ({
 }: SidebarListProps) => {
   const listEle = (
     <div className="p-5 gap-[10px] fcc w100">
-      <h4 className="w100">{heading}</h4>
+      <h3 className="w100">{heading}</h3>
       {list?.map(
         (item, i) => (
           (<>{i != 0 && <div key={i + 1} className="borderLine w100" />}</>),
@@ -33,7 +33,7 @@ const SidebarList = ({
                 ) : (
                   item.startIcon
                 )}
-                <p className=" text-xs ">{item.text}</p>
+                <p className=" ">{item.text}</p>
               </Link>
               <IconButton
                 onClick={() => {
