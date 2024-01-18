@@ -124,6 +124,9 @@ const userSchema = new mongoose.Schema(
     username: { type: String, required: true },
     avatar: { type: String },
     bio: { type: String },
+    flag:{ type: Boolean, default:false },
+    timeStart:{ type: Date,default:null },
+    totalRequest: { type: Number, default:0}, 
     phone: {
       type: String,
       validate: {

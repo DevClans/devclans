@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { ProjectModel, UserModel, LikeModel } from "@/model/schema";
 
+
+
 async function handler(req:Request,{ params }:{ params : { userId: string, projectId: string }}) {
     await dbConnect();
     

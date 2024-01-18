@@ -2,14 +2,15 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { UserModel, ProjectModel, BookmarkModel } from "@/model/schema";
 
+
 async function handler(req: Request) {
   await dbConnect();
 
   const { userId, projectId } = await req.json();
 
+
   try {
-    console.log("started");
-    // Find the user
+ 
     const project = await ProjectModel.findOne({ title: projectId });
     const user = await UserModel.findOne({ username: userId});
 
@@ -33,12 +34,15 @@ async function handler(req: Request) {
         { new: true } // Return the updated document
       );
   
-console.log("done");
+
     return NextResponse.json({
       message: 'Project Liked successfully',
        user: updatedProject,
     });
-  } catch (error) {
+  }
+
+ 
+  catch (error) {
     console.error('Error liking project for user:', error);
     return NextResponse.json({ message: 'Internal Server Error' });
   }
