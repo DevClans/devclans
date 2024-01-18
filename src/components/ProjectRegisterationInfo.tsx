@@ -1,6 +1,31 @@
-'use client'
+"use client"
+
 import { useState } from 'react';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
+import { z, ZodError } from 'zod';
+import { FormControl, FormGroup, InputLabel, MenuItem, Select, Switch, TextField } from '@mui/material';
+
+// Define the Zod schema for your form data
+const projectSchema = z.object({
+  title: z.string().min(4).max(100),
+  desc: z.string().min(10).max(250),
+  topics: z.array(z.string()),
+  githubLink: z.string(),
+  skills: z.array(z.string()).optional(),
+  projectLinks: z.array(z.string()).optional(),
+  projectDetails: z.object({
+    problem: z.string(),
+    challenges: z.array(z.object({ title: z.string(), desc: z.string(), solution: z.string() })),
+    futureGoals: z.array(z.object({ title: z.string(), desc: z.string(), needHelp: z.boolean() })),
+    memberReq: z.array(z.object({ title: z.string(), desc: z.string() })),
+  }).optional(),
+  team: z.array(z.string()).optional(),
+  needMembers: z.enum(['professional', 'student', 'beginner']).optional(),
+  imgs: z.array(z.string()).optional(),
+  video: z.string().optional(),
+  devStage: z.enum(['idea', 'development', 'alpha', 'beta', 'production']).optional(),
+  published: z.boolean(),
+});
 
 const CreateProject = () => {
   const [formData, setFormData] = useState({
@@ -24,127 +49,104 @@ const CreateProject = () => {
     published: false,
   });
 
-//   const router = useRouter();
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+    validateField(name, value);
   };
 
-  const handleArrayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value.split(',') }));
-  };
-
-  const handleProjectDetailsChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLInputElement>,
-    index: number,
-    key: string
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => {
-      const newProjectDetails = [...prevData.projectDetails[key]];
-      newProjectDetails[index] = { ...newProjectDetails[index], [name]: value };
-      return { ...prevData, projectDetails: { ...prevData.projectDetails, [key]: newProjectDetails } };
-    });
+  const validateField = (name: any, value: any) => {
+    try {
+      projectSchema.pick(name.split('.')).parse(value);
+      setFormErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+    } catch (error:any) {
+      if (error instanceof ZodError) {
+        setFormErrors((prevErrors) => ({ ...prevErrors, [name]: error.errors[0]?.message ?? 'Invalid value' }));
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Add logic to send data to the backend
-    const response = await fetch('/api/projects/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
+
+    try {
+      projectSchema.parse(formData);
+      // Add logic to send data to the backend
+      const response = await fetch('/api/projects/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        router.push('/projects'); // Redirect to the project page after successful creation
+      } else {
+        console.error('Error creating project');
+      }
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const newErrors: Record<string, string> = {};
+        error.errors.forEach((err) => {
+          const path = err.path.join('.');
+          newErrors[path] = err.message;
+        });
+        setFormErrors(newErrors);
+      } else {
+        console.error('Error validating form:', error);
+      }
+    }
   };
 
   return (
     <div>
       <h1>Create a Project</h1>
       <form onSubmit={handleSubmit}>
-        <label>
-          Title:
-          <input type="text" name="title" value={formData.title} onChange={handleChange} />
-        </label>
-        <br />
-        <label>
-          Description:
-          <input name="desc" value={formData.desc} onChange={handleChange}></input>
-        </label>
-        <br />
-        <label>
-          Topics (comma-separated):
-          <input type="text" name="topics" value={formData.topics} onChange={handleArrayChange} />
-        </label>
-        <br />
-        <label>
-          GitHub Link:
-          <input type="text" name="githubLink" value={formData.githubLink} onChange={handleChange} />
-        </label>
-        <br />
-        <label>
-          Skills (comma-separated, optional):
-          <input type="text" name="skills" value={formData.skills} onChange={handleArrayChange} />
-        </label>
-        <br />
-        <label>
-          Project Links (comma-separated, optional):
-          <input type="text" name="projectLinks" value={formData.projectLinks} onChange={handleArrayChange} />
-        </label>
-        <br />
-        <label>
-          Project Details - Problem:
-          <input
-            name="problem"
-            value={formData.projectDetails.problem}
-            onChange={(e) => handleProjectDetailsChange(e, 0, 'problem')}
-          ></input>
-        </label>
-        {/* Add more Project Details fields here */}
-        <br />
-        <label>
-          Team (comma-separated, optional):
-          <input type="text" name="team" value={formData.team} onChange={handleArrayChange} />
-        </label>
-        <br />
-        <label>
-          Need Members (professional, student, beginner, optional):
-          <select name="needMembers" value={formData.needMembers} onChange={handleChange}>
-            <option value="professional">Professional</option>
-            <option value="student">Student</option>
-            <option value="beginner">Beginner</option>
-          </select>
-        </label>
-        <br />
-        <label>
-          Images (comma-separated URLs, optional):
-          <input type="text" name="imgs" value={formData.imgs} onChange={handleArrayChange} />
-        </label>
-        <br />
-        <label>
-          Video Link (optional):
-          <input type="text" name="video" value={formData.video} onChange={handleChange} />
-        </label>
-        <br />
-        <label>
-          Development Stage (idea, development, alpha, beta, production, optional):
-          <select name="devStage" value={formData.devStage} onChange={handleChange}>
-            <option value="idea">Idea</option>
-            <option value="development">Development</option>
-            <option value="alpha">Alpha</option>
-            <option value="beta">Beta</option>
-            <option value="production">Production</option>
-          </select>
-        </label>
-        <br />
-        <label>
-          Published:
-          <input type="checkbox" name="published" checked={formData.published} onChange={handleChange} />
-        </label>
-        <br />
+        <FormControl fullWidth>
+          <InputLabel>Title</InputLabel>
+          <TextField
+            type="text"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            error={Boolean(formErrors.title)}
+            helperText={formErrors.title}
+          />
+        </FormControl>
+
+        <FormControl fullWidth>
+          <InputLabel>Description</InputLabel>
+          <TextField
+            type="text"
+            name="desc"
+            value={formData.desc}
+            onChange={handleChange}
+            error={Boolean(formErrors.desc)}
+            helperText={formErrors.desc}
+          />
+        </FormControl>
+
+        <FormControl fullWidth>
+          <InputLabel>Topics (comma-separated)</InputLabel>
+          <TextField
+            type="text"
+            name="topics"
+            value={formData.topics}
+            onChange={(e) => {
+              setFormData((prevData: any) => ({ ...prevData, topics: e.target.value.split(',') }));
+              validateField('topics', e.target.value.split(','));
+            }}
+            error={Boolean(formErrors.topics)}
+            helperText={formErrors.topics}
+          />
+        </FormControl>
+
+        {/* Add similar components for other fields */}
+
         <button type="submit">Create Project</button>
       </form>
     </div>
