@@ -8,8 +8,14 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
 
-const ButtonLike = () => {
+const ButtonLike = ({
+  likesCount,
+}: {
+  likesCount: number;
+  isLiked?: boolean;
+}) => {
   const [liked, setLiked] = useState(false);
+<<<<<<< HEAD
   const [likeCount, setLikeCount] = useState(0);
   const { data: session } = useSession();
  
@@ -108,6 +114,19 @@ const ButtonLike = () => {
       icon={<FavoriteBorderRounded fontSize="small" />}
       onClick={handleClick}
     />
+=======
+  const likeCount = likesCount + (liked ? 1 : 0);
+  return (
+    <>
+      <ButtonIcon
+        active={liked}
+        setActive={setLiked}
+        label={likeCount.toString()}
+        activeIcon={<FavoriteRounded color="primary" fontSize="small" />}
+        icon={<FavoriteBorderRounded fontSize="small" />}
+      />
+    </>
+>>>>>>> 1ae11a3cd429f4f5135fe9cfa3c6cd9e56c935b1
   );
 };
 

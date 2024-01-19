@@ -1,11 +1,16 @@
 import { ImageProps } from "@/types";
 import Image from "next/image";
 
-const ProductImg = ({ src, alt, height, width }: ImageProps) => {
+const ProductImg = ({
+  src,
+  alt,
+  height,
+  width,
+}: Partial<ImageProps> & { src: string }) => {
   return (
     <Image
       src={src || "/homeHero.png"}
-      className="card"
+      className="card max-h-[255px] max-w-[428px]"
       alt={alt || "test"}
       width={width || 428}
       height={height || 255}

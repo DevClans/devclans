@@ -9,7 +9,7 @@ const ProjectDetailsItem = ({ heading, data }: ProjectDetailsItemProps) => {
     typeof value === "string" || value instanceof String;
   return (
     <div className="w100 gap-[10px] fcfs">
-      <h3 className="">{heading}</h3>
+      <h3 className=" text-[18px] text-highlight ">{heading}</h3>
       {isString(data) ? (
         <p>{data as string}</p>
       ) : (
