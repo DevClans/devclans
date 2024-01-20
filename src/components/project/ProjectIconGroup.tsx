@@ -6,8 +6,8 @@ const ProjectIconGroup = ({
   likesCount,
   showLabels = true,
 }: {
-  bookmarkCount: number;
-  likesCount: number;
+  bookmarkCount?: number;
+  likesCount?: number;
   showLabels?: boolean;
 }) => {
   return (
@@ -17,8 +17,12 @@ const ProjectIconGroup = ({
           label={showLabels ? "share" : ""}
           icon={<IosShareRounded fontSize="small" />}
         />
-        <ButtonBookmark bookmarksCount={bookmarkCount} />
-        <ButtonLike likesCount={likesCount} />
+        {typeof bookmarkCount == "number" && (
+          <ButtonBookmark bookmarksCount={bookmarkCount} />
+        )}
+        {typeof likesCount == "number" && (
+          <ButtonLike likesCount={likesCount} />
+        )}
       </div>
     </>
   );

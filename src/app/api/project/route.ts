@@ -14,7 +14,8 @@ async function handler(req: Request) {
         select: "_id discordId",
       },
     ]);
-    console.log(projects);
+    console.log("sending projects scuuessfully");
+    // console.log(projects);
     return NextResponse.json(projects);
   } catch (error) {
     console.log(error, "in project route");

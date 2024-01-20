@@ -5,7 +5,7 @@ const Chip = ({ label, href }: { label?: string; href?: string }) => {
   return (
     <>
       <Link
-        href={href || label || "/"}
+        href={href || "/explore?label=" + label}
         className="frc"
         style={{
           borderRadius: 10,

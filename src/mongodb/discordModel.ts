@@ -81,11 +81,11 @@ export const discordDetailsSchema: Schema<UserDiscordDetailsProps> =
     // Add other properties and validations as needed
   });
 
-const DiscordDetails =
-  mongoose.models.DiscordDetails ||
-  mongoose.model<UserDiscordDetailsProps>(
-    "DiscordDetails",
-    discordDetailsSchema
-  );
+// const DiscordDetails =
+//   mongoose.models.DiscordDetails ||
+//   mongoose.model<UserDiscordDetailsProps>(
+//     "DiscordDetails",
+//     discordDetailsSchema
+//   );
 
-export default DiscordDetails;
+// export default DiscordDetails;

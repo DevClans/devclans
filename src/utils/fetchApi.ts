@@ -1,10 +1,26 @@
 import { urlApi } from "@/constants";
 import { Method } from "axios";
+type CommonRequestHeadersList =
+  | "Accept"
+  | "Content-Length"
+  | "User-Agent"
+  | "cache-control"
+  | "Content-Encoding"
+  | "Authorization";
+
+type ContentType =
+  | "text/html"
+  | "text/plain"
+  | "multipart/form-data"
+  | "application/json"
+  | "application/x-www-form-urlencoded"
+  | "application/octet-stream";
+
 type FetchProps = {
   endpoint: string;
   method?: Method;
-  headers?: any;
   baseUrl?: string;
+  headers?: Record<CommonRequestHeadersList, string>;
 };
 export const Fetch = async ({
   endpoint,
@@ -16,14 +32,14 @@ export const Fetch = async ({
     method,
   };
   if (headers) {
-    options["headers"] = headers;
+    Object.assign(options, headers);
   }
   try {
-    const res = await fetch(baseUrl + endpoint, options);
+    const res = await fetch((baseUrl || urlApi) + (endpoint || ""), options);
     const data = await res.json();
     return data;
   } catch (error) {
-    console.log(error, "error in getProducts");
+    console.log(error, "error in fetch");
     return [];
   }
 };

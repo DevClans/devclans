@@ -1,5 +1,5 @@
 export type ButtonProps = {
-  label: string | number;
+  label: string | number | React.ReactNode;
   icon?: React.ReactNode;
   style?: React.CSSProperties;
   className?: string;

@@ -1,15 +1,7 @@
-import {
-  ButtonIcon,
-  Chip,
-  ProjectStage,
-  IosShareRounded,
-  ButtonLike,
-  ButtonBookmark,
-  ProjectIconGroup,
-  ChipGroup,
-} from "@/components";
+import { ProjectStage, ProjectIconGroup, ChipGroup } from "@/components";
 import ProductImg from "@/components/project/ProjectImg";
 import { ProjectProps } from "@/types/mongo/project.types";
+import { PageProps } from "@/types/page.types";
 
 const ProjectHero = ({
   techStack = ["react", "nextjs", "typescript", "tailwindcss"],
@@ -18,8 +10,9 @@ const ProjectHero = ({
   title,
   likesCount,
   bookmarkCount,
+  searchParams,
   desc,
-}: ProjectProps) => {
+}: ProjectProps & PageProps) => {
   const data = {
     title,
     desc,
@@ -37,7 +30,7 @@ const ProjectHero = ({
         <h1 className="text-4xl">{data.title}</h1>
         <p>{data.desc}</p>
         {/* chips */}
-        <ChipGroup arr={techStack} />
+        <ChipGroup arr={techStack} searchParams={searchParams} />
       </div>
       {/* images */}
       <div className="relative w100">

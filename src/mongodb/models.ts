@@ -8,14 +8,19 @@ import { contactMethods } from "@/lib/contactMethods";
 import { devStages } from "@/lib/devStages";
 import { memberLevels } from "@/lib/memberLevel";
 import { discordDetailsSchema } from "./discordModel";
+import { userGithubDetailsSchema } from "./githubModal";
 
 const userSchema = new mongoose.Schema<UserMongoProps>(
   {
     discordId: { type: String, required: true },
-    githubAccessToken: { type: String, required: true },
-    username: { type: String },
+    githubDetails: { type: userGithubDetailsSchema },
+    domain: {
+      type: String,
+      enum: ["frontend", "backend", "fullstack", "designer", "other"],
+    },
+    username: { type: String, unique: true },
     avatar: { type: String },
-    bio: { type: String, maxlength: 180 }, // describe yourself to cohort folks
+    bio: { type: String, maxlength: 180 },
     phone: {
       type: String,
       validate: {
@@ -24,8 +29,8 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
         },
         message: (props: any) => `${props.value} is not a valid phone number!`,
       },
-      required: function () {
-        return (this as any).contactMethod === "whatsapp";
+      required: function (this: any) {
+        return this.contactMethod === "whatsapp";
       },
     },
     email: {
@@ -36,27 +41,27 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
         },
         message: (props: any) => `${props.value} is not a valid email address!`,
       },
-      required: function () {
-        return (this as any).contactMethod === "email";
+      required: function (this: any) {
+        return this.contactMethod === "email";
       },
     },
     contactMethod: {
       type: String,
-      enum: contactMethods,
       default: "discord",
+      enum: contactMethods,
     },
     socials: {
       twitter: {
         type: String,
-        required: function () {
-          return (this as any).contactMethod === "twitter";
+        required: function (this: any) {
+          return this.contactMethod === "twitter";
         },
         default: "",
       },
       telegram: {
         type: String,
-        required: function () {
-          return (this as any).contactMethod === "telegram";
+        required: function (this: any) {
+          return this.contactMethod === "telegram";
         },
         default: "",
       },
@@ -66,7 +71,7 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
     skills: [
       {
         type: String,
-        enum: skills, // Assuming skills is defined somewhere
+        enum: skills,
       },
     ],
     ownedProjects: [
@@ -75,11 +80,15 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
     contributedProjects: [
       { type: mongoose.Types.ObjectId, ref: "Project", default: [] },
     ],
-    currentCompany: { type: String },
-    careerGoal: { type: String, enum: ["remote", "faang", "startup"] },
-    proudAchievement: { type: String },
-    recentWork: { type: String },
-    discordDetails: discordDetailsSchema,
+    questions: {
+      currentCompany: { type: String },
+      careerGoal: { type: String, enum: ["remote", "faang", "startup"] },
+      proudAchievement: { type: String },
+      recentWork: { type: String },
+    },
+    createdAt: { type: Date, default: Date.now, required: true },
+    updatedAt: { type: Date, default: Date.now, required: true },
+    discordDetails: { type: discordDetailsSchema },
   },
   { timestamps: true }
 );
