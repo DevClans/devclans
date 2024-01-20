@@ -8,20 +8,14 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
 
-const ButtonLike = ({
-  likesCount,
-}: {
-  likesCount: number;
-  isLiked?: boolean;
-}) => {
+const ButtonLike = () => {
   const [liked, setLiked] = useState(false);
-<<<<<<< HEAD
   const [likeCount, setLikeCount] = useState(0);
   const { data: session } = useSession();
  
 
   useEffect(() => {
-    // Fetch initial like count when component mounts
+
     const fetchLikeCount = async () => {
       try {
         const response = await fetch("http://localhost:3000/api/db/getProject/satvik21/quizify",{
@@ -67,7 +61,7 @@ const ButtonLike = ({
     fetchIsLiked();
     
     fetchLikeCount();
-  }, []); // Empty dependency array ensures this effect runs only once on mount
+  }, []); 
 
   const handleClick = async () => {
     let work;
@@ -110,23 +104,12 @@ const ButtonLike = ({
       active={liked}
       setActive={setLiked}
       label={likeCount.toString()}
-      activeIcon={<FavoriteRounded fontSize="small" />}
+      activeIcon={<FavoriteRounded color="primary" fontSize="small" />}
+
       icon={<FavoriteBorderRounded fontSize="small" />}
       onClick={handleClick}
     />
-=======
-  const likeCount = likesCount + (liked ? 1 : 0);
-  return (
-    <>
-      <ButtonIcon
-        active={liked}
-        setActive={setLiked}
-        label={likeCount.toString()}
-        activeIcon={<FavoriteRounded color="primary" fontSize="small" />}
-        icon={<FavoriteBorderRounded fontSize="small" />}
-      />
-    </>
->>>>>>> 1ae11a3cd429f4f5135fe9cfa3c6cd9e56c935b1
+
   );
 };
 

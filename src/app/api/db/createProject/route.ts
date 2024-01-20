@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { UserModel, ProjectModel } from "@/model/schema";
+import { z } from 'zod';
 
 async function handler(req: Request) {
   await dbConnect();
 
   const { userId, projectName, projectDescription, problem } = await req.json();
+  var user= z.string(userId);
 
   try {
     console.log("started");
