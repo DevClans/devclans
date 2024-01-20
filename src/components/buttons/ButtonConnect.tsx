@@ -3,8 +3,9 @@ import { ButtonBlue } from "@/components";
 import { useState } from "react";
 import useModalConnect from "../modals/useModelConnect";
 import { ContactDetailsProps } from "@/types/mongo/user.types";
+import { ButtonProps } from "@/types";
 
-const ButtonConnect = () => {
+const ButtonConnect = ({ label }: Partial<ButtonProps>) => {
   const [open, setOpen] = useState(false);
   const team: ContactDetailsProps[] = [
     {
@@ -30,7 +31,7 @@ const ButtonConnect = () => {
       <ButtonBlue
         style={{ height: 44 }}
         onClick={handleOpen}
-        label="Ask a question to Member(s)"
+        label={label || "Ask a question to Member(s)"}
       />
       <Modal text="" />
     </>

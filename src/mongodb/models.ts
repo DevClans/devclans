@@ -1,4 +1,4 @@
-import { UserMongoProps, UserProps } from "../types/mongo/user.types";
+import { UserMongoProps } from "../types/mongo/user.types";
 import { LikeProps } from "../types/mongo/like.types";
 import { skills } from "@/lib/skills";
 import { BookmarkProps } from "@/types/mongo/bookmark.types";
@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import { contactMethods } from "@/lib/contactMethods";
 import { devStages } from "@/lib/devStages";
 import { memberLevels } from "@/lib/memberLevel";
+import { discordDetailsSchema } from "./discordModel";
 
 const userSchema = new mongoose.Schema<UserMongoProps>(
   {
@@ -78,6 +79,7 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
     careerGoal: { type: String, enum: ["remote", "faang", "startup"] },
     proudAchievement: { type: String },
     recentWork: { type: String },
+    discordDetails: discordDetailsSchema,
   },
   { timestamps: true }
 );
@@ -151,6 +153,15 @@ const projectSchema = new mongoose.Schema<ProjectProps>(
       default: "idea",
     },
     published: { type: Boolean, default: false },
+    repoDetails: {
+      description: { type: String, default: "" },
+      stars: { type: Number, default: 0 },
+      forks: { type: Number, default: 0 },
+      watchers: { type: Number, default: 0 },
+      topics: [{ type: String, default: [] }],
+      commits: { type: Number, default: 0 },
+      lastCommit: { type: Date, default: Date.now },
+    },
   },
   { timestamps: true }
 );

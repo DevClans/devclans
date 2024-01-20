@@ -1,14 +1,16 @@
 import colors from "@/lib/colors";
+import Link from "next/link";
 
-const Chip = ({ label }: { label?: string }) => {
+const Chip = ({ label, href }: { label?: string; href?: string }) => {
   return (
     <>
-      <div
+      <Link
+        href={href || label || "/"}
         className="frc"
         style={{
           borderRadius: 10,
           border: "1px solid var(--border, #132341)",
-          color: colors.heading,
+          color: colors.subH,
           fontSize: 11,
           fontWeight: 500,
           padding: "5px 9px",
@@ -16,7 +18,7 @@ const Chip = ({ label }: { label?: string }) => {
         }}
       >
         {label || "Web"}
-      </div>
+      </Link>
     </>
   );
 };

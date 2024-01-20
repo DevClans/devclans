@@ -5,9 +5,9 @@ const layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <HeroExplore />
-      <div className="container py-[30px] frfssb">
-        <FilterMenu />
+      <div className="container py-[30px] h-max gap-[30px] frfssb">
         {children}
+        <FilterMenu />
       </div>
       {/* filter results */}
     </>

@@ -5,10 +5,13 @@ export type ButtonProps = {
   className?: string;
   active?: boolean;
   onClick?: (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    e:
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+      | React.MouseEvent<HTMLAnchorElement, MouseEvent>,
     label: string | number
   ) => void;
   color?: string;
+  href?: string;
   activeIcon?: React.ReactNode;
   setActive?: React.Dispatch<React.SetStateAction<boolean>>;
 };

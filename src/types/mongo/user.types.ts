@@ -34,9 +34,23 @@ export type ContactDetailsProps = {
   icon?: any;
 };
 
+export type UserDiscordDetailsProps = {
+  _id: string;
+  username: string;
+  discriminator: string;
+  avatar?: string;
+  accent_color?: string;
+  bot?: boolean;
+  global_name?: string;
+  banner?: string;
+  verified?: boolean;
+  email?: string;
+};
+
 export type UserTeamItemProps = {
   githubId: string;
   discordId: string;
+  discordDetails: UserDiscordDetailsProps;
   username?: string;
   avatar?: string;
   _id: mongoose.Types.ObjectId;

@@ -6,18 +6,19 @@ const navigation = [
   // },
   {
     name: "Find Projects",
-    href: "/projects",
+    href: "/explore/projects",
   },
   {
     name: "Find Coder Bhai",
-    href: "/users",
+    href: "/explore/users",
   },
   {
     name: "About 100xDevs",
-    href: "/",
+    href: "https://100xdevs.com/",
+    target: "_blank",
   },
   {
-    name: "Team",
+    name: "About The Team",
     href: "/",
   },
   {
@@ -41,8 +42,8 @@ const Navigation = () => {
         backdropFilter: "blur(27.100000381469727px)",
       }}
     >
-      {navigation.map(({ href, name }, index) => (
-        <Link key={index} href={href}>
+      {navigation.map(({ href, name, target }, index) => (
+        <Link key={index} href={href} target={target}>
           {name}
         </Link>
       ))}
