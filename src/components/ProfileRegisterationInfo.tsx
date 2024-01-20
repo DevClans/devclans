@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 
 const Profile = () => {
   const { data: session } = useSession();
+  const [githubUsername, setGithubUsername] = useState('');
   const [formData, setFormData] = useState({
     githubId: '',
     bio: '',
@@ -16,12 +17,30 @@ const Profile = () => {
     recentWork: '',
   });
 
+  useEffect(() => {
+    // Set GitHub username when session is available
+    //@ts-ignore
+    const githubProvider = session?.provider;
+
+    if (githubProvider === 'github' && session?.user?.name) {
+      setGithubUsername(session.user.name);
+    }
+  }, [session]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: name === 'skills' ? value.split(',').map((skill) => skill.trim()) : value,
     }));
+  };
+
+  const handleConnectGitHub = () => {
+    // Get the current page URL
+    const currentUrl = window.location.href;
+  
+    // Redirect to GitHub OAuth page with the current URL as a callback
+    window.location.href = `/api/auth/signin/github?callbackUrl=${encodeURIComponent(currentUrl)}`;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -49,6 +68,7 @@ const Profile = () => {
   return (
     <div>
       <h1>Your Profile</h1>
+      {githubUsername && <p>Connected with GitHub as: {githubUsername}</p>}
       {session ? (
         <form onSubmit={handleSubmit}>
           {/* ... (existing fields) */}
@@ -103,6 +123,9 @@ const Profile = () => {
           </label>
           <br />
           <button type="submit">Update Profile</button>
+          <button type="button" onClick={handleConnectGitHub}>
+            Connect Your GitHub
+          </button>
         </form>
       ) : (
         <p>You need to be logged in to view your profile.</p>
