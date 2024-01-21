@@ -2,8 +2,6 @@
 import { ArrowLeftRounded, ArrowRightAltRounded } from "@mui/icons-material";
 import { IconGithub, IconTwitter, LightLine, MuiIconButton } from "..";
 const LeftMenuBottomBar = () => {
-  const isActive = "group-data-[state=active]/left:";
-  const notActive = "group-data-[state=not-active]/left:";
   const toogleActive = () => {
     const leftMenu = document.getElementById("leftMenuUser");
     if (leftMenu) {
@@ -29,7 +27,7 @@ const LeftMenuBottomBar = () => {
           >
             <ArrowRightAltRounded
               fontSize="medium"
-              className={`${isActive}hidden`}
+              className={`group-data-[state=active]/left:hidden`}
             />
             <ArrowLeftRounded
               fontSize="medium"
