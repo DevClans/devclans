@@ -1,31 +1,10 @@
-import {
-  LookingForMembers,
-  ProjectDetails,
-  ProjectDetailsItem,
-  ToggleListItem,
-} from "..";
+import { LookingForMembers } from "..";
 
 const RightSidebar = () => {
   return (
     <>
-      <div className="fcc gap-6 max-h-[84vh]">
+      <div className="fcc lg:min-w-[320px] gap-6 max-h-[84vh]">
         <LookingForMembers />
-        <ProjectDetails
-          heading={""}
-          className="h-full"
-          data={[
-            {
-              heading: "The Problem We Solve",
-              headingClass: "text-heading text-sm font-semibold",
-              data: [
-                {
-                  heading: "Hello",
-                  data: [{ title: "Hello", desc: "Hello" }],
-                },
-              ],
-            },
-          ]}
-        />
       </div>
     </>
   );

@@ -11,3 +11,9 @@ export type SidebarListProps = {
   onlyList?: boolean;
   needIconBg?: boolean;
 };
+
+export type InfoWithIconProps = {
+  icon: React.ReactNode;
+  desc: string;
+  title: string;
+};

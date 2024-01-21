@@ -13,7 +13,7 @@ const FilterMenu = () => {
   const addFilter = (chip: FilterChipProps) => {};
   const removeFilter = (chip: FilterChipProps) => {};
   return (
-    <div id="filterMenu" className="gradCard" style={{}}>
+    <div id="filterMenu" className="cardGrad" style={{}}>
       <CheckboxGrp
         filters={filters}
         removeFilter={removeFilter}

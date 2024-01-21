@@ -17,7 +17,7 @@ const page = ({ params }: { params: { id: string } }) => {
         username={userData.username || "Username"}
         desc={userData.bio || "You bio goes here"}
       />
-      <div className="frcsb relative -z-10 w100 container py-6 gap-6">
+      <div className="frfssb peer-data-[state=not-active]:pl-[120px] peer-data-[state=active]:pl-[340px] relative -z-10 w100 container py-6 gap-6">
         {/* middle scroll */}
         <MiddleSection />
         {/* right sidebar */}

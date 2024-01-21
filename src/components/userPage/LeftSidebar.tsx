@@ -14,7 +14,7 @@ const LeftSidebar = ({
     <>
       <div
         id="leftMenuUser"
-        className={`fcfssb gap-3 left-0 top-[0px] pt-20 gradCard data-[state=active]:max-w-[314px] data-[state=not-active]:min-w-20 data-[state=not-active]:max-w-[88px] -z-[1] group/left`}
+        className={`peer transition-[max-width] ease-in-out duration-300 fcfssb gap-3 left-0 top-[0px] pt-20 cardGrad data-[state=active]:max-w-[314px] data-[state=not-active]:min-w-20 data-[state=not-active]:max-w-[88px] -z-[1] group/left`}
         data-state="active"
         style={{
           height: "100vh",
