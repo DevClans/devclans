@@ -5,7 +5,12 @@ import ButtonLogin from "./buttons/ButtonLogin";
 
 const Header = ({ searchParams }: PageProps) => {
   return (
-    <div className="frcsb container w-full py-4 relative z-10">
+    <div
+      className="frcsb container w-full py-3 relative z-30 "
+      style={{
+        backdropFilter: "blur(8px)",
+      }}
+    >
       <Logo />
       <Navigation searchParams={searchParams} />
       <ButtonLogin />

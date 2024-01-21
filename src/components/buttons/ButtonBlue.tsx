@@ -5,9 +5,9 @@ import { ArrowRightAltRounded } from "..";
 const ButtonBlue = ({ style, className, label, onClick }: ButtonProps) => {
   return (
     <button
-      onClick={(e) => onClick && onClick(e, label)}
+      onClick={(e) => onClick && onClick(e, label as string)}
       className={
-        "bg-primary  w100 h-[50px] rounded-[10px] text-sm " + className
+        "bg-primary px-4 w100 h-[50px] rounded-[10px] text-sm " + className
       }
       style={style}
     >

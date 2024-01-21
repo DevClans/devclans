@@ -8,8 +8,9 @@ export type ToogleListItemProps = {
 };
 
 export type ProjectDetailsItemProps = {
-  heading: string; // heaing like challenges, problem we solve
+  heading?: string; // heaing like challenges, problem we solve
   data: string | ToogleListItemProps[];
+  headingClass?: string;
 };
 
 export type ExpandDetailsBoxProps = ProjectDetailsItemProps & {

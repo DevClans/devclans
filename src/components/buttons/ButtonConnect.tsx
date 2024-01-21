@@ -5,7 +5,7 @@ import useModalConnect from "../modals/useModelConnect";
 import { ContactDetailsProps } from "@/types/mongo/user.types";
 import { ButtonProps } from "@/types";
 
-const ButtonConnect = ({ label }: Partial<ButtonProps>) => {
+const ButtonConnect = ({ label, style, className }: Partial<ButtonProps>) => {
   const [open, setOpen] = useState(false);
   const team: ContactDetailsProps[] = [
     {
@@ -29,8 +29,9 @@ const ButtonConnect = ({ label }: Partial<ButtonProps>) => {
   return (
     <>
       <ButtonBlue
-        style={{ height: 44 }}
+        style={{ ...style }}
         onClick={handleOpen}
+        className={`h-11 ${className}`}
         label={label || "Ask a question to Member(s)"}
       />
       <Modal text="" />

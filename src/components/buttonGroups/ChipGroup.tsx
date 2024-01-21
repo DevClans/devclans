@@ -4,7 +4,8 @@ import { Chip } from "..";
 const ChipGroup = ({
   arr,
   searchParams,
-}: { arr: string[] } & Partial<PageProps>) => {
+  className,
+}: { arr: string[]; className?: string } & Partial<PageProps>) => {
   const newParams = new URLSearchParams(
     Object.entries(searchParams || {}).map(([key, value]) => [
       key,
@@ -14,7 +15,7 @@ const ChipGroup = ({
   console.log("searchParams in chipgroup", searchParams, newParams);
   return (
     <>
-      <div className="frc gap-2 flex-wrap">
+      <div className={`${className} frc gap-2 flex-wrap`}>
         {arr?.map((tech, i) => {
           const hasQueryParams = newParams.toString().length > 0;
           let hreff = "/explore?label=" + tech;
