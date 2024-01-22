@@ -106,6 +106,13 @@ const bookmarkSchema = new mongoose.Schema<BookmarkProps>(
   {
     user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
     project: { type: mongoose.Types.ObjectId, ref: "Project", required: true },
+    // // targt and targetType in case we want to bookmark both users and projects
+    // target: {
+    //   type: mongoose.Types.ObjectId,
+    //   required: true,
+    //   refPath: 'targetType',
+    // },
+    // targetType: { type: String, enum: ['User', 'Project'], required: true },
     // timestamp: { type: Date, default: Date.now },
   },
   { timestamps: true }

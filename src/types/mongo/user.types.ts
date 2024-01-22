@@ -19,15 +19,16 @@ export interface UserProps extends UserTeamItemProps {
   skills: Array<(typeof skills)[number]>;
   ownedProjects: mongoose.Types.ObjectId[];
   contributedProjects: mongoose.Types.ObjectId[];
-  questions: {
-    currentCompany?: string;
-    careerGoal?: string;
-    proudAchievement?: string;
-    recentWork?: string;
-  };
+  questions: UserQuestionsProps;
   createdAt: Date;
   updatedAt: Date;
 }
+export type UserQuestionsProps = {
+  currentCompany?: string;
+  careerGoal?: string;
+  proudAchievement?: string;
+  recentWork?: string;
+};
 
 export type UserDiscordDetailsProps = {
   _id: string;

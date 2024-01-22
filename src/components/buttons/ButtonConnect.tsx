@@ -5,26 +5,14 @@ import useModalConnect from "../modals/useModelConnect";
 import { ContactDetailsProps } from "@/types/mongo/user.types";
 import { ButtonProps } from "@/types";
 
-const ButtonConnect = ({ label, style, className }: Partial<ButtonProps>) => {
+const ButtonConnect = ({
+  label,
+  style,
+  className,
+  contact,
+}: Partial<ButtonProps> & { contact?: ContactDetailsProps[] }) => {
   const [open, setOpen] = useState(false);
-  const team: ContactDetailsProps[] = [
-    {
-      name: "kshetez vinayak",
-      contactMethod: "telegram",
-      contactId: "kshetezvinayak",
-    },
-    {
-      name: "satvik manchanda",
-      contactMethod: "telegram",
-      contactId: "satvik1769",
-    },
-    {
-      name: "Siddhant S",
-      contactMethod: "whatsapp",
-      contactId: "+918625008584",
-    },
-  ];
-
+  const team: ContactDetailsProps[] = contact || [];
   const { handleOpen, Modal } = useModalConnect({ isActive: open, team });
   return (
     <>

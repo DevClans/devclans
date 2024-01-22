@@ -5,6 +5,7 @@ export type ButtonProps = {
   style?: React.CSSProperties;
   className?: string;
   active?: boolean;
+  replace?: boolean;
   onClick?: (
     e:
       | React.MouseEvent<HTMLButtonElement, MouseEvent>

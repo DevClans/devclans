@@ -24,8 +24,12 @@ const UserItem = ({
     username: gitUsername,
     login,
   } = githubDetails || {};
-  const avtr = userAvatar(avatar, disAvatar, gitAvatar);
-  const usernm = selectUserUsername(username, discordUsername, gitUsername);
+  const avtr = userAvatar({
+    avatar,
+    discordImg: disAvatar,
+    gitubImg: gitAvatar,
+  });
+  const usernm = selectUserUsername({ username, discordUsername, gitUsername });
   return (
     <>
       <ItemsTemplate

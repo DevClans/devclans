@@ -1,81 +1,61 @@
-import colors from "@/lib/colors";
-import { IconAll, ProjectDetails } from "..";
 import InfoWithIcons from "./InfoWithIcons";
 import { InfoWithIconProps } from "@/types/list.types";
 import RandomInfoCard from "./RandomInfoCard";
-import ReactMarkdown from "react-markdown";
 import ButtonGroupUserSections from "../buttonGroups/ButtonGroupUserSections";
 import { ButtonProps } from "@/types";
+import userQuestions from "@/lib/userQuestions";
+import { UserQuestionsProps } from "@/types/mongo/user.types";
+import { PageProps } from "@/types/page.types";
 
-const MiddleSection = () => {
-  const data = [
-    {
-      icon: <IconAll color={colors.subH} />,
-      title: "hello",
-      desc: "This is a test",
-    },
-    {
-      icon: <IconAll color={colors.subH} />,
-      title: "hello 2",
-      desc: "This is a test 2",
-    },
-  ];
+const MiddleSection = ({
+  questions,
+  username,
+  children,
+  params,
+}: {
+  questions: UserQuestionsProps;
+  username: string;
+} & React.PropsWithChildren &
+  PageProps) => {
+  const id = params?.id;
+  const arr = userQuestions({ questions });
+  const data = arr.length > 2 ? arr.slice(0, 2) : [];
   const sections: ButtonProps[] = [
     {
       label: "Overview",
       activeLabel: "Learn About Me",
+      href: `/user/${id}`,
     },
     {
       label: "Projects",
       activeLabel: "See My Projects",
+      href: `/user/${id}/projects`,
     },
     {
       label: "Experience",
       activeLabel: "See My Experience",
+      href: `/user/${id}/experience`,
     },
     {
       label: "Education",
       activeLabel: "See My Education",
+      href: `/user/${id}/education`,
     },
     {
       label: "Contact",
-      activeLabel: "Contact Me",
+      activeLabel: "Talk To Me",
+      href: `/user/${id}/contact`,
     },
   ];
-  const randomInfo = {
-    user: "Damian",
-    title: "title",
-    desc: "some data comes here",
-  };
+  const randomInfo = { ...arr[0], username };
+
   return (
     <>
       <div className="fcfs w100 gap-6">
         <TopFeatures data={data} />
         <RandomInfoCard {...randomInfo} />
         <ButtonGroupUserSections data={sections} />
-        <div className="cardCommon">
-          <h3>Damian Activity</h3>
-          <p>Activity graphs </p>
-        </div>
-        <ReactMarkdown className="cardCommon markdown">
-          Github Readme
-        </ReactMarkdown>
-        <ProjectDetails
-          heading={""}
-          className="h-full"
-          data={[
-            {
-              heading: "The Problem We Solve",
-              headingClass: "text-heading text-sm font-semibold",
-              data: [
-                {
-                  heading: "Hello",
-                  data: [{ title: "Hello", desc: "Hello" }],
-                },
-              ],
-            },
-          ]}
-        />
+        {children}
       </div>
     </>
   );

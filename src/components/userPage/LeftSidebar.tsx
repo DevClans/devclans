@@ -1,15 +1,18 @@
-import { ButtonBookmark, ButtonConnect, ChipGroup, LightLine } from "..";
+import { ContactDetailsProps, UserProps } from "@/types/mongo/user.types";
+import { ButtonConnect, ChipGroup, LightLine } from "..";
 import ProductImg from "../project/ProjectImg";
 import LeftMenuBottomBar from "./LeftMenuBottomBar";
+import userAvatar from "@/lib/userAvatar";
 
 const LeftSidebar = ({
   username,
-  desc,
-}: {
-  username: string;
-  desc: string;
-}) => {
-  const isActive = "group-data-[state=active]/left:";
+  bio,
+  skills,
+  contactMethod,
+  contactMethodId,
+  ...rest
+}: Partial<UserProps>) => {
+  const avatar = userAvatar({ userProps: rest });
   return (
     <>
       <div
@@ -27,14 +30,14 @@ const LeftSidebar = ({
         }}
       >
         <div
-          className="fcfs group-data-[state=active]/left:px-6 gap-3 h-full p-3 "
+          className="fcfs group-data-[state=active]/left:px-6 gap-3 h-full p-3 overflow-hidden w-full"
           style={{
             boxSizing: "border-box",
           }}
         >
           <div className="group-data-[state=not-active]/left:h-[50px] h-[200px] w100 relative">
             <ProductImg
-              src="/homeHero.png"
+              src={avatar}
               fill={true}
               className={``}
               style={{
@@ -45,32 +48,43 @@ const LeftSidebar = ({
             />
           </div>
           <h1
-            className={`group-data-[state=not-active]/left:text-sm text-[36px]`}
+            className={`group-data-[state=not-active]/left:text-sm text-[36px] `}
           >
             {username || "Damian"}
           </h1>
           <p className="group-data-[state=not-active]/left:hidden">
-            {desc || "I'm a full stack developer, I like to make things."}
+            {bio || "I'm a full stack developer, I like to make things."}
           </p>
           <div className="frc group-data-[state=not-active]/left:flex-col w100 gap-2">
-            <ButtonBookmark
+            {/* <ButtonBookmark
               className={`group-data-[state=not-active]/left:w-full group-data-[state=not-active]/left:justify-center`}
               style={{ height: 40 }}
               bookmarksCount={0}
-            />
+            /> */}
             <ButtonConnect
-              className={`before:content-['Ask'] group-data-[state=active]/left:h-10  group-data-[state=not-active]/left:h-15 gap-1 ${""}}`}
+              className={`userBtn group-data-[state=active]/left:h-10  group-data-[state=not-active]/left:h-15 gap-1 ${""}}`}
               style={{
                 padding: "0 10px",
               }}
-              label={" "}
+              label={"Ask A Question"}
+              contact={[
+                {
+                  name: username,
+                  contactMethod,
+                  contactMethodId,
+                } as unknown as ContactDetailsProps,
+              ]}
             />
           </div>
-          <LightLine className="group-data-[state=not-active]/left:hidden" />
-          <ChipGroup
-            className={`group-data-[state=not-active]/left:hidden`}
-            arr={["chip", "chip"]}
-          />
+          {Array.isArray(skills) && skills.length > 0 && (
+            <>
+              <LightLine className="group-data-[state=not-active]/left:hidden" />
+              <ChipGroup
+                className={`group-data-[state=not-active]/left:hidden`}
+                arr={skills}
+              />
+            </>
+          )}
         </div>
         <LeftMenuBottomBar />
       </div>

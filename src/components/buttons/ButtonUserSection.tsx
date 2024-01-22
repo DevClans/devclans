@@ -30,8 +30,8 @@ const ButtonUserSection = ({
             label
           )
         }
-        className={`border-border border font-medium rounded-[20px] px-3 py-1 text-sm backdrop-filter-[27px] ${className} ${
-          active && "text-subH pl-1 pr-2"
+        className={`border-border frc border !font-medium rounded-[20px] px-3 py-1 text-sm backdrop-filter-[27px] ${className} ${
+          active && "!text-subH pl-1 pr-2"
         }`}
         style={{
           ...style,

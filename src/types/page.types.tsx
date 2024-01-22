@@ -1,4 +1,4 @@
 export type PageProps = Partial<{
-  params: { slug: string };
+  params: Record<string, string | string[] | undefined>;
   searchParams?: { [key: string]: string | string[] | undefined };
 }>;

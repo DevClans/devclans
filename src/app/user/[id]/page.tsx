@@ -1,28 +1,59 @@
-import { LightLine } from "@/components";
-import LeftSidebar from "@/components/userPage/LeftSidebar";
-import MiddleSection from "@/components/userPage/MiddleSection";
-import RightSidebar from "@/components/userPage/RightSidebar";
+import UserOverview from "@/components/userPage/UserOverview";
+import userQuestions from "@/lib/userQuestions";
+import { InfoWithIconProps } from "@/types/list.types";
 import { UserProps } from "@/types/mongo/user.types";
+import {
+  ProjectDetailsItemProps,
+  ToogleListItemProps,
+} from "@/types/toggleList.types";
+import { Fetch } from "@/utils/fetchApi";
 
-const page = ({ params }: { params: { id: string } }) => {
+const page = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  const userData: Partial<UserProps> = {
-    username: "Damian",
-    bio: "I'm a full stack developer, I like to make things.",
+  const userData: UserProps = await Fetch({
+    endpoint: `/user/${id}`,
+  });
+  console.log("user data", userData);
+  if (
+    !userData ||
+    (userData && ("error" in userData || "message" in userData))
+  ) {
+    return <div>user not found</div>;
+  }
+  const questions = userData.questions;
+  const arr = userQuestions({ questions });
+  const convertInfoToProjectDetails = (
+    infoItems: InfoWithIconProps[]
+  ): ProjectDetailsItemProps[] => {
+    return infoItems.map((infoItem) => {
+      // If the item has a question (InfoWithIconProps), create a ToogleListItemProps
+      if (infoItem.question) {
+        const toogleListItem: ToogleListItemProps = {
+          heading: infoItem.question,
+          data: [
+            {
+              // title: infoItem.title,
+              desc: infoItem.desc,
+            },
+          ],
+        };
+
+        return {
+          // heading: infoItem.title,
+          data: [toogleListItem],
+        };
+      }
+
+      // If the item does not have a question, create a regular ProjectDetailsItemProps
+      return {
+        data: infoItem.desc,
+      };
+    });
   };
+  const test = convertInfoToProjectDetails(arr);
   return (
     <>
-      <LightLine />
-      <LeftSidebar
-        username={userData.username || "Username"}
-        desc={userData.bio || "You bio goes here"}
-      />
-      <div className="frfssb peer-data-[state=not-active]:pl-[120px] peer-data-[state=active]:pl-[340px] relative -z-10 w100 container py-6 gap-6">
-        {/* middle scroll */}
-        <MiddleSection />
-        {/* right sidebar */}
-        <RightSidebar />
-      </div>
+      <UserOverview data={test} />
     </>
   );
 };

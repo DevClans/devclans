@@ -14,6 +14,8 @@ export type SidebarListProps = {
 
 export type InfoWithIconProps = {
   icon: React.ReactNode;
+  question?: string;
   desc: string;
+  ans?: string;
   title: string;
 };

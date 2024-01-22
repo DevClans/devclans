@@ -4,7 +4,19 @@ import { IconGithub, IconTwitter, LightLine, MuiIconButton } from "..";
 const LeftMenuBottomBar = () => {
   const toogleActive = () => {
     const leftMenu = document.getElementById("leftMenuUser");
+    const userBtn = document.getElementsByClassName("userBtn")[0];
     if (leftMenu) {
+      if (userBtn) {
+        if (leftMenu.getAttribute("data-state") == "active") {
+          // set userBtn to change text to "Talk"
+          const a = userBtn.innerHTML.split("Question");
+          userBtn.innerHTML = "Ask" + a[1];
+        } else {
+          // set userBtn to change text to "Ask A Question"
+          const a = userBtn.innerHTML.split("Ask");
+          userBtn.innerHTML = "Ask A Question" + a[1];
+        }
+      }
       leftMenu.getAttribute("data-state") == "active"
         ? leftMenu.setAttribute("data-state", "not-active")
         : leftMenu.setAttribute("data-state", "active");

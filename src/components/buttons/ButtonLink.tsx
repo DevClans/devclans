@@ -8,10 +8,12 @@ const ButtonLink = ({
   style,
   onClick,
   href,
+  replace,
 }: ButtonProps) => {
   if (href) {
     return (
       <Link
+        replace={replace}
         className={`fccc button ${className}`}
         onClick={(e) => onClick && onClick(e, "secondary")}
         style={{ ...style }}
