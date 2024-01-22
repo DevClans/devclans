@@ -7,11 +7,19 @@ async function handler(req: Request) {
   await dbConnect();
 
   const { userId, projectName, projectDescription, problem } = await req.json();
-  var user= z.string(userId);
+
+
 
   try {
     console.log("started");
     // Find the user
+    var stringSchema= z.string();
+    stringSchema.parse(userId);
+    stringSchema.parse(projectName);
+    stringSchema.parse(projectDescription);
+    stringSchema.parse(problem);
+  
+
     const user = await UserModel.findOne({ username: userId });
 
     if (!user) {

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { UserModel, ProjectModel, BookmarkModel } from "@/model/schema";
-
+import  { z } from "zod";
 async function handler(req: Request) {
   await dbConnect();
 
@@ -10,6 +10,10 @@ async function handler(req: Request) {
   try {
     console.log("started");
     // Find the user
+    var stringSchema= z.string();
+    stringSchema.parse(userId);
+    stringSchema.parse(projectId);
+   
     const project = await ProjectModel.findOne({ title: projectId });
     const user = await UserModel.findOne({ username: userId });
 
