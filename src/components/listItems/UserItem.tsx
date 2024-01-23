@@ -30,6 +30,7 @@ const UserItem = ({
     gitubImg: gitAvatar,
   });
   const usernm = selectUserUsername({ username, discordUsername, gitUsername });
+
   return (
     <>
       <ItemsTemplate
