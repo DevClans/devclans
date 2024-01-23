@@ -1,5 +1,4 @@
 "use client";
-import { BooleanStateProps } from "@/types/state.types";
 import {
   FormControl,
   FormControlLabel,
@@ -17,10 +16,8 @@ import { ContactDetailsProps } from "@/types/mongo/user.types";
 const useModalConnect = ({ isActive = false, team }: ModalConnectProps) => {
   const [open, setOpen] = useState(isActive);
   const [selectedUser, setSelectedUser] = useState<ContactDetailsProps>();
-  const handleSend = () => {
-    const a =
-      selectedUser &&
-      contactMethodsMap[selectedUser.contactMethod](selectedUser.contactId);
+  const handleSend = (user: ContactDetailsProps) => {
+    const a = user && contactMethodsMap[user.contactMethod](user.contactId);
     const newTab = window.open(a, "_blank", "noopener,noreferrer");
     if (newTab) {
       newTab.opener = null;
@@ -38,10 +35,10 @@ const useModalConnect = ({ isActive = false, team }: ModalConnectProps) => {
           <CloseRounded className="text-text" />
         </MuiIconButton>
         <h2 className="font-normal ">
-          <span className="text-primary font-bold">Connect</span> with the team
-          on their
+          <span className="text-primary font-bold">Connect</span> with the
+          user(s) on their
           <span className="text-primary font-bold"> favourite</span> Social
-          Platforms
+          Media Platforms
         </h2>
         {/* <textarea
           onChange={(e) => {
@@ -79,7 +76,10 @@ const useModalConnect = ({ isActive = false, team }: ModalConnectProps) => {
             ))}
           </RadioGroup>
         </FormControl>
-        <ButtonBlue label="connect" onClick={handleSend} />
+        <ButtonBlue
+          label="connect"
+          onClick={() => handleSend(selectedUser as ContactDetailsProps)}
+        />
       </div>
     </Modal>
   );
@@ -87,6 +87,7 @@ const useModalConnect = ({ isActive = false, team }: ModalConnectProps) => {
   return {
     handleClose,
     handleOpen,
+    handleSend,
     Modal: ModalComponent,
   };
 };

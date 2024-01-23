@@ -6,7 +6,7 @@ const LightRays = ({ style }: { style?: React.CSSProperties }) => {
       {/* LIGHT RAYS */}
       <div
         style={{
-          zIndex: -1,
+          zIndex: -100,
           ...style,
         }}
       >

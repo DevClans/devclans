@@ -7,6 +7,7 @@ import IconWeb from "../icons/IconWeb";
 import IconML from "../icons/IconML";
 import IconCode from "../icons/IconCode";
 import IconSystemDesign from "../icons/IconSystemDesign";
+import { useSearchParams } from "next/navigation";
 
 const dummyCategories = [
   {
@@ -35,7 +36,20 @@ const dummyCategories = [
   },
 ];
 const ButtonGroupCategory = () => {
-  const [active, setActive] = useState<string>("All");
+  const searchParams = useSearchParams();
+  // let categories: string[] = (searchParams.get("category") || "")
+  //   .split(",")
+  //   .filter(Boolean);
+  const newParams = new URLSearchParams(searchParams.toString());
+  const category = searchParams.get("category") || "";
+  // console.log(
+  //   searchParams,
+  //   categories,
+  //   "categories",
+  //   newParams,
+  //   newParams.toString()
+  // )
+  const [active, setActive] = useState<string>(category || "All");
   const handleClick = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     label: string
@@ -44,15 +58,23 @@ const ButtonGroupCategory = () => {
   };
   return (
     <div className="btnRow">
-      {dummyCategories.map((category) => (
-        <ButtonCategory
-          key={category.label}
-          icon={category.icon}
-          label={category.label}
-          active={active === category.label}
-          onClick={handleClick}
-        />
-      ))}
+      {dummyCategories.map(({ label, icon }) => {
+        // const newCategories = categories.includes(label)
+        //   ? categories
+        //   : [...categories, label];
+        // newParams.set("category", newCategories.join(","));
+        newParams.set("category", label);
+        return (
+          <ButtonCategory
+            href={`/explore?${newParams.toString()}`}
+            key={label}
+            icon={icon}
+            label={label}
+            active={active === label}
+            onClick={(e) => handleClick(e as any, label)}
+          />
+        );
+      })}
     </div>
   );
 };

@@ -48,11 +48,23 @@ export type ProjectRepoDetailsProps = {
   commits: number;
   lastCommit: Date;
 };
-export type ProjectTeamProps =
+export type ProjectTeamProps = (
   | UserTeamProps
   | {
       team: mongoose.Types.ObjectId[];
-    };
+    }
+) & {
+  helpedIn:
+    | "idea"
+    | "development"
+    | "testing"
+    | "design"
+    | "documentation"
+    | "frontend"
+    | "backend"
+    | "fullstack"
+    | "other";
+};
 
 export type ProjectInputProps = Omit<
   ProjectProps,

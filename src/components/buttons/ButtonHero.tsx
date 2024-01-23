@@ -5,7 +5,7 @@ const ButtonHero = () => {
   return (
     <div className="relative" id="btnHeroContainer">
       <div className="hero-animation-glow"></div>
-      <Link href="/users" id="btnHero" className="relative">
+      <Link href="/explore" id="btnHero" className="relative">
         Chalo shuru kare
         <ArrowRightAltRounded fontSize={"large"} />
         <div className="hero-preview-animation">

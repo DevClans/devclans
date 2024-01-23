@@ -1,7 +1,7 @@
 const page = () => {
   return (
     <div>
-      Hey From Project Page
+      <>Education</>
     </div>
   );
 };

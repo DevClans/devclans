@@ -49,7 +49,7 @@ const SidebarList = ({
     </div>
   );
   if (onlyList) return listEle;
-  return <div className="gradCard w100">{listEle}</div>;
+  return <div className="cardGrad w100">{listEle}</div>;
 };
 
 export default SidebarList;

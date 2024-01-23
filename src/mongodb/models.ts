@@ -1,4 +1,4 @@
-import { UserMongoProps, UserProps } from "../types/mongo/user.types";
+import { UserMongoProps } from "../types/mongo/user.types";
 import { LikeProps } from "../types/mongo/like.types";
 import { skills } from "@/lib/skills";
 import { BookmarkProps } from "@/types/mongo/bookmark.types";
@@ -7,14 +7,20 @@ import mongoose from "mongoose";
 import { contactMethods } from "@/lib/contactMethods";
 import { devStages } from "@/lib/devStages";
 import { memberLevels } from "@/lib/memberLevel";
+import { discordDetailsSchema } from "./discordModel";
+import { userGithubDetailsSchema } from "./githubModal";
 
 const userSchema = new mongoose.Schema<UserMongoProps>(
   {
     discordId: { type: String, required: true },
-    githubAccessToken: { type: String, required: true },
-    username: { type: String },
+    githubDetails: { type: userGithubDetailsSchema },
+    domain: {
+      type: String,
+      enum: ["frontend", "backend", "fullstack", "designer", "other"],
+    },
+    username: { type: String, unique: true },
     avatar: { type: String },
-    bio: { type: String, maxlength: 180 }, // describe yourself to cohort folks
+    bio: { type: String, maxlength: 180 },
     phone: {
       type: String,
       validate: {
@@ -23,8 +29,8 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
         },
         message: (props: any) => `${props.value} is not a valid phone number!`,
       },
-      required: function () {
-        return (this as any).contactMethod === "whatsapp";
+      required: function (this: any) {
+        return this.contactMethod === "whatsapp";
       },
     },
     email: {
@@ -35,27 +41,27 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
         },
         message: (props: any) => `${props.value} is not a valid email address!`,
       },
-      required: function () {
-        return (this as any).contactMethod === "email";
+      required: function (this: any) {
+        return this.contactMethod === "email";
       },
     },
     contactMethod: {
       type: String,
-      enum: contactMethods,
       default: "discord",
+      enum: contactMethods,
     },
     socials: {
       twitter: {
         type: String,
-        required: function () {
-          return (this as any).contactMethod === "twitter";
+        required: function (this: any) {
+          return this.contactMethod === "twitter";
         },
         default: "",
       },
       telegram: {
         type: String,
-        required: function () {
-          return (this as any).contactMethod === "telegram";
+        required: function (this: any) {
+          return this.contactMethod === "telegram";
         },
         default: "",
       },
@@ -65,7 +71,7 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
     skills: [
       {
         type: String,
-        enum: skills, // Assuming skills is defined somewhere
+        enum: skills,
       },
     ],
     ownedProjects: [
@@ -74,10 +80,15 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
     contributedProjects: [
       { type: mongoose.Types.ObjectId, ref: "Project", default: [] },
     ],
-    currentCompany: { type: String },
-    careerGoal: { type: String, enum: ["remote", "faang", "startup"] },
-    proudAchievement: { type: String },
-    recentWork: { type: String },
+    questions: {
+      currentCompany: { type: String },
+      careerGoal: { type: String, enum: ["remote", "faang", "startup"] },
+      proudAchievement: { type: String },
+      recentWork: { type: String },
+    },
+    createdAt: { type: Date, default: Date.now, required: true },
+    updatedAt: { type: Date, default: Date.now, required: true },
+    discordDetails: { type: discordDetailsSchema },
   },
   { timestamps: true }
 );
@@ -95,6 +106,13 @@ const bookmarkSchema = new mongoose.Schema<BookmarkProps>(
   {
     user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
     project: { type: mongoose.Types.ObjectId, ref: "Project", required: true },
+    // // targt and targetType in case we want to bookmark both users and projects
+    // target: {
+    //   type: mongoose.Types.ObjectId,
+    //   required: true,
+    //   refPath: 'targetType',
+    // },
+    // targetType: { type: String, enum: ['User', 'Project'], required: true },
     // timestamp: { type: Date, default: Date.now },
   },
   { timestamps: true }
@@ -151,6 +169,15 @@ const projectSchema = new mongoose.Schema<ProjectProps>(
       default: "idea",
     },
     published: { type: Boolean, default: false },
+    repoDetails: {
+      description: { type: String, default: "" },
+      stars: { type: Number, default: 0 },
+      forks: { type: Number, default: 0 },
+      watchers: { type: Number, default: 0 },
+      topics: [{ type: String, default: [] }],
+      commits: { type: Number, default: 0 },
+      lastCommit: { type: Date, default: Date.now },
+    },
   },
   { timestamps: true }
 );

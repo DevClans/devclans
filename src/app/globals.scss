@@ -23,10 +23,11 @@
   --subH: #596b91;
   --heading: #e2e8ff;
   --cardBg: #081121;
+  --cardBg1: #020d23;
+  --cardBg2: #020b1c;
   --text: #e2e8ff8c;
   --highlight: #e1ebffbf;
   --bg: #010816;
-  --cardBg2: #020b1c;
   --yellowDark: #a4a622;
   --green: #2da519;
 }
@@ -34,6 +35,8 @@
 body {
   background-color: var(--bg);
   color: var(--text);
+  position: relative;
+  z-index: 0;
 }
 
 html {

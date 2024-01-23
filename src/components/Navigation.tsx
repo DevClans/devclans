@@ -1,3 +1,4 @@
+import { PageProps } from "@/types/page.types";
 import Link from "next/link";
 const navigation = [
   // {
@@ -6,18 +7,23 @@ const navigation = [
   // },
   {
     name: "Find Projects",
-    href: "/projects",
+    href: "/explore",
   },
   {
     name: "Find Coder Bhai",
-    href: "/users",
+    href: "/explore",
+    searchParams: {
+      type: "users",
+    },
   },
   {
     name: "About 100xDevs",
-    href: "/",
+    href: "https://100xdevs.com/",
+    target: "_blank",
+    rel: "noopener noreferrer",
   },
   {
-    name: "Team",
+    name: "About The Team",
     href: "/",
   },
   {
@@ -25,7 +31,7 @@ const navigation = [
     href: "/",
   },
 ];
-const Navigation = () => {
+const Navigation = ({ searchParams }: PageProps) => {
   return (
     <div
       id="navbar"
@@ -41,11 +47,23 @@ const Navigation = () => {
         backdropFilter: "blur(27.100000381469727px)",
       }}
     >
-      {navigation.map(({ href, name }, index) => (
-        <Link key={index} href={href}>
-          {name}
-        </Link>
-      ))}
+      {navigation.map(
+        ({ href, searchParams: sp, name, target, rel }, index) => {
+          let hreff = href;
+          const newParams = new URLSearchParams();
+          if (sp) {
+            for (const key in sp) {
+              newParams.set(key, sp.type);
+            }
+            hreff = "/explore?" + newParams.toString();
+          }
+          return (
+            <Link key={index} href={hreff} rel={rel} target={target}>
+              {name}
+            </Link>
+          );
+        }
+      )}
     </div>
   );
 };

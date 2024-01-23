@@ -38,11 +38,15 @@
   text-transform: capitalize;
 }
 
-button {
+button,
+.button {
   color: var(--highlight, rgba(225, 235, 255, 0.75));
-  font-size: 16px;
+  // font-size: 16px;
   font-style: normal;
   font-weight: 600;
   line-height: 108%; /* 17.28px */
   text-transform: capitalize;
+}
+.button {
+  line-height: normal;
 }
