@@ -1,13 +1,7 @@
-import {
-  ButtonIcon,
-  Chip,
-  ProjectStage,
-  IosShareRounded,
-  ButtonLike,
-  ButtonBookmark,
-} from "@/components";
+import { ProjectStage, ProjectIconGroup, ChipGroup } from "@/components";
 import ProductImg from "@/components/project/ProjectImg";
 import { ProjectProps } from "@/types/mongo/project.types";
+import { PageProps } from "@/types/page.types";
 
 const ProjectHero = ({
   techStack = ["react", "nextjs", "typescript", "tailwindcss"],
@@ -16,8 +10,9 @@ const ProjectHero = ({
   title,
   likesCount,
   bookmarkCount,
+  searchParams,
   desc,
-}: ProjectProps) => {
+}: ProjectProps & PageProps) => {
   const data = {
     title,
     desc,
@@ -27,23 +22,15 @@ const ProjectHero = ({
       <div className="gap-5 fcfs w100">
         <div className="frcsb w100">
           <ProjectStage stage={devStage} />
-          <div className="frc gap-[10px]">
-            <ButtonIcon
-              label="share"
-              icon={<IosShareRounded fontSize="small" />}
-            />
-            <ButtonBookmark bookmarksCount={bookmarkCount} />
-            <ButtonLike likesCount={likesCount} />
-          </div>
+          <ProjectIconGroup
+            likesCount={likesCount}
+            bookmarkCount={bookmarkCount}
+          />
         </div>
         <h1 className="text-4xl">{data.title}</h1>
         <p>{data.desc}</p>
         {/* chips */}
-        <div className="frc flex-wrap">
-          {techStack.map((tech, i) => (
-            <Chip key={i} label={tech} />
-          ))}
-        </div>
+        <ChipGroup arr={techStack} searchParams={searchParams} />
       </div>
       {/* images */}
       <div className="relative w100">

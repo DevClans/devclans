@@ -4,7 +4,7 @@ import "./globals.scss";
 import { getServerSession } from "next-auth";
 import SessionProvider from "@/components/SessionProvider";
 import Header from "@/components/Header";
-import { authOptions } from "@/utils/auth";
+import { authOptions } from "@/utils/auth/auth";
 import { ToastContainer } from "react-toastify";
 import LightRays from "@/components/LightRays";
 

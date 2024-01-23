@@ -22,6 +22,7 @@ const ProjectStage = ({
         color: colors.border,
         fontSize: 11,
         fontWeight: 500,
+        lineHeight: "13px",
         gap: "8px",
         textTransform: "capitalize",
       }}

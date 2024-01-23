@@ -9,11 +9,13 @@ const ButtonIcon = ({
   active,
   activeIcon,
   setActive,
+  className,
+  style,
 }: Partial<ButtonProps>) => {
   const labelString = label?.toString();
   return (
     <button
-      className={`frc card rounded-[10px] gap-[5px]`}
+      className={`frc card rounded-[10px] gap-[5px] ${className}`}
       onClick={(e) => {
         if (onClick) {
           onClick(e, labelString || "");
@@ -25,6 +27,7 @@ const ButtonIcon = ({
         boxShadow: "none",
         padding: "5px 12px",
         color,
+        ...style,
       }}
     >
       {active ? activeIcon : icon}

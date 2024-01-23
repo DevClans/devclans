@@ -1,5 +1,6 @@
 export { default as ButtonCategory } from "./ButtonCategory";
 export { default as ButtonConnect } from "./ButtonConnect";
+export { default as ButtonSecondary } from "./ButtonSecondary";
 export { default as ButtonBookmark } from "./ButtonBookmark";
 export { default as ButtonBlue } from "./ButtonBlue";
 export { default as ButtonLike } from "./ButtonLike";
