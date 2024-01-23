@@ -25,7 +25,10 @@ body {
     @apply frc justify-between;
   }
   .frfssb {
-    @apply flex flex-row items-start;
+    @apply flex flex-row items-start justify-between;
+  }
+  .fcfssb {
+    @apply flex flex-col items-start justify-between;
   }
   .fcfs {
     @apply flex flex-col items-start;

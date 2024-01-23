@@ -5,6 +5,9 @@
   box-shadow: 0px 4px 5.3px 0px rgba(20, 26, 37, 0.2) inset,
     0px -4px 3px 0px rgba(6, 12, 24, 0.1) inset;
 }
+.cardCommon {
+  @apply border-border border p-4 rounded-[10px] w100;
+}
 .card2 {
   background: var(--cardBg2, #020b1c);
   border-radius: 20px;
@@ -19,7 +22,7 @@
   backdrop-filter: blur(41.04999923706055px);
 }
 
-.gradCard {
+.cardGrad {
   border-radius: 10px;
   border: 1px solid #132541;
   background: var(
@@ -47,4 +50,25 @@
   gap: 10px;
   flex-shrink: 0;
   align-self: stretch;
+}
+
+.cardHighlight {
+  border-radius: 10px;
+  border: 1px solid var(--border, #132341);
+  background: radial-gradient(
+      80.09% 69.44% at 50% 0%,
+      rgba(125, 168, 255, 0.2) 0%,
+      rgba(128, 170, 255, 0) 100%
+    ),
+    radial-gradient(
+      31.92% 71.68% at 50% 0.45%,
+      rgba(213, 227, 255, 0.1) 0%,
+      rgba(86, 115, 172, 0) 100%
+    ),
+    radial-gradient(
+      40.15% 99.55% at 50% 0.45%,
+      rgba(86, 115, 172, 0.1) 0%,
+      rgba(86, 115, 172, 0) 100%
+    );
+  padding: 20px;
 }

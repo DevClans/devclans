@@ -1,15 +1,3 @@
-const colors = {
-  border: "#132341",
-  primary: "#457BE3",
-  priDark: "#3E75E3",
-  priDarker: "#284F9C",
-  subH: "#596B91",
-  heading: "#E2E8FF",
-  cardBg: "#081121",
-  text: "#E2E8FF8C",
-  highlight: "#E1EBFFBF",
-  bg: "#010816",
-  yellowDark: "#A4A622",
-  cardBg2: "#020b1c",
-};
+import { tailwindColors } from "../../tailwind.config";
+const colors = tailwindColors;
 export default colors;

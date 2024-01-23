@@ -3,11 +3,13 @@ import Link from "next/link";
 
 const LinkWithIcon = ({
   text,
+  target,
   icon,
   isBold = false,
   href,
   fontSize,
 }: {
+  target?: string;
   text: string;
   icon?: React.ReactNode;
   isBold?: boolean;
@@ -36,6 +38,7 @@ const LinkWithIcon = ({
         ...(isBold ? boldStyle : normalStyle),
       }}
       className="frc gap-[3px]"
+      target={target}
     >
       {text || "Link"}
       {icon}

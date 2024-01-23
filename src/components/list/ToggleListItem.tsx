@@ -23,12 +23,10 @@ const ToggleListItem = ({
             gap: "20px",
           }}
         >
-          {data.map((item, i) => (
+          {data.map(({ title, desc }, i) => (
             <div key={i} className="markdown">
-              <h3 className="text-highlight gap-[5px]">
-                {item.title || "title"}
-              </h3>
-              <p>{item.desc || "some desc"}</p>
+              {title && <h3 className="text-highlight gap-[5px]">{title}</h3>}
+              {desc && <p>{desc}</p>}
             </div>
           ))}
         </div>

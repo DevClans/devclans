@@ -4,6 +4,7 @@ export { default as ProjectStage } from "./ProjectStage";
 export { default as ProjectHero } from "./ProjectHero";
 export { default as ExpandDetailsBox } from "./ExpandDetailsBox";
 export { default as ProjectDetails } from "./ProjectDetails";
+export { default as ProjectIconGroup } from "./ProjectIconGroup";
 export { default as ProjectDetailsItem } from "./ProjectDetailsItem";
 export { default as ProjectTeam } from "./ProjectTeam";
 export { default as AboutTheRepo } from "./AboutTheRepo";

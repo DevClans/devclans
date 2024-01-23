@@ -4,7 +4,21 @@ import {
   ToogleListItemProps,
 } from "@/types/toggleList.types";
 
-const ProjectDetails = ({ data }: { data: ProjectDetailsItemProps[] }) => {
+const ProjectDetails = ({
+  data,
+  heading = "Project Details",
+  style,
+  className,
+  headingClass,
+  containerClass,
+}: {
+  data: ProjectDetailsItemProps[];
+  heading?: string;
+  style?: React.CSSProperties;
+  className?: string;
+  headingClass?: string;
+  containerClass?: string;
+}) => {
   const toogleData: ToogleListItemProps = {
     heading: "readme.md",
     data: [
@@ -26,9 +40,9 @@ const ProjectDetails = ({ data }: { data: ProjectDetailsItemProps[] }) => {
     },
   ];
   return (
-    <div className="w100 fcfs p-5 card2">
-      <h2 className="mb-7 ">Project Details</h2>
-      <div className="w100 fcc gap-7">
+    <div className={`w100 fcfs p-5 card2 ${className}`} style={style}>
+      {heading && <h2 className={"mb-6 " + headingClass}>{heading}</h2>}
+      <div className={containerClass + " w100 fcc gap-6 "}>
         {dummydata.map((item, index) => (
           <ProjectDetailsItem {...item} key={index} />
         ))}

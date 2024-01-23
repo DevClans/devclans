@@ -8,9 +8,13 @@ import {
 } from "@/components";
 import { FetchProjectProps } from "@/types/fetch.types";
 import { UserTeamItemProps } from "@/types/mongo/user.types";
+import { PageProps } from "@/types/page.types";
 import { convertProjectDetails } from "@/utils/convertProjectDetails";
 
-const Page = async ({ params }: { params: { id: string } }) => {
+const Page = async ({
+  params,
+  searchParams,
+}: { params: { id: string } } & PageProps) => {
   const id = params.id;
   const {
     projectData,
@@ -28,7 +32,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
       <LightLine />
       <div className=" p-[30px] gap-[30px] frfssb w100">
         <div className="w100 fcc gap-[30px]">
-          <ProjectHero {...data} />
+          <ProjectHero {...data} params={params} searchParams={searchParams} />
           <AboutTheRepo {...files} />
           {convertedProjectDetails && (
             <ProjectDetails data={convertedProjectDetails} />
