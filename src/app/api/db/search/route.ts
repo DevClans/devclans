@@ -1,6 +1,7 @@
 import dbConnect from '@/lib/dbConnect';
 import { NextResponse } from 'next/server';
 import { MongoClient } from 'mongodb';
+import  { stringSchema } from "@/zod/zod.common"
 
 const client = new MongoClient(process.env.DATABASE_URL!);
 
@@ -14,6 +15,7 @@ async function handler(req:Request) {
     const collection = db.collection("projects");
     
     const { searchTerm } = await req.json();
+    stringSchema.parse(searchTerm);
     
     const pipeline = [
       {

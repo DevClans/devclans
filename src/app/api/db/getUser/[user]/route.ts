@@ -1,13 +1,17 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { UserModel } from "@/model/schema";
+import  { stringSchema } from "@/zod/zod.common"
 
 async function handler(req:Request,{ params }:{ params : { user: string }}) {
+  try{
     await dbConnect();
     
     const user  = params.user;
-    if (!user || typeof user !== 'string') {
-        return NextResponse.json({ message: 'Invalid user parameter' });
+    stringSchema.parse(user);
+    
+    if (!user) {
+        return NextResponse.json({ message: 'User not found' });
       }
 
    
@@ -18,5 +22,8 @@ async function handler(req:Request,{ params }:{ params : { user: string }}) {
      
       return  NextResponse.json(u);
 }
-
+catch(error){
+  return NextResponse.json(error);
+}
+}
 export { handler as GET }

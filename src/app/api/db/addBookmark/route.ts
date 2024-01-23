@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { UserModel, ProjectModel, BookmarkModel } from "@/model/schema";
-import { z } from 'zod';
+import  { stringSchema } from "@/zod/zod.common"
 
 
 async function handler(req: Request) {
@@ -9,44 +9,11 @@ async function handler(req: Request) {
 
   const { userId, projectId } = await req.json();
   
-  const stringSchema = z.string();
-  const integerSchema = z.number();
-  const stringArray = z.string().optional().array();
-
- var x = stringSchema.parse(userId);
- var y =  stringSchema.parse(projectId)
-  const dateSchema = z.date();
-  const projectSchema = z.object({
-    "problem": stringSchema,
-    "challenges": stringArray,
-    "futureGoals": stringArray,
-    "memberReq": stringArray
-  });
-
-  const objectSchema = z.object(
-    {
-   "projectDetails":projectSchema,
-  
-  "title": stringSchema,
-  "desc": stringSchema,
-  "topics": stringArray,
-  "githubLink": stringSchema,
-  "likesCount": integerSchema,
-  "likesArray": stringArray,
-  "bookmarkCount": integerSchema,
-  "projectLinks": stringArray,
-  "team": stringArray,
-  "imgs": stringArray,
-  "devStage": stringSchema,
-  "createdAt": dateSchema,
-  "updatedAt": dateSchema,
-  "__v": integerSchema
-}
-  );
 
 
   try {
- if(x && y){
+    stringSchema.parse(userId);
+    stringSchema.parse(projectId);
     const project = await ProjectModel.findOne({ title: projectId });
     const user = await UserModel.findOne({ username: userId});
 
@@ -67,17 +34,15 @@ async function handler(req: Request) {
         },
         { new: true } // Return the updated document
       );
-  objectSchema.parse(updatedProject);
+
 
     return NextResponse.json({
       message: 'Project Liked successfully',
        user: updatedProject,
     });
   }
-  else{
-    return NextResponse.json({ message: 'Wrong Type' });
-  }
-  }
+
+  
 
  
   catch (error) {

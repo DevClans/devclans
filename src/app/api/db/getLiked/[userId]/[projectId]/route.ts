@@ -1,15 +1,17 @@
 import { NextResponse } from 'next/server';
-
+import  { stringSchema } from "@/zod/zod.common"
 import dbConnect from '@/lib/dbConnect';
 import { ProjectModel, UserModel, LikeModel } from "@/model/schema";
 
 
 
 async function handler(req:Request,{ params }:{ params : { userId: string, projectId: string }}) {
+  try{
     await dbConnect();
     
     const  { userId, projectId }  = params;
-    console.log(userId);
+    stringSchema.parse(userId);
+    stringSchema.parse(projectId);
   
     if (!userId || typeof userId !== 'string') {
         return NextResponse.json({ message: 'Invalid user parameter' });
@@ -30,6 +32,10 @@ async function handler(req:Request,{ params }:{ params : { userId: string, proje
       
      
       return  NextResponse.json(likes);
+    }
+    catch(error){
+      return NextResponse.json(error);
+    }
 }
 
 export { handler as GET }

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { z } from "zod";
+import  { stringSchema } from "@/zod/zod.common"
 
 import dbConnect from '@/lib/dbConnect';
 import { UserModel } from "@/model/schema";
@@ -12,7 +12,6 @@ async function handler(req: Request) {
 
     const { name, email, discordId, username,githubId } =  await req.json()
       try {
-        var stringSchema= z.string();
         stringSchema.parse(username);
         stringSchema.parse(name);
         stringSchema.parse(githubId);
