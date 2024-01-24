@@ -1,4 +1,4 @@
-import { UserProps } from "@/types/mongo/user.types";
+import { UserProps, UserSearchInfoProps } from "@/types/mongo/user.types";
 import { ProjectIconGroup } from "..";
 import ProductImg from "../project/ProjectImg";
 import ItemsTemplate from "./ItemsTemplate";
@@ -16,7 +16,7 @@ const UserItem = ({
   username,
   _id,
   searchParams,
-}: UserProps & Partial<PageProps>) => {
+}: UserSearchInfoProps & Partial<PageProps>) => {
   const { username: discordUsername, avatar: disAvatar } = discordDetails || {};
   const {
     avatar_url: gitAvatar,
