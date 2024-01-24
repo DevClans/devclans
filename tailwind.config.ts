@@ -16,7 +16,6 @@ export const tailwindColors = {
   cardBg1: "#020D23",
   green: "#2da519",
 };
-import { withUt } from "uploadthing/tw";
 
 export default withUt({
   content: [
