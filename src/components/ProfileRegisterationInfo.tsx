@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession, signIn } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation'
 
 const Profile = () => {
-  const { data: session } = useSession();
-  const [githubUsername, setGithubUsername] = useState('');
+  const { data: session }:any = useSession();
+  // const [githubUsername, setGithubUsername] = useState('');
   const [formData, setFormData] = useState({
     githubId: '',
     bio: '',
@@ -17,15 +18,24 @@ const Profile = () => {
     recentWork: '',
   });
 
-  useEffect(() => {
-    // Set GitHub username when session is available
-    //@ts-ignore
-    const githubProvider = session?.provider;
+  const searchParams = useSearchParams()
+  const githubUsername = searchParams.get('githubUsername')
 
-    if (githubProvider === 'github' && session?.user?.name) {
-      setGithubUsername(session.user.name);
+  useEffect(() => {
+    console.log("Route Parameter: ", githubUsername);
+    const username = Array.isArray(githubUsername) ? githubUsername[0] : githubUsername;
+  
+    if (username) {
+      setFormData(prevData => ({
+        ...prevData,
+        githubId: username
+      }));
     }
-  }, [session]);
+  }, [githubUsername]);
+  
+
+  console.log('githubUsername', githubUsername);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -33,14 +43,6 @@ const Profile = () => {
       ...prevData,
       [name]: name === 'skills' ? value.split(',').map((skill) => skill.trim()) : value,
     }));
-  };
-
-  const handleConnectGitHub = () => {
-    // Get the current page URL
-    const currentUrl = window.location.href;
-  
-    // Redirect to GitHub OAuth page with the current URL as a callback
-    window.location.href = `/api/auth/signin/github?callbackUrl=${encodeURIComponent(currentUrl)}`;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -65,13 +67,21 @@ const Profile = () => {
     }
   };
 
+  const handleConnectGitHub = () => {
+    const GITHUB_AUTH_URL = "https://github.com/login/oauth/authorize";
+    const CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
+    const CALLBACK_URL = process.env.NEXT_PUBLIC_GITHUB_CALLBACK_URL;
+    const SCOPES = "read:user,user:email";
+  
+    window.location.href = `${GITHUB_AUTH_URL}?client_id=${CLIENT_ID}&redirect_uri=${CALLBACK_URL}&scope=${SCOPES}`;
+  };
+
   return (
     <div>
       <h1>Your Profile</h1>
-      {githubUsername && <p>Connected with GitHub as: {githubUsername}</p>}
+      <h2>{githubUsername}</h2>
       {session ? (
         <form onSubmit={handleSubmit}>
-          {/* ... (existing fields) */}
 
           {/* New fields */}
           <label>
@@ -123,9 +133,8 @@ const Profile = () => {
           </label>
           <br />
           <button type="submit">Update Profile</button>
-          <button type="button" onClick={handleConnectGitHub}>
-            Connect Your GitHub
-          </button>
+          {/* GitHub Connection Button */}
+          <button type="button" onClick={handleConnectGitHub}>Connect Your GitHub</button>
         </form>
       ) : (
         <p>You need to be logged in to view your profile.</p>
