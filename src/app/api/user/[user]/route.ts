@@ -1,4 +1,5 @@
 import { getOctokit } from "@/github/config.github";
+import getGithubReadme from "@/github/repos/gh.getReadme";
 import { UserModel } from "@/mongodb/models";
 import redisClient from "@/redis/config";
 import {
@@ -48,17 +49,25 @@ const getGithubData = async (
       }
     }
     if (getData && userAccessToken) {
-      // TODO get data from github api
+      // get data from github api
       const githubapi = await getOctokit({ accessToken: userAccessToken });
       if (!githubapi) {
         console.error("error getting github api");
         return;
       }
+      // get github related data
       const githubData: any = await githubapi.request("GET /user", {
         headers: {
           "X-GitHub-Api-Version": "2022-11-28",
         },
       });
+      const githubUsername = githubData.data.username;
+      // get github readme
+      const readme = getGithubReadme({ username: githubUsername });
+      if (readme) {
+        // add readme to dataset
+        userInfo["githubDetails"]["readme"] = readme;
+      }
       console.info("githubData", githubData);
       const skipKeys = ["accessToken", "refreshToken"];
       for (const key of userGithubDetailsKeys) {
@@ -73,9 +82,15 @@ const getGithubData = async (
         JSON.stringify(userInfo["githubDetails"])
       );
       redisClient.expire(UserRedisKeys.usersGithub, 60 * 60 * 24 * 1); // 1 day
+    } else {
+      if (getData) {
+        console.error("error getting github api");
+      } else {
+        console.info("user github cache hit");
+      }
     }
   } catch (error) {
-    console.error("error in user github data", error);
+    // console.error("error in user github data", error);
   }
 };
 
@@ -96,6 +111,7 @@ async function handler(
     const userInCache = await redisClient.hget(UserRedisKeys.users, userId);
     Object.assign(userInfo, userInCache ? JSON.parse(userInCache) : {}); // info like: username, avatar, etc
     if (userInCache) {
+      console.info("users cache hit");
       // * GETTING USER DETAILS
       try {
         // check for user data in cache in userData key
@@ -105,6 +121,7 @@ async function handler(
         );
         // if user data is in cache, add it to user object
         if (userData) {
+          console.info("usersdata cache hit");
           Object.assign(userInfo, JSON.parse(userData));
         } else {
           // get some details
@@ -143,9 +160,9 @@ async function handler(
       const userSearchInfoData: any = {};
       for (const key of Object.keys(userInfo)) {
         if (userSearchInfoKeys.includes(key)) {
-          userDetailsData[key] = userInfo[key];
-        } else {
           userSearchInfoData[key] = userInfo[key];
+        } else {
+          userDetailsData[key] = userInfo[key];
         }
       }
       redisClient.hset(

@@ -57,7 +57,7 @@ export const userDiscordDetailsKeys: string[] = [
 ];
 
 export type UserGithubDetailsProps = {
-  installationId?: string;
+  accessToken?: string;
   refreshToken?: string;
   username: string;
   avatar_url?: string;
@@ -67,6 +67,7 @@ export type UserGithubDetailsProps = {
   bio?: string;
   twitter_username?: string;
   login: string;
+  readme?: string;
 };
 export const userGithubDetailsKeys: string[] = [
   "accessToken",
