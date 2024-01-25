@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import  { stringSchema } from "@/zod/zod.common"
-
+import { userSchema } from '@/zod/zod.common';
 import dbConnect from '@/lib/dbConnect';
-import { UserModel } from "@/model/schema";
+import { UserModel } from "@/mongodb/models";
 
 
 async function handler(req: Request) {
@@ -10,18 +10,18 @@ async function handler(req: Request) {
   await dbConnect();
   console.log("connected");
 
-    const { name, email, discordId, username,githubId } =  await req.json()
+    const {email,phone, discordId, username,githubDetails } =  await req.json()
       try {
         stringSchema.parse(username);
-        stringSchema.parse(name);
-        stringSchema.parse(githubId);
+        stringSchema.parse(phone);
         stringSchema.parse(email);
         stringSchema.parse(discordId);
-    console.log("Creating user using", name, email, discordId,username,githubId);
+    console.log("Creating user using", email,phone, discordId,username);
     
     const user = new UserModel({
-    name, email, discordId ,username,githubId
+     email,phone , discordId ,username, githubDetails
     });
+    userSchema.parse(user);
     await user.save();
     return NextResponse.json(user)
   } catch (error) {

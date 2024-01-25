@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
-import { UserModel, ProjectModel } from "@/model/schema";
-import  { stringSchema } from "@/zod/zod.common"
+import { UserModel, ProjectModel } from "@/mongodb/models";
+import  { stringSchema , projectSchema, userSchema } from "@/zod/zod.common"
 
 async function handler(req: Request) {
   await dbConnect();
@@ -42,6 +42,8 @@ async function handler(req: Request) {
       { new: true } // Return the updated document
     );
 console.log("done");
+userSchema.parse(updatedUser);
+ projectSchema.parse(createdProject);
     return NextResponse.json({
       message: 'Project created and associated with user successfully',
        user: updatedUser,

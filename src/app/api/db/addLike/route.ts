@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { UserModel, ProjectModel, LikeModel } from "@/model/schema";
-import  { stringSchema } from "@/zod/zod.common"
+import  { stringSchema, projectSchema, likeSchema } from "@/zod/zod.common"
 
 
 
@@ -31,6 +31,7 @@ async function handler(req: Request) {
         project: project._id
     })
     await like.save();
+    likeSchema.parse(like);
     const updatedProject = await ProjectModel.findOneAndUpdate(
         { _id: project._id },
         {
@@ -39,11 +40,12 @@ async function handler(req: Request) {
         },
         { new: true } // Return the updated document
       );
-    
+
+    projectSchema.parse(updatedProject);
 console.log("done");
     return NextResponse.json({
       message: 'Project Liked successfully',
-       user: updatedProject,
+       project: updatedProject,
     });
   
   } catch (error) {

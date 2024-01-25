@@ -1,7 +1,7 @@
 import dbConnect from '@/lib/dbConnect';
 import { NextResponse } from 'next/server';
 import { MongoClient } from 'mongodb';
-import  { stringSchema } from "@/zod/zod.common"
+import  { stringSchema, projectArraySchema } from "@/zod/zod.common"
 
 const client = new MongoClient(process.env.MONGO_URL!);
 
@@ -40,6 +40,9 @@ if(scheme){
     ];
 
     const searchResults = await collection.aggregate(pipeline).toArray();
+    projectArraySchema.parse(searchResults);
+
+
 
     return NextResponse.json({ results: searchResults });
   }

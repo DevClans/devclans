@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { UserModel } from "@/model/schema";
+import { userSchema } from '@/zod/zod.common';
 
 async function handler(req:Request,{ params }:{ params : { skill: string }}) {
     try{
@@ -15,6 +16,8 @@ async function handler(req:Request,{ params }:{ params : { skill: string }}) {
     const u = await UserModel.find({
       skills : skill
     });
+
+    userSchema.parse(u);
       
      
       return  NextResponse.json(u);

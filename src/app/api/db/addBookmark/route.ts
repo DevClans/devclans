@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
-import { UserModel, ProjectModel, BookmarkModel } from "@/model/schema";
-import  { stringSchema } from "@/zod/zod.common"
+import { UserModel, ProjectModel, BookmarkModel } from "@/mongodb/models"
+import  { stringSchema, projectSchema, likeSchema } from "@/zod/zod.common"
 
 
 async function handler(req: Request) {
@@ -26,6 +26,7 @@ async function handler(req: Request) {
         project: project._id
     })
     await bookmark.save();
+    likeSchema.parse(bookmark);
     const updatedProject = await ProjectModel.findOneAndUpdate(
         { _id: project._id },
         {
@@ -34,7 +35,8 @@ async function handler(req: Request) {
         },
         { new: true } // Return the updated document
       );
-
+      
+        projectSchema.parse(updatedProject);
 
     return NextResponse.json({
       message: 'Project Liked successfully',

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { UserModel, ProjectModel, LikeModel } from "@/model/schema";
-import  { stringSchema } from "@/zod/zod.common"
+import  { stringSchema, projectSchema, likeSchema } from "@/zod/zod.common"
 
 async function handler(req: Request) {
   await dbConnect();
@@ -27,6 +27,7 @@ async function handler(req: Request) {
     if (existingLike) {
       // If remove is true and the like exists, remove the like
       await LikeModel.findByIdAndDelete(existingLike._id);
+      likeSchema.parse(existingLike);
 
       // Update the project's likesCount and likesArray
       const updatedProject = await ProjectModel.findOneAndUpdate(
@@ -39,7 +40,7 @@ async function handler(req: Request) {
       );
 
       console.log("done");
-
+        projectSchema.parse(updatedProject);
       return NextResponse.json({
         message: 'Like removed successfully',
         project: updatedProject,

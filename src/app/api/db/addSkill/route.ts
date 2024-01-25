@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { UserModel, ProjectModel, LikeModel } from "@/model/schema";
-import  { stringSchema, stringArraySchema } from "@/zod/zod.common"
+import  { stringSchema, stringArraySchema, userSchema} from "@/zod/zod.common"
 
 
 
@@ -34,14 +34,16 @@ async function handler(req: Request) {
       );
     
 console.log("done");
+
+userSchema.parse(updatedUser);
     return NextResponse.json({
-      message: 'Project Liked successfully',
+      message: 'Skill added successfully',
        user: updatedUser,
     });
   
  
   } catch (error) {
-    console.error('Error liking project for user:', error);
+    console.error('Error adding skills of  user:', error);
     return NextResponse.json({ message: 'Internal Server Error' });
   }
 }

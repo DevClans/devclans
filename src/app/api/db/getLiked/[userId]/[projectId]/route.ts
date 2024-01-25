@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import  { stringSchema } from "@/zod/zod.common"
+import  { stringSchema, userSchema, projectSchema } from "@/zod/zod.common"
 import dbConnect from '@/lib/dbConnect';
 import { ProjectModel, UserModel, LikeModel } from "@/model/schema";
 
@@ -16,17 +16,19 @@ async function handler(req:Request,{ params }:{ params : { userId: string, proje
     if (!userId || typeof userId !== 'string') {
         return NextResponse.json({ message: 'Invalid user parameter' });
       }
-      const u = await UserModel.find({username:userId})
-      const p = await ProjectModel.find({title:projectId})
+      const u = await UserModel.findOne({username:userId})
+      userSchema.parse(u);
+      const p = await ProjectModel.findOne({title:projectId})
+      projectSchema.parse(p);
+
       if(!u || !p){
         return NextResponse.json({ message: 'User or Project not found' });
       }
-      console.log(u[0]._id)
    
     const likes =  await LikeModel.find({
 
-          user : u[0]._id,
-          project: p[0]._id
+          user : u._id,
+          project: p._id
  
       });
       

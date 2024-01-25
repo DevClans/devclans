@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import  { stringSchema } from "@/zod/zod.common"
+import  { stringSchema , projectSchema } from "@/zod/zod.common"
 import dbConnect from '@/lib/dbConnect';
 import { ProjectModel, UserModel } from "@/model/schema";
 
@@ -18,13 +18,13 @@ async function handler(req:Request,{ params }:{ params : { user: string, project
       const u = await UserModel.find({username:user})
 
    
-    const projects = await ProjectModel.find({
+    const projects = await ProjectModel.findOne({
 
           owner : u,
           title: project
  
       });
-      
+      projectSchema.parse(projects);
      
       return  NextResponse.json(projects);
 }

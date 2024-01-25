@@ -1,7 +1,7 @@
 import dbConnect from '@/lib/dbConnect';
 import { NextResponse } from 'next/server';
 import { MongoClient } from 'mongodb';
-import  { stringSchema } from "@/zod/zod.common"
+import  { stringSchema, projectArraySchema } from "@/zod/zod.common"
 
 const client = new MongoClient(process.env.DATABASE_URL!);
 
@@ -34,6 +34,7 @@ async function handler(req:Request) {
 
     const searchResults = await collection.aggregate(pipeline).toArray();
 
+    projectArraySchema.parse(searchResults);
     return NextResponse.json({ results: searchResults });
   } catch (error) {
     console.error('Error searching:', error);

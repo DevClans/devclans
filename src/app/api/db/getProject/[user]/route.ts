@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import  { stringSchema } from "@/zod/zod.common"
+import  { projectArraySchema, stringSchema } from "@/zod/zod.common"
 import dbConnect from '@/lib/dbConnect';
 import { ProjectModel } from "@/model/schema";
 
@@ -19,7 +19,7 @@ async function handler(req:Request,{ params }:{ params : { user: string }}) {
     
       });
       
-     
+     projectArraySchema.parse(project);
       return  NextResponse.json(project);
 }
 catch(error){

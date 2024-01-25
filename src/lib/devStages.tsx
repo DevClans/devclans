@@ -9,6 +9,7 @@ export const devStagesColors = {
 };
 
 export const devStages = Object.keys(devStagesColors);
+console.log(devStages)
 
 // Generate enum based on keys of devStagesColors
 export type DevStagesType = keyof typeof devStagesColors;

@@ -39,8 +39,10 @@ export default async function RootLayout({
         <title>{metadata.title as React.ReactNode}</title>
         <meta name="description" content={metadata.description as string} />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+       
       </head>
       <body>
+
         <SessionProvider session={session}>
           {modal}
           <Header />
@@ -58,6 +60,7 @@ export default async function RootLayout({
           }}
           toastClassName={"card"}
         />
+ 
       </body>
     </html>
   );

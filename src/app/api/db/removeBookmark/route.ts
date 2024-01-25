@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import { UserModel, ProjectModel, BookmarkModel } from "@/model/schema";
-import  { stringSchema } from "@/zod/zod.common"
+import  { stringSchema, projectSchema, likeSchema } from "@/zod/zod.common"
 async function handler(req: Request) {
   await dbConnect();
 
@@ -23,6 +23,7 @@ async function handler(req: Request) {
 
     // Check if the user has already liked the project
     const existingBookmark = await BookmarkModel.findOne({ user: user._id, project: project._id });
+    likeSchema.parse(existingBookmark)
 
     if (existingBookmark) {
       // If remove is true and the like exists, remove the like
@@ -38,8 +39,9 @@ async function handler(req: Request) {
         { new: true } // Return the updated document
       );
 
-      console.log("done");
 
+      console.log("done");
+        projectSchema.parse(updatedProject);
       return NextResponse.json({
         message: 'Bookmark removed successfully',
         project: updatedProject,
