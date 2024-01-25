@@ -44,6 +44,11 @@ export const userGithubDetailsSchema = new Schema<UserGithubDetailsProps>(
       minlength: 1,
       unique: true,
     },
+    readme: {
+      type: String,
+      trim: true,
+      maxlength: 5000,
+    },
   },
   { timestamps: true }
 );

@@ -5,7 +5,7 @@ import  { stringSchema, projectArraySchema } from "@/zod/zod.common"
 
 const client = new MongoClient(process.env.DATABASE_URL!);
 
-async function handler(req:Request) {
+async function handler(req: Request) {
   await dbConnect();
 
   try {
@@ -13,20 +13,20 @@ async function handler(req:Request) {
     console.log("connected");
     const db = client.db("user");
     const collection = db.collection("projects");
-    
+
     const { searchTerm } = await req.json();
     stringSchema.parse(searchTerm);
-    
+
     const pipeline = [
       {
         $search: {
           index: "projects",
           text: {
             query: searchTerm,
-            path:{
-                'wildcard':'*'
+            path: {
+              wildcard: "*",
             },
-            fuzzy:{}
+            fuzzy: {}, // todo check this
           },
         },
       },
@@ -37,8 +37,8 @@ async function handler(req:Request) {
     projectArraySchema.parse(searchResults);
     return NextResponse.json({ results: searchResults });
   } catch (error) {
-    console.error('Error searching:', error);
-   return  NextResponse.json({ message: 'Internal Server Error' });
+    console.error("Error searching:", error);
+    return NextResponse.json({ message: "Internal Server Error" });
   } finally {
     await client.close();
   }
