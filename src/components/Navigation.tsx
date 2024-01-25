@@ -24,11 +24,11 @@ const navigation = [
   },
   {
     name: "About The Team",
-    href: "/",
+    href: "/about-us",
   },
   {
     name: "contact us",
-    href: "/",
+    href: "/contact-us",
   },
 ];
 const Navigation = ({ searchParams }: PageProps) => {
