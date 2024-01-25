@@ -31,7 +31,7 @@ export type UserQuestionsProps = {
 };
 
 export type UserDiscordDetailsProps = {
-  _id: string;
+  _id: string; // discord id
   username: string;
   discriminator: string;
   avatar?: string;
@@ -42,6 +42,19 @@ export type UserDiscordDetailsProps = {
   verified?: boolean;
   email?: string;
 };
+
+export const userDiscordDetailsKeys: string[] = [
+  "_id",
+  "username",
+  "discriminator",
+  "avatar",
+  "accent_color",
+  "bot",
+  "global_name",
+  "banner",
+  "verified",
+  "email",
+];
 
 export type UserGithubDetailsProps = {
   accessToken?: string;
@@ -54,7 +67,20 @@ export type UserGithubDetailsProps = {
   bio?: string;
   twitter_username?: string;
   login: string;
+  readme?: string;
 };
+export const userGithubDetailsKeys: string[] = [
+  "accessToken",
+  "refreshToken",
+  "username",
+  "avatar_url",
+  "node_id",
+  "name",
+  "company",
+  "bio",
+  "twitter_username",
+  "login",
+];
 
 export type UserTeamItemProps = {
   githubId: string;
@@ -68,6 +94,27 @@ export type UserTeamItemProps = {
   contactMethodId: string;
 };
 
+export type UserSearchInfoProps = {
+  avatar?: string;
+  bio?: string;
+  skills: Array<(typeof skills)[number]>;
+  discordDetails: UserDiscordDetailsProps;
+  githubDetails?: UserGithubDetailsProps;
+  skillLevel?: MemberLevelType;
+  username?: string;
+  _id: mongoose.Types.ObjectId;
+};
+export const userSearchInfoKeys: string[] = [
+  "avatar",
+  "bio",
+  "skills",
+  "discordDetails",
+  "githubDetails",
+  "skillLevel",
+  "username",
+  "_id",
+];
+
 export type UserMongoProps = Omit<UserProps, "githubId">;
 
 export type ContactDetailsProps = {
@@ -78,3 +125,10 @@ export type ContactDetailsProps = {
 };
 
 export type UserTeamProps = { team: UserTeamItemProps[] };
+
+export enum UserRedisKeys {
+  users = "users",
+  usersData = "userData",
+  usersGithub = "userGithub",
+  usersDiscord = "userDiscord",
+}
