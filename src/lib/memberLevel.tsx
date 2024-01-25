@@ -9,7 +9,6 @@ export const memberLevelsMap = {
   god: true,
 };
 
-export const memberLevels = [...Object.keys(memberLevelsMap), null];
-
+export const memberLevels = [...Object.keys(memberLevelsMap), null] as const;
 
 export type MemberLevelType = keyof typeof memberLevelsMap | null;

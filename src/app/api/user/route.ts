@@ -6,7 +6,6 @@ import redisClient from "@/redis/config";
 async function handler(req: Request) {
   try {
     await dbConnect();
-
     // Check if the users data exists in Redis
     const usersFromCache = await redisClient.hgetall("users");
 

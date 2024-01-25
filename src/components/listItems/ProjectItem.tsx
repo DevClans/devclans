@@ -1,4 +1,4 @@
-import { ProjectProps } from "@/types/mongo/project.types";
+import { ProjectSearchItemProps } from "@/types/mongo/project.types";
 import ProductImg from "../project/ProjectImg";
 import { ProjectIconGroup, ProjectStage } from "..";
 import ItemsTemplate from "./ItemsTemplate";
@@ -13,7 +13,7 @@ const ProjectItem = ({
   techStack,
   team,
   searchParams,
-}: Partial<ProjectProps> & Partial<PageProps>) => {
+}: ProjectSearchItemProps & Partial<PageProps>) => {
   const teamNames = ["John", "Doe", "Jane", "Doe"];
   return (
     <>

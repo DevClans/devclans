@@ -4,7 +4,7 @@ import { skills } from "@/lib/skills";
 import mongoose from "mongoose";
 
 // Define the User interface extending mongoose.Document
-export interface UserProps extends UserTeamItemProps {
+export interface UserProps extends UserTeamItemProps, UserSearchInfoProps {
   skillLevel?: MemberLevelType;
   domain?: "frontend" | "backend" | "fullstack" | "designer" | "other"; // domain you are currenty studying
   bio?: string;
@@ -83,16 +83,24 @@ export const userGithubDetailsKeys: string[] = [
 ];
 
 export type UserTeamItemProps = {
-  githubId: string;
-  discordId: string;
-  discordDetails: UserDiscordDetailsProps;
-  githubDetails: UserGithubDetailsProps;
+  githubId: string; // username
+  discordId: string; // username
   username?: string;
   avatar?: string;
   _id: mongoose.Types.ObjectId;
   contactMethod: contactMethodsType;
   contactMethodId: string;
 };
+
+export const userTeamItemKeys: string[] = [
+  "githubId",
+  "discordId",
+  "username",
+  "avatar",
+  "_id",
+  "contactMethod",
+  "contactMethodId",
+];
 
 export type UserSearchInfoProps = {
   avatar?: string;

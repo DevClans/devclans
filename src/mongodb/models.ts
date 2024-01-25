@@ -9,6 +9,8 @@ import { devStages } from "@/lib/devStages";
 import { memberLevels } from "@/lib/memberLevel";
 import { discordDetailsSchema } from "./discordModel";
 import { userGithubDetailsSchema } from "./githubModal";
+import projectRepoSchema from "./projectRepoDetails";
+import { projectDomains } from "@/lib/domains";
 
 const userSchema = new mongoose.Schema<UserMongoProps>(
   {
@@ -16,7 +18,7 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
     githubDetails: { type: userGithubDetailsSchema },
     domain: {
       type: String,
-      enum: ["frontend", "backend", "fullstack", "designer", "other"],
+      enum: projectDomains,
     },
     username: { type: String, unique: true },
     avatar: { type: String },
@@ -169,15 +171,7 @@ const projectSchema = new mongoose.Schema<ProjectProps>(
       default: "idea",
     },
     published: { type: Boolean, default: false },
-    repoDetails: {
-      description: { type: String, default: "" },
-      stars: { type: Number, default: 0 },
-      forks: { type: Number, default: 0 },
-      watchers: { type: Number, default: 0 },
-      topics: [{ type: String, default: [] }],
-      commits: { type: Number, default: 0 },
-      lastCommit: { type: Date, default: Date.now },
-    },
+    repoDetails: projectRepoSchema,
   },
   { timestamps: true }
 );

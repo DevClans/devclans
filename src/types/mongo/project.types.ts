@@ -37,17 +37,33 @@ export type ProjectProps = ProjectTeamProps & {
   repoDetails: Partial<ProjectRepoDetailsProps>;
 };
 
-export type ProjectRepoDetailsProps = {
+export type ProjectRepoDetailsProps = ProjectFilesProps & {
   description: string;
-  stars: number;
+  owner: string;
+  watchers_count: number;
   forks: number;
   watchers: number;
   topics: string[];
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: Date;
+  updated_at: Date;
   commits: number;
   lastCommit: Date;
+  languages: Record<string, number>;
 };
+
+export const ProjectRepoDetailsKeys: string[] = [
+  "description",
+  "owner",
+  "watchers_count",
+  "forks",
+  "watchers",
+  "topics",
+  "created_at",
+  "updated_at",
+  "commits",
+  "lastCommit",
+  "languages",
+];
 export type ProjectTeamProps = (
   | UserTeamProps
   | {
@@ -81,3 +97,30 @@ export type ProjectFilesProps = {
   readme: string;
   contributing: string;
 };
+
+export enum ProjectRedisKeys {
+  projects = "projects",
+  projectsData = "projectData",
+  projectsGithub = "projectGithub",
+  projectsDiscord = "projectDiscord",
+}
+
+export type ProjectSearchItemProps = {
+  needMembers?: MemberLevelType;
+  imgs: string[];
+  _id?: mongoose.Types.ObjectId;
+  desc: string;
+  title: string;
+  techStack: string[];
+  team: mongoose.Types.ObjectId[];
+};
+
+export const projectSearchItemKeys: string[] = [
+  "needMembers",
+  "imgs",
+  "_id",
+  "desc",
+  "title",
+  "techStack",
+  "team",
+];

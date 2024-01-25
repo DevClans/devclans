@@ -26,14 +26,14 @@ const ProjectData = async (projectId: string) => {
     }
   };
 
-  const projectData = await fetchData();
+  const projectData = (await fetchData()) as FetchProjectProps;
 
   const renderLanguages = () => {
-    if (!(projectData && (projectData as { languages: any }).languages)) {
+    if (!projectData?.data?.repoDetails?.languages) {
       return null;
     }
 
-    const languagesObject = (projectData as { languages: any }).languages;
+    const languagesObject = projectData.data.repoDetails.languages;
     const totalBytes: any = Object.values(languagesObject).reduce(
       (acc: any, percentage: any) => acc + percentage,
       0

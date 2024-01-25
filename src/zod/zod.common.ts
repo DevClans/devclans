@@ -1,31 +1,44 @@
 import { z } from "zod";
 import { skills } from "@/lib/skills";
-import { Types, Schema } from 'mongoose';
+import { Types, Schema } from "mongoose";
+import { memberLevels } from "@/lib/memberLevel";
+import { devStages } from "@/lib/devStages";
+import { contactMethods } from "@/lib/contactMethods";
+import { projectDomains } from "@/lib/domains";
+import { zodUserTeamItemSchema } from "./users/zod.userTeam";
 
-
-
-const ownerSchema =  z.custom<Schema.Types.ObjectId>((value: any) => {
-  if (!Types.ObjectId.isValid(value)) {
-    throw new Error('Invalid ObjectId');
+export const zodMongoId = z
+  .string()
+  .refine((value) => Types.ObjectId.isValid(value), {
+    message: "something worong with object id",
+  });
+export const zodDateString = z.string().refine(
+  (value) => {
+    const date = new Date(value);
+    return !isNaN(date.getTime());
+  },
+  {
+    message: "Invalid date string",
+    path: [], // path is filled out by zod
   }
-  return new Types.ObjectId(value);
+);
+export const zodGithubAccessToken = z
+  .string()
+  .refine((value) => /^[a-fA-F0-9]{40}$/.test(value), {
+    message: "Invalid GitHub access token format",
+  });
+const ownerSchema = z.object({
+  _id: zodMongoId,
+  githubId: z.string().min(1).max(50),
+  githubDetails: z
+    .object({
+      accessToken: zodGithubAccessToken,
+    })
+    .optional(),
 });
 
+const ownedProjects = z.array(zodMongoId);
 
-
-const ownedProjects =  z.custom<Schema.Types.ObjectId>((value: any) => {
-  if (!Types.ObjectId.isValid(value)) {
-    throw new Error('Invalid ObjectId');
-  }
-  return new Types.ObjectId(value);
-});
-
-
-
-const domain =  ["frontend", "backend", "fullstack", "designer", "other"] as const;
-const contact = [ 'discord', 'whatsapp', 'telegram', 'twitter' ] as const;
-const memberLevels = ['beginner','intermediate','advanced','expert','master','grandmaster','legend','god'] as const;
-const devStages = [ 'idea', 'development', 'alpha', 'beta', 'production' ] as const;
 export const stringSchema = z.string();
 
 export const stringArraySchema = z.array(z.string());
@@ -50,116 +63,162 @@ export const discordDetailsSchema = z.object({
   discriminator: z.string().refine((value) => /^\d{4}$/.test(value), {
     message: "Invalid discriminator! Must be a string of 4 digits.",
   }),
-  avatar: z.string().default("").refine((value) => /^https:\/\/cdn.discordapp.com/.test(value), {
-    message: "Invalid avatar URL! Must start with 'https://cdn.discordapp.com/'.",
-  }),
-  accent_color: z.string().default("").refine((value) => /^#([0-9a-fA-F]{3}){1,2}$/.test(value), {
-    message: "Invalid accent color! Must be a valid hex color code.",
-  }),
+  avatar: z
+    .string()
+    .default("")
+    .refine((value) => /^https:\/\/cdn.discordapp.com/.test(value), {
+      message:
+        "Invalid avatar URL! Must start with 'https://cdn.discordapp.com/'.",
+    }),
+  accent_color: z
+    .string()
+    .default("")
+    .refine((value) => /^#([0-9a-fA-F]{3}){1,2}$/.test(value), {
+      message: "Invalid accent color! Must be a valid hex color code.",
+    }),
   bot: z.boolean().default(false),
   global_name: z.string().default(""),
-  banner: z.string().default("").refine((value) => /^https:\/\/cdn.discordapp.com/.test(value), {
-    message: "Invalid banner URL! Must start with 'https://cdn.discordapp.com/'.",
-  }),
+  banner: z
+    .string()
+    .default("")
+    .refine((value) => /^https:\/\/cdn.discordapp.com/.test(value), {
+      message:
+        "Invalid banner URL! Must start with 'https://cdn.discordapp.com/'.",
+    }),
   verified: z.boolean().default(false),
-  email: z.string().default("").refine((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), {
-    message: "Invalid email address!",
-  }),
+  email: z
+    .string()
+    .default("")
+    .refine((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), {
+      message: "Invalid email address!",
+    }),
   // Add other properties and validations as needed
 });
 
-
 export const userSchema = z.object({
-  discordId:stringSchema.max(50).min(1),
-  githubDetails:userGithubDetailsSchema.optional(),
-  domain: z.enum(domain).optional(),
-  username:stringSchema.max(50).min(1),
+  discordId: z.string().min(5).max(50),
+  githubDetails: userGithubDetailsSchema.optional(),
+  domain: z.enum(projectDomains).optional(),
+  username: stringSchema.max(50).min(1),
   avatar: z.string().optional(),
-  bio:stringSchema.max(100).optional(),
-  contactMethod:z.enum(contact).default("discord"),
+  bio: stringSchema.max(100).optional(),
+  contactMethod: z.enum(contactMethods).default("discord"),
   socials: z.object({
-    twitter:stringSchema.optional(),
-    telegram:stringSchema.optional(),
-    linkedin:stringSchema.default(""),
-    website:stringSchema.default("")
+    twitter: stringSchema.optional(),
+    telegram: stringSchema.optional(),
+    linkedin: stringSchema.default(""),
+    website: stringSchema.default(""),
   }),
-  phone: z.string().refine((value) => /^[0-9]{10}$/.test(value), {
-    message: "Invalid phone number!",
-  }).optional(),
-  email: z.string().refine((value) => /\S+@\S+\.\S+/.test(value), {
-    message: "Invalid email address!",
-  }).optional(),
+  phone: z
+    .string()
+    .refine((value) => /^[0-9]{10}$/.test(value), {
+      message: "Invalid phone number!",
+    })
+    .optional(),
+  email: z
+    .string()
+    .refine((value) => /\S+@\S+\.\S+/.test(value), {
+      message: "Invalid email address!",
+    })
+    .optional(),
 
   skills: z.array(z.enum(skills)).optional(),
   ownedProjects: z.array(ownedProjects),
   contributedProjects: z.array(ownedProjects),
-  questions: z.object({
-    currentCompany: z.string().optional(),
-    careerGoal: z.enum(["remote", "faang", "startup"]).optional(),
-    proudAchievement: z.string().optional(),
-    recentWork: z.string().optional(),
-  }).optional(),
-  discordDetails:discordDetailsSchema.optional(),
-  createdAt: z.date().default(() => new Date()),
-  updatedAt: z.date().default(() => new Date()),
-  
-})
-export const userArraySchema= z.array(userSchema)
+  questions: z
+    .object({
+      currentCompany: z.string().optional(),
+      careerGoal: z.enum(["remote", "faang", "startup"]).optional(),
+      proudAchievement: z.string().optional(),
+      recentWork: z.string().optional(),
+    })
+    .optional(),
+  discordDetails: discordDetailsSchema.optional(),
+  createdAt: zodDateString,
+  updatedAt: zodDateString,
+});
+export const userArraySchema = z.array(userSchema);
 
-
-export const projectSchema = z.object({
-  title: z.string().min(1).max(50),
-  desc: z.string().min(1).max(180),
-  owner:ownerSchema,
-  contributors:z.array(ownerSchema),
+export const zodProjectSearchInfoSchema = z.object({
+  _id: zodMongoId,
+  title: z.string().min(3).max(50),
+  desc: z.string().min(10).max(180),
+  techStack: z.array(z.string()).default([]),
+  team: z.array(zodUserTeamItemSchema).default([]),
+  needMembers: z
+    .enum(memberLevels as any)
+    .nullable()
+    .default("beginner"),
+  imgs: z.array(z.string()).default([]),
+});
+export const zodRepoDetailsSchema = z
+  .object({
+    description: z.string().min(10).max(100),
+    stars: z.number().max(1000000),
+    forks: z.number().max(10000),
+    watchers: z.number().max(1000000),
+    topics: z.array(z.string()).max(20).default([]).optional(),
+    commits: z.number().max(10000).optional(),
+    lastCommit: zodDateString,
+    readme: z.string().max(3000),
+    contributing: z.string().max(3000),
+    languages: z.record(z.number()),
+  })
+  .optional();
+export const zodProjectDataSchema = z.object({
+  owner: ownerSchema,
+  contributors: z.string().array(),
   // Add other properties if needed
   topics: z.array(z.string()).default([]),
-  techStack: z.array(z.string()).default([]),
   repoName: z.string().max(50).default(""),
   likesCount: z.number().default(0),
   bookmarkCount: z.number().default(0),
   projectLinks: z.array(z.string()).default([]),
   projectDetails: z.object({
     problem: z.string().max(180),
-    challenges: z.array(z.object({
-      title: z.string().default(""),
-      desc: z.string().default(""),
-      solution: z.string().default(""),
-    })).default([]),
-    futureGoals: z.array(z.object({
-      title: z.string().default(""),
-      desc: z.string().default(""),
-      needHelp: z.boolean().default(false),
-    })).default([]),
-    memberReq: z.array(z.object({
-      title: z.string().default(""),
-      desc: z.string().default(""),
-    })).default([]),
+    challenges: z
+      .array(
+        z.object({
+          title: z.string().default(""),
+          desc: z.string().default(""),
+          solution: z.string().default(""),
+        })
+      )
+      .default([]),
+    futureGoals: z
+      .array(
+        z.object({
+          title: z.string().default(""),
+          desc: z.string().default(""),
+          needHelp: z.boolean().default(false),
+        })
+      )
+      .default([]),
+    memberReq: z
+      .array(
+        z.object({
+          title: z.string().default(""),
+          desc: z.string().default(""),
+        })
+      )
+      .default([]),
   }),
-  team: z.array(z.string()).default([]),
-  needMembers: z.enum(memberLevels).nullable().default("beginner"),
-  imgs: z.array(z.string()).default([]),
   video: z.string().default(""),
-  devStage: z.enum(devStages).default("idea"),
+  devStage: z.enum(devStages as any).default("idea"),
   published: z.boolean().default(false),
-  repoDetails: z.object({
-    description: z.string().default(""),
-    stars: z.number().default(0),
-    forks: z.number().default(0),
-    watchers: z.number().default(0),
-    topics: z.array(z.string()).default([]),
-    commits: z.number().default(0),
-    lastCommit: z.date().default(() => new Date()),
-  }),
-  createdAt: z.date().default(() => new Date()),
-  updatedAt: z.date().default(() => new Date()),
+  repoDetails: zodRepoDetailsSchema,
+  createdAt: zodDateString,
+  updatedAt: zodDateString,
+});
+
+export const projectSchema = z.object({
+  ...zodProjectSearchInfoSchema.shape,
+  ...zodProjectDataSchema.shape,
 });
 
 export const projectArraySchema = z.array(projectSchema);
 
-export const likeSchema = z.object(
-  {
-    user:ownerSchema,
-    project:ownedProjects
-  }
-)
+export const likeAndBkMarkSchema = z.object({
+  user: zodMongoId,
+  project: zodMongoId,
+});
