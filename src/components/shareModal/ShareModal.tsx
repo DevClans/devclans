@@ -19,7 +19,7 @@ import Box from '@mui/material/Box';
 
 
 
-const ProjectIconGroup = ({
+const ShareModal = ({
   bookmarkCount,
   likesCount,
   showLabels = true,
@@ -120,4 +120,4 @@ const ProjectIconGroup = ({
   );
 };
 
-export default ProjectIconGroup;
+export default ShareModal;
