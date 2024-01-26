@@ -41,6 +41,7 @@ const Projects = async ({ params, searchParams }: Partial<PageProps>) => {
       {projects.map((product, i) => (
         <ProjectItem searchParams={searchParams} {...product} key={i} />
       ))}
+    
     </div>
   );
 };
