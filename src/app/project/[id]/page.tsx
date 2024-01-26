@@ -21,12 +21,16 @@ const Page = async ({
     renderLanguages,
   }: { projectData: FetchProjectProps | null; renderLanguages: any } =
     await ProjectData(id);
-  const { data, files, languages } = (projectData as FetchProjectProps) || {};
+  const { data } = (projectData as FetchProjectProps) || {};
   // console.log("data for id", id, "=> ", data);
   const convertedProjectDetails = convertProjectDetails(data?.projectDetails);
   if (!data) {
     return <>No data Found With Id {id}</>;
   }
+  const files = {
+    readme: data?.repoDetails?.readme || "",
+    contributing: data?.repoDetails?.contributing || "",
+  };
   return (
     <>
       <LightLine />

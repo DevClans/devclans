@@ -1,3 +1,4 @@
+import { zodGithubAccessToken } from "@/zod/zod.common";
 import { App, Octokit } from "octokit";
 
 export const getOctokit = async ({
@@ -13,13 +14,19 @@ export const getOctokit = async ({
         appId: process.env.GITHUB_APP_ID || "",
         privateKey: process.env.GITHUB_PRIVATE_KEY || "",
       });
-      return await app.getInstallationOctokit(installationId);
-    } else if (accessToken) {
-      return new Octokit({
-        auth: accessToken,
-      });
+      return {
+        api: await app.getInstallationOctokit(installationId),
+        type: "app",
+      };
+    } else if (zodGithubAccessToken.parse(accessToken)) {
+      return {
+        api: new Octokit({
+          auth: accessToken,
+        }),
+        type: "auth",
+      };
     } else {
-      return new Octokit({});
+      return { api: new Octokit({}), type: "free" };
     }
   } catch (error) {
     console.error("Error getting octokit", error);
