@@ -53,7 +53,7 @@ export async function GET(
       // TODO encrypt github access token
       setGithubAccessToken(obj);
       redisClient.hset(
-        ProjectRedisKeys.projectsData,
+        ProjectRedisKeys.data,
         id,
         JSON.stringify({
           ...obj,
@@ -66,9 +66,9 @@ export async function GET(
           },
         })
       );
-      redisClient.expire(ProjectRedisKeys.projectsData, 60 * 60 * 24 * 7); // 1 week
+      redisClient.expire(ProjectRedisKeys.data, 60 * 60 * 24 * 7); // 1 week
     };
-    const projectString = await redisClient.hget(ProjectRedisKeys.projects, id);
+    const projectString = await redisClient.hget(ProjectRedisKeys.list, id);
     // console.info("Project found in cache:", project);
     let isProject: any = {};
     if (projectString) {
@@ -83,7 +83,7 @@ export async function GET(
       // project is in cache
       // check if project data is in cache
       const projectDataString = await redisClient.hget(
-        ProjectRedisKeys.projectsData,
+        ProjectRedisKeys.data,
         id
       );
       console.info("projectDataString recieved", Boolean(projectDataString));
@@ -136,11 +136,11 @@ export async function GET(
       console.info("searchInfoData", searchInfoData);
       console.info("detailsData", detailsData);
       redisClient.hset(
-        ProjectRedisKeys.projects,
+        ProjectRedisKeys.list,
         id,
         JSON.stringify(searchInfoData)
       );
-      redisClient.expire(ProjectRedisKeys.projects, 60 * 60 * 24 * 7); // 1 week
+      redisClient.expire(ProjectRedisKeys.list, 60 * 60 * 24 * 7); // 1 week
       setProjectDataRedis(detailsData);
       projectInfo.owner &&
         "githubDetails" in projectInfo.owner &&
@@ -197,7 +197,7 @@ const getGithubData = async (
     // Check if readme is in cache
     console.info("-- getting github data --");
     const githubDataString = await redisClient.hget(
-      ProjectRedisKeys.projectsGithub,
+      ProjectRedisKeys.github,
       id
     );
     const {
@@ -440,7 +440,7 @@ const getGithubData = async (
       console.info("updateRes for repodetails", Boolean(updateRes));
       // store in cache
       redisClient.hset(
-        ProjectRedisKeys.projectsGithub,
+        ProjectRedisKeys.github,
         id,
         JSON.stringify(repoDetails)
       );

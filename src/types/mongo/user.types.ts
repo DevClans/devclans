@@ -135,8 +135,9 @@ export type ContactDetailsProps = {
 export type UserTeamProps = { team: UserTeamItemProps[] };
 
 export enum UserRedisKeys {
-  users = "users",
-  usersData = "userData",
-  usersGithub = "userGithub",
-  usersDiscord = "userDiscord",
+  list = "users",
+  data = "userData",
+  github = "userGithub",
+  discord = "userDiscord",
+  search = "userSearch",
 }

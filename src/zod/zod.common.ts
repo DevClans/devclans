@@ -222,3 +222,20 @@ export const likeAndBkMarkSchema = z.object({
   user: zodMongoId,
   project: zodMongoId,
 });
+
+export const zodFilterQuery = z.object({
+  search: z.string().optional().default(""),
+  page: z
+    .union([z.string(), z.number()])
+    .transform((value) =>
+      typeof value === "string" ? parseFloat(value) : value
+    )
+    .optional()
+    .default(parseInt("1")),
+  filters: z
+    .union([z.record(z.any()), z.string()])
+    .transform((val) => (typeof val === "string" ? JSON.parse(val) : val))
+    .optional()
+    .default({}),
+  pageLength: z.number().optional().default(20),
+});

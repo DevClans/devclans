@@ -41,6 +41,9 @@ dependencies:
   bson:
     specifier: ^6.2.0
     version: 6.2.0
+  fast-json-stable-stringify:
+    specifier: ^2.1.0
+    version: 2.1.0
   github-calendar:
     specifier: ^2.3.2
     version: 2.3.2

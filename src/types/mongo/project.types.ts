@@ -99,10 +99,11 @@ export type ProjectFilesProps = {
 };
 
 export enum ProjectRedisKeys {
-  projects = "projects",
-  projectsData = "projectData",
-  projectsGithub = "projectGithub",
-  projectsDiscord = "projectDiscord",
+  list = "projects",
+  data = "projectData",
+  github = "projectGithub",
+  discord = "projectDiscord",
+  search = "projectSearches",
 }
 
 export type ProjectSearchItemProps = {

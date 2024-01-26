@@ -33,10 +33,7 @@ const getGithubData = async (
 ) => {
   try {
     let getData = true;
-    const githubData = await redisClient.hget(
-      UserRedisKeys.usersGithub,
-      userId
-    );
+    const githubData = await redisClient.hget(UserRedisKeys.github, userId);
     if (githubData) {
       Object.assign(userInfo["githubDetails"], JSON.parse(githubData));
       // check if it contains all fields
@@ -51,12 +48,12 @@ const getGithubData = async (
     if (getData && userAccessToken) {
       // get data from github api
       const githubapi = await getOctokit({ accessToken: userAccessToken });
-      if (!githubapi) {
+      if (!githubapi || !(githubapi.type === "auth")) {
         console.error("error getting github api");
         return;
       }
       // get github related data
-      const githubData: any = await githubapi.request("GET /user", {
+      const githubData: any = await githubapi.api.request("GET /user", {
         headers: {
           "X-GitHub-Api-Version": "2022-11-28",
         },
@@ -77,11 +74,11 @@ const getGithubData = async (
       }
       // store data
       redisClient.hset(
-        UserRedisKeys.usersGithub,
+        UserRedisKeys.github,
         userId,
         JSON.stringify(userInfo["githubDetails"])
       );
-      redisClient.expire(UserRedisKeys.usersGithub, 60 * 60 * 24 * 1); // 1 day
+      redisClient.expire(UserRedisKeys.github, 60 * 60 * 24 * 1); // 1 day
     } else {
       if (getData) {
         console.error("error getting github api");
@@ -108,17 +105,14 @@ async function handler(
     }
     // is user in cache? check users key
     const userInfo: UserProps | UserSearchInfoProps | Record<string, any> = {};
-    const userInCache = await redisClient.hget(UserRedisKeys.users, userId);
+    const userInCache = await redisClient.hget(UserRedisKeys.list, userId);
     Object.assign(userInfo, userInCache ? JSON.parse(userInCache) : {}); // info like: username, avatar, etc
     if (userInCache) {
       console.info("users cache hit");
       // * GETTING USER DETAILS
       try {
         // check for user data in cache in userData key
-        const userData = await redisClient.hget(
-          UserRedisKeys.usersData,
-          userId
-        );
+        const userData = await redisClient.hget(UserRedisKeys.data, userId);
         // if user data is in cache, add it to user object
         if (userData) {
           console.info("usersdata cache hit");
@@ -134,7 +128,7 @@ async function handler(
           }
           Object.assign(userInfo, u);
           // add to cache
-          redisClient.hset(UserRedisKeys.usersData, userId, JSON.stringify(u));
+          redisClient.hset(UserRedisKeys.data, userId, JSON.stringify(u));
           redisClient.expire("usersData", 60 * 60 * 24 * 7); // 1 week
         }
       } catch (error) {
@@ -166,17 +160,17 @@ async function handler(
         }
       }
       redisClient.hset(
-        UserRedisKeys.users,
+        UserRedisKeys.list,
         userId,
         JSON.stringify(userSearchInfoData)
       );
-      redisClient.expire(UserRedisKeys.users, 60 * 60 * 24 * 7); // 1 week
+      redisClient.expire(UserRedisKeys.list, 60 * 60 * 24 * 7); // 1 week
       redisClient.hset(
-        UserRedisKeys.usersData,
+        UserRedisKeys.data,
         userId,
         JSON.stringify(userDetailsData)
       );
-      redisClient.expire(UserRedisKeys.usersData, 60 * 60 * 24 * 7); // 1 week
+      redisClient.expire(UserRedisKeys.data, 60 * 60 * 24 * 7); // 1 week
     }
 
     // if yes, return from cache
