@@ -127,7 +127,7 @@ const projectSchema = new mongoose.Schema<ProjectProps>(
     owner: { type: mongoose.Types.ObjectId, ref: "User", required: true },
     contributors: [{ type: mongoose.Types.ObjectId, ref: "User", default: [] }],
     topics: [{ type: String, default: [] }], // ml, android
-    techStack: [{ type: String, default: [] }], // tech: html, css
+    skills: [{ type: String, default: [] }], // tech: html, css
     repoName: { type: String, default: "" },
     likesCount: { type: Number, default: 0 },
     bookmarkCount: { type: Number, default: 0 },

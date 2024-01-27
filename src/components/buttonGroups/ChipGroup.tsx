@@ -1,28 +1,31 @@
 import { PageProps } from "@/types/page.types";
 import { Chip } from "..";
+import { getFilters, toggleFilter } from "@/utils/filterFunctions";
 
 const ChipGroup = ({
   arr,
   searchParams,
   className,
-}: { arr: string[]; className?: string } & Partial<PageProps>) => {
-  const newParams = new URLSearchParams(
-    Object.entries(searchParams || {}).map(([key, value]) => [
-      key,
-      String(value),
-    ])
-  );
-  console.log("searchParams in chipgroup", searchParams, newParams);
+  baseUrl = "",
+}: {
+  arr: string[];
+  className?: string;
+  baseUrl?: string;
+} & Partial<PageProps>) => {
+  const { filters, newParams } = getFilters(searchParams);
+  console.log("searchParams in chipgroup", searchParams, newParams, baseUrl);
   return (
     <>
       <div className={`${className} frc gap-2 flex-wrap`}>
         {arr?.map((tech, i) => {
-          const hasQueryParams = newParams.toString().length > 0;
-          let hreff = "/explore?label=" + tech;
-          if (hasQueryParams) {
-            newParams.set("label", tech);
-            hreff = "/explore?" + newParams.toString();
-          }
+          const { newParams: params } = toggleFilter(
+            newParams,
+            filters,
+            "skills",
+            tech
+          );
+
+          let hreff = params && `${baseUrl}?${params.toString()}`;
           return <Chip key={i} label={tech} href={hreff} />;
         })}
       </div>

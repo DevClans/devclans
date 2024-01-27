@@ -1,12 +1,13 @@
 import { MemberLevelType } from "./../../lib/memberLevel";
 import { contactMethodsMap, contactMethodsType } from "@/lib/contactMethods";
+import { ProjectDomainType } from "@/lib/domains";
 import { skills } from "@/lib/skills";
 import mongoose from "mongoose";
 
 // Define the User interface extending mongoose.Document
 export interface UserProps extends UserTeamItemProps, UserSearchInfoProps {
   skillLevel?: MemberLevelType;
-  domain?: "frontend" | "backend" | "fullstack" | "designer" | "other"; // domain you are currenty studying
+  domain?: ProjectDomainType; // domain you are currenty studying
   bio?: string;
   phone?: string;
   email?: string;

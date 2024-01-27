@@ -28,7 +28,7 @@ const userQuestions = ({ questions }: { questions: UserQuestionsProps }) => {
         " "
       )}`,
   };
-  const ques: InfoWithIconProps[] = Object.keys(questions)
+  const ques: InfoWithIconProps[] = Object.keys(questions || {})
     .map((key) => {
       if (!questions[key as keyof UserQuestionsProps]) {
         return;
@@ -45,7 +45,7 @@ const userQuestions = ({ questions }: { questions: UserQuestionsProps }) => {
     })
     .filter(Boolean) as InfoWithIconProps[];
   const questionsObj = Object.fromEntries(
-    Object.keys(questions).map((key) => {
+    Object.keys(questions || {}).map((key) => {
       return [
         sampleQuestions[key as keyof typeof sampleQuestions],
         questions[key as keyof UserQuestionsProps],

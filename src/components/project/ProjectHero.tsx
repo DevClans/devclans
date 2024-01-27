@@ -4,7 +4,7 @@ import { ProjectProps } from "@/types/mongo/project.types";
 import { PageProps } from "@/types/page.types";
 
 const ProjectHero = ({
-  techStack = ["react", "nextjs", "typescript", "tailwindcss"],
+  skills = ["react", "nextjs", "typescript", "tailwindcss"],
   imgs,
   devStage,
   title,
@@ -30,7 +30,11 @@ const ProjectHero = ({
         <h1 className="text-4xl">{data.title}</h1>
         <p>{data.desc}</p>
         {/* chips */}
-        <ChipGroup arr={techStack} searchParams={searchParams} />
+        <ChipGroup
+          arr={skills}
+          searchParams={searchParams}
+          baseUrl="/explore/projects"
+        />
       </div>
       {/* images */}
       <div className="relative w100">

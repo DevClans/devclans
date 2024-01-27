@@ -41,7 +41,7 @@ const createDummyData = async () => {
         owner: new mongoose.Types.ObjectId("65a5c5088ff73712ce98eb74"), // Replace with a valid user ID
         contributors: ["65a5c5088ff73712ce98eb74"], // Dummy value for contributors
         topics: ["ml", "android"],
-        techStack: ["tech: html", "css"],
+        skills: ["tech: html", "css"],
         githubLink: "https://github.com/dummyuser/dummyproject",
         likesCount: 0,
         bookmarkCount: 0,

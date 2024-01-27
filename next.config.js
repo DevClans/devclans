@@ -10,7 +10,7 @@ const nextConfig = {
         hostname: "utfs.io",
       },
     ],
-    domains: ["picsum.photos"],
+    domains: ["picsum.photos", "avatars.githubusercontent.com"],
   },
   async headers() {
     return [

@@ -4,12 +4,14 @@ import MiddleSection from "@/components/userPage/MiddleSection";
 import RightSidebar from "@/components/userPage/RightSidebar";
 import selectUserUsername from "@/lib/selectUserUsername";
 import { UserProps } from "@/types/mongo/user.types";
+import { PageProps } from "@/types/page.types";
 import { Fetch } from "@/utils/fetchApi";
 
 const layout = async ({
   params,
   children,
-}: { params: { id: string } } & React.PropsWithChildren) => {
+  searchParams,
+}: { params: { id: string } } & PageProps & React.PropsWithChildren) => {
   const { id } = params;
   const userData: UserProps = await Fetch({
     endpoint: `/user/${id}`,
@@ -25,7 +27,7 @@ const layout = async ({
   return (
     <>
       <LightLine />
-      <LeftSidebar {...userData} />
+      <LeftSidebar {...userData} searchParams={searchParams} />
       <div className="frfssb peer-data-[state=not-active]:pl-[120px] peer-data-[state=active]:pl-[340px] relative -z-10 w100 container py-6 gap-6">
         {/* middle scroll */}
         <MiddleSection

@@ -1,3 +1,4 @@
+import { ProjectDomainType } from "./../../lib/domains";
 import mongoose from "mongoose";
 import { UserProps, UserTeamProps } from "./user.types";
 import { DevStagesType } from "@/lib/devStages";
@@ -18,10 +19,11 @@ export type ProjectProps = ProjectTeamProps & {
   _id?: mongoose.Types.ObjectId;
   title: string;
   desc: string;
+  domain: ProjectDomainType;
   owner: mongoose.Types.ObjectId | Partial<UserProps>;
   contributors: mongoose.Types.ObjectId[] | Partial<UserProps>[];
   topics: string[];
-  techStack: string[];
+  skills: string[];
   repoName: string;
   likesCount: number;
   bookmarkCount: number;
@@ -112,8 +114,11 @@ export type ProjectSearchItemProps = {
   _id?: mongoose.Types.ObjectId;
   desc: string;
   title: string;
-  techStack: string[];
-  team: mongoose.Types.ObjectId[];
+  skills: string[];
+  team: {
+    username?: string;
+    _id: mongoose.Types.ObjectId;
+  }[];
 };
 
 export const projectSearchItemKeys: string[] = [
@@ -122,6 +127,6 @@ export const projectSearchItemKeys: string[] = [
   "_id",
   "desc",
   "title",
-  "techStack",
+  "skills",
   "team",
 ];

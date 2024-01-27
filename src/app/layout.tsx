@@ -21,7 +21,7 @@ const bebas_neue = Bebas_Neue({
   variable: "--bebas_neue",
 });
 export const metadata: Metadata = {
-  title: "Beyond 1x",
+  title: "Devclans",
   description: "Connect with thousands of developers from 100xdevs",
 };
 
@@ -35,14 +35,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
   return (
     <html lang="en" className={`${poppins.variable} ${bebas_neue.variable}`}>
-      <head>
-        <title>{metadata.title as React.ReactNode}</title>
-        <meta name="description" content={metadata.description as string} />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-       
-      </head>
       <body>
-
         <SessionProvider session={session}>
           {modal}
           <Header />
@@ -60,7 +53,6 @@ export default async function RootLayout({
           }}
           toastClassName={"card"}
         />
- 
       </body>
     </html>
   );

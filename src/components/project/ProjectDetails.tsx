@@ -19,26 +19,30 @@ const ProjectDetails = ({
   headingClass?: string;
   containerClass?: string;
 }) => {
-  const toogleData: ToogleListItemProps = {
-    heading: "readme.md",
-    data: [
-      {
-        title: "title",
-        desc: "desc",
-      },
-    ],
-  };
+  // const toogleData: ToogleListItemProps = {
+  //   heading: "readme.md",
+  //   data: [
+  //     {
+  //       title: "title",
+  //       desc: "desc",
+  //     },
+  //   ],
+  // };
 
-  const dummydata: ProjectDetailsItemProps[] = data || [
-    {
-      heading: "The Problem We Solve",
-      data: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-    },
-    {
-      heading: "Challenges We Ran Into",
-      data: [toogleData],
-    },
-  ];
+  const dummydata: ProjectDetailsItemProps[] = data;
+  //  [
+  //   {
+  //     heading: "The Problem We Solve",
+  //     data: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
+  //   },
+  //   {
+  //     heading: "Challenges We Ran Into",
+  //     data: [toogleData],
+  //   },
+  // ];
+  if (data.length == 0) {
+    return <></>;
+  }
   return (
     <div className={`w100 fcfs p-5 card2 ${className}`} style={style}>
       {heading && <h2 className={"mb-6 " + headingClass}>{heading}</h2>}

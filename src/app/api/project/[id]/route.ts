@@ -444,6 +444,7 @@ const getGithubData = async (
         id,
         JSON.stringify(repoDetails)
       );
+      redisClient.expire(ProjectRedisKeys.github, 60 * 60 * 24 * 7); // 1 week
     }
     return {
       readme: repoDetails["readme"],

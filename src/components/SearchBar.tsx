@@ -1,37 +1,84 @@
 "use client";
 
+import colors from "@/lib/colors";
+import { debounce } from "@/lib/debounce";
 import { SearchRounded } from "@mui/icons-material";
+import Link from "next/link";
 import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const SearchBar = () => {
+  const searchParams = useSearchParams();
+  const newParams = new URLSearchParams(searchParams.toString());
   const [search, setSearch] = useState<string>("");
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
+  const router = useRouter();
+  const handleChange = debounce((value: string) => {
+    setSearch(value);
+    // to search just after stopping typing
+    newParams.set("search", value);
+    router.push("?" + newParams.toString());
+  }, 300);
+  const link = (search: string) => {
+    newParams.set("search", search);
+    return "?search=" + newParams.toString();
   };
+  const clearSearch = () => {
+    const searchbar = document.getElementById(
+      "searchbar"
+    ) as HTMLInputElement | null;
+    if (searchbar) {
+      searchbar.value = "";
+    }
+  };
+  // to clear on route change
+  // useEffect(() => {
+  //   clearSearch();
+  // }, [router]);
   return (
     <div
       className="relative card frc gap-3 w-full frcsb"
       style={{
         borderRadius: "20px",
         // backdropFilter: "blur(27.100000381469727px)",
-        padding: 15,
         background:
           "linear-gradient(0deg, rgba(231, 239, 255, 0.04) 0%, rgba(230, 239, 255, 0.00) 100%, rgba(231, 239, 255, 0.00) 100%), rgba(2, 12, 32, 0.08)",
         height: 66,
         boxSizing: "border-box",
       }}
     >
-      <input
-        className="w100"
-        style={{
-          background: "transparent",
-          outline: "none",
+      <form className="w100 " autoComplete="off" autoCorrect="off">
+        <input
+          id="searchbar"
+          name="search"
+          className="w100 p-3"
+          style={{
+            background: "transparent",
+            outline: "none",
+          }}
+          placeholder="Search"
+          defaultValue={search}
+          onChange={(e) => handleChange(e.target.value)}
+        />
+        <input type="submit" hidden />
+      </form>
+
+      <Link
+        className="pr-3 py-3"
+        href={link(search)}
+        onClick={(e) => {
+          if (!search) {
+            e.preventDefault();
+          } else {
+            clearSearch();
+          }
         }}
-        placeholder="Search"
-        value={search}
-        onChange={handleChange}
-      />
-      <SearchRounded />
+      >
+        <SearchRounded
+          style={{
+            color: search ? colors.priDark : colors.text,
+          }}
+        />
+      </Link>
     </div>
   );
 };

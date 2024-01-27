@@ -49,7 +49,7 @@ const CreateProject = () => {
     desc: "",
     topics: [""],
     githubLink: "",
-    techStack: [],
+    skills: [],
     projectLinks: [""],
     projectDetails: {
       problem: "",

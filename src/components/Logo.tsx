@@ -4,7 +4,7 @@ const Logo = () => {
   return (
     <>
       <Link href={"/"} className="" id="logo">
-        Beyond 1x
+        Devclans
       </Link>
     </>
   );

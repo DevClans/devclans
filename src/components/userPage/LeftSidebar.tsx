@@ -3,6 +3,7 @@ import { ButtonConnect, ChipGroup, LightLine } from "..";
 import ProductImg from "../project/ProjectImg";
 import LeftMenuBottomBar from "./LeftMenuBottomBar";
 import userAvatar from "@/lib/userAvatar";
+import { PageProps } from "@/types/page.types";
 
 const LeftSidebar = ({
   username,
@@ -11,7 +12,7 @@ const LeftSidebar = ({
   contactMethod,
   contactMethodId,
   ...rest
-}: Partial<UserProps>) => {
+}: Partial<UserProps> & PageProps) => {
   const avatar = userAvatar({ userProps: rest });
   return (
     <>
@@ -82,6 +83,8 @@ const LeftSidebar = ({
               <ChipGroup
                 className={`group-data-[state=not-active]/left:hidden`}
                 arr={skills}
+                searchParams={rest?.searchParams}
+                baseUrl="/explore/users"
               />
             </>
           )}

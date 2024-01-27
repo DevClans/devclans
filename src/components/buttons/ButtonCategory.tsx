@@ -23,7 +23,10 @@ const ButtonCategory = ({
   };
   return (
     <ButtonLink
-      href={href || `/explore?category=${label}`}
+      href={
+        href ||
+        (String(label).toLowerCase() == "all" ? "?" : `?domain=${label}`)
+      }
       label={
         <>
           {icon}
