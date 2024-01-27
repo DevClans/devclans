@@ -95,14 +95,11 @@ export const discordDetailsSchema = z.object({
   // Add other properties and validations as needed
 });
 
-export const userSchema = z.object({
-  discordId: z.string().min(5).max(50),
+export const profileSchema = z.object({
   githubDetails: userGithubDetailsSchema.optional(),
-  domain: z.enum(projectDomains).optional(),
-  username: stringSchema.max(50).min(1),
-  avatar: z.string().optional(),
   bio: stringSchema.max(100).optional(),
   contactMethod: z.enum(contactMethods).default("discord"),
+  skills: z.array(z.enum(skills)).optional(),
   socials: z.object({
     twitter: stringSchema.optional(),
     telegram: stringSchema.optional(),
@@ -122,10 +119,7 @@ export const userSchema = z.object({
     })
     .optional(),
 
-  skills: z.array(z.enum(skills)).optional(),
-  ownedProjects: z.array(ownedProjects),
-  contributedProjects: z.array(ownedProjects),
-  questions: z
+    questions: z
     .object({
       currentCompany: z.string().optional(),
       careerGoal: z.enum(["remote", "faang", "startup"]).optional(),
@@ -133,6 +127,17 @@ export const userSchema = z.object({
       recentWork: z.string().optional(),
     })
     .optional(),
+  domain: z.enum(projectDomains).optional(),
+}).optional();
+
+
+export const userSchema = z.object({
+  // ...profileSchema.shape,
+  discordId: z.string().min(5).max(50),
+  username: stringSchema.max(50).min(1),
+  avatar: z.string().optional(),
+  ownedProjects: z.array(ownedProjects),
+  contributedProjects: z.array(ownedProjects),
   discordDetails: discordDetailsSchema.optional(),
   createdAt: zodDateString,
   updatedAt: zodDateString,
