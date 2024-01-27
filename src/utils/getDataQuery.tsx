@@ -26,7 +26,9 @@ async function handler(req: Request, type: "projects" | "users" = "projects") {
     )}:${page}`;
 
     // Check if the result is already in the cache
-    const cachedProjectIds = await redisClient.zrange(searchKey, 0, -1);
+    const zcache = await redisClient.zrange(searchKey, 0, -1);
+    const cachedProjectIds = zcache[0] == "0" ? [] : zcache;
+
     console.log(cachedProjectIds, "cachedProjectIds");
     const cacheData: string[] = [];
     const resData: Props[] = [];
@@ -82,12 +84,16 @@ async function handler(req: Request, type: "projects" | "users" = "projects") {
     // adding data to projectsData
     Array.prototype.push.apply(resData, dbData);
     // Storing the data in cache
+    // if (dataIdsForCache.length > 0) {
+    console.log("Storing projects in cache");
+    // storing ids in sorting set
+    await redisClient.zadd(
+      searchKey,
+      ...(dataIdsForCache.length > 0 ? dataIdsForCache : ([0, 0] as any))
+    ); //zadd(key, score1, member1, score2, member2, ...)
+    redisClient.expire(searchKey, 60 * 60 * 24 * 7); // 1 week
+    // storing data in projects hash
     if (dataIdsForCache.length > 0) {
-      console.log("Storing projects in cache");
-      // storing ids in sorting set
-      await redisClient.zadd(searchKey, ...(dataIdsForCache as any)); //zadd(key, score1, member1, score2, member2, ...)
-      redisClient.expire(searchKey, 60 * 60 * 24 * 7); // 1 week
-      // storing data in projects hash
       redisClient.hmset(
         Enum.list,
         dbData.reduce(
@@ -99,6 +105,7 @@ async function handler(req: Request, type: "projects" | "users" = "projects") {
         )
       );
     }
+    // }
     console.log("Sending projects successfully");
     return NextResponse.json(resData);
   } catch (error: any) {
@@ -117,3 +124,5 @@ export { handler as getDataQuery };
 // check count
 // if count is less or not found, get from database
 // store in cache
+// {$and:[{
+// $or:[{username:{"$regex":"dummy","$options":"i"}}]},{skills:{$in:["javascript"]}}]}

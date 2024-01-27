@@ -143,7 +143,7 @@ export const zodProjectSearchInfoSchema = z.object({
   _id: zodMongoId,
   title: z.string().min(3).max(50),
   desc: z.string().min(10).max(180),
-  techStack: z.array(z.string()).default([]),
+  skills: z.array(z.string()).default([]),
   team: z.array(zodUserTeamItemSchema).default([]),
   needMembers: z
     .enum(memberLevels as any)
@@ -233,7 +233,7 @@ export const zodFilterQuery = z.object({
     .optional()
     .default(parseInt("1")),
   filters: z
-    .union([z.record(z.any()), z.string()])
+    .union([z.record(z.string().array()), z.string()])
     .transform((val) => (typeof val === "string" ? JSON.parse(val) : val))
     .optional()
     .default({}),

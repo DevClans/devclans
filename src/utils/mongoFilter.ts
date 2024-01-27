@@ -11,7 +11,7 @@ export const mongoFilter = (
       andConditions.push({
         $or: [
           { title: { $regex: search, $options: "i" } },
-          { description: { $regex: search, $options: "i" } },
+          { desc: { $regex: search, $options: "i" } },
         ],
       });
     } else {
@@ -41,11 +41,11 @@ export const mongoFilter = (
   // Add filter conditions
   if (Array.isArray(filters)) {
     for (const filter of filters) {
-      andConditions.push({ [filter[0]]: filter[1] });
+      andConditions.push({ [filter[0]]: { $in: filter[1] } });
     }
   } else {
     for (const field in filters) {
-      andConditions.push({ [field]: filters[field] });
+      andConditions.push({ [field]: { $in: filters[field] } });
     }
   }
 

@@ -2,10 +2,13 @@ import colors from "@/lib/colors";
 import Link from "next/link";
 
 const Chip = ({ label, href }: { label?: string; href?: string }) => {
+  const newParams = new URLSearchParams();
+  const filters = { skills: [label] };
+  newParams.set("filters", JSON.stringify(filters));
   return (
     <>
       <Link
-        href={href || "/explore?label=" + label}
+        href={href || `/explore?${newParams.toString()}`}
         className="frc"
         style={{
           borderRadius: 10,

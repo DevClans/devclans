@@ -7,14 +7,11 @@ const navigation = [
   // },
   {
     name: "Find Projects",
-    href: "/explore",
+    href: "/explore/projects",
   },
   {
     name: "Find Coder Bhai",
-    href: "/explore",
-    searchParams: {
-      type: "users",
-    },
+    href: "/explore/users",
   },
   {
     name: "About 100xDevs",
@@ -48,14 +45,14 @@ const Navigation = ({ searchParams }: PageProps) => {
       }}
     >
       {navigation.map(
-        ({ href, searchParams: sp, name, target, rel }, index) => {
+        ({ href, searchParams: sp, name, target, rel }: any, index) => {
           let hreff = href;
           const newParams = new URLSearchParams();
           if (sp) {
             for (const key in sp) {
               newParams.set(key, sp.type);
             }
-            hreff = "/explore?" + newParams.toString();
+            hreff = href + "?" + newParams.toString();
           }
           return (
             <Link key={index} href={hreff} rel={rel} target={target}>

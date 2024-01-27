@@ -10,11 +10,11 @@ const ProjectItem = ({
   _id,
   desc,
   title,
-  techStack,
+  skills,
   team,
   searchParams,
 }: ProjectSearchItemProps & Partial<PageProps>) => {
-  const teamNames = ["John", "Doe", "Jane", "Doe"];
+  const teamNames = team?.map((t) => t.username) || [];
   return (
     <>
       <ItemsTemplate
@@ -46,19 +46,18 @@ const ProjectItem = ({
         rightMessage={
           <div className="frc gap-1">
             <p>Searching For :</p>
-            <p className="text-highlight">{needMembers || "Beginers"}</p>
+            <p className="text-highlight capitalize">
+              {needMembers || "Beginers"}
+            </p>
           </div>
         }
         detailHeading="Team"
-        detailDesc={teamNames.join(", ") || "team names"}
-        chipArr={techStack || []}
+        detailDesc={teamNames.join(", ")}
+        chipArr={skills || []}
         searchParams={searchParams}
-        baseUrl={"/project/"}
+        baseUrl={"/project"}
         _id={_id?.toString() || ""}
-        desc={
-          desc ||
-          "Some cool description about the group. Some cool description about the group."
-        }
+        desc={desc}
       />
     </>
   );
