@@ -3,10 +3,12 @@
 import { useEffect, useState } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation'
+import { urlApi } from '@/constants';
+import { profileSchema } from '@/zod/zod.common';
 
 const Profile = () => {
   const { data: session }:any = useSession();
-  // const [githubUsername, setGithubUsername] = useState('');
+
   const [formData, setFormData] = useState({
     githubId: '',
     bio: '',
@@ -46,15 +48,32 @@ const Profile = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    // e.preventDefault();
+
+    console.log("inside handleSubmit")
+
+
+    // Check if the user is authenticated
+    if (!session) {
+      console.error('User is not authenticated.');
+      return;
+    }
+
+    console.log("outside parsing")
+
 
     try {
-      const response = await fetch('/api/user/profile', {
+      console.log("reached parsing")
+      const validatedData = profileSchema.parse(formData);
+      // Add the accessToken to the headers for authenticated requests
+      console.log("Form Data:", validatedData)
+      const response = await fetch(`${urlApi}/user/profile`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.accessToken}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(validatedData),
       });
 
       if (response.ok) {
@@ -81,7 +100,7 @@ const Profile = () => {
       <h1>Your Profile</h1>
       <h2>{githubUsername}</h2>
       {session ? (
-        <form onSubmit={handleSubmit}>
+        <div>
 
           {/* New fields */}
           <label>
@@ -132,10 +151,10 @@ const Profile = () => {
             <input name="recentWork" value={formData.recentWork} onChange={handleChange} className='text-black'/>
           </label>
           <br />
-          <button type="submit">Update Profile</button>
+          <button onClick={() => handleSubmit} >Update Profile</button>
           {/* GitHub Connection Button */}
           <button type="button" onClick={handleConnectGitHub}>Connect Your GitHub</button>
-        </form>
+        </div>
       ) : (
         <p>You need to be logged in to view your profile.</p>
       )}
