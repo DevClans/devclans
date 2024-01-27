@@ -7,7 +7,8 @@ async function handler(req: Request) {
     await dbConnect();
 
     const user = await UserModel.find();
-    userArraySchema.parse(user);
+    // userArraySchema.parse(user);
+    
     
     return  NextResponse.json(user);
 }
