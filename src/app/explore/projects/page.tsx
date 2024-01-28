@@ -6,6 +6,7 @@ import { stringify } from "querystring";
 
 const Projects = async ({ params, searchParams }: Partial<PageProps>) => {
   const str = stringify(searchParams);
+  console.log(str)
   const projects: ProjectProps[] =
     (await Fetch({
       endpoint: "/project" + (str ? `?${str}` : ""),

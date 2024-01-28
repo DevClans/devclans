@@ -12,7 +12,12 @@ export const zodMongoId = z
   .refine((value) => Types.ObjectId.isValid(value), {
     message: "something worong with object id",
   });
-export const zodDateString = z.string().refine(
+ export const MySchema = z.object({
+    owner: z.string().refine((value) => Types.ObjectId.isValid(value), {
+      message: 'Invalid ObjectId',
+    }),
+  });
+export const zodDateString = z.date().refine(
   (value) => {
     const date = new Date(value);
     return !isNaN(date.getTime());
@@ -37,9 +42,12 @@ const ownerSchema = z.object({
     .optional(),
 });
 
-const ownedProjects = z.array(zodMongoId);
-
 export const stringSchema = z.string();
+
+
+const ownedProjects = z.array(z.object({
+  _id:stringSchema}));
+
 
 export const stringArraySchema = z.array(z.string());
 
@@ -119,7 +127,10 @@ export const profileSchema = z.object({
     })
     .optional(),
 
-    questions: z
+  
+  ownedProjects: z.array(z.string()),
+  contributedProjects: z.array(z.string()),
+  questions: z
     .object({
       currentCompany: z.string().optional(),
       careerGoal: z.enum(["remote", "faang", "startup"]).optional(),
@@ -139,13 +150,14 @@ export const userSchema = z.object({
   ownedProjects: z.array(ownedProjects),
   contributedProjects: z.array(ownedProjects),
   discordDetails: discordDetailsSchema.optional(),
-  createdAt: zodDateString,
-  updatedAt: zodDateString,
+  createdAt: zodDateString.optional(),
+  updatedAt: zodDateString.optional(),
 });
+
 export const userArraySchema = z.array(userSchema);
 
 export const zodProjectSearchInfoSchema = z.object({
-  _id: zodMongoId,
+
   title: z.string().min(3).max(50),
   desc: z.string().min(10).max(180),
   skills: z.array(z.string()).default([]),
@@ -171,8 +183,7 @@ export const zodRepoDetailsSchema = z
   })
   .optional();
 export const zodProjectDataSchema = z.object({
-  owner: ownerSchema,
-  contributors: z.string().array(),
+  contributors: z.string().array().default([]),
   // Add other properties if needed
   topics: z.array(z.string()).default([]),
   repoName: z.string().max(50).default(""),
@@ -212,8 +223,6 @@ export const zodProjectDataSchema = z.object({
   devStage: z.enum(devStages as any).default("idea"),
   published: z.boolean().default(false),
   repoDetails: zodRepoDetailsSchema,
-  createdAt: zodDateString,
-  updatedAt: zodDateString,
 });
 
 export const projectSchema = z.object({

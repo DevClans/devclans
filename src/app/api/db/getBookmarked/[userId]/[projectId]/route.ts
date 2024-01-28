@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import  { stringSchema, userSchema, projectSchema } from "@/zod/zod.common"
 import dbConnect from '@/lib/dbConnect';
-import { ProjectModel, UserModel, LikeModel } from "@/model/schema";
-import { isValidObjectId } from 'mongoose';
+import { ProjectModel, UserModel, BookmarkModel } from "@/model/schema";
 
 
 
@@ -17,26 +16,23 @@ async function handler(req:Request,{ params }:{ params : { userId: string, proje
     if (!userId || typeof userId !== 'string') {
         return NextResponse.json({ message: 'Invalid user parameter' });
       }
-      if (!isValidObjectId(projectId)) {
-        return NextResponse.json({ message: 'Invalid project ID' });
-      }
-  
-      const project = await ProjectModel.findById(projectId);
       const u = await UserModel.findOne({username:userId})
 
+
+  
     
 
       if(!u ){
-        return NextResponse.json({ message: 'User not found' });
+        return NextResponse.json({ message: 'User or Project not found' });
       }
    
-    const likes =  await LikeModel.find({
+    const likes =  await BookmarkModel.find({
 
           user : u._id,
           project: projectId
  
       });
-      
+      console.log(likes)
      
       return  NextResponse.json(likes);
     }

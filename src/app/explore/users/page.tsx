@@ -16,10 +16,13 @@ const Users = async ({ params, searchParams }: Partial<PageProps>) => {
   if (users.length === 0) {
     return <h3>No users found</h3>;
   }
+  if (!Array.isArray(users) || (Array.isArray(users) && users.length === 0)) {
+    return <h3>No users found</h3>;
+  }
   return (
     <div className="w100 fcfs gap-6">
-      <h3>Around {users.length} results found</h3>
-      {users.map((user, i) => {
+      <h3>Around { users.length} results found</h3>
+      {users?.map((user, i) => {
         return <UserItem searchParams={searchParams} key={i} {...user} />;
       })}
     </div>

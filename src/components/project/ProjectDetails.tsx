@@ -48,7 +48,10 @@ const ProjectDetails = ({
       {heading && <h2 className={"mb-6 " + headingClass}>{heading}</h2>}
       <div className={containerClass + " w100 fcc gap-6 "}>
         {dummydata.map((item, index) => (
-          <ProjectDetailsItem {...item} key={index} />
+          <>
+             <ProjectDetailsItem {...item} key={index} />
+          </>
+       
         ))}
       </div>
     </div>

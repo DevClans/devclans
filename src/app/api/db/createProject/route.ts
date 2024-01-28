@@ -4,46 +4,39 @@ import { UserModel, ProjectModel } from "@/mongodb/models";
 import  { stringSchema , projectSchema, userSchema } from "@/zod/zod.common"
 
 async function handler(req: Request) {
-  await dbConnect();
-
-  const { userId, projectName, projectDescription, problem } = await req.json();
-
-
-
   try {
+    await dbConnect();
     console.log("started");
-    stringSchema.parse(userId);
-    stringSchema.parse(projectName);
-    stringSchema.parse(projectDescription);
-    stringSchema.parse(problem);
+    const body = await req.json();
+    const { username, projects } = body;
+  const data=  projectSchema.parse(projects);
+
   
 
-    const user = await UserModel.findOne({ username: userId });
+    const user = await UserModel.findOne({ username: username });
 
     if (!user) {
-      return NextResponse.json({ message: 'User not found' });
+      return NextResponse.json({ message: 'User not found' });  
     }
 
+
     // Create a new project
-    const createdProject = new ProjectModel({
-      title: projectName,
-      desc: projectDescription,
-      owner: user._id,
-      contributors: [user._id], // Assuming the owner is also a member initially
-      projectDetails:{
-        problem:problem
-      }
-    });
+    const createdProject = new ProjectModel(projects);
     await createdProject.save();
     // Update the user's projects array
+   let str = createdProject._id;
+
+
     const updatedUser = await UserModel.findOneAndUpdate(
       { _id: user._id },
-      { $push: { projects: createdProject._id, ownedProjects:createdProject._id } },
+      { $push: { projects: str, ownedProjects:str } },
       { new: true } // Return the updated document
     );
+    console.log(updatedUser)
+
+
 console.log("done");
-userSchema.parse(updatedUser);
- projectSchema.parse(createdProject);
+
     return NextResponse.json({
       message: 'Project created and associated with user successfully',
        user: updatedUser,
