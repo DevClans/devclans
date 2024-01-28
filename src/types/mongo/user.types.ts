@@ -2,7 +2,9 @@ import { MemberLevelType } from "./../../lib/memberLevel";
 import { contactMethodsMap, contactMethodsType } from "@/lib/contactMethods";
 import { ProjectDomainType } from "@/lib/domains";
 import { skills } from "@/lib/skills";
+import { zodUserFormSchema } from "@/zod/zod.common";
 import mongoose from "mongoose";
+import { z } from "zod";
 
 // Define the User interface extending mongoose.Document
 export interface UserProps extends UserTeamItemProps, UserSearchInfoProps {
@@ -142,3 +144,4 @@ export enum UserRedisKeys {
   discord = "userDiscord",
   search = "userSearch",
 }
+export type UserFormProps = z.infer<typeof zodUserFormSchema>;

@@ -11,7 +11,10 @@ const Projects = async ({ params, searchParams }: Partial<PageProps>) => {
       endpoint: "/project" + (str ? `?${str}` : ""),
     })) || [];
   // console.log(projects, "projects in frontend");
-  if (!Array.isArray(projects) || projects.length === 0) {
+  if (
+    !Array.isArray(projects) ||
+    (Array.isArray(projects) && projects.length === 0)
+  ) {
     return <h3>No projects found</h3>;
   }
   return (

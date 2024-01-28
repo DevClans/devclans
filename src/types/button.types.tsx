@@ -16,6 +16,10 @@ export type ButtonProps = {
   href?: string;
   activeIcon?: React.ReactNode;
   setActive?: React.Dispatch<React.SetStateAction<boolean>>;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  loading?: boolean;
+  form?: string;
 };
 export type IconButtonProps = ButtonProps & {
   icon: React.ReactNode;
