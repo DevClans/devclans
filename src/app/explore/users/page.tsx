@@ -13,7 +13,7 @@ const Users = async ({ params, searchParams }: Partial<PageProps>) => {
       } as any,
     })) || [];
   // console.log(users, "users in frontend");
-  if (users.length === 0) {
+  if (!Array.isArray(users) || (Array.isArray(users) && users.length === 0)) {
     return <h3>No users found</h3>;
   }
   return (

@@ -36,9 +36,8 @@ const SearchBar = () => {
   // }, [router]);
   return (
     <div
-      className="relative card frc gap-3 w-full frcsb"
+      className="relative card rounded-[20px] has-[:focus]:border-priDark has-[:focus]:rounded-[10px] transition-border-radius duration-150 ease-in-out frc gap-3 w-full frcsb"
       style={{
-        borderRadius: "20px",
         // backdropFilter: "blur(27.100000381469727px)",
         background:
           "linear-gradient(0deg, rgba(231, 239, 255, 0.04) 0%, rgba(230, 239, 255, 0.00) 100%, rgba(231, 239, 255, 0.00) 100%), rgba(2, 12, 32, 0.08)",
@@ -50,10 +49,11 @@ const SearchBar = () => {
         <input
           id="searchbar"
           name="search"
-          className="w100 p-3"
+          className="w100 p-3 "
           style={{
             background: "transparent",
             outline: "none",
+            border: "none",
           }}
           placeholder="Search"
           defaultValue={search}

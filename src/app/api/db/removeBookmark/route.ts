@@ -3,7 +3,7 @@ import dbConnect from "@/lib/dbConnect";
 import { UserModel, ProjectModel, BookmarkModel } from "@/model/schema";
 import {
   stringSchema,
-  projectSchema,
+  zodProjectFormSchema,
   likeAndBkMarkSchema,
 } from "@/zod/zod.common";
 async function handler(req: Request) {
@@ -47,7 +47,7 @@ async function handler(req: Request) {
       );
 
       console.log("done");
-      projectSchema.parse(updatedProject);
+      zodProjectFormSchema.parse(updatedProject);
       return NextResponse.json({
         message: "Bookmark removed successfully",
         project: updatedProject,

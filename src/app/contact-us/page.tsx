@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import { FC } from 'react';
-import { useForm } from 'react-hook-form';
-import { sendEmail } from '@/utils/send-email';
+import { FC } from "react";
+import { useForm } from "react-hook-form";
+import { sendEmail } from "@/utils/send-email";
+import { ButtonBlue } from "@/components";
 
 export type FormData = {
   name: string;
@@ -18,54 +19,54 @@ const Contact: FC = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md mx-auto">
-      <div className='mb-2'>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="container w-full gap-3 p-6 fcc max-w-md mx-auto"
+    >
+      <h1 className="text-[36px]">Contact Form</h1>
+      <div className=" w100">
         <label
-          htmlFor='name'
-          className='mb-3 block text-base font-medium text-black'
+          htmlFor="name"
+          className="mb-1 block text-xs font-medium text-text"
         >
           Full Name
         </label>
         <input
-          type='text'
-          placeholder='Full Name'
-          className='w-full rounded-md border border-gray-300 bg-white py-3 px-6 text-base font-medium text-gray-700 outline-none focus:border-purple-500 focus:shadow-md'
-          {...register('name', { required: true })}
+          type="text"
+          placeholder="Full Name"
+          className="w-full border    p-3 text-sm font-medium  outline-none focus:border-priDark focus:shadow-md"
+          {...register("name", { required: true })}
         />
       </div>
-      <div className='mb-5'>
+      <div className=" w100">
         <label
-          htmlFor='email'
-          className='mb-3 block text-base font-medium text-black'
+          htmlFor="email"
+          className="mb-1 block text-xs font-medium text-text"
         >
           Email Address
         </label>
         <input
-          type='email'
-          placeholder='example@domain.com'
-          className='w-full rounded-md border border-gray-300 bg-white py-3 px-6 text-base font-medium text-gray-700 outline-none focus:border-purple-500 focus:shadow-md'
-          {...register('email', { required: true })}
+          type="email"
+          placeholder="example@domain.com"
+          className="w-full border    p-3 text-sm font-medium  outline-none focus:border-priDark focus:shadow-md"
+          {...register("email", { required: true })}
         />
       </div>
-      <div className='mb-5'>
+      <div className="w100">
         <label
-          htmlFor='message'
-          className='mb-3 block text-base font-medium text-black'
+          htmlFor="message"
+          className="mb-1 block text-xs font-medium text-text"
         >
           Message
         </label>
         <textarea
           rows={4}
-          placeholder='Type your message'
-          className='w-full resize-none rounded-md border border-gray-300 bg-white py-3 px-6 text-base font-medium text-gray-700 outline-none focus:border-purple-500 focus:shadow-md'
-          {...register('message', { required: true })}
+          placeholder="Type your message"
+          className="w-full resize-none border  p-3 text-sm font-medium  outline-none focus:border-priDark focus:shadow-md"
+          {...register("message", { required: true })}
         ></textarea>
       </div>
-      <div>
-        <button className='hover:shadow-form rounded-md bg-purple-500 py-3 px-8 text-base font-semibold text-white outline-none'>
-          Submit
-        </button>
-      </div>
+      <ButtonBlue label="Submit" className="w100" />
     </form>
   );
 };
