@@ -1,5 +1,5 @@
-import Profile from "@/components/ProfileRegisterationInfo";
+import FormNewUser from "@/components/FormNewUser";
 
 export default function NewUser() {
-  return <Profile />;
+  return <FormNewUser />;
 }

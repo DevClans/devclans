@@ -221,6 +221,35 @@ export const zodRepoDetailsSchema = z
     languages: z.record(z.number()),
   })
   .optional();
+export const zodProjectDetailsSchema = z.object({
+  problem: z.string().max(180),
+  challenges: z
+    .array(
+      z.object({
+        title: z.string().default(""),
+        desc: z.string().default(""),
+        solution: z.string().default(""),
+      })
+    )
+    .default([]),
+  futureGoals: z
+    .array(
+      z.object({
+        title: z.string().default(""),
+        desc: z.string().default(""),
+        needHelp: z.boolean().default(false),
+      })
+    )
+    .default([]),
+  memberReq: z
+    .array(
+      z.object({
+        title: z.string().default(""),
+        desc: z.string().default(""),
+      })
+    )
+    .default([]),
+});
 export const zodProjectDataSchema = z.object({
   owner: ownerSchema,
   contributors: z.string().array(),
@@ -230,35 +259,7 @@ export const zodProjectDataSchema = z.object({
   likesCount: z.number().default(0),
   bookmarkCount: z.number().default(0),
   projectLinks: z.array(z.string()).default([]),
-  projectDetails: z.object({
-    problem: z.string().max(180),
-    challenges: z
-      .array(
-        z.object({
-          title: z.string().default(""),
-          desc: z.string().default(""),
-          solution: z.string().default(""),
-        })
-      )
-      .default([]),
-    futureGoals: z
-      .array(
-        z.object({
-          title: z.string().default(""),
-          desc: z.string().default(""),
-          needHelp: z.boolean().default(false),
-        })
-      )
-      .default([]),
-    memberReq: z
-      .array(
-        z.object({
-          title: z.string().default(""),
-          desc: z.string().default(""),
-        })
-      )
-      .default([]),
-  }),
+  projectDetails: zodProjectDetailsSchema,
   video: z.string().default(""),
   devStage: z.enum(devStages as any).default("idea"),
   published: z.boolean().default(false),
@@ -272,6 +273,24 @@ export const projectSchema = z.object({
   ...zodProjectDataSchema.shape,
 });
 
+export const zodProjectFormSchema = z.object({
+  title: z.string().min(3).max(50),
+  desc: z.string().min(10).max(180),
+  skills: z.string().array().default([]),
+  team: z.string().array().default([]),
+  needMembers: z
+    .enum(memberLevels as any)
+    .nullable()
+    .default("beginner"),
+  imgs: z.array(z.string()).default([]),
+  topics: z.array(z.string()).default([]),
+  repoName: z.string().max(50).default(""),
+  projectLinks: z.array(z.string()).default([]),
+  video: z.string().default(""),
+  projectDetails: zodProjectDetailsSchema,
+  devStage: z.enum(devStages as any).default("idea"),
+  published: z.boolean().default(false),
+});
 export const projectArraySchema = z.array(projectSchema);
 
 export const likeAndBkMarkSchema = z.object({

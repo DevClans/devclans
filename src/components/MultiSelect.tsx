@@ -65,7 +65,12 @@ export default function MultipleSelectChip({
   };
   return (
     <div className="w100">
-      <FormControl className="card2 w100" style={{}}>
+      <FormControl
+        className="card2 w100"
+        style={{
+          border: `1px solid ${colors.border}`,
+        }}
+      >
         {/* <InputLabel id="demo-multiple-chip-label">Chip</InputLabel> */}
         <Select
           labelId="demo-multiple-chip-label"

@@ -3,7 +3,7 @@ import dbConnect from "@/lib/dbConnect";
 import { UserModel, ProjectModel, BookmarkModel } from "@/mongodb/models";
 import {
   stringSchema,
-  projectSchema,
+  zodProjectFormSchema,
   likeAndBkMarkSchema,
 } from "@/zod/zod.common";
 
@@ -37,7 +37,7 @@ async function handler(req: Request) {
       { new: true } // Return the updated document
     );
 
-    projectSchema.parse(updatedProject);
+    zodProjectFormSchema.parse(updatedProject);
 
     return NextResponse.json({
       message: "Project Liked successfully",

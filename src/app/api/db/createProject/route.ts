@@ -1,14 +1,16 @@
-import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/dbConnect';
+import { NextResponse } from "next/server";
+import dbConnect from "@/lib/dbConnect";
 import { UserModel, ProjectModel } from "@/mongodb/models";
-import  { stringSchema , projectSchema, userSchema } from "@/zod/zod.common"
+import {
+  stringSchema,
+  zodProjectFormSchema,
+  userSchema,
+} from "@/zod/zod.common";
 
 async function handler(req: Request) {
   await dbConnect();
 
   const { userId, projectName, projectDescription, problem } = await req.json();
-
-
 
   try {
     console.log("started");
@@ -16,12 +18,11 @@ async function handler(req: Request) {
     stringSchema.parse(projectName);
     stringSchema.parse(projectDescription);
     stringSchema.parse(problem);
-  
 
     const user = await UserModel.findOne({ username: userId });
 
     if (!user) {
-      return NextResponse.json({ message: 'User not found' });
+      return NextResponse.json({ message: "User not found" });
     }
 
     // Create a new project
@@ -30,28 +31,33 @@ async function handler(req: Request) {
       desc: projectDescription,
       owner: user._id,
       contributors: [user._id], // Assuming the owner is also a member initially
-      projectDetails:{
-        problem:problem
-      }
+      projectDetails: {
+        problem: problem,
+      },
     });
     await createdProject.save();
     // Update the user's projects array
     const updatedUser = await UserModel.findOneAndUpdate(
       { _id: user._id },
-      { $push: { projects: createdProject._id, ownedProjects:createdProject._id } },
+      {
+        $push: {
+          projects: createdProject._id,
+          ownedProjects: createdProject._id,
+        },
+      },
       { new: true } // Return the updated document
     );
-console.log("done");
-userSchema.parse(updatedUser);
- projectSchema.parse(createdProject);
+    console.log("done");
+    userSchema.parse(updatedUser);
+    zodProjectFormSchema.parse(createdProject);
     return NextResponse.json({
-      message: 'Project created and associated with user successfully',
-       user: updatedUser,
+      message: "Project created and associated with user successfully",
+      user: updatedUser,
       project: createdProject,
     });
   } catch (error) {
-    console.error('Error creating project for user:', error);
-    return NextResponse.json({ message: 'Internal Server Error' });
+    console.error("Error creating project for user:", error);
+    return NextResponse.json({ message: "Internal Server Error" });
   }
 }
 
