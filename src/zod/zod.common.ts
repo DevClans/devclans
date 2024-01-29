@@ -290,6 +290,7 @@ export const zodProjectFormSchema = z.object({
   projectDetails: zodProjectDetailsSchema,
   devStage: z.enum(devStages as any).default("idea"),
   published: z.boolean().default(false),
+  domain: z.enum(projectDomains),
 });
 export const projectArraySchema = z.array(projectSchema);
 

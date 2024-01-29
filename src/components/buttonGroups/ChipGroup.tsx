@@ -13,7 +13,7 @@ const ChipGroup = ({
   baseUrl?: string;
 } & Partial<PageProps>) => {
   const { filters, newParams } = getFilters(searchParams);
-  console.log("searchParams in chipgroup", searchParams, newParams, baseUrl);
+  // console.log("searchParams in chipgroup", searchParams, newParams, baseUrl);
   return (
     <>
       <div className={`${className} frc gap-2 flex-wrap`}>
