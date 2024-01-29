@@ -16,7 +16,8 @@ import { ButtonBlue, ButtonSecondary } from ".";
 import { toast } from "react-toastify";
 
 const Profile = () => {
-  const { data: session }: any = useSession();
+  const { data }: any = useSession();
+  const session = data?.user;
   const {
     register,
     handleSubmit,
@@ -53,7 +54,7 @@ const Profile = () => {
     try {
       console.log("inside handleSubmit");
       // Check if the user is authenticated
-      if (!session) {
+      if (!(session && session?._id)) {
         console.error("User is not authenticated.");
         return;
       }
@@ -62,7 +63,7 @@ const Profile = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ data, id: session.id }),
+        body: JSON.stringify({ data, id: session._id }),
       });
       console.log("response", response.status, response.statusText);
       if (response.status > 200) {

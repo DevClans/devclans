@@ -2,7 +2,10 @@ import { MemberLevelType } from "./../../lib/memberLevel";
 import { contactMethodsMap, contactMethodsType } from "@/lib/contactMethods";
 import { ProjectDomainType } from "@/lib/domains";
 import { skills } from "@/lib/skills";
-import { zodUserFormSchema } from "@/zod/zod.common";
+import {
+  zodUserDiscordDetailsSchema,
+  zodUserFormSchema,
+} from "@/zod/zod.common";
 import mongoose from "mongoose";
 import { z } from "zod";
 
@@ -33,18 +36,9 @@ export type UserQuestionsProps = {
   recentWork?: string;
 };
 
-export type UserDiscordDetailsProps = {
-  _id: string; // discord id
-  username: string;
-  discriminator: string;
-  avatar?: string;
-  accent_color?: string;
-  bot?: boolean;
-  global_name?: string;
-  banner?: string;
-  verified?: boolean;
-  email?: string;
-};
+export type UserDiscordDetailsProps = z.infer<
+  typeof zodUserDiscordDetailsSchema
+>;
 
 export const userDiscordDetailsKeys: string[] = [
   "_id",

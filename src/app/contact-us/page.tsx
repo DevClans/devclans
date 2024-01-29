@@ -34,7 +34,7 @@ const Contact: FC = () => {
         <input
           type="text"
           placeholder="Full Name"
-          className="w-full rounded-md border    p-3 text-sm font-medium  outline-none focus:border-priDark focus:shadow-md"
+          className="w-full border    p-3 text-sm font-medium  outline-none focus:border-priDark focus:shadow-md"
           {...register("name", { required: true })}
         />
       </div>
@@ -48,7 +48,7 @@ const Contact: FC = () => {
         <input
           type="email"
           placeholder="example@domain.com"
-          className="w-full rounded-md border    p-3 text-sm font-medium  outline-none focus:border-priDark focus:shadow-md"
+          className="w-full border    p-3 text-sm font-medium  outline-none focus:border-priDark focus:shadow-md"
           {...register("email", { required: true })}
         />
       </div>
@@ -62,7 +62,7 @@ const Contact: FC = () => {
         <textarea
           rows={4}
           placeholder="Type your message"
-          className="w-full resize-none rounded-md border  p-3 text-sm font-medium  outline-none focus:border-priDark focus:shadow-md"
+          className="w-full resize-none border  p-3 text-sm font-medium  outline-none focus:border-priDark focus:shadow-md"
           {...register("message", { required: true })}
         ></textarea>
       </div>

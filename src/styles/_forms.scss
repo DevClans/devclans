@@ -1,6 +1,8 @@
 input,
 select,
 textarea {
-  @apply card2 p-3;
+  border-radius: 20px;
+  @apply card2 p-3 focus:border-priDark focus:rounded-lg;
   outline: none; // Remove outline on focus
+  transition: border-radius 0.15s ease-in-out;
 }

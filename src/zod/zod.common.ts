@@ -42,7 +42,14 @@ const ownedProjects = z.array(zodMongoId);
 export const stringSchema = z.string();
 
 export const stringArraySchema = z.array(z.string());
-
+// Define a custom refinement function to validate the hexadecimal color code with variable length
+const isValidHexColorVariableLength = (value: any) => {
+  if (!value) {
+    return true;
+  }
+  const hexString = value.toString(16); // Convert integer to hexadecimal string
+  return /^#?([0-9A-F]{6}|[0-9A-F]{7}|[0-9A-F]{8})$/i.test(hexString); // Regular expression to validate hexadecimal color code with variable length
+};
 export const userGithubDetailsSchema = z.object({
   accessToken: z.string(),
   username: z.string().max(50),
@@ -55,43 +62,51 @@ export const userGithubDetailsSchema = z.object({
   login: z.string().min(1).trim(),
 });
 
-export const discordDetailsSchema = z.object({
+export const zodUserDiscordDetailsSchema = z.object({
   _id: z.string().refine((value) => /^\d{17,19}$/.test(value), {
     message: "Invalid Discord ID! Must be a string of 17 to 19 digits.",
   }),
   username: z.string().min(2).max(32),
-  discriminator: z.string().refine((value) => /^\d{4}$/.test(value), {
-    message: "Invalid discriminator! Must be a string of 4 digits.",
+  discriminator: z
+    .string()
+    .refine((value) => /^\d{4}$/.test(value) || value == "0", {
+      message: "Invalid discriminator! Must be a string of 4 digits.",
+    }),
+  avatar: z.string().regex(/^[0-9a-fA-F]{32}$/, {
+    message: "Invalid 32-character hexadecimal string",
   }),
-  avatar: z
-    .string()
-    .default("")
-    .refine((value) => /^https:\/\/cdn.discordapp.com/.test(value), {
-      message:
-        "Invalid avatar URL! Must start with 'https://cdn.discordapp.com/'.",
-    }),
+  // https://cdn.discordapp.com/avatars/746713386380689509/bd71d4c78ff1b8b234addd5393436661.png
   accent_color: z
-    .string()
-    .default("")
-    .refine((value) => /^#([0-9a-fA-F]{3}){1,2}$/.test(value), {
-      message: "Invalid accent color! Must be a valid hex color code.",
-    }),
-  bot: z.boolean().default(false),
+    .number()
+    .nullable()
+    .refine((value) => isValidHexColorVariableLength(value), {
+      message: "Invalid hexadecimal color code with variable length",
+    })
+    .optional(),
+  bot: z.boolean().optional(),
   global_name: z.string().default(""),
   banner: z
     .string()
-    .default("")
-    .refine((value) => /^https:\/\/cdn.discordapp.com/.test(value), {
-      message:
-        "Invalid banner URL! Must start with 'https://cdn.discordapp.com/'.",
-    }),
-  verified: z.boolean().default(false),
+    .nullable()
+    .refine(
+      (value) => (value ? /^https:\/\/cdn.discordapp.com/.test(value) : true),
+      {
+        message:
+          "Invalid banner URL! Must start with 'https://cdn.discordapp.com/'.",
+      }
+    )
+    .optional(),
+  verified: z.boolean().optional(),
   email: z
     .string()
-    .default("")
-    .refine((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), {
-      message: "Invalid email address!",
-    }),
+    .nullable()
+    .refine(
+      (value) => (value ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) : value),
+      {
+        message: "Invalid email address!",
+      }
+    )
+    .optional(),
   // Add other properties and validations as needed
 });
 
@@ -174,7 +189,7 @@ export const userSchema = z.object({
   avatar: z.string().optional(),
   ownedProjects: z.array(ownedProjects),
   contributedProjects: z.array(ownedProjects),
-  discordDetails: discordDetailsSchema.optional(),
+  discordDetails: zodUserDiscordDetailsSchema.optional(),
   createdAt: zodDateString,
   updatedAt: zodDateString,
 });
