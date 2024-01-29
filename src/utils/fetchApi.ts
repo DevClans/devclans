@@ -6,7 +6,9 @@ type CommonRequestHeadersList =
   | "User-Agent"
   | "cache-control"
   | "Content-Encoding"
-  | "Authorization";
+  | "Authorization"
+  | "Content-Type"
+  | "d-a";
 
 type ContentType =
   | "text/html"
@@ -20,19 +22,26 @@ type FetchProps = {
   endpoint: string;
   method?: Method;
   baseUrl?: string;
-  headers?: Record<CommonRequestHeadersList, string>;
+  headers?: any;
+  type?: "nan" | "an"; //nan means no access needed and an means access needed
 };
+
 export const Fetch = async ({
   endpoint,
   headers,
   baseUrl = urlApi,
   method = "GET",
+  type = "nan",
 }: FetchProps) => {
   const options: Partial<FetchProps> = {
     method,
+    headers: {
+      "Content-Type": "application/json",
+      "x-d-a": type, // d-a means devclans-access
+    },
   };
   if (headers) {
-    Object.assign(options, headers);
+    Object.assign(options["headers"], headers);
   }
   try {
     const res = await fetch((baseUrl || urlApi) + (endpoint || ""), options);

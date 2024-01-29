@@ -1,4 +1,5 @@
 import { withAuth } from "next-auth/middleware";
+import { getSession } from "next-auth/react";
 import { NextResponse } from "next/server";
 
 // middleware is applied to all routes, use conditionals to select
@@ -19,7 +20,19 @@ export default withAuth(
         //   jwtToken,
         //   req.nextUrl.pathname
         // );
-        if (req.nextUrl.pathname.startsWith("/api")) {
+        // console.log("oken", token);
+        const headers: any = req.headers;
+        // console.log(headers, "headers", headers?.get("x-d-a"));
+        const accessNeeded = headers?.get("x-d-a")
+          ? headers.get("x-d-a") == "an"
+          : true;
+        if (
+          req.nextUrl.pathname.startsWith("/api") &&
+          accessNeeded &&
+          !token &&
+          !nextSession
+        ) {
+          console.log("access not allowed");
           return false;
         }
         return true;
