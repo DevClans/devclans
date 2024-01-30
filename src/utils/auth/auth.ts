@@ -1,5 +1,6 @@
 import type { NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import GithubProvider from "next-auth/providers/github";
 import { adapter } from "./adapterFunctions";
 import { UserDiscordDetailsProps } from "@/types/mongo/user.types";
 import { zodUserDiscordDetailsSchema } from "@/zod/zod.common";
@@ -17,6 +18,9 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID as string,
       clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
+      authorization: {
+        params: { scope: 'identify email guilds' },
+      },
       async profile(profile: any, tokens: any) {
         const { id } = profile;
         // const { accessToken } = tokens;
@@ -35,6 +39,10 @@ export const authOptions: NextAuthOptions = {
           emailVerified: profile.verified,
         };
       },
+    }),
+    GithubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     }),
   ],
   callbacks: {
