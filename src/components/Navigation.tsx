@@ -28,21 +28,29 @@ const navigation = [
     href: "/contact-us",
   },
 ];
-const Navigation = ({ searchParams }: PageProps) => {
+const Navigation = ({
+  searchParams,
+  className,
+  replaceStyle,
+  replaceClassname,
+}: PageProps & {
+  className?: string;
+  replaceStyle?: React.CSSProperties;
+  replaceClassname?: string;
+}) => {
   return (
     <div
       id="navbar"
-      className="card frcsb"
-      style={{
-        padding: "15px 40px",
-        gap: "30px",
-        borderRadius: "20px",
-        border: "1px solid var(--border, #132341)",
-        background: "rgba(8, 17, 33, 0.12)",
-        boxShadow:
-          "0px 4px 5.3px 0px rgba(20, 26, 37, 0.20) inset, 0px -4px 3px 0px rgb(6, 12, 24, 0.10) inset",
-        backdropFilter: "blur(27.100000381469727px)",
-      }}
+      className={
+        replaceClassname ||
+        "card cardHeader flex-row items-center justify-between " + className
+      }
+      style={
+        replaceStyle || {
+          padding: "15px 40px",
+          gap: "30px",
+        }
+      }
     >
       {navigation.map(
         ({ href, searchParams: sp, name, target, rel }: any, index) => {
@@ -55,7 +63,15 @@ const Navigation = ({ searchParams }: PageProps) => {
             hreff = href + "?" + newParams.toString();
           }
           return (
-            <Link key={index} href={hreff} rel={rel} target={target}>
+            <Link
+              key={index}
+              className={`flex-shrink-0 text-nowrap ${
+                replaceStyle && "w100 py-3"
+              }`}
+              href={hreff}
+              rel={rel}
+              target={target}
+            >
               {name}
             </Link>
           );

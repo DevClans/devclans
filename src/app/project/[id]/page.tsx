@@ -34,7 +34,7 @@ const Page = async ({
   return (
     <>
       <LightLine />
-      <div className=" p-[30px] gap-[30px] frfssb w100">
+      <div className="container p-[30px] gap-[30px] flex flex-col items-center  lg:flex-row lg:items-start lg:justify-between w100">
         <div className="w100 fcc gap-[30px]">
           <ProjectHero {...data} params={params} searchParams={searchParams} />
           <AboutTheRepo {...files} />

@@ -18,8 +18,7 @@ const ButtonGroupUserSections = ({
     <>
       <div
         className={
-          "frc gap-2 overflow-scroll lg:overflow-auto w-100 scrollbar " +
-          containerClassName
+          "frc gap-2 btnRow w-100 !justify-normal " + containerClassName
         }
         style={containerStyle}
       >

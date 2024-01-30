@@ -55,6 +55,9 @@ body {
   .fs0 {
     flex-shrink: 0;
   }
+  button {
+    @apply fccc;
+  }
   // RESPONSIVE BUTTON GROUP
   .btnRow {
     @apply frcsb overflow-visible w100;

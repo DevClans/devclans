@@ -1,16 +1,17 @@
 import { FormData } from "@/app/contact-us/page";
-import { urlApi } from "@/constants";
+import { Fetch } from "./fetchApi";
 
 export function sendEmail(data: FormData) {
-  const apiEndpoint = urlApi + "/email";
   console.log(data);
-
-  fetch(apiEndpoint, {
+  Fetch({
+    endpoint: "/email",
     method: "POST",
-    body: JSON.stringify(data),
+    headers: {
+      body: JSON.stringify(data),
+    },
   })
-    .then((res) => res.json())
-    .then((response) => {
+    .then((res) => console.log(res))
+    .then((response: any) => {
       alert(response.message);
     })
     .catch((err) => {

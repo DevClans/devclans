@@ -42,6 +42,7 @@ const CheckBoxItem = ({
   return (
     <>
       <FormGroup
+
       // className="gap-1 fcfs flex-nowrap max-h-[200px] overflow-x-scroll scrollbar-x"
       >
         {type == "slider" ? (
@@ -89,10 +90,18 @@ const CheckBoxItem = ({
                       height: 25,
                       width: 25,
                     }}
+                    className="mr-1"
                   />
                 }
                 label={
-                  <p className="text-sm font-medium capitalize">{label}</p>
+                  <p
+                    style={{
+                      fontFamily: "var(--poppins)",
+                    }}
+                    className="text-sm font-medium capitalize"
+                  >
+                    {label}
+                  </p>
                 }
               />
             );

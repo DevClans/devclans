@@ -6,6 +6,7 @@ import {
 } from "@/components";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { Fetch } from "@/utils/fetchApi";
 
 const ButtonLike = () => {
   const [liked, setLiked] = useState(false);
@@ -15,16 +16,10 @@ const ButtonLike = () => {
   useEffect(() => {
     const fetchLikeCount = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:3000/api/db/getProject/satvik21/quizify",
-          {
-            method: "GET",
-
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await Fetch({
+          endpoint: `getProject/satvik21/quizify`,
+          method: "GET",
+        });
         const data = await response.json();
         console.log(data);
 
@@ -35,16 +30,10 @@ const ButtonLike = () => {
     };
     const fetchIsLiked = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3000/api/db/getLiked/${session?.user?.name}/quizify`,
-          {
-            method: "GET",
-
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await Fetch({
+          endpoint: `getLiked/${session?.user?.name}/quizify`,
+          method: "GET",
+        });
         const data = await response.json();
         console.log(data);
         if (data.length == 0) {
