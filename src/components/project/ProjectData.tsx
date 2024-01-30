@@ -1,5 +1,5 @@
-import { urlApi } from "@/constants";
 import { FetchProjectProps } from "@/types/fetch.types";
+import { Fetch } from "@/utils/fetchApi";
 
 // Function to generate a random hex color
 const getRandomColor = () => {
@@ -15,8 +15,9 @@ const ProjectData = async (projectId: string) => {
   const fetchData = async (): Promise<FetchProjectProps | null> => {
     // Function body
     try {
-      const response = await fetch(urlApi + `/project/${projectId}`, {
-        cache: "no-store",
+      const response = await Fetch({
+        endpoint: `/project/${projectId}`,
+        method: "GET",
       });
       const data: FetchProjectProps = await response.json();
       return data;

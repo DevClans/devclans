@@ -32,7 +32,7 @@ const ProjectSidebar = ({ team }: UserTeamProps) => {
     };
   });
   return (
-    <div className="fcc max-w-[360px] w100 gap-[30px]">
+    <div className="lg:sticky lg:top-[40px] fcc lg:max-w-[360px] w100 gap-[30px]">
       <LookingForMembers />
       <ProjectLinks />
       <ProjectTeam list={links} />

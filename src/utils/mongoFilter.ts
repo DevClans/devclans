@@ -49,7 +49,9 @@ export const mongoFilter = (
     }
   }
 
-  return {
-    $and: andConditions,
-  };
+  return andConditions.length > 0
+    ? {
+        $and: andConditions,
+      }
+    : {};
 };

@@ -27,18 +27,20 @@ const layout = async ({
   return (
     <>
       <LightLine />
-      <LeftSidebar {...userData} searchParams={searchParams} />
-      <div className="frfssb peer-data-[state=not-active]:pl-[120px] peer-data-[state=active]:pl-[340px] relative -z-10 w100 container py-6 gap-6">
-        {/* middle scroll */}
-        <MiddleSection
-          params={params}
-          username={username}
-          questions={userData.questions}
-        >
-          {children}
-        </MiddleSection>
-        {/* right sidebar */}
-        <RightSidebar />
+      <div className="fcc container relative -z-10 gap-6 py-6 w100">
+        <LeftSidebar {...userData} searchParams={searchParams} />
+        <div className="flex flex-col items-center  lg:flex-row lg:items-start lg:justify-between md:peer-data-[state=not-active]:pl-[120px] md:peer-data-[state=active]:pl-[340px] relative md:-z-10 w100 md:py-6 gap-6">
+          {/* middle scroll */}
+          <MiddleSection
+            params={params}
+            username={username}
+            questions={userData.questions}
+          >
+            {children}
+          </MiddleSection>
+          {/* right sidebar */}
+          <RightSidebar />
+        </div>
       </div>
     </>
   );

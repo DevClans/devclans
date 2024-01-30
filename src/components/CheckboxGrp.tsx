@@ -1,4 +1,3 @@
-import Text from "@/components/Text";
 import { FilterSidebarProps, SliderProps } from "@/types";
 import { PageProps } from "@/types/page.types";
 import CheckBoxItem from "./CheckBoxItem";
@@ -12,12 +11,7 @@ const CheckboxGrp = ({
       {data?.map(
         ({ heading, key, title, type, data, ...sliderProps }, index) => (
           <div key={index}>
-            <Text
-              type="semi16"
-              textClass="text-base font-medium text-highlight"
-            >
-              {heading || title}
-            </Text>
+            <h3 className="">{heading || title}</h3>
             <CheckBoxItem
               searchParams={searchParams}
               key={index}
