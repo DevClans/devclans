@@ -21,7 +21,7 @@ const FormNewProject = () => {
       defaultValues: defaultValues as any,
       resolver: zodResolver(zodProjectFormSchema),
     });
-
+console.log(watch())
   const onSubmit: SubmitHandler<ProjectProps> = async (data) =>
     await createProjectUser("/project/update", data, session, setError);
   const commonClass: string = "w100";
