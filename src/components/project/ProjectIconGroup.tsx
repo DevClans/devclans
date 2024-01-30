@@ -1,14 +1,17 @@
 "use client";
 import { ButtonBookmark, ButtonIcon, ButtonLike, IosShareRounded } from "..";
+import { Types } from "mongoose";
 
 const ProjectIconGroup = ({
   bookmarkCount,
   likesCount,
   showLabels = true,
+  title
 }: {
   bookmarkCount?: number;
   likesCount?: number;
   showLabels?: boolean;
+  title?:Types.ObjectId;
 }) => {
   return (
     <>
@@ -21,7 +24,7 @@ const ProjectIconGroup = ({
           <ButtonBookmark bookmarksCount={bookmarkCount} />
         )}
         {typeof likesCount == "number" && (
-          <ButtonLike likesCount={likesCount} />
+          <ButtonLike likesCount={likesCount} title={title}/>
         )}
       </div>
     </>

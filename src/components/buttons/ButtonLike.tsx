@@ -8,10 +8,16 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Fetch } from "@/utils/fetchApi";
 
-const ButtonLike = () => {
+const ButtonLike = (props: any) => {
+  let title = props.title;
   const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
+  const [likesCount, setLikeCount] = useState(0);
   const { data: session } = useSession();
+
+  const userId = "saivi21";
+  const ownerId = "saivi21";
+  title = "65b67ad4b7c3dc79392510f9";
+  //console.log(title);
 
   useEffect(() => {
     const fetchLikeCount = async () => {
@@ -21,9 +27,12 @@ const ButtonLike = () => {
           method: "GET",
         });
         const data = await response.json();
-        console.log(data);
+        //  console.log(data)
+        if (data) {
+          //console.log(data.likesCount)
 
-        setLikeCount(data[0].likesCount);
+          setLikeCount(data.likesCount);
+        }
       } catch (error) {
         console.error("Error fetching initial like count:", error);
       }
@@ -35,49 +44,56 @@ const ButtonLike = () => {
           method: "GET",
         });
         const data = await response.json();
-        console.log(data);
-        if (data.length == 0) {
-          console.log("false");
-          setLiked(false);
+        //  console.log("This is data");
+        // console.log(data);
+        if (data.length > 0) {
+          if (data[0]._id) {
+            console.log("false");
+            setLiked(false);
+          } else {
+            console.log("true");
+            setLiked(true);
+          }
         } else {
-          console.log("true");
           setLiked(true);
+          console.log(true);
         }
       } catch (error) {
         console.error("Error fetching initial like count:", error);
       }
     };
-    // fetchIsLiked();
+    fetchIsLiked();
 
-    // fetchLikeCount();
+    fetchLikeCount();
   }, []);
 
   const handleClick = async () => {
     let work;
     if (liked) {
-      work = "removeLike";
-    } else {
       work = "addLike";
+    } else {
+      work = "removeLike";
     }
     try {
-      console.log(work);
+      // console.log(work);
       const response = await fetch(`http://localhost:3000/api/db/${work}`, {
         method: "POST",
         body: JSON.stringify({
-          userId: session?.user?.name,
-          projectId: "quizify",
+          userId: "saivi21",
+          projectId: title,
         }),
         headers: {
           "Content-Type": "application/json",
         },
       });
-      console.log(session);
+      //console.log(title);
       const data = await response.json();
-      console.log(data);
+      //console.log(liked);
+      //console.log(data);
       if (liked) {
         setLikeCount(data.project.likesCount);
       } else {
-        setLikeCount(data.user.likesCount);
+        setLikeCount(data.project.likesCount);
       }
 
       setLiked(!liked);
@@ -90,7 +106,7 @@ const ButtonLike = () => {
     <ButtonIcon
       active={liked}
       setActive={setLiked}
-      label={likeCount.toString()}
+      label={likesCount.toString()}
       activeIcon={<FavoriteRounded color="primary" fontSize="small" />}
       icon={<FavoriteBorderRounded fontSize="small" />}
       onClick={handleClick}

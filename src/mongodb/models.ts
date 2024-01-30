@@ -11,6 +11,7 @@ import { discordDetailsSchema } from "./discordModel";
 import { userGithubDetailsSchema } from "./githubModal";
 import projectRepoSchema from "./projectRepoDetails";
 import { projectDomains } from "@/lib/domains";
+import { string } from "zod";
 
 const userSchema = new mongoose.Schema<UserMongoProps>(
   {
@@ -124,8 +125,10 @@ const projectSchema = new mongoose.Schema<ProjectProps>(
   {
     title: { type: String, required: true },
     desc: { type: String, required: true },
-    owner: { type: mongoose.Types.ObjectId, ref: "User", required: true },
-    contributors: [{ type: mongoose.Types.ObjectId, ref: "User", default: [] }],
+     owner: { type: mongoose.Types.ObjectId, ref: "User", required: true },
+    //owner:{ type: String, required:true },
+     contributors: [{ type: mongoose.Types.ObjectId, ref: "User", default: [] }],
+    //contributors:[{ type:String, default:[]}],
     topics: [{ type: String, default: [] }], // ml, android
     skills: [{ type: String, default: [] }], // tech: html, css
     repoName: { type: String, default: "" },

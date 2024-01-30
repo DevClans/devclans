@@ -40,6 +40,7 @@ const ProjectItem = ({
               showLabels={false}
               bookmarkCount={0}
               likesCount={0}
+              title={_id}
             />
           </>
         }

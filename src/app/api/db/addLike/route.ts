@@ -6,6 +6,7 @@ import {
   zodProjectFormSchema,
   likeAndBkMarkSchema,
 } from "@/zod/zod.common";
+import { Types, isValidObjectId } from "mongoose";
 
 async function handler(req: Request) {
   await dbConnect();
@@ -17,8 +18,15 @@ async function handler(req: Request) {
     // Find the user
     stringSchema.parse(userId);
     stringSchema.parse(projectId);
-    const project = await ProjectModel.findOne({ title: projectId });
+    if (!isValidObjectId(projectId)) {
+      return NextResponse.json({ message: 'Invalid project ID' });
+    }
+
+    const project = await ProjectModel.findById(projectId);
+    console.log(project);
+
     const user = await UserModel.findOne({ username: userId });
+    console.log(user)
 
     if (!project || !user) {
       return NextResponse.json({ message: "Project or user not found" });
@@ -31,7 +39,7 @@ async function handler(req: Request) {
       project: project._id,
     });
     await like.save();
-    likeAndBkMarkSchema.parse(like);
+
     const updatedProject = await ProjectModel.findOneAndUpdate(
       { _id: project._id },
       {
@@ -41,7 +49,6 @@ async function handler(req: Request) {
       { new: true } // Return the updated document
     );
 
-    zodProjectFormSchema.parse(updatedProject);
     console.log("done");
     return NextResponse.json({
       message: "Project Liked successfully",
