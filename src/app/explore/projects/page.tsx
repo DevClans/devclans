@@ -3,9 +3,11 @@ import { ProjectProps } from "@/types/mongo/project.types";
 import { Fetch } from "@/utils/fetchApi";
 import { PageProps } from "@/types/page.types";
 import { stringify } from "querystring";
+import ToolBox from "@/components/ToolBox";
 
 const Projects = async ({ params, searchParams }: Partial<PageProps>) => {
   const str = stringify(searchParams);
+  console.log(str)
   const projects: ProjectProps[] =
     (await Fetch({
       endpoint: "/project" + (str ? `?${str}` : ""),
@@ -19,7 +21,7 @@ const Projects = async ({ params, searchParams }: Partial<PageProps>) => {
   }
   return (
     <div className="fcfs w100 gap-6">
-      <h3>Around {projects.length} results found</h3>
+      <ToolBox count={projects.length} />
       {projects.map((product, i) => (
         <ProjectItem searchParams={searchParams} {...product} key={i} />
       ))}

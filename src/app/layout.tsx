@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins, Bebas_Neue } from "next/font/google";
 import "./globals.scss";
 import { getServerSession } from "next-auth";
@@ -25,7 +25,12 @@ export const metadata: Metadata = {
   title: "Devclans",
   description: "Connect with thousands of developers from 100xdevs",
 };
-
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 export default async function RootLayout({
   children,
   modal,

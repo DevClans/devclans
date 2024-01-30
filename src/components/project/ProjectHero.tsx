@@ -8,6 +8,7 @@ const ProjectHero = ({
   imgs,
   devStage,
   title,
+  _id,
   likesCount,
   bookmarkCount,
   searchParams,
@@ -16,6 +17,7 @@ const ProjectHero = ({
   const data = {
     title,
     desc,
+    _id
   };
   return (
     <div className="card2 py-[30px] w100 fcfs gap-[30px] px-5">
@@ -25,6 +27,8 @@ const ProjectHero = ({
           <ProjectIconGroup
             likesCount={likesCount}
             bookmarkCount={bookmarkCount}
+            title={data._id}
+         
           />
         </div>
         <h1 className="text-4xl">{data.title}</h1>

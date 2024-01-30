@@ -18,25 +18,19 @@ const LeftSidebar = ({
     <>
       <div
         id="leftMenuUser"
-        className={`peer transition-[max-width] ease-in-out duration-300 fcfssb gap-3 left-0 top-[0px] pt-20 cardGrad data-[state=active]:max-w-[314px] data-[state=not-active]:min-w-20 data-[state=not-active]:max-w-[88px] -z-[1] group/left`}
+        className={`peer transition-[max-width] ease-in-out duration-300 fcfssb gap-3 md:left-0 md:top-[0px] md:pt-20 cardGrad md:data-[state=active]:max-w-[314px] md:data-[state=not-active]:min-w-20 md:data-[state=not-active]:max-w-[88px] md:-z-[1] group/left md:fixed w100 md:h-screen md:!border-r md:!border-b-none md:!rounded-none `}
         data-state="active"
         style={{
-          height: "100vh",
-          position: "fixed",
           boxSizing: "border-box",
-          borderWidth: 0,
-          borderRightWidth: 1,
-          borderLeftWidth: 0,
-          borderRadius: 0,
         }}
       >
         <div
-          className="fcfs group-data-[state=active]/left:px-6 gap-3 h-full p-3 overflow-hidden w-full"
+          className="fcfs md:group-data-[state=active]/left:px-6 gap-3 h-full p-3 overflow-hidden w-full"
           style={{
             boxSizing: "border-box",
           }}
         >
-          <div className="group-data-[state=not-active]/left:h-[50px] h-[200px] w100 relative">
+          <div className="md:group-data-[state=not-active]/left:h-[50px] h-[200px] w100 relative">
             <ProductImg
               src={avatar}
               fill={true}
@@ -49,21 +43,21 @@ const LeftSidebar = ({
             />
           </div>
           <h1
-            className={`group-data-[state=not-active]/left:text-sm text-[36px] `}
+            className={`md:group-data-[state=not-active]/left:text-sm text-[36px] !text-left `}
           >
             {username || "Damian"}
           </h1>
-          <p className="group-data-[state=not-active]/left:hidden">
+          <p className="md:group-data-[state=not-active]/left:hidden">
             {bio || "I'm a full stack developer, I like to make things."}
           </p>
-          <div className="frc group-data-[state=not-active]/left:flex-col w100 gap-2">
+          <div className="frc md:group-data-[state=not-active]/left:flex-col w100 gap-2">
             {/* <ButtonBookmark
-              className={`group-data-[state=not-active]/left:w-full group-data-[state=not-active]/left:justify-center`}
+              className={`md:group-data-[state=not-active]/left:w-full md:group-data-[state=not-active]/left:justify-center`}
               style={{ height: 40 }}
               bookmarksCount={0}
             /> */}
             <ButtonConnect
-              className={`userBtn group-data-[state=active]/left:h-10  group-data-[state=not-active]/left:h-15 gap-1 ${""}}`}
+              className={`userBtn md:group-data-[state=active]/left:h-10  md:group-data-[state=not-active]/left:h-15 gap-1 ${""}}`}
               style={{
                 padding: "0 10px",
               }}
@@ -79,9 +73,9 @@ const LeftSidebar = ({
           </div>
           {Array.isArray(skills) && skills.length > 0 && (
             <>
-              <LightLine className="group-data-[state=not-active]/left:hidden" />
+              <LightLine className="md:group-data-[state=not-active]/left:hidden" />
               <ChipGroup
-                className={`group-data-[state=not-active]/left:hidden`}
+                className={`md:group-data-[state=not-active]/left:hidden`}
                 arr={skills}
                 searchParams={rest?.searchParams}
                 baseUrl="/explore/users"

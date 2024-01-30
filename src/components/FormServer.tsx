@@ -52,7 +52,7 @@ const FormServer = ({
                       {option}
                     </option>
                   ))}
-                  )
+                  
                 </select>
               );
               const multiSelectEle = (

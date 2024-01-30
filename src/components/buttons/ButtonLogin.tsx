@@ -8,7 +8,7 @@ const ButtonLogin = () => {
   const { data: session } = useSession();
 
   useEffect(() => {
-    console.log(session);
+    // console.log(session);
     // Check if the session is not present (user is logged out) and show a toast
     if (!session) {
       toast.info("Successfully Logged Out");

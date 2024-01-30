@@ -12,7 +12,12 @@ export const zodMongoId = z
   .refine((value) => Types.ObjectId.isValid(value), {
     message: "something worong with object id",
   });
-export const zodDateString = z.string().refine(
+ export const MySchema = z.object({
+    owner: z.string().refine((value) => Types.ObjectId.isValid(value), {
+      message: 'Invalid ObjectId',
+    }),
+  });
+export const zodDateString = z.date().refine(
   (value) => {
     const date = new Date(value);
     return !isNaN(date.getTime());
@@ -37,9 +42,12 @@ const ownerSchema = z.object({
     .optional(),
 });
 
-const ownedProjects = z.array(zodMongoId);
-
 export const stringSchema = z.string();
+
+
+const ownedProjects = z.array(z.object({
+  _id:stringSchema}));
+
 
 export const stringArraySchema = z.array(z.string());
 // Define a custom refinement function to validate the hexadecimal color code with variable length
@@ -193,10 +201,11 @@ export const userSchema = z.object({
   createdAt: zodDateString,
   updatedAt: zodDateString,
 });
+
 export const userArraySchema = z.array(userSchema);
 
 export const zodProjectSearchInfoSchema = z.object({
-  _id: zodMongoId,
+
   title: z.string().min(3).max(50),
   desc: z.string().min(10).max(180),
   skills: z.array(z.string()).default([]),
@@ -250,6 +259,13 @@ export const zodProjectDetailsSchema = z.object({
     )
     .default([]),
 });
+
+const StringArrayParser = z.string().refine((data) => {
+  return typeof data === 'string';
+}, { message: 'Input must be a string' }).transform((data) => data.split(','));
+
+
+
 export const zodProjectDataSchema = z.object({
   owner: ownerSchema,
   contributors: z.string().array(),
@@ -258,15 +274,14 @@ export const zodProjectDataSchema = z.object({
   repoName: z.string().max(50).default(""),
   likesCount: z.number().default(0),
   bookmarkCount: z.number().default(0),
-  projectLinks: z.array(z.string()).default([]),
+  projectLinks: stringArraySchema,
   projectDetails: zodProjectDetailsSchema,
   video: z.string().default(""),
   devStage: z.enum(devStages as any).default("idea"),
   published: z.boolean().default(false),
   repoDetails: zodRepoDetailsSchema,
-  createdAt: zodDateString,
-  updatedAt: zodDateString,
 });
+
 
 export const projectSchema = z.object({
   ...zodProjectSearchInfoSchema.shape,
@@ -290,6 +305,7 @@ export const zodProjectFormSchema = z.object({
   projectDetails: zodProjectDetailsSchema,
   devStage: z.enum(devStages as any).default("idea"),
   published: z.boolean().default(false),
+  domain: z.enum(projectDomains),
 });
 export const projectArraySchema = z.array(projectSchema);
 

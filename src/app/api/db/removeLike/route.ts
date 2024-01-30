@@ -6,6 +6,7 @@ import {
   zodProjectFormSchema,
   likeAndBkMarkSchema,
 } from "@/zod/zod.common";
+import { isValidObjectId } from "mongoose";
 
 async function handler(req: Request) {
   await dbConnect();
@@ -18,7 +19,11 @@ async function handler(req: Request) {
     stringSchema.parse(userId);
     stringSchema.parse(projectId);
 
-    const project = await ProjectModel.findOne({ title: projectId });
+    if (!isValidObjectId(projectId)) {
+      return NextResponse.json({ message: 'Invalid project ID' });
+    }
+
+    const project = await ProjectModel.findById(projectId);
     const user = await UserModel.findOne({ username: userId });
 
     if (!project || !user) {
@@ -34,7 +39,7 @@ async function handler(req: Request) {
     if (existingLike) {
       // If remove is true and the like exists, remove the like
       await LikeModel.findByIdAndDelete(existingLike._id);
-      likeAndBkMarkSchema.parse(existingLike);
+   
 
       // Update the project's likesCount and likesArray
       const updatedProject = await ProjectModel.findOneAndUpdate(
@@ -47,7 +52,7 @@ async function handler(req: Request) {
       );
 
       console.log("done");
-      zodProjectFormSchema.parse(updatedProject);
+
       return NextResponse.json({
         message: "Like removed successfully",
         project: updatedProject,

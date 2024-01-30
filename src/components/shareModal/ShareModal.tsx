@@ -23,10 +23,12 @@ const ShareModal = ({
   bookmarkCount,
   likesCount,
   showLabels = true,
+  title
 }: {
   bookmarkCount?: number;
   likesCount?: number;
   showLabels?: boolean;
+  title?:string
 }) => {
   const [isShareModalOpen, setShareModalOpen] = useState(false);
 
@@ -95,6 +97,7 @@ const ShareModal = ({
   return (
     <>
       <div className="frc gap-[10px]">
+    
         <ButtonIcon
           label={showLabels ? "share" : ""}
           icon={<IosShareRounded fontSize="small" />}
@@ -104,7 +107,7 @@ const ShareModal = ({
           <ButtonBookmark bookmarksCount={bookmarkCount} />
         )}
         {typeof likesCount === "number" && (
-          <ButtonLike likesCount={likesCount} />
+          <ButtonLike likesCount={likesCount} title={title} />
         )}
 
         <Modal
