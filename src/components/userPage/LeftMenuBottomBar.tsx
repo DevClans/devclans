@@ -24,26 +24,26 @@ const LeftMenuBottomBar = () => {
   };
   return (
     <>
-      <div className="fcfs w100 gap-2 group-data-[state=not-active]/left:px-2">
+      <div className="hidden md:visible md:flex flex-col items-start w100 gap-2 md:group-data-[state=not-active]/left:px-2">
         <LightLine />
-        <div className="frcsb group-data-[state=not-active]/left:flex-col gap-2 w100 ">
-          <div className="frc h-full group-data-[state=active]/left:ml-4 gap-3 w100 group-data-[state=active]/left:border-r group-data-[state=not-active]/left:border-b group-data-[state=not-active]/left:pb-4 border-border group-data-[state=not-active]/left:flex-col">
+        <div className="frcsb md:group-data-[state=not-active]/left:flex-col gap-2 w100 ">
+          <div className="frc h-full md:group-data-[state=active]/left:ml-4 gap-3 w100 md:group-data-[state=active]/left:border-r md:group-data-[state=not-active]/left:border-b md:group-data-[state=not-active]/left:pb-4 border-border md:group-data-[state=not-active]/left:flex-col">
             <IconGithub />
             <IconTwitter className="" />
           </div>
           <MuiIconButton
-            className="text-text group-data-[state=not-active]/left:w-full group-data-[state=active]/left:mr-2"
+            className="text-text md:group-data-[state=not-active]/left:w-full md:group-data-[state=active]/left:mr-2"
             onClick={() => {
               toogleActive();
             }}
           >
             <ArrowRightAltRounded
               fontSize="medium"
-              className={`group-data-[state=active]/left:hidden`}
+              className={`md:group-data-[state=active]/left:hidden`}
             />
             <ArrowLeftRounded
               fontSize="medium"
-              className={`group-data-[state=not-active]/left:hidden`}
+              className={`md:group-data-[state=not-active]/left:hidden`}
             />
           </MuiIconButton>
         </div>

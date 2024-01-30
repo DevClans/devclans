@@ -15,7 +15,7 @@ const RandomInfoCard = ({
       <div className="cardHighlight fcc [&>*]:w-full w100 gap-2">
         <div className="frcsb">
           <h3 className="text-highlight">{question || title || "title"}</h3>
-          <div className="frc gap-1 text-subH">
+          <div className="lg:flex items-center gap-1 text-subH hidden lg:visible">
             <Space size={16} />
             <p className="font-medium text-subH text-[10px]">
               Press Space For New Fact

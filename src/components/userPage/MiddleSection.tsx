@@ -66,7 +66,7 @@ export default MiddleSection;
 const TopFeatures = ({ data }: { data: InfoWithIconProps[] }) => {
   return (
     <>
-      <div className="frc w100 gap-6">
+      <div className="flex lg:flex-row items-center flex-col  w100 gap-x-6 gap-y-3">
         {data.map((item, i) => (
           <InfoWithIcons key={i} {...item} />
         ))}

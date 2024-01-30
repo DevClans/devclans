@@ -14,7 +14,8 @@ const ButtonBlue = ({
       {...props}
       onClick={(e) => onClick && onClick(e, label as string)}
       className={
-        "bg-primary px-4 w100 h-[50px] rounded-[10px] text-sm " + className
+        "bg-primary gap-y-0 frc flex-wrap px-4 w100 h-[50px] rounded-[10px] text-sm " +
+        className
       }
       style={style}
     >

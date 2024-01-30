@@ -19,7 +19,7 @@
 
 h1 {
   text-align: center;
-  font-size: 74px;
+  font-size: clamp(44px, 7vh, 74px);
   font-style: normal;
   font-weight: 600;
   line-height: 115%; /* 85.1px */
