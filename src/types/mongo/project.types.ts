@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import { UserProps, UserTeamProps } from "./user.types";
 import { DevStagesType } from "@/lib/devStages";
 import { MemberLevelType } from "@/lib/memberLevel";
+import { zodProjectFormSchema } from "@/zod/zod.common";
+import { z } from "zod";
 export type FetchProjectDetailsItemProps = {
   title: string;
   desc: string;
@@ -130,3 +132,5 @@ export const projectSearchItemKeys: string[] = [
   "skills",
   "team",
 ];
+
+export type ProjectFormProps = z.infer<typeof zodProjectFormSchema>;

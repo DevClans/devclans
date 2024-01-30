@@ -47,6 +47,7 @@ body {
     }
   }
 
+  textarea::placeholder,
   input::placeholder {
     opacity: 0.4;
   }
@@ -60,7 +61,7 @@ body {
   }
   @media screen and (max-width: 768px) {
     .btnRow {
-      @apply frc gap-3 overflow-scroll;
+      @apply frc gap-3 overflow-x-scroll scrollbar;
     }
   }
   // SCROLLBAR

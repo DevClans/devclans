@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import  { stringSchema , projectSchema } from "@/zod/zod.common"
-import dbConnect from '@/lib/dbConnect';
+import { NextResponse } from "next/server";
+import { stringSchema, zodProjectFormSchema } from "@/zod/zod.common";
+import dbConnect from "@/lib/dbConnect";
 import { ProjectModel, UserModel } from "@/model/schema";
 import { isValidObjectId } from 'mongoose';
 
@@ -10,8 +10,8 @@ async function handler(req:Request,{ params }:{ params : { user: string, project
 
 
     await dbConnect();
-    
-    const  { user, project }  = params;
+
+    const { user, project } = params;
     stringSchema.parse(user);
     stringSchema.parse(project);
     if (!user || typeof user !== 'string') {
@@ -42,4 +42,4 @@ catch(error){
 }
 }
 
-export { handler as GET }
+export { handler as GET };

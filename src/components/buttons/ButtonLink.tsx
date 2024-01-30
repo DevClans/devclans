@@ -9,6 +9,7 @@ const ButtonLink = ({
   onClick,
   href,
   replace,
+  ...rest
 }: ButtonProps) => {
   if (href) {
     return (
@@ -18,6 +19,7 @@ const ButtonLink = ({
         onClick={(e) => onClick && onClick(e, "secondary")}
         style={{ ...style }}
         href={href}
+        {...rest}
       >
         {label || "Link Button"}
       </Link>
@@ -25,6 +27,7 @@ const ButtonLink = ({
   }
   return (
     <button
+      {...rest}
       className={`${className}`}
       onClick={(e) => onClick && onClick(e, "secondary")}
       style={{ ...style }}

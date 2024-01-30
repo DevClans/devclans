@@ -1,9 +1,5 @@
-import Profile from "@/components/ProfileRegisterationInfo"
+import FormNewUser from "@/components/FormNewUser";
 
-export default function NewUser(){
-    return(
-        <div>
-            <Profile />
-        </div>
-    )
+export default function NewUser() {
+  return <FormNewUser />;
 }

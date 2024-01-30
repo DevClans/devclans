@@ -1,11 +1,12 @@
-import { FormData } from '@/app/contact-us/page';
+import { FormData } from "@/app/contact-us/page";
+import { urlApi } from "@/constants";
 
 export function sendEmail(data: FormData) {
-  const apiEndpoint = '/api/email';
+  const apiEndpoint = urlApi + "/email";
   console.log(data);
 
   fetch(apiEndpoint, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify(data),
   })
     .then((res) => res.json())

@@ -3,7 +3,7 @@ import dbConnect from "@/lib/dbConnect";
 import { UserModel, ProjectModel, LikeModel } from "@/model/schema";
 import {
   stringSchema,
-  projectSchema,
+  zodProjectFormSchema,
   likeAndBkMarkSchema,
 } from "@/zod/zod.common";
 import { isValidObjectId } from "mongoose";

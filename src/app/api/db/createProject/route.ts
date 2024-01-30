@@ -1,7 +1,12 @@
-import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/dbConnect';
+import { NextResponse } from "next/server";
+import dbConnect from "@/lib/dbConnect";
 import { UserModel, ProjectModel } from "@/mongodb/models";
-import  { stringSchema , projectSchema, userSchema } from "@/zod/zod.common"
+import {
+  stringSchema,
+  zodProjectFormSchema,
+  userSchema,
+  projectSchema
+} from "@/zod/zod.common";
 
 async function handler(req: Request) {
   try {
@@ -38,13 +43,13 @@ async function handler(req: Request) {
 console.log("done");
 
     return NextResponse.json({
-      message: 'Project created and associated with user successfully',
-       user: updatedUser,
+      message: "Project created and associated with user successfully",
+      user: updatedUser,
       project: createdProject,
     });
   } catch (error) {
-    console.error('Error creating project for user:', error);
-    return NextResponse.json({ message: 'Internal Server Error' });
+    console.error("Error creating project for user:", error);
+    return NextResponse.json({ message: "Internal Server Error" });
   }
 }
 

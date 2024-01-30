@@ -50,7 +50,14 @@ const ownedProjects = z.array(z.object({
 
 
 export const stringArraySchema = z.array(z.string());
-
+// Define a custom refinement function to validate the hexadecimal color code with variable length
+const isValidHexColorVariableLength = (value: any) => {
+  if (!value) {
+    return true;
+  }
+  const hexString = value.toString(16); // Convert integer to hexadecimal string
+  return /^#?([0-9A-F]{6}|[0-9A-F]{7}|[0-9A-F]{8})$/i.test(hexString); // Regular expression to validate hexadecimal color code with variable length
+};
 export const userGithubDetailsSchema = z.object({
   accessToken: z.string(),
   username: z.string().max(50),
@@ -63,95 +70,136 @@ export const userGithubDetailsSchema = z.object({
   login: z.string().min(1).trim(),
 });
 
-export const discordDetailsSchema = z.object({
+export const zodUserDiscordDetailsSchema = z.object({
   _id: z.string().refine((value) => /^\d{17,19}$/.test(value), {
     message: "Invalid Discord ID! Must be a string of 17 to 19 digits.",
   }),
   username: z.string().min(2).max(32),
-  discriminator: z.string().refine((value) => /^\d{4}$/.test(value), {
-    message: "Invalid discriminator! Must be a string of 4 digits.",
+  discriminator: z
+    .string()
+    .refine((value) => /^\d{4}$/.test(value) || value == "0", {
+      message: "Invalid discriminator! Must be a string of 4 digits.",
+    }),
+  avatar: z.string().regex(/^[0-9a-fA-F]{32}$/, {
+    message: "Invalid 32-character hexadecimal string",
   }),
-  avatar: z
-    .string()
-    .default("")
-    .refine((value) => /^https:\/\/cdn.discordapp.com/.test(value), {
-      message:
-        "Invalid avatar URL! Must start with 'https://cdn.discordapp.com/'.",
-    }),
+  // https://cdn.discordapp.com/avatars/746713386380689509/bd71d4c78ff1b8b234addd5393436661.png
   accent_color: z
-    .string()
-    .default("")
-    .refine((value) => /^#([0-9a-fA-F]{3}){1,2}$/.test(value), {
-      message: "Invalid accent color! Must be a valid hex color code.",
-    }),
-  bot: z.boolean().default(false),
+    .number()
+    .nullable()
+    .refine((value) => isValidHexColorVariableLength(value), {
+      message: "Invalid hexadecimal color code with variable length",
+    })
+    .optional(),
+  bot: z.boolean().optional(),
   global_name: z.string().default(""),
   banner: z
     .string()
-    .default("")
-    .refine((value) => /^https:\/\/cdn.discordapp.com/.test(value), {
-      message:
-        "Invalid banner URL! Must start with 'https://cdn.discordapp.com/'.",
-    }),
-  verified: z.boolean().default(false),
+    .nullable()
+    .refine(
+      (value) => (value ? /^https:\/\/cdn.discordapp.com/.test(value) : true),
+      {
+        message:
+          "Invalid banner URL! Must start with 'https://cdn.discordapp.com/'.",
+      }
+    )
+    .optional(),
+  verified: z.boolean().optional(),
   email: z
     .string()
-    .default("")
-    .refine((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), {
-      message: "Invalid email address!",
-    }),
+    .nullable()
+    .refine(
+      (value) => (value ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) : value),
+      {
+        message: "Invalid email address!",
+      }
+    )
+    .optional(),
   // Add other properties and validations as needed
 });
 
-export const profileSchema = z.object({
-  githubDetails: userGithubDetailsSchema.optional(),
-  bio: stringSchema.max(100).optional(),
-  contactMethod: z.enum(contactMethods).default("discord"),
-  skills: z.array(z.enum(skills)).optional(),
-  socials: z.object({
-    twitter: stringSchema.optional(),
-    telegram: stringSchema.optional(),
-    linkedin: stringSchema.default(""),
-    website: stringSchema.default(""),
-  }),
-  phone: z
-    .string()
-    .refine((value) => /^[0-9]{10}$/.test(value), {
-      message: "Invalid phone number!",
-    })
-    .optional(),
-  email: z
-    .string()
-    .refine((value) => /\S+@\S+\.\S+/.test(value), {
-      message: "Invalid email address!",
-    })
-    .optional(),
+export const zodUserFormSchema = z
+  .object({
+    githubDetails: userGithubDetailsSchema.optional(),
+    bio: stringSchema.min(10).max(100),
+    contactMethod: z.enum(contactMethods as any),
+    skills: z.array(z.enum(skills)).optional(),
+    socials: z.object({
+      twitter: stringSchema.max(150).optional(),
+      telegram: stringSchema.max(150).optional(),
+      linkedin: stringSchema.max(150).optional(),
+      website: stringSchema.max(150).optional(),
+    }),
+    phone: z
+      .string()
+      .max(13)
+      .nullable()
+      .refine((value) => (value ? /^[0-9]{10}$/.test(value) : true), {
+        message: "Invalid phone number!",
+      })
+      .optional(),
+    email: z
+      .string()
+      .email()
+      .min(10)
+      .max(100)
+      .nullable()
+      .refine((value) => (value ? /\S+@\S+\.\S+/.test(value) : true), {
+        message: "Invalid email address!",
+      })
+      .optional(),
+    questions: z.object({
+      currentCompany: z.string().max(250).optional(),
+      careerGoal: z.enum(["remote", "faang", "startup"]).default("remote"),
+      proudAchievement: z.string().max(250).optional(),
+      recentWork: z.string().max(250).optional(),
+    }),
+    domain: z.enum(projectDomains),
+  })
+  .superRefine((value, context) => {
+    if (value.contactMethod === "whatsapp" && !value.phone) {
+      context.addIssue({
+        code: "custom",
+        message: "Phone number is required for WhatsApp contact method",
+        path: ["phone"],
+      });
+    }
+    if (value.contactMethod === "telegram" && !value.socials.telegram) {
+      context.addIssue({
+        code: "custom",
+        message: "Telegram username is required for Telegram contact method",
+        path: ["socials", "telegram"],
+      });
+    }
+    if (value.contactMethod === "email" && !value.email) {
+      context.addIssue({
+        code: "custom",
+        message: "Email is required for Email contact method",
+        path: ["email"],
+      });
+    }
+    if (value.contactMethod === "twitter" && !value.socials.twitter) {
+      context.addIssue({
+        code: "custom",
+        message: "Twitter username is required for Twitter contact method",
+        path: ["socials", "twitter"],
+      });
+    }
+    // return true;
+  });
 
-  
-  ownedProjects: z.array(z.string()),
-  contributedProjects: z.array(z.string()),
-  questions: z
-    .object({
-      currentCompany: z.string().optional(),
-      careerGoal: z.enum(["remote", "faang", "startup"]).optional(),
-      proudAchievement: z.string().optional(),
-      recentWork: z.string().optional(),
-    })
-    .optional(),
-  domain: z.enum(projectDomains).optional(),
-}).optional();
-
+export const userFormShape = zodUserFormSchema._def.schema.shape;
 
 export const userSchema = z.object({
-  // ...profileSchema.shape,
+  ...userFormShape,
   discordId: z.string().min(5).max(50),
   username: stringSchema.max(50).min(1),
   avatar: z.string().optional(),
   ownedProjects: z.array(ownedProjects),
   contributedProjects: z.array(ownedProjects),
-  discordDetails: discordDetailsSchema.optional(),
-  createdAt: zodDateString.optional(),
-  updatedAt: zodDateString.optional(),
+  discordDetails: zodUserDiscordDetailsSchema.optional(),
+  createdAt: zodDateString,
+  updatedAt: zodDateString,
 });
 
 export const userArraySchema = z.array(userSchema);
@@ -182,54 +230,82 @@ export const zodRepoDetailsSchema = z
     languages: z.record(z.number()),
   })
   .optional();
+export const zodProjectDetailsSchema = z.object({
+  problem: z.string().max(180),
+  challenges: z
+    .array(
+      z.object({
+        title: z.string().default(""),
+        desc: z.string().default(""),
+        solution: z.string().default(""),
+      })
+    )
+    .default([]),
+  futureGoals: z
+    .array(
+      z.object({
+        title: z.string().default(""),
+        desc: z.string().default(""),
+        needHelp: z.boolean().default(false),
+      })
+    )
+    .default([]),
+  memberReq: z
+    .array(
+      z.object({
+        title: z.string().default(""),
+        desc: z.string().default(""),
+      })
+    )
+    .default([]),
+});
+
+const StringArrayParser = z.string().refine((data) => {
+  return typeof data === 'string';
+}, { message: 'Input must be a string' }).transform((data) => data.split(','));
+
+
+
 export const zodProjectDataSchema = z.object({
-  contributors: z.string().array().default([]),
+  owner: ownerSchema,
+  contributors: z.string().array(),
   // Add other properties if needed
   topics: z.array(z.string()).default([]),
   repoName: z.string().max(50).default(""),
   likesCount: z.number().default(0),
   bookmarkCount: z.number().default(0),
-  projectLinks: z.array(z.string()).default([]),
-  projectDetails: z.object({
-    problem: z.string().max(180),
-    challenges: z
-      .array(
-        z.object({
-          title: z.string().default(""),
-          desc: z.string().default(""),
-          solution: z.string().default(""),
-        })
-      )
-      .default([]),
-    futureGoals: z
-      .array(
-        z.object({
-          title: z.string().default(""),
-          desc: z.string().default(""),
-          needHelp: z.boolean().default(false),
-        })
-      )
-      .default([]),
-    memberReq: z
-      .array(
-        z.object({
-          title: z.string().default(""),
-          desc: z.string().default(""),
-        })
-      )
-      .default([]),
-  }),
+  projectLinks: stringArraySchema,
+  projectDetails: zodProjectDetailsSchema,
   video: z.string().default(""),
   devStage: z.enum(devStages as any).default("idea"),
   published: z.boolean().default(false),
   repoDetails: zodRepoDetailsSchema,
 });
 
+
 export const projectSchema = z.object({
   ...zodProjectSearchInfoSchema.shape,
   ...zodProjectDataSchema.shape,
 });
 
+export const zodProjectFormSchema = z.object({
+  title: z.string().min(3).max(50),
+  desc: z.string().min(10).max(180),
+  skills: z.string().array().default([]),
+  team: z.string().array().default([]),
+  needMembers: z
+    .enum(memberLevels as any)
+    .nullable()
+    .default("beginner"),
+  imgs: z.array(z.string()).default([]),
+  topics: z.array(z.string()).default([]),
+  repoName: z.string().max(50).default(""),
+  projectLinks: z.array(z.string()).default([]),
+  video: z.string().default(""),
+  projectDetails: zodProjectDetailsSchema,
+  devStage: z.enum(devStages as any).default("idea"),
+  published: z.boolean().default(false),
+});
 export const projectArraySchema = z.array(projectSchema);
 
 export const likeAndBkMarkSchema = z.object({

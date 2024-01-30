@@ -9,6 +9,7 @@
 @import "../styles/toastify.scss";
 @import "../styles/lines.scss";
 @import "../styles/detailsTag.scss";
+@import "../styles/forms.scss";
 
 :root {
   --border: #132341;
@@ -30,6 +31,7 @@
   --bg: #010816;
   --yellowDark: #a4a622;
   --green: #2da519;
+  --red: #d64343;
 }
 
 body {
@@ -45,4 +47,8 @@ html {
 
 button {
   color: var(--highlight);
+}
+
+.error {
+  color: var(--red);
 }
