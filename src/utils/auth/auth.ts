@@ -61,11 +61,12 @@ export const authOptions: NextAuthOptions = {
       } as any;
       return session;
     },
-    // signIn: async (user: any, account: any, profile: any) => {
-    //   console.log("signIn");
-    //   check if is discord member
-    //   return false;
-    // },
+    // https://next-auth.js.org/configuration/callbacks#sign-in-callback
+    signIn: async ({ user, account, profile, email, credentials }) => {
+      console.log("signIn");
+      // TODO check if is discord member
+      return true;
+    },
   },
   events: {
     signIn: async (message) => {

@@ -1,19 +1,19 @@
-"use client";
 import { ButtonProps } from "@/types";
 import ButtonUserSection from "../buttons/ButtonUserSection";
-import { useState } from "react";
 
 const ButtonGroupUserSections = ({
   data,
   containerClassName,
   containerStyle,
+  active,
   ...rest
 }: {
   data: ButtonProps[];
   containerClassName?: string;
   containerStyle?: React.CSSProperties;
 } & Partial<ButtonProps>) => {
-  const [active, setActive] = useState(0);
+  // const [isActive, setActive] = useState(active);
+  // console.log(isActive, "isActive");
   return (
     <>
       <div
@@ -25,12 +25,12 @@ const ButtonGroupUserSections = ({
         {data.map((item, i) => (
           <ButtonUserSection
             {...rest}
-            active={active === i}
+            active={active === item.label?.toString().toLowerCase()}
             key={i}
             {...item}
-            onClick={() => {
-              setActive(i);
-            }}
+            // onClick={() => {
+            //   setActive(item.label?.toString().toLowerCase());
+            // }}
           />
         ))}
       </div>

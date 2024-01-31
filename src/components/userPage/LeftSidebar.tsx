@@ -4,8 +4,9 @@ import ProductImg from "../project/ProjectImg";
 import LeftMenuBottomBar from "./LeftMenuBottomBar";
 import userAvatar from "@/lib/userAvatar";
 import { PageProps } from "@/types/page.types";
+import LeftSiderbarTopItem from "./LeftSiderbarTopItem";
 
-const LeftSidebar = ({
+const LeftSidebar = async ({
   username,
   bio,
   skills,
@@ -13,17 +14,18 @@ const LeftSidebar = ({
   contactMethodId,
   ...rest
 }: Partial<UserProps> & PageProps) => {
-  const avatar = userAvatar({ userProps: rest });
+  const avatar = await userAvatar({ userProps: rest });
   return (
     <>
       <div
         id="leftMenuUser"
-        className={`peer transition-[max-width] ease-in-out duration-300 fcfssb gap-3 md:left-0 md:top-[0px] md:pt-20 cardGrad md:data-[state=active]:max-w-[314px] md:data-[state=not-active]:min-w-20 md:data-[state=not-active]:max-w-[88px] md:-z-[1] group/left md:fixed w100 md:h-screen md:!border-r md:!border-b-none md:!rounded-none `}
+        className={`peer transition-[max-width] ease-in-out duration-300 fcfssb gap-3 md:left-0 md:top-[0px] cardGrad md:data-[state=active]:max-w-[314px] md:data-[state=not-active]:min-w-20 md:data-[state=not-active]:max-w-[88px] md:-z-[1] group/left md:fixed w100 md:h-screen  md:!border-r md:!border-b-0 md:!rounded-none `}
         data-state="active"
         style={{
           boxSizing: "border-box",
         }}
       >
+        <LeftSiderbarTopItem />
         <div
           className="fcfs md:group-data-[state=active]/left:px-6 gap-3 h-full p-3 overflow-hidden w-full"
           style={{

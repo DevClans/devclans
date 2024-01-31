@@ -13,7 +13,7 @@ const LinkWithIcon = ({
   text: string;
   icon?: React.ReactNode;
   isBold?: boolean;
-  href: string;
+  href?: string;
   fontSize?: number;
 }) => {
   const commonStyle: React.CSSProperties = {
@@ -29,19 +29,26 @@ const LinkWithIcon = ({
     color: colors.text,
     fontWeight: 400,
   };
-  return (
-    <Link
-      href={href}
-      style={{
-        display: "inline-flex",
-        ...commonStyle,
-        ...(isBold ? boldStyle : normalStyle),
-      }}
-      className="frc gap-[3px]"
-      target={target}
-    >
+  const props = {
+    style: {
+      display: "inline-flex",
+      ...commonStyle,
+      ...(isBold ? boldStyle : normalStyle),
+    },
+    className: "frc gap-[3px]",
+  };
+  const innerHtml = (
+    <>
       {text || "Link"}
       {icon}
+    </>
+  );
+  if (!href) {
+    return <div {...props}>{innerHtml}</div>;
+  }
+  return (
+    <Link href={href} target={target} {...props}>
+      {innerHtml}
     </Link>
   );
 };

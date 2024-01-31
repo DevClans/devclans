@@ -8,6 +8,7 @@ import {
 } from "@/zod/zod.common";
 import mongoose from "mongoose";
 import { z } from "zod";
+import { ProjectProps } from "./project.types";
 
 // Define the User interface extending mongoose.Document
 export interface UserProps extends UserTeamItemProps, UserSearchInfoProps {
@@ -34,6 +35,11 @@ export type UserQuestionsProps = {
   careerGoal?: string;
   proudAchievement?: string;
   recentWork?: string;
+};
+
+export type UserProjectProps = {
+  ownedProjects: ProjectProps[];
+  contributedProjects: ProjectProps[];
 };
 
 export type UserDiscordDetailsProps = z.infer<

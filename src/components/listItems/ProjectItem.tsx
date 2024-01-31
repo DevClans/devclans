@@ -3,6 +3,8 @@ import ProductImg from "../project/ProjectImg";
 import { ProjectIconGroup, ProjectStage } from "..";
 import ItemsTemplate from "./ItemsTemplate";
 import { PageProps } from "@/types/page.types";
+import { urlProject } from "@/constants";
+import { msgSharingProject } from "@/lib/constants.messages";
 
 const ProjectItem = ({
   needMembers,
@@ -37,6 +39,8 @@ const ProjectItem = ({
           <>
             <ProjectStage />
             <ProjectIconGroup
+              url={urlProject(_id)}
+              message={msgSharingProject(title || "")}
               showLabels={false}
               bookmarkCount={0}
               likesCount={0}

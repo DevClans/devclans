@@ -1,8 +1,13 @@
 import Image from "next/image";
 import BottomBar from "../../TextBars/BottomBar";
 import { LinkShare } from "@/components";
+import { msgLookingForMember } from "@/lib/constants.messages";
+import { urlUser } from "@/constants";
 
 const LookingForMembers = () => {
+  const username = "test";
+  const id = "123";
+  const level = "beginner";
   return (
     <div className="fcc w100">
       <div
@@ -33,7 +38,11 @@ const LookingForMembers = () => {
       <BottomBar
         text={
           <>
-            Tell cohort friends about this opportunity <LinkShare href={"/"} />
+            Tell cohort friends about this opportunity{" "}
+            <LinkShare
+              url={urlUser(id)}
+              message={msgLookingForMember(username, level)}
+            />
           </>
         }
       />

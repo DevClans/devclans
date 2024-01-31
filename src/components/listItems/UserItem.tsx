@@ -1,12 +1,14 @@
-import { UserProps, UserSearchInfoProps } from "@/types/mongo/user.types";
+import { UserSearchInfoProps } from "@/types/mongo/user.types";
 import { ProjectIconGroup } from "..";
 import ProductImg from "../project/ProjectImg";
 import ItemsTemplate from "./ItemsTemplate";
 import userAvatar from "@/lib/userAvatar";
 import selectUserUsername from "@/lib/selectUserUsername";
 import { PageProps } from "@/types/page.types";
+import { msgSharingUser } from "@/lib/constants.messages";
+import { urlUser } from "@/constants";
 
-const UserItem = ({
+const UserItem = async ({
   avatar,
   bio,
   skills,
@@ -24,7 +26,7 @@ const UserItem = ({
     username: gitUsername,
     login,
   } = githubDetails || {};
-  const avtr = userAvatar({
+  const avtr = await userAvatar({
     avatar,
     discordImg: disAvatar,
     gitubImg: gitAvatar,
@@ -53,7 +55,11 @@ const UserItem = ({
         detailsHeader={
           <>
             <h2>{usernm || "Username"}</h2>
-            <ProjectIconGroup showLabels={false} />
+            <ProjectIconGroup
+              showLabels={false}
+              url={urlUser(_id)}
+              message={msgSharingUser(usernm)}
+            />
           </>
         }
         rightMessage={

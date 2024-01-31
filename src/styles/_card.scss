@@ -12,6 +12,11 @@
   background: var(--cardBg2, #020b1c);
   border-radius: 20px;
 }
+.card3 {
+  @apply card card2;
+  padding: 20px;
+  border-radius: 10px;
+}
 
 .heroCard {
   border-bottom: 1px solid var(--border, #132341);

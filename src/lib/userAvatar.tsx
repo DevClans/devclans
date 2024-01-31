@@ -1,6 +1,10 @@
 import { UserProps } from "@/types/mongo/user.types";
-
-const userAvatar = ({
+import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
+const discordImgUrl = (userid: string, avatar: string) => {
+  if (!userid || !avatar) return "";
+  return `https://cdn.discordapp.com/avatars/${userid}/${avatar}.png`;
+};
+const userAvatar = async ({
   avatar,
   discordImg,
   gitubImg,
@@ -10,7 +14,13 @@ const userAvatar = ({
   discordImg?: string;
   gitubImg?: string;
   userProps?: Partial<UserProps>;
-}): string => {
+}): Promise<string> => {
+  const session = getServerSessionForServer();
+  if (session) {
+    const userd: any = (await session)?.user;
+    const url = discordImgUrl(userd?.discordId || "", userd?.avatar || "");
+    if (url) return url;
+  }
   const avtr = avatar || userProps?.avatar;
   const dc = discordImg || userProps?.discordDetails?.avatar;
   const gh = gitubImg || userProps?.githubDetails?.avatar_url;
