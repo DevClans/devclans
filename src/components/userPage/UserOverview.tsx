@@ -1,11 +1,17 @@
 import ReactMarkdown from "react-markdown";
 import { ProjectDetailsItemProps } from "@/types/toggleList.types";
 import { ProjectDetails } from "..";
-const UserOverview = ({ data }: { data: ProjectDetailsItemProps[] }) => {
+const UserOverview = ({
+  data,
+  username,
+}: {
+  data: ProjectDetailsItemProps[];
+  username: string;
+}) => {
   return (
     <>
       <div id="overview" className="cardCommon">
-        <h3>Damian Activity</h3>
+        <h3>{username ? username + "'s" : ""} Activity</h3>
         <p>Activity graphs </p>
       </div>
       <ReactMarkdown className="cardCommon markdown">

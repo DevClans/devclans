@@ -23,7 +23,7 @@ const LeftSiderbarTopItem = () => {
   return (
     <div
       id="leftMenuHeader"
-      className="h-16 transition-[height] duration-300 ease-in-out"
+      className="h-16 hidden md:flex transition-[height] duration-300 ease-in-out"
     />
   );
 };

@@ -1,5 +1,5 @@
 import { ProjectDomainType } from "./../../lib/domains";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { UserProps, UserTeamProps } from "./user.types";
 import { DevStagesType } from "@/lib/devStages";
 import { MemberLevelType } from "@/lib/memberLevel";
@@ -117,6 +117,7 @@ export type ProjectSearchItemProps = {
   desc: string;
   title: string;
   skills: string[];
+  owner: Types.ObjectId;
   team: {
     username?: string;
     _id: mongoose.Types.ObjectId;
@@ -128,6 +129,7 @@ export const projectSearchItemKeys: string[] = [
   "imgs",
   "_id",
   "desc",
+  "owner",
   "title",
   "skills",
   "team",

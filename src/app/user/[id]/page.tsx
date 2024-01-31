@@ -65,7 +65,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
   };
   const test = convertInfoToProjectDetails(arr);
   const ele: { [key: string]: JSX.Element } = {
-    overview: <UserOverview data={test} />,
+    overview: <UserOverview data={test} username={username} />,
     projects: (
       <UserProjects
         ownedProjects={
@@ -86,7 +86,11 @@ const page = async ({ params, searchParams }: UserPageProps) => {
   };
   return (
     <>
-      <LeftSidebar {...userData} searchParams={searchParams} />
+      <LeftSidebar
+        {...userData}
+        username={username}
+        searchParams={searchParams}
+      />
       <Common
         username={username}
         questions={userData["questions"]}

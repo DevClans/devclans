@@ -19,7 +19,11 @@ const UserItem = async ({
   _id,
   searchParams,
 }: UserSearchInfoProps & Partial<PageProps>) => {
-  const { username: discordUsername, avatar: disAvatar } = discordDetails || {};
+  const {
+    username: discordUsername,
+    avatar: disAvatar,
+    _id: disID,
+  } = discordDetails || {};
   const {
     avatar_url: gitAvatar,
     bio: gitBio,
@@ -30,6 +34,7 @@ const UserItem = async ({
     avatar,
     discordImg: disAvatar,
     gitubImg: gitAvatar,
+    discordId: disID,
   });
   const usernm = selectUserUsername({ username, discordUsername, gitUsername });
 

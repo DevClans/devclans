@@ -10,11 +10,10 @@ const ProjectItem = ({
   needMembers,
   imgs,
   _id,
-  desc,
   title,
   skills,
   team,
-  searchParams,
+  ...rest
 }: ProjectSearchItemProps & Partial<PageProps>) => {
   const teamNames = team?.map((t) => t.username) || [];
   return (
@@ -59,10 +58,9 @@ const ProjectItem = ({
         detailHeading="Team"
         detailDesc={teamNames.join(", ")}
         chipArr={skills || []}
-        searchParams={searchParams}
         baseUrl={"/project"}
         _id={_id?.toString() || ""}
-        desc={desc}
+        {...rest}
       />
     </>
   );

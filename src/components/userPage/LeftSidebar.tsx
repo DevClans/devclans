@@ -1,10 +1,11 @@
 import { ContactDetailsProps, UserProps } from "@/types/mongo/user.types";
-import { ButtonConnect, ChipGroup, LightLine } from "..";
+import { ButtonBlue, ButtonConnect, ChipGroup, LightLine } from "..";
 import ProductImg from "../project/ProjectImg";
 import LeftMenuBottomBar from "./LeftMenuBottomBar";
 import userAvatar from "@/lib/userAvatar";
 import { PageProps } from "@/types/page.types";
 import LeftSiderbarTopItem from "./LeftSiderbarTopItem";
+import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 
 const LeftSidebar = async ({
   username,
@@ -12,8 +13,10 @@ const LeftSidebar = async ({
   skills,
   contactMethod,
   contactMethodId,
+  _id,
   ...rest
 }: Partial<UserProps> & PageProps) => {
+  const session: any = await getServerSessionForServer();
   const avatar = await userAvatar({ userProps: rest });
   return (
     <>
@@ -47,7 +50,7 @@ const LeftSidebar = async ({
           <h1
             className={`md:group-data-[state=not-active]/left:text-sm text-[36px] !text-left `}
           >
-            {username || "Damian"}
+            {username || "Username"}
           </h1>
           <p className="md:group-data-[state=not-active]/left:hidden">
             {bio || "I'm a full stack developer, I like to make things."}
@@ -58,20 +61,25 @@ const LeftSidebar = async ({
               style={{ height: 40 }}
               bookmarksCount={0}
             /> */}
-            <ButtonConnect
-              className={`userBtn md:group-data-[state=active]/left:h-10  md:group-data-[state=not-active]/left:h-15 gap-1 ${""}}`}
-              style={{
-                padding: "0 10px",
-              }}
-              label={"Ask A Question"}
-              contact={[
-                {
-                  name: username,
-                  contactMethod,
-                  contactMethodId,
-                } as unknown as ContactDetailsProps,
-              ]}
-            />
+            {session && session.user._id === _id ? (
+              // <Link href="/project/new">Create Project</Link>
+              <ButtonBlue href="/project/new" label={"Create Project"} />
+            ) : (
+              <ButtonConnect
+                className={`userBtn md:group-data-[state=active]/left:h-10  md:group-data-[state=not-active]/left:h-15 gap-1 ${""}}`}
+                style={{
+                  padding: "0 10px",
+                }}
+                label={"Ask A Question"}
+                contact={[
+                  {
+                    name: username,
+                    contactMethod,
+                    contactMethodId,
+                  } as unknown as ContactDetailsProps,
+                ]}
+              />
+            )}
           </div>
           {Array.isArray(skills) && skills.length > 0 && (
             <>
