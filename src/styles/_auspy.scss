@@ -80,12 +80,14 @@ body {
   .scrollbarHidden::-webkit-scrollbar,
   .scrollbar-x::-webkit-scrollbar {
     height: 5px;
+    width: 5px;
   }
 
   .scrollbar:hover::-webkit-scrollbar,
   .scrollbar-x:hover::-webkit-scrollbar {
     transition: heigth 2s ease;
     height: 5px;
+    width: 5px;
   }
 
   .scrollbar::-webkit-scrollbar-thumb,
