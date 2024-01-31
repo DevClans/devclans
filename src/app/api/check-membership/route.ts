@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import checkServerMembership from '../middleware/checkServerMembership/route';
 
 export async function GET(req: NextRequest, res: NextResponse) {
-  const userDiscordId = 'siddhantfr'; // Replace with the actual Discord user ID you want to check
+  const userDiscordId = '920620119921676319r'; // Replace with the actual Discord user ID you want to check
   const result = await checkServerMembership(req, res, userDiscordId);
 
   // Log the result or send it as a response
