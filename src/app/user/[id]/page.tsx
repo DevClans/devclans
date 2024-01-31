@@ -1,7 +1,6 @@
 import LeftSidebar from "@/components/userPage/LeftSidebar";
 import MiddleSection from "@/components/userPage/MiddleSection";
 import RightSidebar from "@/components/userPage/RightSidebar";
-import UserExperience from "@/components/userPage/UserExperience";
 import UserOverview from "@/components/userPage/UserOverview";
 import UserProjects from "@/components/userPage/UserProjects";
 import selectUserUsername from "@/lib/selectUserUsername";
@@ -16,8 +15,9 @@ import type {
 import { Fetch } from "@/utils/fetchApi";
 
 type UserPageProps = {
-  userData: UserProps;
-} & React.PropsWithChildren & { params: { id: string } } & PageProps;
+  params: { id: string };
+  searchParams: { tab: string };
+};
 
 const page = async ({ params, searchParams }: UserPageProps) => {
   const { id } = params;

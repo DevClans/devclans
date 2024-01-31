@@ -1,9 +1,6 @@
 import { LightLine } from "@/components";
-import { PageProps } from "@/types/page.types";
 
-const layout = async ({
-  children,
-}: { params: { id: string } } & PageProps & React.PropsWithChildren) => {
+const layout = async ({ children }: React.PropsWithChildren) => {
   return (
     <>
       <LightLine />

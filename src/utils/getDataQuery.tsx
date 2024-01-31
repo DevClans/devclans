@@ -9,7 +9,13 @@ import { mongoProjects } from "./mongoGetProjects";
 import { getSearchParams } from "./getSearchParams";
 import { UserProps, UserRedisKeys } from "@/types/mongo/user.types";
 
-async function handler(req: Request, type: "projects" | "users" = "projects") {
+export async function getDataQuery(
+  url: string,
+  type: "projects" | "users" = "projects"
+) {
+  if (!url) {
+    return NextResponse.json({ error: "no request" });
+  }
   const isProject = type === "projects";
   const Enum = isProject ? ProjectRedisKeys : UserRedisKeys;
   type Props = typeof isProject extends true ? ProjectProps : UserProps;
@@ -17,7 +23,7 @@ async function handler(req: Request, type: "projects" | "users" = "projects") {
     await dbConnect();
     // Assuming you have query parameters for search, page, filters
     const { search, page, filters }: FilterQuery = zodFilterQuery.parse(
-      getSearchParams(req.url)
+      getSearchParams(url)
     );
     console.log(search, page, filters, "search, page, filters");
     // Generating a unique key for each search combination
@@ -113,8 +119,6 @@ async function handler(req: Request, type: "projects" | "users" = "projects") {
     return NextResponse.json({ error: error.message });
   }
 }
-
-export { handler as getDataQuery };
 
 // algorithm
 // get search query, page, filters from url

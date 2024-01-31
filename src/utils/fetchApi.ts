@@ -36,6 +36,7 @@ export const Fetch = async ({
   const options: Partial<FetchProps> = {
     method,
     headers: {
+      "cache-control": "force-cache",
       "Content-Type": "application/json",
       "x-d-a": type, // d-a means devclans-access
     },

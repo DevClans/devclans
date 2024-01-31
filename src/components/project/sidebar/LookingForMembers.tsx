@@ -3,10 +3,11 @@ import BottomBar from "../../TextBars/BottomBar";
 import { LinkShare } from "@/components";
 import { msgLookingForMember } from "@/lib/constants.messages";
 import { urlUser } from "@/constants";
+import { Types } from "mongoose";
 
 const LookingForMembers = () => {
   const username = "test";
-  const id = "123";
+  const id: Types.ObjectId = "123" as unknown as Types.ObjectId;
   const level = "beginner";
   return (
     <div className="fcc w100">

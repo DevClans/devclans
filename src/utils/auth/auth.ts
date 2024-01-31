@@ -17,9 +17,15 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID as string,
       clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
+      authorization: {
+        params: {
+          scope: "identify email guilds",
+        },
+      },
       async profile(profile: any, tokens: any) {
         const { id } = profile;
-        // const { accessToken } = tokens;
+        const { accessToken } = tokens;
+        // TODO check discord membership
         const isData = zodUserDiscordDetailsSchema.safeParse({
           ...profile,
           _id: id,
@@ -62,11 +68,10 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     // https://next-auth.js.org/configuration/callbacks#sign-in-callback
-    signIn: async ({ user, account, profile, email, credentials }) => {
-      console.log("signIn");
-      // TODO check if is discord member
-      return true;
-    },
+    // signIn: async ({ user, account, profile, email, credentials }) => {
+    //   console.log("signIn");
+    //   return true;
+    // },
   },
   events: {
     signIn: async (message) => {

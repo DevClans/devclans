@@ -15,7 +15,10 @@ export type ButtonProps = {
   color?: string;
   href?: string;
   activeIcon?: React.ReactNode;
-  setActive?: React.Dispatch<React.SetStateAction<boolean | number | string>>;
+  setActive?: any;
+  // | React.Dispatch<React.SetStateAction<boolean>>
+  // | React.Dispatch<React.SetStateAction<string>>
+  // | React.Dispatch<React.SetStateAction<number>>;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   loading?: boolean;
