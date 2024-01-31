@@ -25,7 +25,7 @@ async function handler(req: Request) {
     const project = await ProjectModel.findById(projectId);
     console.log(project);
 
-    const user = await UserModel.findOne({ username: userId });
+    const user = await UserModel.findOne({ _id: userId });
     console.log(user)
 
     if (!project || !user) {

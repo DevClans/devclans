@@ -267,14 +267,13 @@ const StringArrayParser = z.string().refine((data) => {
 
 
 export const zodProjectDataSchema = z.object({
-  owner: ownerSchema,
-  contributors: z.string().array(),
+  contributors: z.string().array().default([]),
   // Add other properties if needed
   topics: z.array(z.string()).default([]),
   repoName: z.string().max(50).default(""),
   likesCount: z.number().default(0),
   bookmarkCount: z.number().default(0),
-  projectLinks: stringArraySchema,
+  projectLinks: stringArraySchema.default([]),
   projectDetails: zodProjectDetailsSchema,
   video: z.string().default(""),
   devStage: z.enum(devStages as any).default("idea"),

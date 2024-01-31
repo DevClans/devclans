@@ -16,7 +16,7 @@ async function handler(req:Request,{ params }:{ params : { userId: string, proje
     if (!userId || typeof userId !== 'string') {
         return NextResponse.json({ message: 'Invalid user parameter' });
       }
-      const u = await UserModel.findOne({username:userId})
+      const u = await UserModel.findOne({_id:userId});
 
 
   

@@ -10,26 +10,26 @@ import { Fetch } from "@/utils/fetchApi";
 
 const ButtonLike = (props: any) => {
   let title = props.title;
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(true);
   const [likesCount, setLikeCount] = useState(0);
   const { data: session } = useSession();
 
-  const userId = "saivi21";
-  const ownerId = "saivi21";
-  title = "65b67ad4b7c3dc79392510f9";
+  const userId = "65baa30ac89d8b732cadfdf2";
+  const ownerId = "65baa30ac89d8b732cadfdf2";
+  title = "65baa4d8c89d8b732cadfdfe";
   //console.log(title);
 
   useEffect(() => {
     const fetchLikeCount = async () => {
       try {
-        const response = await Fetch({
-          endpoint: `getProject/satvik21/quizify`,
+        const data = await Fetch({
+          endpoint: `/db/getProject/${userId}/${title}`,
           method: "GET",
         });
-        const data = await response.json();
+       
         //  console.log(data)
         if (data) {
-          //console.log(data.likesCount)
+          console.log(data.likesCount)
 
           setLikeCount(data.likesCount);
         }
@@ -39,13 +39,13 @@ const ButtonLike = (props: any) => {
     };
     const fetchIsLiked = async () => {
       try {
-        const response = await Fetch({
-          endpoint: `getLiked/${session?.user?.name}/quizify`,
+        const data = await Fetch({
+          endpoint: `/db/getLiked/${userId}/${title}`,
           method: "GET",
         });
-        const data = await response.json();
-        //  console.log("This is data");
-        // console.log(data);
+      
+         console.log("This is data");
+        console.log(data);
         if (data.length > 0) {
           if (data[0]._id) {
             console.log("false");
@@ -62,9 +62,24 @@ const ButtonLike = (props: any) => {
         console.error("Error fetching initial like count:", error);
       }
     };
-    fetchIsLiked();
 
+    const localLikedState = localStorage.getItem(`likedState_${title}_${userId}`);
+    if(localLikedState){
+    
+      setLiked(JSON.parse(localLikedState));
+    }
+    else{
+    fetchIsLiked();
+    }
+
+    const localLikeNumber = localStorage.getItem(`likeNumber_${title}`);
+    if(localLikeNumber){
+      console.log("Taken from local storage")
+      setLikeCount(JSON.parse(localLikeNumber))
+    }
+    else{
     fetchLikeCount();
+    }
   }, []);
 
   const handleClick = async () => {
@@ -73,13 +88,14 @@ const ButtonLike = (props: any) => {
       work = "addLike";
     } else {
       work = "removeLike";
+       
     }
     try {
       // console.log(work);
       const response = await fetch(`http://localhost:3000/api/db/${work}`, {
         method: "POST",
         body: JSON.stringify({
-          userId: "saivi21",
+          userId: "65baa30ac89d8b732cadfdf2",
           projectId: title,
         }),
         headers: {
@@ -89,13 +105,12 @@ const ButtonLike = (props: any) => {
       //console.log(title);
       const data = await response.json();
       //console.log(liked);
-      //console.log(data);
-      if (liked) {
-        setLikeCount(data.project.likesCount);
-      } else {
-        setLikeCount(data.project.likesCount);
-      }
-
+      console.log(data);
+    
+      console.log(data.project.likesCount)
+      localStorage.setItem(`likedState_${title}_${userId}`, JSON.stringify(!liked));
+      localStorage.setItem(`likedNumber_${title}`, JSON.stringify(data.project.likesCount));
+      setLikeCount(data.project.likesCount);
       setLiked(!liked);
     } catch (error) {
       console.error("Error adding like:", error);
@@ -104,9 +119,9 @@ const ButtonLike = (props: any) => {
 
   return (
     <ButtonIcon
-      active={liked}
+      active={!liked}
       setActive={setLiked}
-      label={likesCount.toString()}
+      label={likesCount?.toString()}
       activeIcon={<FavoriteRounded color="primary" fontSize="small" />}
       icon={<FavoriteBorderRounded fontSize="small" />}
       onClick={handleClick}
