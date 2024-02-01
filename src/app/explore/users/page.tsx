@@ -4,6 +4,7 @@ import { Fetch } from "@/utils/fetchApi";
 import { PageProps } from "@/types/page.types";
 import { stringify } from "querystring";
 import ToolBox from "@/components/ToolBox";
+import GitHubGraph from "@/components/GithubGraph";
 const Users = async ({ params, searchParams }: Partial<PageProps>) => {
   const str = stringify(searchParams);
   const users: UserProps[] =
@@ -22,6 +23,7 @@ const Users = async ({ params, searchParams }: Partial<PageProps>) => {
   }
   return (
     <div className="w100 fcfs gap-6">
+      <GitHubGraph/>
       <ToolBox count={users.length} />
       {users.map((user, i) => {
         return <UserItem searchParams={searchParams} key={i} {...user} />;

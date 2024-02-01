@@ -21,7 +21,7 @@ async function handler(req: Request) {
     }
 
     const project = await ProjectModel.findById(projectId);
-    const user = await UserModel.findOne({ username: userId });
+    const user: any = await UserModel.findOne({ _id: userId });
     
 
     if (!project || !user) {
@@ -47,7 +47,7 @@ async function handler(req: Request) {
 
     return NextResponse.json({
       message: "Project Liked successfully",
-      user: updatedProject,
+      project: updatedProject,
     });
   } catch (error) {
     console.error("Error liking project for user:", error);

@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+// app/api/middleware/checkServerMembership/page.ts
+
 import { getSession } from "next-auth/react";
+import { NextRequest, NextResponse } from "next/server";
 
 type MyUser = {
   id: string;
@@ -15,61 +17,52 @@ async function isDiscordServerMember(
 ): Promise<boolean> {
   try {
     const response = await fetch(
-      "https://discord.com/api/v10/users/@me/guilds"
-      // {
-      //   headers: {
-      //     Authorization: `Bearer ${accessToken}`,
-      //   },
-      // }
+      `https://discord.com/api/v10/guilds/${serverId}/members/@me`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
 
-    if (!response.ok) {
-      // Handle error
-      console.error("Discord API error:", response.status, response.statusText);
-      return false;
-    }
+    const data = await response.json(); // Get the response data
+    console.log(data); // Log the response data to see the details
 
-    const guilds = await response.json();
-    return guilds.some((guild: any) => guild.id === serverId);
+    return response.ok;
   } catch (error) {
-    // Handle any other errors
     console.error("Error checking server membership:", error);
     return false;
   }
 }
 
-async function checkServerMembership(req: NextRequest, res: NextResponse) {
-  // const session = await getSession({ req: req as any });
+export default async function checkServerMembership(
+  req: NextRequest,
+  res: NextResponse,
+  userDiscordId: string
+) {
+  const session = await getSession({ req: req as any });
 
-  // if (!session || !session.user || !("discordAccessToken" in session.user)) {
-  //   // User is not authenticated or does not have discordAccessToken
-  //   return new NextResponse("User not authenticated", { status: 401 });
-  // }
+  if (!session || !session.user || !("discordAccessToken" in session.user)) {
+    return new NextResponse("User not authenticated", { status: 401 });
+  }
 
-  // const myUser = session.user as MyUser; // Explicit cast to MyUser
+  const myUser = session.user as MyUser;
 
-  // const serverId = "1171768226691162162"; // Replace with the actual Discord server ID
-  // const isMember = true;
-  // // await isDiscordServerMember(
-  // //   myUser.discordAccessToken!,
-  // //   serverId
-  // // );
+  const serverId = "1171768226691162162"; // Replace with the actual Discord server ID
+  const isMember = await isDiscordServerMember(
+    myUser.discordAccessToken!,
+    serverId
+  );
 
-  // if (isMember) {
-  //   // User is a member of the required Discord server
-  //   return new NextResponse("User is a member of the required Discord server", {
-  //     status: 200,
-  //   });
-  // } else {
-  //   // User is not a member of the required Discord server
-  //   return new NextResponse(
-  //     "User is not a member of the required Discord server",
-  //     { status: 403 }
-  //   );
-  // }
-  return new NextResponse("User is a member of the required Discord server", {
-    status: 200,
-  });
+  if (isMember && myUser.id === userDiscordId) {
+    return new NextResponse(
+      "User is a member of the required Discord server and has the specified Discord ID",
+      { status: 200 }
+    );
+  } else {
+    return new NextResponse(
+      "User is not a member of the required Discord server or does not have the specified Discord ID",
+      { status: 403 }
+    );
+  }
 }
-
-export { checkServerMembership as GET };
