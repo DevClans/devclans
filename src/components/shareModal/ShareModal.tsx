@@ -17,6 +17,7 @@ import ButtonClose from "../buttons/ButtonClose";
 import ButtonLinkIcon from "../buttons/ButtonLinkIcon";
 import ButtonShare from "../buttons/ButtonShare";
 import { ShareProps } from "@/types/link.types";
+import { Box } from "@mui/material";
 
 const ShareModal = ({
   children,
@@ -84,16 +85,18 @@ const ShareModal = ({
   return (
     <>
       <div className="frc gap-[10px]">
-        <button onClick={handleShareButtonClick}>
+        <div onClick={handleShareButtonClick}>
           {children || <ButtonShare url={url} message={message} />}
-        </button>
+        </div>
         <Modal
           open={isShareModalOpen}
           onClose={closeShareModal}
           aria-labelledby="share-modal"
           aria-describedby="share-options"
         >
-          <ShareModalContent />
+          <Box>
+            <ShareModalContent />
+          </Box>
         </Modal>
       </div>
     </>

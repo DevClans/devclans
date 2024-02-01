@@ -11,7 +11,10 @@ const ButtonCloseFilter = () => {
   };
   return (
     <>
-      <IconButton className="text-highlight" onClick={handleClick}>
+      <IconButton
+        className="text-highlight sticky top-4 left-[96%]"
+        onClick={handleClick}
+      >
         <CloseRounded fontSize="medium" />
       </IconButton>
     </>
