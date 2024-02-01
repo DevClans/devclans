@@ -1,5 +1,6 @@
 import FormNewUser from "@/components/FormNewUser";
+import ImageUpload from "@/components/ImageUpload";
 
 export default function NewUser() {
-  return <FormNewUser />;
+  return <ImageUpload />;
 }
