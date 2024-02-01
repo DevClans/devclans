@@ -62,6 +62,13 @@ const ButtonLike = (props: any) => {
         console.error("Error fetching initial like count:", error);
       }
     };
+    const cleanupLocalStorage = () => {
+      localStorage.clear();
+    };
+
+    var hour = 24;
+    const cleanupInterval = setInterval(cleanupLocalStorage, hour*60*60*1000);
+
 
     const localLikedState = localStorage.getItem(`likedState_${title}_${userId}`);
     if(localLikedState){
@@ -80,6 +87,9 @@ const ButtonLike = (props: any) => {
     else{
     fetchLikeCount();
     }
+    return () => {
+      clearInterval(cleanupInterval);
+    };
   }, []);
 
   const handleClick = async () => {

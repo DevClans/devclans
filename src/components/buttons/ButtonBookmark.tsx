@@ -83,6 +83,14 @@ const ButtonBookmark = (
         console.error("Error fetching initial like count:", error);
       }
     };
+
+    const cleanupLocalStorage = () => {
+      localStorage.clear();
+    };
+
+    var hour = 24;
+    const cleanupInterval = setInterval(cleanupLocalStorage, hour*60*60*1000);
+
     const localBookmarkState = localStorage.getItem(`BookmarkState_${title}_${userId}`);
 
  if(localBookmarkState){
@@ -100,6 +108,9 @@ const ButtonBookmark = (
     else{
     fetchLikeCount();
     }
+    return () => {
+      clearInterval(cleanupInterval);
+    };
   }, []);
 
 
