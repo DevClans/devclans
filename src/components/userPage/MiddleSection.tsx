@@ -57,8 +57,14 @@ const MiddleSection = ({
       <div className="fcfs w100 gap-6">
         <TopFeatures data={data} />
         <RandomInfoCard {...randomInfo} />
-        <ButtonGroupUserSections active={tab} data={sections} />
-        {children}
+        <div className="fcfs w100">
+          <ButtonGroupUserSections
+            // className="-mb-4"
+            active={tab}
+            data={sections}
+          />
+          <div className="fcfs w100 gap-6">{children}</div>
+        </div>
       </div>
     </>
   );
@@ -67,6 +73,9 @@ const MiddleSection = ({
 export default MiddleSection;
 
 const TopFeatures = ({ data }: { data: InfoWithIconProps[] }) => {
+  if (!data || data?.length == 0) {
+    return <></>;
+  }
   return (
     <>
       <div className="flex lg:flex-row items-center flex-col  w100 gap-x-6 gap-y-3">

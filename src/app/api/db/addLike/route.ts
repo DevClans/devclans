@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import { UserModel, ProjectModel, LikeModel } from "@/model/schema";
+import { UserModel, ProjectModel, LikeModel } from "@/mongodb/models";
 import {
   stringSchema,
   zodProjectFormSchema,
@@ -19,14 +19,14 @@ async function handler(req: Request) {
     stringSchema.parse(userId);
     stringSchema.parse(projectId);
     if (!isValidObjectId(projectId)) {
-      return NextResponse.json({ message: 'Invalid project ID' });
+      return NextResponse.json({ message: "Invalid project ID" });
     }
 
     const project = await ProjectModel.findById(projectId);
     console.log(project);
 
     const user = await UserModel.findOne({ _id: userId });
-    console.log(user)
+    console.log(user);
 
     if (!project || !user) {
       return NextResponse.json({ message: "Project or user not found" });

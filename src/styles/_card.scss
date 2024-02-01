@@ -8,6 +8,7 @@
 .cardCommon {
   @apply border-border border p-4 rounded-[10px] w100;
 }
+
 .card2 {
   background: var(--cardBg2, #020b1c);
   border-radius: 20px;
@@ -18,6 +19,14 @@
   border-radius: 10px;
 }
 
+@media screen and (max-width: 1024px) {
+  .cardCommon {
+    padding: 15px;
+  }
+  .card3 {
+    padding: 15px;
+  }
+}
 .heroCard {
   border-bottom: 1px solid var(--border, #132341);
 

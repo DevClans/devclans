@@ -65,7 +65,13 @@ const page = async ({ params, searchParams }: UserPageProps) => {
   };
   const test = convertInfoToProjectDetails(arr);
   const ele: { [key: string]: JSX.Element } = {
-    overview: <UserOverview data={test} username={username} />,
+    overview: (
+      <UserOverview
+        data={test}
+        username={username}
+        githubDetails={userData["githubDetails"]}
+      />
+    ),
     projects: (
       <UserProjects
         ownedProjects={
@@ -120,7 +126,11 @@ const Common = ({
   questions: UserProps["questions"];
 } & React.PropsWithChildren) => {
   return (
-    <div className="flex flex-col items-center  lg:flex-row lg:items-start lg:justify-between md:peer-data-[state=active]:pl-[300px] md:peer-data-[state=not-active]:pl-[80px] lg:peer-data-[state=not-active]:pl-[90px] lg:peer-data-[state=active]:pl-[310px] relative md:-z-10 w100 md:py-6 gap-6">
+    <div
+      className="flex flex-col items-center  
+    xl:flex-row 
+    lg:items-start lg:justify-between md:peer-data-[state=active]:pl-[300px] md:peer-data-[state=not-active]:pl-[80px] lg:peer-data-[state=not-active]:pl-[90px] lg:peer-data-[state=active]:pl-[310px] relative md:-z-10 w100 md:py-6 gap-6"
+    >
       {/* middle scroll */}
       <MiddleSection
         params={params}

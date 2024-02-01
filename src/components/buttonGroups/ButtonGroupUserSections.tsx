@@ -18,12 +18,14 @@ const ButtonGroupUserSections = ({
     <>
       <div
         className={
-          "frc gap-2 btnRow w-100 !justify-normal " + containerClassName
+          "frc gap-2 btnRow w-100 !justify-normal sticky top-0  py-2 backdrop-blur-[12px] scrollbar-hide " +
+          containerClassName
         }
         style={containerStyle}
       >
         {data.map((item, i) => (
           <ButtonUserSection
+            // className="backdrop-blur-[15px]"
             {...rest}
             active={active === item.label?.toString().toLowerCase()}
             key={i}

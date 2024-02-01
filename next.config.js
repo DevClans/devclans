@@ -14,6 +14,7 @@ const nextConfig = {
       "picsum.photos",
       "avatars.githubusercontent.com",
       "cdn.discordapp.com",
+      "github-readme-activity-graph.vercel.app",
     ],
   },
   async headers() {

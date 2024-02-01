@@ -23,7 +23,13 @@ const ShareModal = ({
   children,
   url,
   message,
-}: ShareProps & React.PropsWithChildren) => {
+  style,
+  className,
+}: ShareProps &
+  React.PropsWithChildren & {
+    style?: React.CSSProperties;
+    className?: string;
+  }) => {
   const [isShareModalOpen, setShareModalOpen] = useState(false);
   const shareUrl = url || "https://github.com/next-shareasdfasdfa";
   const shareMsg =
@@ -84,11 +90,12 @@ const ShareModal = ({
 
   return (
     <>
-      <div className="frc gap-[10px]">
+      <div className={"frc gap-[10px] " + className} style={style}>
         <div onClick={handleShareButtonClick}>
           {children || <ButtonShare url={url} message={message} />}
         </div>
         <Modal
+          className={className}
           open={isShareModalOpen}
           onClose={closeShareModal}
           aria-labelledby="share-modal"

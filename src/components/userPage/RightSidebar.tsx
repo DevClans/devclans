@@ -3,7 +3,7 @@ import { LookingForMembers } from "..";
 const RightSidebar = () => {
   return (
     <>
-      <div className="fcc lg:min-w-[320px] lg:max-w-[320px] w100 gap-6 max-h-[84vh] lg:sticky lg:top-[40px]">
+      <div className="fcc xl:min-w-[250px] xl:max-w-[320px] w100 gap-6 max-h-[84vh] xl:sticky xl:top-[40px]">
         <LookingForMembers />
       </div>
     </>

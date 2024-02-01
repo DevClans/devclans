@@ -38,13 +38,13 @@ const LookingForMembers = () => {
       </div>
       <BottomBar
         text={
-          <>
+          <span className="w100">
             Tell cohort friends about this opportunity{" "}
             <LinkShare
               url={urlUser(id)}
               message={msgLookingForMember(username, level)}
             />
-          </>
+          </span>
         }
       />
     </div>

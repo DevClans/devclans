@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import { UserModel, ProjectModel, LikeModel } from "@/model/schema";
+import { UserModel, ProjectModel, LikeModel } from "@/mongodb/models";
 import {
   stringSchema,
   zodProjectFormSchema,
@@ -20,7 +20,7 @@ async function handler(req: Request) {
     stringSchema.parse(projectId);
 
     if (!isValidObjectId(projectId)) {
-      return NextResponse.json({ message: 'Invalid project ID' });
+      return NextResponse.json({ message: "Invalid project ID" });
     }
 
     const project = await ProjectModel.findById(projectId);
@@ -39,7 +39,6 @@ async function handler(req: Request) {
     if (existingLike) {
       // If remove is true and the like exists, remove the like
       await LikeModel.findByIdAndDelete(existingLike._id);
-   
 
       // Update the project's likesCount and likesArray
       const updatedProject = await ProjectModel.findOneAndUpdate(

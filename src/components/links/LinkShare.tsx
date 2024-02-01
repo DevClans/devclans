@@ -7,7 +7,7 @@ type LinkShareProps = Partial<LinkProps> & ShareProps;
 const LinkShare = ({ href, icon, ...shareProps }: LinkShareProps) => {
   return (
     <>
-      <ShareModal {...shareProps}>
+      <ShareModal {...shareProps} className="!inline-flex">
         <LinkWithIcon
           text="Share"
           isBold={true}
