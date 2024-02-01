@@ -26,7 +26,7 @@ async function handler(req:Request,{ params }:{ params : { userId: string, proje
       }
   
       const project = await ProjectModel.findById(projectId);
-      const u = await UserModel.findOne({username:userId})
+      const u = await UserModel.findOne({_id:userId})
 
     
 
@@ -39,7 +39,7 @@ async function handler(req:Request,{ params }:{ params : { userId: string, proje
           user : u._id,
           project: projectId
  
-      });
+      }).lean();
       
      
       return  NextResponse.json(likes);

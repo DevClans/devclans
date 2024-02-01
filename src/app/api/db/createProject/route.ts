@@ -14,11 +14,11 @@ async function handler(req: Request) {
     console.log("started");
     const body = await req.json();
     const { username, projects } = body;
-  const data=  projectSchema.parse(projects);
+   const data=  projectSchema.parse(projects);
 
   
 
-    const user = await UserModel.findOne({ username: username });
+    const user = await UserModel.findOne({ "discordDetails.username": username });
 
     if (!user) {
       return NextResponse.json({ message: 'User not found' });  
@@ -35,6 +35,7 @@ async function handler(req: Request) {
     const updatedUser = await UserModel.findOneAndUpdate(
       { _id: user._id },
       { $push: { projects: str, ownedProjects:str } },
+      
       { new: true } // Return the updated document
     );
     console.log(updatedUser)

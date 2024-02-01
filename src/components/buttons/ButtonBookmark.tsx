@@ -19,13 +19,13 @@ const ButtonBookmark = (
   isMarked?: boolean;
 } & Partial<ButtonProps>) => {
  let title:String;
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(true);
   const [bookmarkCount, setBookmarkCount] = useState(0);
   const { data: session } = useSession();
 
-  const userId = "saivi21"
-  const ownerId="saivi21"
- title = "65b67ad4b7c3dc79392510f9"
+  const userId = "65baa30ac89d8b732cadfdf2"
+  const ownerId="65baa30ac89d8b732cadfdf2"
+ title = "65baa4d8c89d8b732cadfdfe"
    //console.log(title);
   
    useEffect(() => {
@@ -83,9 +83,23 @@ const ButtonBookmark = (
         console.error("Error fetching initial like count:", error);
       }
     };
-   fetchIsLiked();
+    const localBookmarkState = localStorage.getItem(`BookmarkState_${title}_${userId}`);
 
-  fetchLikeCount();
+ if(localBookmarkState){
+   
+      setLiked(JSON.parse(localBookmarkState));
+    }
+    else{
+    fetchIsLiked();
+    }
+    const localLikeNumber = localStorage.getItem(`BookmarkNumber_${title}`);
+    if(localLikeNumber){
+      console.log("Taken from local storage")
+      setBookmarkCount(JSON.parse(localLikeNumber))
+    }
+    else{
+    fetchLikeCount();
+    }
   }, []);
 
 
@@ -101,7 +115,7 @@ const ButtonBookmark = (
       const response = await fetch(`http://localhost:3000/api/db/${work}`, {
         method: "POST",
         body: JSON.stringify({
-          userId:"saivi21",
+          userId:ownerId,
           projectId: title,
         }),
         headers: {
@@ -112,12 +126,13 @@ const ButtonBookmark = (
       const data = await response.json();
       console.log(liked);
       console.log(data);
-      if (liked) {
-        setBookmarkCount(data.user.bookmarkCount);
-      } else {
+     
         setBookmarkCount(data.project.bookmarkCount);
-      }
-
+  
+      console.log(bookmarkCount)
+      localStorage.setItem(`BookmarkState_${title}_${userId}`, JSON.stringify(!liked));
+      localStorage.setItem(`BookmarkNumber_${title}`,JSON.stringify(data.project.bookmarkCount));
+      setBookmarkCount(data.project.bookmarkCount);
       setLiked(!liked);
     } catch (error) {
       console.error("Error adding like:", error);
@@ -126,7 +141,7 @@ const ButtonBookmark = (
 
   return (
     <ButtonIcon
-      active={liked}
+      active={!liked}
       setActive={setLiked}
       className={`${className}`}
       onClick={handleClick}
