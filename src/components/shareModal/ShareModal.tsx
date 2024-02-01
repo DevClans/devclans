@@ -17,7 +17,7 @@ import ButtonClose from "../buttons/ButtonClose";
 import ButtonLinkIcon from "../buttons/ButtonLinkIcon";
 import ButtonShare from "../buttons/ButtonShare";
 import { ShareProps } from "@/types/link.types";
-import { Box } from "@mui/material";
+import { Box, Container } from "@mui/material";
 
 const ShareModal = ({
   children,
@@ -101,9 +101,9 @@ const ShareModal = ({
           aria-labelledby="share-modal"
           aria-describedby="share-options"
         >
-          <Box>
+          <Container className="fccc w-screen h-screen">
             <ShareModalContent />
-          </Box>
+          </Container>
         </Modal>
       </div>
     </>

@@ -31,7 +31,7 @@ const ProjectHero = ({
             message={msgSharingProject(title || "")}
             likesCount={likesCount}
             bookmarkCount={bookmarkCount}
-            title={data._id}
+            _id={data._id}
           />
         </div>
         <h1 className="text-4xl">{data.title}</h1>

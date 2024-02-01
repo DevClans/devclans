@@ -7,32 +7,38 @@ import {
 import { ButtonProps } from "@/types";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { Types } from "mongoose";
+import { toast } from "react-toastify";
 
-const ButtonBookmark = (
-  {
+const ButtonBookmark = ({
   bookmarksCount,
   isMarked,
   style,
   className,
+  _id,
 }: {
   bookmarksCount: number;
   isMarked?: boolean;
+  _id: string | Types.ObjectId;
 } & Partial<ButtonProps>) => {
- let title:String;
+  const projectId = _id;
   const [liked, setLiked] = useState(true);
-  const [bookmarkCount, setBookmarkCount] = useState(0);
-  const { data: session } = useSession();
+  const [bookmarkCount, setBookmarkCount] = useState(bookmarksCount);
+  const { data: session }: any = useSession();
 
-  const userId = "65baa30ac89d8b732cadfdf2"
-  const ownerId="65baa30ac89d8b732cadfdf2"
- title = "65baa4d8c89d8b732cadfdfe"
-   //console.log(title);
-  
-   useEffect(() => {
+  const userId = session?.user?._id;
+  const ownerId = session?.user?._id;
+  //console.log(title);
+
+  useEffect(() => {
     const fetchLikeCount = async () => {
+      if (!(userId && projectId)) {
+        console.error("User ID or Project ID not found in bk fetchIsCount()");
+        return;
+      }
       try {
         const response = await fetch(
-          `http://localhost:3000/api/db/getProject/${ownerId}/${title}`,
+          `http://localhost:3000/api/db/getProject/${ownerId}/${projectId}`,
           {
             method: "GET",
 
@@ -42,20 +48,23 @@ const ButtonBookmark = (
           }
         );
         const data = await response.json();
-        if(data){
-          console.log(data.bookmarkCount)
-        
+        if (data) {
+          console.log(data.bookmarkCount);
+
           setBookmarkCount(data.bookmarkCount);
         }
-      
       } catch (error) {
         console.error("Error fetching initial like count:", error);
       }
     };
     const fetchIsLiked = async () => {
+      if (!(userId && projectId)) {
+        console.error("User ID or Project ID not found in bk fetchIsLiked()");
+        return;
+      }
       try {
         const response = await fetch(
-          `http://localhost:3000/api/db/getBookmarked/${userId}/${title}`,
+          `http://localhost:3000/api/db/getBookmarked/${userId}/${projectId}`,
           {
             method: "GET",
             headers: {
@@ -64,9 +73,9 @@ const ButtonBookmark = (
           }
         );
         const data = await response.json();
-       // console.log("This is data");
+        // console.log("This is data");
         //console.log(data);
-        if(data.length>0){
+        if (data.length > 0) {
           if (data[0]._id) {
             console.log("false");
             setLiked(false);
@@ -74,8 +83,7 @@ const ButtonBookmark = (
             console.log("true");
             setLiked(true);
           }
-        } 
-        else{
+        } else {
           setLiked(true);
           console.log(true);
         }
@@ -83,27 +91,33 @@ const ButtonBookmark = (
         console.error("Error fetching initial like count:", error);
       }
     };
-    const localBookmarkState = localStorage.getItem(`BookmarkState_${title}_${userId}`);
+    const localBookmarkState = localStorage.getItem(
+      `BookmarkState_${projectId}_${userId}`
+    );
 
- if(localBookmarkState){
-   
+    if (localBookmarkState) {
       setLiked(JSON.parse(localBookmarkState));
+    } else {
+      fetchIsLiked();
     }
-    else{
-    fetchIsLiked();
-    }
-    const localLikeNumber = localStorage.getItem(`BookmarkNumber_${title}`);
-    if(localLikeNumber){
-      console.log("Taken from local storage")
-      setBookmarkCount(JSON.parse(localLikeNumber))
-    }
-    else{
-    fetchLikeCount();
+    const localLikeNumber = localStorage.getItem(`BookmarkNumber_${projectId}`);
+    if (localLikeNumber) {
+      console.log("Taken from local storage");
+      setBookmarkCount(JSON.parse(localLikeNumber));
+    } else {
+      fetchLikeCount();
     }
   }, []);
 
-
   const handleClick = async () => {
+    if (!session) {
+      toast.warning("You must be signed in to bookmark a project");
+      return;
+    }
+    if (!(userId && projectId)) {
+      console.error("User ID or Project ID not found in handleCilck()");
+      return;
+    }
     let work;
     if (liked) {
       work = "addBookmark";
@@ -115,8 +129,8 @@ const ButtonBookmark = (
       const response = await fetch(`http://localhost:3000/api/db/${work}`, {
         method: "POST",
         body: JSON.stringify({
-          userId:ownerId,
-          projectId: title,
+          userId: ownerId,
+          projectId: projectId,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -126,12 +140,18 @@ const ButtonBookmark = (
       const data = await response.json();
       console.log(liked);
       console.log(data);
-     
-        setBookmarkCount(data.project.bookmarkCount);
-  
-      console.log(bookmarkCount)
-      localStorage.setItem(`BookmarkState_${title}_${userId}`, JSON.stringify(!liked));
-      localStorage.setItem(`BookmarkNumber_${title}`,JSON.stringify(data.project.bookmarkCount));
+
+      setBookmarkCount(data.project.bookmarkCount);
+
+      console.log(bookmarkCount);
+      localStorage.setItem(
+        `BookmarkState_${projectId}_${userId}`,
+        JSON.stringify(!liked)
+      );
+      localStorage.setItem(
+        `BookmarkNumber_${projectId}`,
+        JSON.stringify(data.project.bookmarkCount)
+      );
       setBookmarkCount(data.project.bookmarkCount);
       setLiked(!liked);
     } catch (error) {

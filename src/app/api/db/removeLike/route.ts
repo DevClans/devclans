@@ -1,11 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import { UserModel, ProjectModel, LikeModel } from "@/mongodb/models";
-import {
-  stringSchema,
-  zodProjectFormSchema,
-  likeAndBkMarkSchema,
-} from "@/zod/zod.common";
+import { stringSchema } from "@/zod/zod.common";
 import { isValidObjectId } from "mongoose";
 
 async function handler(req: Request) {
@@ -45,7 +41,6 @@ async function handler(req: Request) {
         { _id: project._id },
         {
           $inc: { likesCount: -1 }, // Decrement likesCount
-          $pull: { likesArray: existingLike._id }, // Pull the existingLike._id from likesArray
         },
         { new: true } // Return the updated document
       );

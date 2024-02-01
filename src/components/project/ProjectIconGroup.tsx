@@ -8,24 +8,24 @@ const ProjectIconGroup = ({
   bookmarkCount,
   likesCount,
   showLabels = true,
-  title,
+  _id,
   url,
   message,
 }: {
   bookmarkCount?: number;
   likesCount?: number;
   showLabels?: boolean;
-  title?: Types.ObjectId;
+  _id?: Types.ObjectId;
 } & ShareProps) => {
   return (
     <>
       <div className="frc gap-[10px]">
         <ButtonShare showLabels={showLabels} url={url} message={message} />
         {typeof bookmarkCount == "number" && (
-          <ButtonBookmark bookmarksCount={bookmarkCount} />
+          <ButtonBookmark _id={_id || ""} bookmarksCount={bookmarkCount} />
         )}
         {typeof likesCount == "number" && (
-          <ButtonLike likesCount={likesCount} title={title} />
+          <ButtonLike likeCount={likesCount} _id={_id || ""} />
         )}
       </div>
     </>
