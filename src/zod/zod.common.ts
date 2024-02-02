@@ -232,7 +232,8 @@ export const zodRepoDetailsSchema = z
   .optional();
 export const zodProjectDetailsSchema = z.object({
   problem: z.string().max(180),
-  challenges: 
+  challenges: z
+    .array(
       z.object({
         title: z.string().default(""),
         desc: z.string().default(""),
