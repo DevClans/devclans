@@ -21,11 +21,12 @@ const ButtonBookmark = (
  let title:String;
   const [liked, setLiked] = useState(true);
   const [bookmarkCount, setBookmarkCount] = useState(0);
+  const [loading, setLoading]=useState(false);
   const { data: session } = useSession();
 
-  const userId = "65baa30ac89d8b732cadfdf2"
-  const ownerId="65baa30ac89d8b732cadfdf2"
- title = "65baa4d8c89d8b732cadfdfe"
+  const userId = "65bcd41c0e3d1d3d4f7d5cdb"
+  const ownerId="65bcd41c0e3d1d3d4f7d5cdb"
+ title = "65bcee7e0e3d1d3d4f7d5d08"
    //console.log(title);
   
    useEffect(() => {
@@ -108,11 +109,15 @@ const ButtonBookmark = (
     else{
     fetchLikeCount();
     }
+    //setLoading(false);
     return () => {
       clearInterval(cleanupInterval);
     };
+   
   }, []);
 
+
+  console.log(loading)
 
   const handleClick = async () => {
     let work;
@@ -123,6 +128,7 @@ const ButtonBookmark = (
     }
     try {
       console.log(work);
+      setLoading(true)
       const response = await fetch(`http://localhost:3000/api/db/${work}`, {
         method: "POST",
         body: JSON.stringify({
@@ -135,8 +141,12 @@ const ButtonBookmark = (
       });
       //console.log(title);
       const data = await response.json();
+      if(data){
+      
+        setLoading(false);
       console.log(liked);
       console.log(data);
+      console.log(loading)
      
         setBookmarkCount(data.project.bookmarkCount);
   
@@ -145,21 +155,33 @@ const ButtonBookmark = (
       localStorage.setItem(`BookmarkNumber_${title}`,JSON.stringify(data.project.bookmarkCount));
       setBookmarkCount(data.project.bookmarkCount);
       setLiked(!liked);
+      }
     } catch (error) {
       console.error("Error adding like:", error);
     }
   };
 
   return (
+<>
+
+
     <ButtonIcon
       active={!liked}
       setActive={setLiked}
       className={`${className}`}
       onClick={handleClick}
-      label={bookmarkCount.toString()}
+      
+      label={loading? "Loading":bookmarkCount.toString()}
+      
       activeIcon={<BookmarkRounded color="primary" fontSize="small" />}
       icon={<BookmarkBorderOutlined fontSize="small" />}
     />
+
+
+ 
+</>
+
+    
   );
 };
 

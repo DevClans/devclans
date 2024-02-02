@@ -13,12 +13,15 @@ async function handler(req: Request) {
     await dbConnect();
     console.log("started");
     const body = await req.json();
-    const { username, projects } = body;
-   const data=  projectSchema.parse(projects);
+    const { id, data } = body;
+    data.owner = id;
+   const dataSet=  projectSchema.parse(data);
 
-  
 
-    const user = await UserModel.findOne({ "discordDetails.username": username });
+  console.log(data)
+
+    const user = await UserModel.findOne({"_id":id});
+
 
     if (!user) {
       return NextResponse.json({ message: 'User not found' });  
@@ -26,7 +29,7 @@ async function handler(req: Request) {
 
 
     // Create a new project
-    const createdProject = new ProjectModel(projects);
+    const createdProject = new ProjectModel(data);
     await createdProject.save();
     // Update the user's projects array
    let str = createdProject._id;
