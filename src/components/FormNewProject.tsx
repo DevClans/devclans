@@ -40,13 +40,26 @@ const FormNewProject = () => {
   const { watch, setError, setValue, handleSubmit, ...form } =
     useForm<ProjectFormProps>({
       defaultValues: defaultValues as any,
-      resolver: zodResolver(zodProjectFormSchema),
+      // resolver: zodResolver(zodProjectFormSchema),
     });
-
+  console.log(watch());
   const onSubmit: SubmitHandler<ProjectProps> = async (data) => {
-    console.log("data", data);
-    return await createProjectUser("/project/update", data, session, setError);
+    try {
+      console.log("clicked");
+      return await createProjectUser(
+        "/db/createProject",
+        data,
+        session,
+        setError
+      );
+    } catch (err) {
+      console.log(err);
+    }
   };
+  // const onSubmit = ()=>{
+  //   console.log("clicked");
+
+  // }
   const commonClass: string = "w100";
 
   const fieldsArray: InputFieldProps[] = dummyProjectFormSchemaFields;
@@ -62,6 +75,7 @@ const FormNewProject = () => {
         formId="projectForm"
         zodFormShape={userFormShape}
         onSubmit={handleSubmit(onSubmit as any)}
+        // onSubmit={handleSubmit(onSubmit)}
         commonClass={commonClass}
         fieldsArray={fieldsArray}
       />

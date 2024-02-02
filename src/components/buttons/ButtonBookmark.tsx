@@ -23,6 +23,7 @@ const ButtonBookmark = ({
 } & Partial<ButtonProps>) => {
   const projectId = _id;
   const [liked, setLiked] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [bookmarkCount, setBookmarkCount] = useState(bookmarksCount);
   const { data: session }: any = useSession();
 
@@ -107,6 +108,7 @@ const ButtonBookmark = ({
     } else {
       fetchLikeCount();
     }
+    //setLoading(false);
   }, []);
 
   const handleClick = async () => {
@@ -126,6 +128,7 @@ const ButtonBookmark = ({
     }
     try {
       console.log(work);
+      setLoading(true);
       const response = await fetch(`http://localhost:3000/api/db/${work}`, {
         method: "POST",
         body: JSON.stringify({
@@ -138,37 +141,42 @@ const ButtonBookmark = ({
       });
       //console.log(title);
       const data = await response.json();
-      console.log(liked);
-      console.log(data);
+      if (data) {
+        setLoading(false);
+        console.log(liked);
+        console.log(data);
 
-      setBookmarkCount(data.project.bookmarkCount);
+        setBookmarkCount(data.project.bookmarkCount);
 
-      console.log(bookmarkCount);
-      localStorage.setItem(
-        `BookmarkState_${projectId}_${userId}`,
-        JSON.stringify(!liked)
-      );
-      localStorage.setItem(
-        `BookmarkNumber_${projectId}`,
-        JSON.stringify(data.project.bookmarkCount)
-      );
-      setBookmarkCount(data.project.bookmarkCount);
-      setLiked(!liked);
+        console.log(bookmarkCount);
+        localStorage.setItem(
+          `BookmarkState_${projectId}_${userId}`,
+          JSON.stringify(!liked)
+        );
+        localStorage.setItem(
+          `BookmarkNumber_${projectId}`,
+          JSON.stringify(data.project.bookmarkCount)
+        );
+        setBookmarkCount(data.project.bookmarkCount);
+        setLiked(!liked);
+      }
     } catch (error) {
       console.error("Error adding like:", error);
     }
   };
 
   return (
-    <ButtonIcon
-      active={!liked}
-      setActive={setLiked}
-      className={`${className}`}
-      onClick={handleClick}
-      label={bookmarkCount.toString()}
-      activeIcon={<BookmarkRounded color="primary" fontSize="small" />}
-      icon={<BookmarkBorderOutlined fontSize="small" />}
-    />
+    <>
+      <ButtonIcon
+        active={!liked}
+        setActive={setLiked}
+        className={`${className}`}
+        onClick={handleClick}
+        label={loading ? "Loading" : bookmarkCount.toString()}
+        activeIcon={<BookmarkRounded color="primary" fontSize="small" />}
+        icon={<BookmarkBorderOutlined fontSize="small" />}
+      />
+    </>
   );
 };
 
