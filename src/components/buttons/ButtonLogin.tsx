@@ -7,9 +7,7 @@ const ButtonLogin = () => {
   const { data: session } = useSession();
 
   const handleLogin = () => {
-    signIn().finally(() => {
-      toast.success("Successfully Logged In");
-    });
+    signIn();
   };
 
   const handleLogout = () => {

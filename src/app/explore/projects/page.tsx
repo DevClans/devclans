@@ -7,8 +7,8 @@ import ToolBox from "@/components/ToolBox";
 
 const Projects = async ({ params, searchParams }: Partial<PageProps>) => {
   const str = stringify(searchParams);
-  console.log("This is str" + str );
-  console.log(searchParams)
+  // console.log("This is str" + str );
+  // console.log(searchParams)
   const projects: ProjectProps[] =
     (await Fetch({
       endpoint: "/project" + (str ? `?${str}` : ""),

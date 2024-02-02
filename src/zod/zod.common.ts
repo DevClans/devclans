@@ -12,11 +12,11 @@ export const zodMongoId = z
   .refine((value) => Types.ObjectId.isValid(value), {
     message: "something worong with object id",
   });
- export const MySchema = z.object({
-    owner: z.string().refine((value) => Types.ObjectId.isValid(value), {
-      message: 'Invalid ObjectId',
-    }),
-  });
+export const MySchema = z.object({
+  owner: z.string().refine((value) => Types.ObjectId.isValid(value), {
+    message: "Invalid ObjectId",
+  }),
+});
 export const zodDateString = z.date().refine(
   (value) => {
     const date = new Date(value);
@@ -44,10 +44,11 @@ const ownerSchema = z.object({
 
 export const stringSchema = z.string();
 
-
-const ownedProjects = z.array(z.object({
-  _id:stringSchema}));
-
+const ownedProjects = z.array(
+  z.object({
+    _id: stringSchema,
+  })
+);
 
 export const stringArraySchema = z.array(z.string());
 // Define a custom refinement function to validate the hexadecimal color code with variable length
@@ -205,7 +206,6 @@ export const userSchema = z.object({
 export const userArraySchema = z.array(userSchema);
 
 export const zodProjectSearchInfoSchema = z.object({
-
   title: z.string().min(3).max(50),
   desc: z.string().min(10).max(180),
   skills: z.array(z.string()).default([]),
@@ -240,7 +240,7 @@ export const zodProjectDetailsSchema = z.object({
         solution: z.string().default(""),
       })
     )
-    .default([]),
+    .optional(),
   futureGoals: z
     .array(
       z.object({
@@ -249,7 +249,7 @@ export const zodProjectDetailsSchema = z.object({
         needHelp: z.boolean().default(false),
       })
     )
-    .default([]),
+    .optional(),
   memberReq: z
     .array(
       z.object({
@@ -257,14 +257,18 @@ export const zodProjectDetailsSchema = z.object({
         desc: z.string().default(""),
       })
     )
-    .default([]),
+    .optional(),
 });
 
-const StringArrayParser = z.string().refine((data) => {
-  return typeof data === 'string';
-}, { message: 'Input must be a string' }).transform((data) => data.split(','));
-
-
+const StringArrayParser = z
+  .string()
+  .refine(
+    (data) => {
+      return typeof data === "string";
+    },
+    { message: "Input must be a string" }
+  )
+  .transform((data) => data.split(","));
 
 export const zodProjectDataSchema = z.object({
   contributors: z.string().array().default([]),
@@ -280,7 +284,6 @@ export const zodProjectDataSchema = z.object({
   published: z.boolean().default(false),
   repoDetails: zodRepoDetailsSchema,
 });
-
 
 export const projectSchema = z.object({
   ...zodProjectSearchInfoSchema.shape,

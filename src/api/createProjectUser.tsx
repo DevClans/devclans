@@ -33,5 +33,6 @@ export const createProjectUser = async (
     setError("root", {
       message: error?.message,
     });
+    return null;
   }
 };

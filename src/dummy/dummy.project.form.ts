@@ -3,7 +3,6 @@ import { memberLevels } from "@/lib/memberLevel";
 import { skills } from "@/lib/skills";
 import { InputFieldProps } from "@/types/form.types";
 
-
 export const dummyProjectFormSchemaFields: InputFieldProps[] = [
   {
     label: "Title",
@@ -17,7 +16,7 @@ export const dummyProjectFormSchemaFields: InputFieldProps[] = [
     label: "Tech Stack",
     name: "skills",
     multi: true,
-    options: skills as any , // Add options here if needed
+    options: skills as any, // Add options here if needed
   },
   // {
   //   label: "Team",
@@ -43,10 +42,10 @@ export const dummyProjectFormSchemaFields: InputFieldProps[] = [
     label: "Repository Name",
     name: "repoName",
   },
-  {
-    label: "Project Links",
-    name: "projectLinks",
-  },
+  // {
+  //   label: "Project Links",
+  //   name: "projectLinks",
+  // },
   {
     label: "Video",
     name: "video",
@@ -96,7 +95,7 @@ export const dummyProjectFormSchemaFields: InputFieldProps[] = [
   {
     label: "Published",
     name: "published",
-    type:"checkbox",
+    type: "checkbox",
   },
   {
     label: "Repository Details",

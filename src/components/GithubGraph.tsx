@@ -35,7 +35,7 @@ const GitHubGraph = ({ username }: { username: string }) => {
       <GitHubCalendar username={"auspy" || username} year={year} />
       <img
         className="mt-2"
-        src={`https://github-readme-activity-graph.vercel.app/graph?username=${username}&theme=github-compact&bg_color=081121&title_color=${removeHashTag(
+        src={`https://github-readme-activity-graph-ashen.vercel.app/graph?username=${username}&theme=github-compact&bg_color=081121&title_color=${removeHashTag(
           colors.priDark
         )}&color=${removeHashTag(
           colors.text

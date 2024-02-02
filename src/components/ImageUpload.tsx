@@ -12,6 +12,7 @@ const ImageUpload = () => {
         endpoint="imageUploader"
         onClientUploadComplete={(res) => {
           setImageUrl(res[0].url);
+          console.log("img url", res[0].url);
         }}
         onUploadError={(error: Error) => {
           alert(`ERROR! ${error.message}`);

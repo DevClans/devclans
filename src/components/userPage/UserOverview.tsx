@@ -1,11 +1,10 @@
 import ReactMarkdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
 import { ProjectDetailsItemProps } from "@/types/toggleList.types";
 import { ProjectDetails } from "..";
 import GitHubGraph from "../GithubGraph";
 import { UserProps } from "@/types/mongo/user.types";
 import colors from "@/lib/colors";
-import Image from "next/image";
+
 const UserOverview = ({
   data,
   username,
@@ -44,11 +43,11 @@ const UserOverview = ({
           </div>
           <div className="flex items-start flex-row flex-wrap gap-2 ">
             <img
-              src={`https://github-readme-stats.vercel.app/api?username=${login}&show_icons=true${urlSettings}`}
+              src={`https://github-readme-stats-devclans.vercel.app/api?username=${login}&show_icons=true${urlSettings}`}
               alt={`${username}'s GitHub stats`}
             />
             <img
-              src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${login}&size_weight=0.5&count_weight=0.5&layout=compact${urlSettings}`}
+              src={`https://github-readme-stats-devclans.vercel.app/api/top-langs/?username=${login}&size_weight=0.5&count_weight=0.5&layout=compact${urlSettings}`}
               alt={`Top Langs`}
             />
           </div>
