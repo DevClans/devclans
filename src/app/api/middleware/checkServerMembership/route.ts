@@ -1,4 +1,4 @@
-// app/api/middleware/checkServerMembership/page.ts
+//app/api/middleware/checkServerMembership/page.ts
 
 import { getSession } from 'next-auth/react';
 import { NextRequest, NextResponse } from 'next/server';

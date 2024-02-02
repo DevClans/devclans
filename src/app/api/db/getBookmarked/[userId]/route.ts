@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import  { stringSchema, userSchema, projectSchema } from "@/zod/zod.common"
 import dbConnect from '@/lib/dbConnect';
-import { ProjectModel, UserModel, LikeModel } from "@/model/schema";
+import { ProjectModel, UserModel, BookmarkModel } from "@/model/schema";
 
 
 
@@ -26,7 +26,7 @@ async function handler(req:Request,{ params }:{ params : { userId: string }}) {
         return NextResponse.json({ message: 'User or Project not found' });
       }
    
-    const likes =  await LikeModel.find({
+    const likes =  await BookmarkModel.find({
 
           user : u._id
  

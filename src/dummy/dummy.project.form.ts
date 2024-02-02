@@ -43,10 +43,10 @@ export const dummyProjectFormSchemaFields: InputFieldProps[] = [
     label: "Repository Name",
     name: "repoName",
   },
-  {
-    label: "Project Links",
-    name: "projectLinks",
-  },
+  // {
+  //   label: "Project Links",
+  //   name: "projectLinks",
+  // },
   {
     label: "Video",
     name: "video",
@@ -93,15 +93,10 @@ export const dummyProjectFormSchemaFields: InputFieldProps[] = [
     name: "devStage",
     options: devStages, // Assuming devStages is defined elsewhere
   },
-  {
-    label: "Published",
-    name: "published",
-    type:"checkbox",
-  },
-  {
-    label: "Repository Details",
-    name: "repoDetails",
-    // Assuming zodRepoDetailsSchema is defined elsewhere
-    // and represents the schema for repository details
-  },
+  // {
+  //   label: "Published",
+  //   name: "published",
+  //   type:"checkbox",
+  // },
+
 ];

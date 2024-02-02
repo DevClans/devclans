@@ -12,11 +12,12 @@ const ButtonLike = (props: any) => {
   let title = props.title;
   const [liked, setLiked] = useState(true);
   const [likesCount, setLikeCount] = useState(0);
+  const [loading, setLoading]=useState(false);
   const { data: session } = useSession();
 
-  const userId = "65baa30ac89d8b732cadfdf2";
-  const ownerId = "65baa30ac89d8b732cadfdf2";
-  title = "65baa4d8c89d8b732cadfdfe";
+  const userId = "65bcd41c0e3d1d3d4f7d5cdb";
+  const ownerId = "65bcd41c0e3d1d3d4f7d5cdb";
+  title = "65bcee7e0e3d1d3d4f7d5d08";
   //console.log(title);
 
   useEffect(() => {
@@ -62,6 +63,13 @@ const ButtonLike = (props: any) => {
         console.error("Error fetching initial like count:", error);
       }
     };
+    const cleanupLocalStorage = () => {
+      localStorage.clear();
+    };
+
+    var hour = 24;
+    const cleanupInterval = setInterval(cleanupLocalStorage, hour*60*60*1000);
+
 
     const localLikedState = localStorage.getItem(`likedState_${title}_${userId}`);
     if(localLikedState){
@@ -80,6 +88,9 @@ const ButtonLike = (props: any) => {
     else{
     fetchLikeCount();
     }
+    return () => {
+      clearInterval(cleanupInterval);
+    };
   }, []);
 
   const handleClick = async () => {
@@ -92,10 +103,11 @@ const ButtonLike = (props: any) => {
     }
     try {
       // console.log(work);
+      setLoading(true)
       const response = await fetch(`http://localhost:3000/api/db/${work}`, {
         method: "POST",
         body: JSON.stringify({
-          userId: "65baa30ac89d8b732cadfdf2",
+          userId: userId,
           projectId: title,
         }),
         headers: {
@@ -105,27 +117,38 @@ const ButtonLike = (props: any) => {
       //console.log(title);
       const data = await response.json();
       //console.log(liked);
-      console.log(data);
+      if(data){
+        setLoading(false)
+        console.log(data);
     
-      console.log(data.project.likesCount)
-      localStorage.setItem(`likedState_${title}_${userId}`, JSON.stringify(!liked));
-      localStorage.setItem(`likedNumber_${title}`, JSON.stringify(data.project.likesCount));
-      setLikeCount(data.project.likesCount);
-      setLiked(!liked);
+        console.log(data.project.likesCount)
+        localStorage.setItem(`likedState_${title}_${userId}`, JSON.stringify(!liked));
+        localStorage.setItem(`likedNumber_${title}`, JSON.stringify(data.project.likesCount));
+        setLikeCount(data.project.likesCount);
+        setLiked(!liked);
+      }
+    
     } catch (error) {
       console.error("Error adding like:", error);
     }
   };
 
   return (
+    <>
+
     <ButtonIcon
       active={!liked}
       setActive={setLiked}
-      label={likesCount?.toString()}
+      label={ loading ? "Loading":likesCount?.toString()}
       activeIcon={<FavoriteRounded color="primary" fontSize="small" />}
       icon={<FavoriteBorderRounded fontSize="small" />}
       onClick={handleClick}
+      
     />
+
+
+    </>
+ 
   );
 };
 

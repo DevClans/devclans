@@ -232,32 +232,29 @@ export const zodRepoDetailsSchema = z
   .optional();
 export const zodProjectDetailsSchema = z.object({
   problem: z.string().max(180),
-  challenges: z
-    .array(
+  challenges: 
       z.object({
         title: z.string().default(""),
         desc: z.string().default(""),
         solution: z.string().default(""),
       })
-    )
-    .default([]),
-  futureGoals: z
-    .array(
+    
+    .default({}),
+  futureGoals: 
       z.object({
         title: z.string().default(""),
         desc: z.string().default(""),
         needHelp: z.boolean().default(false),
       })
-    )
-    .default([]),
-  memberReq: z
-    .array(
+ 
+    .default({}),
+  memberReq: 
       z.object({
         title: z.string().default(""),
         desc: z.string().default(""),
       })
-    )
-    .default([]),
+    
+    .default({}),
 });
 
 const StringArrayParser = z.string().refine((data) => {
