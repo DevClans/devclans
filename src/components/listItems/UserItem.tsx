@@ -70,7 +70,7 @@ const UserItem = async ({
         detailDesc={skillLevel as string}
         chipArr={skills}
         baseUrl={"/user/"}
-        _id={_id.toString()}
+        _id={_id?.toString()}
         desc={bio || gitBio || ""}
       />
     </>
