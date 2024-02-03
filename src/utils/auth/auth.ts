@@ -45,6 +45,9 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  session: {
+    strategy: "database",
+  },
   callbacks: {
     async session({ session, token, user }: any) {
       // console.log("SESSION", session, "TOKEN", token, "USER", user);
