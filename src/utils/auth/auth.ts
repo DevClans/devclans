@@ -35,6 +35,7 @@ export const authOptions: NextAuthOptions = {
         discordDetails = isData.data;
         return {
           id: id,
+          username: profile.username,
           discordId: id,
           discordDetails,
           email: profile.email,
@@ -49,7 +50,7 @@ export const authOptions: NextAuthOptions = {
       // console.log("SESSION", session, "TOKEN", token, "USER", user);
       session.user = {
         _id: user.id,
-        username: user.discordDetails?.username,
+        username: user.username || user.discordDetails?.username,
         avatar: user.discordDetails?.avatar,
         discordId: user.discordId,
       } as any;
