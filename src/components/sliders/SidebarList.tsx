@@ -33,7 +33,7 @@ const SidebarList = ({
                 ) : (
                   item.startIcon
                 )}
-                <p className=" ">{item.text}</p>
+                <p className=" ">{item.text || item.href}</p>
               </Link>
               <IconButton
                 onClick={() => {

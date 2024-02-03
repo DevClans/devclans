@@ -7,30 +7,40 @@ import {
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Fetch } from "@/utils/fetchApi";
+import { Types } from "mongoose";
+import { toast } from "react-toastify";
 
-const ButtonLike = (props: any) => {
-  let title = props.title;
+const ButtonLike = ({
+  _id,
+  likeCount,
+}: {
+  _id: Types.ObjectId | string;
+  likeCount: number;
+}) => {
+  const projectId = _id;
   const [liked, setLiked] = useState(true);
   const [likesCount, setLikeCount] = useState(0);
-  const [loading, setLoading]=useState(false);
-  const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
+  const { data: session }: any = useSession();
 
-  const userId = "65bcd41c0e3d1d3d4f7d5cdb";
-  const ownerId = "65bcd41c0e3d1d3d4f7d5cdb";
-  title = "65bcee7e0e3d1d3d4f7d5d08";
+  const userId = session?.user?._id;
   //console.log(title);
 
   useEffect(() => {
     const fetchLikeCount = async () => {
+      if (!(userId && projectId)) {
+        console.error("User ID or Project ID not found in fetchLikeCount()");
+        return;
+      }
       try {
         const data = await Fetch({
-          endpoint: `/db/getProject/${userId}/${title}`,
+          endpoint: `/db/getProject/${userId}/${projectId}`,
           method: "GET",
         });
-       
+
         //  console.log(data)
         if (data) {
-          console.log(data.likesCount)
+          console.log(data.likesCount);
 
           setLikeCount(data.likesCount);
         }
@@ -39,13 +49,17 @@ const ButtonLike = (props: any) => {
       }
     };
     const fetchIsLiked = async () => {
+      if (!(userId && projectId)) {
+        console.error("User ID or Project ID not found in fetchIsLiked()");
+        return;
+      }
       try {
         const data = await Fetch({
-          endpoint: `/db/getLiked/${userId}/${title}`,
+          endpoint: `/db/getLiked/${userId}/${projectId}`,
           method: "GET",
         });
-      
-         console.log("This is data");
+
+        console.log("This is data");
         console.log(data);
         if (data.length > 0) {
           if (data[0]._id) {
@@ -68,25 +82,26 @@ const ButtonLike = (props: any) => {
     };
 
     var hour = 24;
-    const cleanupInterval = setInterval(cleanupLocalStorage, hour*60*60*1000);
+    const cleanupInterval = setInterval(
+      cleanupLocalStorage,
+      hour * 60 * 60 * 1000
+    );
 
-
-    const localLikedState = localStorage.getItem(`likedState_${title}_${userId}`);
-    if(localLikedState){
-    
+    const localLikedState = localStorage.getItem(
+      `likedState_${projectId}_${userId}`
+    );
+    if (localLikedState) {
       setLiked(JSON.parse(localLikedState));
-    }
-    else{
-    fetchIsLiked();
+    } else {
+      fetchIsLiked();
     }
 
-    const localLikeNumber = localStorage.getItem(`likeNumber_${title}`);
-    if(localLikeNumber){
-      console.log("Taken from local storage")
-      setLikeCount(JSON.parse(localLikeNumber))
-    }
-    else{
-    fetchLikeCount();
+    const localLikeNumber = localStorage.getItem(`likeNumber_${projectId}`);
+    if (localLikeNumber) {
+      console.log("Taken from local storage");
+      setLikeCount(JSON.parse(localLikeNumber));
+    } else {
+      fetchLikeCount();
     }
     return () => {
       clearInterval(cleanupInterval);
@@ -94,21 +109,28 @@ const ButtonLike = (props: any) => {
   }, []);
 
   const handleClick = async () => {
+    if (!session) {
+      toast.warning("You must be signed in to like a project");
+      return;
+    }
+    if (!(userId && projectId)) {
+      console.error("User ID or Project ID not found in handleCilck()");
+      return;
+    }
     let work;
     if (liked) {
       work = "addLike";
     } else {
       work = "removeLike";
-       
     }
     try {
       // console.log(work);
-      setLoading(true)
+      setLoading(true);
       const response = await fetch(`http://localhost:3000/api/db/${work}`, {
         method: "POST",
         body: JSON.stringify({
           userId: userId,
-          projectId: title,
+          projectId: projectId,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -117,17 +139,22 @@ const ButtonLike = (props: any) => {
       //console.log(title);
       const data = await response.json();
       //console.log(liked);
-      if(data){
-        setLoading(false)
+      if (data) {
+        setLoading(false);
         console.log(data);
-    
-        console.log(data.project.likesCount)
-        localStorage.setItem(`likedState_${title}_${userId}`, JSON.stringify(!liked));
-        localStorage.setItem(`likedNumber_${title}`, JSON.stringify(data.project.likesCount));
+
+        console.log(data.project.likesCount);
+        localStorage.setItem(
+          `likedState_${projectId}_${userId}`,
+          JSON.stringify(!liked)
+        );
+        localStorage.setItem(
+          `likedNumber_${projectId}`,
+          JSON.stringify(data.project.likesCount)
+        );
         setLikeCount(data.project.likesCount);
         setLiked(!liked);
       }
-    
     } catch (error) {
       console.error("Error adding like:", error);
     }
@@ -135,20 +162,15 @@ const ButtonLike = (props: any) => {
 
   return (
     <>
-
-    <ButtonIcon
-      active={!liked}
-      setActive={setLiked}
-      label={ loading ? "Loading":likesCount?.toString()}
-      activeIcon={<FavoriteRounded color="primary" fontSize="small" />}
-      icon={<FavoriteBorderRounded fontSize="small" />}
-      onClick={handleClick}
-      
-    />
-
-
+      <ButtonIcon
+        active={!liked}
+        setActive={setLiked}
+        label={loading ? "Loading" : likesCount?.toString()}
+        activeIcon={<FavoriteRounded color="primary" fontSize="small" />}
+        icon={<FavoriteBorderRounded fontSize="small" />}
+        onClick={handleClick}
+      />
     </>
- 
   );
 };
 

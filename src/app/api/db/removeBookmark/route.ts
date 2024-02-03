@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import { UserModel, ProjectModel, BookmarkModel } from "@/model/schema";
+import { UserModel, ProjectModel, BookmarkModel } from "@/mongodb/models";
 import {
   stringSchema,
   zodProjectFormSchema,
@@ -20,7 +20,7 @@ async function handler(req: Request) {
     stringSchema.parse(projectId);
 
     if (!isValidObjectId(projectId)) {
-      return NextResponse.json({ message: 'Invalid project ID' });
+      return NextResponse.json({ message: "Invalid project ID" });
     }
 
     const project = await ProjectModel.findById(projectId);
@@ -35,7 +35,6 @@ async function handler(req: Request) {
       user: user._id,
       project: project._id,
     });
-    
 
     if (existingBookmark) {
       // If remove is true and the like exists, remove the like
@@ -52,7 +51,7 @@ async function handler(req: Request) {
       );
 
       console.log("done");
-    
+
       return NextResponse.json({
         message: "Bookmark removed successfully",
         project: updatedProject,

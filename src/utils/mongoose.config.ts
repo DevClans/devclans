@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 declare global {
-  var mongoose: any; // This must be a `var` and not a `let / const`
+  var mongoose: {
+    promise: Promise<typeof import("mongoose")> | null;
+    conn: typeof import("mongoose") | null;
+  };
 }
 
 const MONGO_URL = process.env.MONGO_URL!;

@@ -1,7 +1,7 @@
 import { getDataQuery } from "@/utils/getDataQuery";
 
-export async function handler(req: Request) {
-  return getDataQuery(req);
+async function handler(req: Request) {
+  return getDataQuery(req.url);
 }
 
 export { handler as GET };

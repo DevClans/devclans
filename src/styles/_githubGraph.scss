@@ -1,0 +1,48 @@
+.react-activity-calendar {
+  font-family: var(--poppins);
+  color: #e2e8ff60;
+  color-scheme: dark;
+  svg:nth-child(1) {
+    width: 683px;
+  }
+  text,
+  div {
+    font-size: 12px;
+  }
+  rect {
+    stroke: var(--border);
+  }
+  [data-level="0"],
+  .react-activity-calendar__legend-colors > svg:nth-of-type(1) rect {
+    fill: var(--subH);
+    opacity: 0.2;
+  }
+  [data-level="1"],
+  .react-activity-calendar__legend-colors > svg:nth-of-type(2) rect {
+    fill: var(--priDarker);
+    opacity: 0.5;
+  }
+  [data-level="2"],
+  .react-activity-calendar__legend-colors > svg:nth-of-type(3) rect {
+    fill: var(--priDark);
+    opacity: 0.6;
+  }
+  [data-level="3"],
+  .react-activity-calendar__legend-colors > svg:nth-of-type(4) rect {
+    fill: var(--primary);
+    opacity: 0.7;
+  }
+  [data-level="4"],
+  .react-activity-calendar__legend-colors > svg:nth-of-type(5) rect {
+    fill: var(--primary);
+  }
+}
+
+// .react-activity-calendar::-webkit-scrollbar {
+//   width: 0px;
+//   background: transparent; /* make scrollbar transparent */
+// }
+// .react-activity-calendar::-webkit-scrollbar-thumb {
+//   width: 0px;
+//   background: transparent; /* make scrollbar transparent */
+// }

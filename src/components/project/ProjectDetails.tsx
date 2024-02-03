@@ -44,14 +44,13 @@ const ProjectDetails = ({
     return <></>;
   }
   return (
-    <div className={`w100 fcfs p-5 card2 ${className}`} style={style}>
+    <div className={`w100 fcfs p-3 card2 ${className}`} style={style}>
       {heading && <h2 className={"mb-6 " + headingClass}>{heading}</h2>}
       <div className={containerClass + " w100 fcc gap-6 "}>
         {dummydata.map((item, index) => (
           <>
-             <ProjectDetailsItem {...item} key={index} />
+            <ProjectDetailsItem {...item} key={index} />
           </>
-       
         ))}
       </div>
     </div>

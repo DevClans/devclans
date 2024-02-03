@@ -1,7 +1,14 @@
 import { ListItemProps } from "@/types/list.types";
 import { LightLine, SidebarList, ButtonConnect } from "@/components";
+import { ContactDetailsProps } from "@/types/mongo/user.types";
 
-const ProjectTeam = ({ list }: { list: ListItemProps[] }) => {
+const ProjectTeam = ({
+  list,
+  contact,
+}: {
+  list: ListItemProps[];
+  contact: ContactDetailsProps[];
+}) => {
   return (
     <div className="card2 w100">
       <SidebarList
@@ -19,7 +26,7 @@ const ProjectTeam = ({ list }: { list: ListItemProps[] }) => {
           favorite social media accounts for smooth communication. 😎`}
         </p>
         <div className="mt-[5px]" />
-        <ButtonConnect />
+        <ButtonConnect contact={contact} />
       </div>
     </div>
   );

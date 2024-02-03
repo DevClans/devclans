@@ -3,16 +3,17 @@ import ProductImg from "../project/ProjectImg";
 import { ProjectIconGroup, ProjectStage } from "..";
 import ItemsTemplate from "./ItemsTemplate";
 import { PageProps } from "@/types/page.types";
+import { urlProject } from "@/constants";
+import { msgSharingProject } from "@/lib/constants.messages";
 
 const ProjectItem = ({
   needMembers,
   imgs,
   _id,
-  desc,
   title,
   skills,
   team,
-  searchParams,
+  ...rest
 }: ProjectSearchItemProps & Partial<PageProps>) => {
   const teamNames = team?.map((t) => t.username) || [];
   return (
@@ -37,10 +38,12 @@ const ProjectItem = ({
           <>
             <ProjectStage />
             <ProjectIconGroup
+              url={urlProject(_id)}
+              message={msgSharingProject(title || "")}
               showLabels={false}
               bookmarkCount={0}
               likesCount={0}
-              title={_id}
+              _id={_id}
             />
           </>
         }
@@ -55,10 +58,9 @@ const ProjectItem = ({
         detailHeading="Team"
         detailDesc={teamNames.join(", ")}
         chipArr={skills || []}
-        searchParams={searchParams}
         baseUrl={"/project"}
         _id={_id?.toString() || ""}
-        desc={desc}
+        {...rest}
       />
     </>
   );

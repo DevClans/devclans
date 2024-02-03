@@ -96,38 +96,33 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
   { timestamps: true }
 );
 
-const likeSchema = new mongoose.Schema<LikeProps>(
-  {
-    user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
-    project: { type: mongoose.Types.ObjectId, ref: "Project", required: true },
-    // timestamp: { type: Date, default: Date.now },
-  },
-  { timestamps: true }
-);
+const likeSchema = new mongoose.Schema<LikeProps>({
+  user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
+  project: { type: mongoose.Types.ObjectId, ref: "Project", required: true },
+  timestamp: { type: Date, default: Date.now },
+});
 
-const bookmarkSchema = new mongoose.Schema<BookmarkProps>(
-  {
-    user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
-    project: { type: mongoose.Types.ObjectId, ref: "Project", required: true },
-    // // targt and targetType in case we want to bookmark both users and projects
-    // target: {
-    //   type: mongoose.Types.ObjectId,
-    //   required: true,
-    //   refPath: 'targetType',
-    // },
-    // targetType: { type: String, enum: ['User', 'Project'], required: true },
-    // timestamp: { type: Date, default: Date.now },
-  },
-  { timestamps: true }
-);
+const bookmarkSchema = new mongoose.Schema<BookmarkProps>({
+  user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
+  project: { type: mongoose.Types.ObjectId, ref: "Project", required: true },
+  timestamp: { type: Date, default: Date.now },
+  // // targt and targetType in case we want to bookmark both users and projects
+  // target: {
+  //   type: mongoose.Types.ObjectId,
+  //   required: true,
+  //   refPath: 'targetType',
+  // },
+  // targetType: { type: String, enum: ['User', 'Project'], required: true },
+  // timestamp: { type: Date, default: Date.now },
+});
 
 const projectSchema = new mongoose.Schema<ProjectProps>(
   {
     title: { type: String, required: true },
     desc: { type: String, required: true },
-     owner: { type: mongoose.Types.ObjectId, ref: "User", required: true },
+    owner: { type: mongoose.Types.ObjectId, ref: "User", required: true },
     //owner:{ type: String, required:true },
-     contributors: [{ type: mongoose.Types.ObjectId, ref: "User", default: [] }],
+    contributors: [{ type: mongoose.Types.ObjectId, ref: "User", default: [] }],
     //contributors:[{ type:String, default:[]}],
     topics: [{ type: String, default: [] }], // ml, android
     skills: [{ type: String, default: [] }], // tech: html, css

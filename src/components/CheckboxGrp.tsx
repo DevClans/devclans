@@ -1,11 +1,7 @@
 import { FilterSidebarProps, SliderProps } from "@/types";
-import { PageProps } from "@/types/page.types";
 import CheckBoxItem from "./CheckBoxItem";
 
-const CheckboxGrp = ({
-  data,
-  searchParams,
-}: Partial<FilterSidebarProps> & PageProps) => {
+const CheckboxGrp = ({ data }: Partial<FilterSidebarProps>) => {
   return (
     <div className="flex flex-col" style={{ rowGap: 30 }}>
       {data?.map(
@@ -13,7 +9,6 @@ const CheckboxGrp = ({
           <div key={index}>
             <h3 className="">{heading || title}</h3>
             <CheckBoxItem
-              searchParams={searchParams}
               key={index}
               type={type || ""}
               data={data}

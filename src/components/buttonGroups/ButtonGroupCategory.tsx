@@ -60,6 +60,11 @@ const ButtonGroupCategory = () => {
   return (
     <div className="btnRow">
       {dummyCategories.map(({ label, icon }) => {
+        // console.log(label, "label");
+        if (label === "all") {
+          delete filters["domain"];
+          newParams.set("filters", JSON.stringify(filters));
+        }
         const { newParams: params } = toggleFilter(
           newParams,
           filters,

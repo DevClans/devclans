@@ -1,10 +1,19 @@
-import { SvgProps } from "@/types";
+"use client";
+import { ButtonProps } from "@/types";
 
-const IconWithBg = ({ icon }: { icon: React.ReactNode }) => {
+const IconWithBg = ({
+  icon,
+  children,
+  onClick,
+}: React.PropsWithChildren & Partial<ButtonProps>) => {
   return (
-    <div style={{}} className="p-[10px] card rounded-[5px]">
-      {icon}
-    </div>
+    <button
+      onClick={onClick as any}
+      style={{}}
+      className="p-[10px] card rounded-[5px]"
+    >
+      {icon || children}
+    </button>
   );
 };
 

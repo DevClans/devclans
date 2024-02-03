@@ -1,6 +1,5 @@
 "use client";
-import { useState } from 'react';
-import { ButtonBookmark, ButtonIcon, ButtonLike, IosShareRounded } from "..";
+import { useState } from "react";
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -12,72 +11,70 @@ import {
   TelegramIcon,
   LinkedinIcon,
   TwitterIcon,
-
-} from 'next-share';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-
-
+} from "next-share";
+import Modal from "@mui/material/Modal";
+import ButtonClose from "../buttons/ButtonClose";
+import ButtonLinkIcon from "../buttons/ButtonLinkIcon";
+import ButtonShare from "../buttons/ButtonShare";
+import { ShareProps } from "@/types/link.types";
+import { Container } from "@mui/material";
 
 const ShareModal = ({
-  bookmarkCount,
-  likesCount,
-  showLabels = true,
-  title
-}: {
-  bookmarkCount?: number;
-  likesCount?: number;
-  showLabels?: boolean;
-  title?:string
-}) => {
+  children,
+  url,
+  message,
+  style,
+  className,
+}: ShareProps &
+  React.PropsWithChildren & {
+    style?: React.CSSProperties;
+    className?: string;
+  }) => {
   const [isShareModalOpen, setShareModalOpen] = useState(false);
-
-  const ShareModalContent = () => (
-    <div className='flex '>
-  <Box className="share-modal-content justify-center align-center ">
-      <FacebookShareButton
-        url={'https://github.com/next-share'}
-        quote={'next-share is a social share buttons for your next React apps.'}
-        hashtag={'#nextshare'}
-      >
-        <FacebookIcon size={32} round />
-      </FacebookShareButton>
-  
-      <WhatsappShareButton
-        url={'https://github.com/next-share'}
-        title={'Check out this link'}
-      >
-        <WhatsappIcon size={32} round />
-      </WhatsappShareButton>
-      
-      <TwitterShareButton
-        url={'https://github.com/next-share'}
-        title={'Check out this link'}
-      >
-        <TwitterIcon size={32} round />
-      </TwitterShareButton>
-      
-      <TelegramShareButton
-        url={'https://github.com/next-share'}
-        title={'Check out this link'}
-      >
-        <TelegramIcon size={32} round />
-      </TelegramShareButton>
-
-      <LinkedinShareButton
-        url={'https://github.com/next-share'}
-        title={'Check out this link'}
-      >
-        <LinkedinIcon size={32} round />
-      </LinkedinShareButton>
-  
-      {/* Add more share options as needed */}
-  
-      <button onClick={handleShareButtonUnClick}>Close</button>
-    </Box>
-    </div>
-  
-  );
+  const shareUrl = url || "https://github.com/next-shareasdfasdfa";
+  const shareMsg =
+    message || "next-share is a social share buttons for your next React apps.";
+  const ShareModalContent = () => {
+    return (
+      <div className="w100 h-full fccc">
+        <div className="relative card gap-4 rounded-[20px] p-4 fcc share-modal-content justify-center align-center max-w-[300px]">
+          <h2 className="text-center">Share To Your Network</h2>
+          <div className="frc w100">
+            <input
+              disabled
+              value={shareUrl}
+              type="text"
+              className="!border-r-0 max-h-[42px] w100 !rounded-[5px] text-nowrap"
+            />
+            <ButtonLinkIcon text={shareUrl} />
+          </div>
+          <div className="frcsb w100 gap-2">
+            <FacebookShareButton
+              url={shareUrl}
+              quote={shareMsg}
+              // hashtag={"#nextshare"}
+            >
+              <FacebookIcon size={32} round />
+            </FacebookShareButton>
+            <WhatsappShareButton url={shareUrl} title={shareMsg}>
+              <WhatsappIcon size={32} round />
+            </WhatsappShareButton>
+            <TwitterShareButton url={shareUrl} title={shareMsg}>
+              <TwitterIcon size={32} round />
+            </TwitterShareButton>
+            <TelegramShareButton url={shareUrl} title={shareMsg}>
+              <TelegramIcon size={32} round />
+            </TelegramShareButton>
+            <LinkedinShareButton url={shareUrl} title={shareMsg}>
+              <LinkedinIcon size={32} round />
+            </LinkedinShareButton>
+          </div>
+          {/* Add more share options as needed */}
+          <ButtonClose onClick={closeShareModal} />
+        </div>
+      </div>
+    );
+  };
 
   const openShareModal = () => {
     setShareModalOpen(true);
@@ -90,33 +87,23 @@ const ShareModal = ({
   const handleShareButtonClick = () => {
     openShareModal();
   };
-  const handleShareButtonUnClick = () => {
-    closeShareModal();
-  };
 
   return (
     <>
-      <div className="frc gap-[10px]">
-    
-        <ButtonIcon
-          label={showLabels ? "share" : ""}
-          icon={<IosShareRounded fontSize="small" />}
-          onClick={handleShareButtonClick}
-        />
-        {typeof bookmarkCount === "number" && (
-          <ButtonBookmark bookmarksCount={bookmarkCount} />
-        )}
-        {typeof likesCount === "number" && (
-          <ButtonLike likesCount={likesCount} title={title} />
-        )}
-
+      <div className={"frc gap-[10px] " + className} style={style}>
+        <div onClick={handleShareButtonClick}>
+          {children || <ButtonShare url={url} message={message} />}
+        </div>
         <Modal
+          className={className}
           open={isShareModalOpen}
           onClose={closeShareModal}
           aria-labelledby="share-modal"
           aria-describedby="share-options"
         >
-          <ShareModalContent />
+          <Container className="fccc w-screen h-screen">
+            <ShareModalContent />
+          </Container>
         </Modal>
       </div>
     </>

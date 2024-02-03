@@ -3,7 +3,6 @@ import { memberLevels } from "@/lib/memberLevel";
 import { skills } from "@/lib/skills";
 import { InputFieldProps } from "@/types/form.types";
 
-
 export const dummyProjectFormSchemaFields: InputFieldProps[] = [
   {
     label: "Title",
@@ -17,7 +16,7 @@ export const dummyProjectFormSchemaFields: InputFieldProps[] = [
     label: "Tech Stack",
     name: "skills",
     multi: true,
-    options: skills as any , // Add options here if needed
+    options: skills as any, // Add options here if needed
   },
   // {
   //   label: "Team",
@@ -43,6 +42,10 @@ export const dummyProjectFormSchemaFields: InputFieldProps[] = [
     label: "Repository Name",
     name: "repoName",
   },
+  // {
+  //   label: "Project Links",
+  //   name: "projectLinks",
+  // },
   // {
   //   label: "Project Links",
   //   name: "projectLinks",
@@ -93,10 +96,15 @@ export const dummyProjectFormSchemaFields: InputFieldProps[] = [
     name: "devStage",
     options: devStages, // Assuming devStages is defined elsewhere
   },
-  // {
-  //   label: "Published",
-  //   name: "published",
-  //   type:"checkbox",
-  // },
-
+  {
+    label: "Published",
+    name: "published",
+    type: "checkbox",
+  },
+  {
+    label: "Repository Details",
+    name: "repoDetails",
+    // Assuming zodRepoDetailsSchema is defined elsewhere
+    // and represents the schema for repository details
+  },
 ];

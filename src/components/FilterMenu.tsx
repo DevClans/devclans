@@ -5,10 +5,10 @@ import ButtonCloseFilter from "./buttons/ButtonCloseFilter";
 
 const FilterMenu = (props: PageProps) => {
   return (
-    <div id="filterMenu" className="cardGrad" style={{}}>
+    <div id="filterMenu" className="relative cardGrad w100" style={{}}>
+      <ButtonCloseFilter />
       <div className="frcsb w100">
         <h2>Filters</h2>
-        <ButtonCloseFilter />
       </div>
       <CheckboxGrp {...props} data={dummyFilterSteps} />
     </div>
