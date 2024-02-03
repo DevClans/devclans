@@ -1,6 +1,7 @@
 import type { NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import GithubProvider from "next-auth/providers/github";
+import   GoogleProvider from "next-auth/providers/google";
 import { adapter } from "./adapterFunctions";
 import { UserDiscordDetailsProps } from "@/types/mongo/user.types";
 import { zodUserDiscordDetailsSchema } from "@/zod/zod.common";
@@ -40,6 +41,17 @@ export const authOptions: NextAuthOptions = {
         };
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_SECRET_ID as string,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
+    })
   ],
   callbacks: {
     async jwt(params) {
@@ -56,7 +68,7 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token, user }: any) {
-      // console.log("SESSION", session, "TOKEN", token, "USER", user);
+     // console.log("SESSION", session, "TOKEN", token, "USER", user);
       session.user = {
         _id: user.id,
         username: user.discordDetails?.username,
