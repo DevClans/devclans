@@ -1,7 +1,7 @@
 export const mongoFilter = (
-  search: string,
-  filters: Record<string, any>,
-  type: "projects" | "users"
+  search?: string,
+  filters?: Record<string, any>,
+  type?: "projects" | "users"
 ) => {
   const isProject = type == "projects";
   const andConditions = [];
@@ -39,13 +39,15 @@ export const mongoFilter = (
   }
 
   // Add filter conditions
-  if (Array.isArray(filters)) {
-    for (const filter of filters) {
-      andConditions.push({ [filter[0]]: { $in: filter[1] } });
-    }
-  } else {
-    for (const field in filters) {
-      andConditions.push({ [field]: { $in: filters[field] } });
+  if (filters) {
+    if (Array.isArray(filters)) {
+      for (const filter of filters) {
+        andConditions.push({ [filter[0]]: { $in: filter[1] } });
+      }
+    } else {
+      for (const field in filters) {
+        andConditions.push({ [field]: { $in: filters[field] } });
+      }
     }
   }
 
