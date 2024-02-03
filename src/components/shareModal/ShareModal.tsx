@@ -17,7 +17,7 @@ import ButtonClose from "../buttons/ButtonClose";
 import ButtonLinkIcon from "../buttons/ButtonLinkIcon";
 import ButtonShare from "../buttons/ButtonShare";
 import { ShareProps } from "@/types/link.types";
-import { Box, Container } from "@mui/material";
+import { Container } from "@mui/material";
 
 const ShareModal = ({
   children,

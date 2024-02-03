@@ -21,7 +21,7 @@ const ButtonLike = ({
   const [liked, setLiked] = useState(true);
   const [likesCount, setLikeCount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
 
   const userId = session?.user?._id;
   //console.log(title);
@@ -145,11 +145,11 @@ const ButtonLike = ({
 
         console.log(data.project.likesCount);
         localStorage.setItem(
-          `likedState_${title}_${userId}`,
+          `likedState_${projectId}_${userId}`,
           JSON.stringify(!liked)
         );
         localStorage.setItem(
-          `likedNumber_${title}`,
+          `likedNumber_${projectId}`,
           JSON.stringify(data.project.likesCount)
         );
         setLikeCount(data.project.likesCount);

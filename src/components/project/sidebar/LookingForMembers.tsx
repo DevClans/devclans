@@ -2,13 +2,17 @@ import Image from "next/image";
 import BottomBar from "../../TextBars/BottomBar";
 import { LinkShare } from "@/components";
 import { msgLookingForMember } from "@/lib/constants.messages";
-import { urlUser } from "@/constants";
-import { Types } from "mongoose";
+import { urlProject, urlUser } from "@/constants";
+import { LookingForMembersProps } from "@/types/mongo/user.types";
 
-const LookingForMembers = () => {
-  const username = "test";
-  const id: Types.ObjectId = "123" as unknown as Types.ObjectId;
-  const level = "beginner";
+const LookingForMembers = ({
+  username,
+  _id,
+  level,
+}: LookingForMembersProps) => {
+  if (!level) {
+    return null;
+  }
   return (
     <div className="fcc w100">
       <div
@@ -36,17 +40,19 @@ const LookingForMembers = () => {
           <span className="font-semibold">wowo</span>
         </p>
       </div>
-      <BottomBar
-        text={
-          <span className="w100">
-            Tell cohort friends about this opportunity{" "}
-            <LinkShare
-              url={urlUser(id)}
-              message={msgLookingForMember(username, level)}
-            />
-          </span>
-        }
-      />
+      {Boolean(_id && username) && (
+        <BottomBar
+          text={
+            <span className="w100">
+              Tell cohort friends about this opportunity{" "}
+              <LinkShare
+                url={urlUser(_id) || urlProject(_id)}
+                message={msgLookingForMember(username, level)}
+              />
+            </span>
+          }
+        />
+      )}
     </div>
   );
 };

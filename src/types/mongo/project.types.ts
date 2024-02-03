@@ -1,6 +1,11 @@
 import { ProjectDomainType } from "./../../lib/domains";
 import mongoose, { Types } from "mongoose";
-import { UserProps, UserTeamProps } from "./user.types";
+import {
+  ContactDetailsProps,
+  LookingForMembersProps,
+  UserProps,
+  UserTeamProps,
+} from "./user.types";
 import { DevStagesType } from "@/lib/devStages";
 import { MemberLevelType } from "@/lib/memberLevel";
 import { zodProjectFormSchema } from "@/zod/zod.common";
@@ -136,3 +141,9 @@ export const projectSearchItemKeys: string[] = [
 ];
 
 export type ProjectFormProps = z.infer<typeof zodProjectFormSchema>;
+
+export type UserSidebarProps = UserTeamProps & {
+  links: ProjectProps["projectLinks"];
+  needMembers: LookingForMembersProps;
+  contact: ContactDetailsProps[];
+};
