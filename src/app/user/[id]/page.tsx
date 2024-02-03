@@ -6,7 +6,10 @@ import UserProjects from "@/components/userPage/UserProjects";
 import selectUserUsername from "@/lib/selectUserUsername";
 import userQuestions from "@/lib/userQuestions";
 import { InfoWithIconProps } from "@/types/list.types";
-import type { UserProps } from "@/types/mongo/user.types";
+import type {
+  LookingForMembersProps,
+  UserProps,
+} from "@/types/mongo/user.types";
 import type { PageProps } from "@/types/page.types";
 import type {
   ProjectDetailsItemProps,
@@ -98,6 +101,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
         searchParams={searchParams}
       />
       <Common
+        level={userData["skillLevel"]}
         username={username}
         questions={userData["questions"]}
         params={params}
@@ -121,10 +125,12 @@ const Common = ({
   username,
   questions,
   searchParams,
+  level,
 }: PageProps & {
   username: UserProps["username"];
   questions: UserProps["questions"];
-} & React.PropsWithChildren) => {
+} & React.PropsWithChildren &
+  LookingForMembersProps) => {
   return (
     <div
       className="flex flex-col items-center  
@@ -141,7 +147,7 @@ const Common = ({
         {children}
       </MiddleSection>
       {/* right sidebar */}
-      <RightSidebar />
+      <RightSidebar username={username || ""} level={level} />
     </div>
   );
 };

@@ -8,7 +8,7 @@ import { LookingForMembersProps } from "@/types/mongo/user.types";
 const LookingForMembers = ({
   username,
   _id,
-  level,
+  level = "beginner",
 }: LookingForMembersProps) => {
   if (!level) {
     return null;

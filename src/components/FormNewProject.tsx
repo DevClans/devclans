@@ -7,7 +7,7 @@ import FormServer from "./FormServer";
 import { userFormShape, zodProjectFormSchema } from "@/zod/zod.common";
 import { useSession } from "next-auth/react";
 import { dummyProjectFormSchemaFields } from "@/dummy/dummy.project.form";
-import { createProjectUser } from "@/api/createProjectUser";
+import { createProjectUser } from "@/utils/createProjectUser";
 
 const FormNewProject = () => {
   const { data }: any = useSession();

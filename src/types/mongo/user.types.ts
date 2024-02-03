@@ -148,5 +148,5 @@ export type UserFormProps = z.infer<typeof zodUserFormSchema>;
 export type LookingForMembersProps = {
   username: string;
   _id?: Types.ObjectId;
-  level: MemberLevelType;
+  level?: MemberLevelType;
 };
