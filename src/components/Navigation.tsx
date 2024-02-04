@@ -64,6 +64,7 @@ const Navigation = ({
           }
           return (
             <Link
+              title={name}
               key={index}
               className={`flex-shrink-0 text-nowrap ${
                 replaceStyle && "w100 py-3"

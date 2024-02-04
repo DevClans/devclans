@@ -14,6 +14,7 @@ const ButtonLink = ({
   disabled = false,
   loading = false,
   replace,
+  title,
   ...rest
 }: ButtonProps) => {
   const [clicked, setClicked] = useState(false);
@@ -34,6 +35,7 @@ const ButtonLink = ({
   if (href) {
     return (
       <Link
+        title={(typeof label == "string" && label) || title || "Link Button"}
         replace={replace}
         className={`fccc button ${className}`}
         onClick={handleClick}
@@ -48,6 +50,7 @@ const ButtonLink = ({
   return (
     <button
       {...rest}
+      title={(typeof label == "string" && label) || title || "Button"}
       disabled={loading || disabled}
       className={`${className}`}
       onClick={handleClick}

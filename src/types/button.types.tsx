@@ -1,4 +1,5 @@
 export type ButtonProps = {
+  title?: string;
   label: string | number | React.ReactNode;
   activeLabel?: string | number | React.ReactNode;
   icon?: React.ReactNode;

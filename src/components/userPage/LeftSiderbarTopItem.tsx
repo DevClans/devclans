@@ -13,7 +13,7 @@ const LeftSiderbarTopItem = () => {
         if (top > 80) {
           ele.style.height = "0px";
         } else {
-          ele.style.height = "80px";
+          ele.style.height = "75px";
         }
       }
     };

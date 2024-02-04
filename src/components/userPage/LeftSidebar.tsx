@@ -22,7 +22,7 @@ const LeftSidebar = async ({
     <>
       <div
         id="leftMenuUser"
-        className={`peer transition-[max-width] ease-in-out duration-300 fcfssb gap-3 md:left-0 md:top-[0px] cardGrad md:data-[state=active]:max-w-[314px] md:data-[state=not-active]:min-w-20 md:data-[state=not-active]:max-w-[88px] md:-z-[1] group/left md:fixed w100 md:h-screen  md:!border-r md:!border-b-0 md:!rounded-none `}
+        className={`peer transition-[max-width] mt-6 md:mt-0 ease-in-out duration-300 fcfssb gap-3 md:left-0 md:top-[0px] cardGrad md:data-[state=active]:max-w-[314px] md:data-[state=not-active]:min-w-20 md:data-[state=not-active]:max-w-[88px] md:-z-[1] group/left md:fixed w100 md:h-screen  md:!border-r md:!border-b-0 md:!rounded-none `}
         data-state="active"
         style={{
           boxSizing: "border-box",
