@@ -24,8 +24,8 @@ const ImageComp = ({
         }}
         alt={rest.alt || "image"}
         onError={() => setError(true)}
-        onLoadingComplete={(img) => {
-          if (img.naturalWidth < 1) {
+        onLoad={(img) => {
+          if (img.currentTarget.naturalWidth  < 1) {
             setError(true);
           }
         }}

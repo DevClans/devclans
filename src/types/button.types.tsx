@@ -11,7 +11,7 @@ export type ButtonProps = {
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
       | React.MouseEvent<HTMLAnchorElement, MouseEvent>,
     label: string | number
-  ) => void;
+  ) => any;
   color?: string;
   href?: string;
   activeIcon?: React.ReactNode;

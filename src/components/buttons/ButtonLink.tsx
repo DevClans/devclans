@@ -1,6 +1,9 @@
 "use client";
+// import colors from "@/lib/colors";
 import { ButtonProps } from "@/types";
+import { CircularProgress } from "@mui/material";
 import Link from "next/link";
+import { useState } from "react";
 
 const ButtonLink = ({
   label,
@@ -8,31 +11,49 @@ const ButtonLink = ({
   style,
   onClick,
   href,
+  disabled = false,
+  loading = false,
   replace,
   ...rest
 }: ButtonProps) => {
+  const [clicked, setClicked] = useState(false);
+  const progress = <CircularProgress color="inherit" size={14} />;
+  const handleClick = async (e: any) => {
+    setClicked(true);
+    if (disabled || loading) {
+      e.preventDefault();
+      return;
+    }
+    if (onClick) {
+      await onClick(e, "secondary");
+      setClicked(false);
+    } else {
+      setClicked(false);
+    }
+  };
   if (href) {
     return (
       <Link
         replace={replace}
         className={`fccc button ${className}`}
-        onClick={(e) => onClick && onClick(e, "secondary")}
+        onClick={handleClick}
         style={{ ...style }}
         href={href}
         {...rest}
       >
-        {label || "Link Button"}
+        {!loading ? label || "Link Button" : progress}
       </Link>
     );
   }
   return (
     <button
       {...rest}
+      disabled={loading || disabled}
       className={`${className}`}
-      onClick={(e) => onClick && onClick(e, "secondary")}
+      onClick={handleClick}
       style={{ ...style }}
     >
-      {label || "Button"}
+      {!loading ? label || "Button" : progress}
     </button>
   );
 };
