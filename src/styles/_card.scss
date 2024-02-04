@@ -8,11 +8,25 @@
 .cardCommon {
   @apply border-border border p-4 rounded-[10px] w100;
 }
+
 .card2 {
   background: var(--cardBg2, #020b1c);
   border-radius: 20px;
 }
+.card3 {
+  @apply card card2;
+  padding: 20px;
+  border-radius: 10px;
+}
 
+@media screen and (max-width: 1024px) {
+  .cardCommon {
+    padding: 15px;
+  }
+  .card3 {
+    padding: 15px;
+  }
+}
 .heroCard {
   border-bottom: 1px solid var(--border, #132341);
 
@@ -52,6 +66,7 @@
   // height: 100;
   border-radius: 0;
   padding: 30px;
+  padding-top: 0;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
@@ -65,11 +80,18 @@
     padding: 20px;
     bottom: 0;
     height: 50%;
+    padding-top: 0;
     top: unset;
     right: unset;
     position: fixed;
     backdrop-filter: blur(41.04999923706055px);
-    padding-top: 30px;
+    // padding-top: 30px;
+    @apply scrollbar-x;
+  }
+}
+@media screen and (min-width: 768px) {
+  #filterMenu {
+    @apply scrollbar-x;
   }
 }
 

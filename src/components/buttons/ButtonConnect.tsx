@@ -10,7 +10,7 @@ const ButtonConnect = ({
   style,
   className,
   contact,
-}: Partial<ButtonProps> & { contact?: ContactDetailsProps[] }) => {
+}: Partial<ButtonProps> & { contact: ContactDetailsProps[] }) => {
   const [open, setOpen] = useState(false);
   const team: ContactDetailsProps[] = contact || [];
   const { handleOpen, Modal } = useModalConnect({ isActive: open, team });

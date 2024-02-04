@@ -2,6 +2,7 @@ import { getOctokit } from "@/github/config.github";
 import getGithubReadme from "@/github/repos/gh.getReadme";
 import { UserModel } from "@/mongodb/models";
 import redisClient from "@/redis/config";
+import { projectSearchItemKeys } from "@/types/mongo/project.types";
 import {
   UserProps,
   UserRedisKeys,
@@ -19,6 +20,8 @@ const getUserData = async (user: string, select: string) => {
       new Types.ObjectId(user)
     )
       .select(select)
+      .populate("ownedProjects", projectSearchItemKeys.join(" "))
+      // TODO get only ids and check in cache and then get missing data if load increases
       .lean();
     return u;
   } catch (error) {

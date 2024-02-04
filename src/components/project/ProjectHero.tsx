@@ -1,5 +1,7 @@
 import { ProjectStage, ProjectIconGroup, ChipGroup } from "@/components";
 import ProductImg from "@/components/project/ProjectImg";
+import { urlProject } from "@/constants";
+import { msgSharingProject } from "@/lib/constants.messages";
 import { ProjectProps } from "@/types/mongo/project.types";
 import { PageProps } from "@/types/page.types";
 
@@ -17,7 +19,7 @@ const ProjectHero = ({
   const data = {
     title,
     desc,
-    _id
+    _id,
   };
   return (
     <div className="card2 py-[30px] w100 fcfs gap-[30px] px-5">
@@ -25,10 +27,11 @@ const ProjectHero = ({
         <div className="frcsb w100">
           <ProjectStage stage={devStage} />
           <ProjectIconGroup
+            url={urlProject(_id)}
+            message={msgSharingProject(title || "")}
             likesCount={likesCount}
             bookmarkCount={bookmarkCount}
-            title={data._id}
-         
+            _id={data._id}
           />
         </div>
         <h1 className="text-4xl">{data.title}</h1>

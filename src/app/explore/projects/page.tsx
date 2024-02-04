@@ -1,32 +1,18 @@
-import ProjectItem from "@/components/listItems/ProjectItem";
-import { ProjectProps } from "@/types/mongo/project.types";
+import { ProjectSearchItemProps } from "@/types/mongo/project.types";
 import { Fetch } from "@/utils/fetchApi";
 import { PageProps } from "@/types/page.types";
 import { stringify } from "querystring";
-import ToolBox from "@/components/ToolBox";
+import ProjectItems from "@/components/project/ProjectItems";
 
 const Projects = async ({ params, searchParams }: Partial<PageProps>) => {
   const str = stringify(searchParams);
-  console.log("This is str" + str );
-  console.log(searchParams)
-  const projects: ProjectProps[] =
+  // console.log("This is str" + str );
+  // console.log(searchParams)
+  const projects: ProjectSearchItemProps[] =
     (await Fetch({
       endpoint: "/project" + (str ? `?${str}` : ""),
     })) || [];
   // console.log(projects, "projects in frontend");
-  if (
-    !Array.isArray(projects) ||
-    (Array.isArray(projects) && projects.length === 0)
-  ) {
-    return <h3>No projects found</h3>;
-  }
-  return (
-    <div className="fcfs w100 gap-6">
-      <ToolBox count={projects.length} />
-      {projects.map((product, i) => (
-        <ProjectItem searchParams={searchParams} {...product} key={i} />
-      ))}
-    </div>
-  );
+  return <ProjectItems projects={projects} searchParams={searchParams} />;
 };
 export default Projects;

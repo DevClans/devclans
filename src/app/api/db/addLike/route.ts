@@ -1,12 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import { UserModel, ProjectModel, LikeModel } from "@/model/schema";
-import {
-  stringSchema,
-  zodProjectFormSchema,
-  likeAndBkMarkSchema,
-} from "@/zod/zod.common";
-import { Types, isValidObjectId } from "mongoose";
+import { ProjectModel, LikeModel } from "@/mongodb/models";
+import { zodMongoId } from "@/zod/zod.common";
 
 async function handler(req: Request) {
   await dbConnect();
@@ -16,35 +11,19 @@ async function handler(req: Request) {
   try {
     console.log("started");
     // Find the user
-    stringSchema.parse(userId);
-    stringSchema.parse(projectId);
-    if (!isValidObjectId(projectId)) {
-      return NextResponse.json({ message: 'Invalid project ID' });
-    }
+    const uid = zodMongoId.parse(userId);
+    const pid = zodMongoId.parse(projectId);
 
-    const project = await ProjectModel.findById(projectId);
-    console.log(project);
-
-    const user = await UserModel.findOne({ _id: userId });
-    console.log(user)
-
-    if (!project || !user) {
-      return NextResponse.json({ message: "Project or user not found" });
-    }
-
-    var count = project.likesCount;
-    count++;
     const like = new LikeModel({
-      user: user._id,
-      project: project._id,
+      user: uid,
+      project: pid,
     });
     await like.save();
 
     const updatedProject = await ProjectModel.findOneAndUpdate(
-      { _id: project._id },
+      { _id: pid },
       {
         $inc: { likesCount: 1 }, // Increment likesCount
-        $push: { likesArray: like._id }, // Push like._id to likesArray
       },
       { new: true } // Return the updated document
     );

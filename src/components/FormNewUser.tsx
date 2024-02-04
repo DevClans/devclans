@@ -14,7 +14,7 @@ import { ButtonBlue } from ".";
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { createProjectUser } from "@/api/createProjectUser";
+import { createProjectUser } from "@/utils/createProjectUser";
 
 const FormNewUser = () => {
   const searchParams = useSearchParams();

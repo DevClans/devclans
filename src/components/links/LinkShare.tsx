@@ -1,23 +1,26 @@
-import { LinkProps } from "@/types/link.types";
+import { LinkProps, ShareProps } from "@/types/link.types";
 import LinkWithIcon from "./LinkWithIcon";
 import IosShareOutlinedIcon from "@mui/icons-material/IosShareOutlined";
+import ShareModal from "../shareModal/ShareModal";
 // opens a modal to share the project
-const LinkShare = ({ href }: LinkProps) => {
+type LinkShareProps = Partial<LinkProps> & ShareProps;
+const LinkShare = ({ href, icon, ...shareProps }: LinkShareProps) => {
   return (
     <>
-      <LinkWithIcon
-        text="Share"
-        href={href || "/"}
-        isBold={true}
-        icon={
-          <IosShareOutlinedIcon
-            style={{
-              height: 14,
-              width: 14,
-            }}
-          />
-        }
-      />
+      <ShareModal {...shareProps} className="!inline-flex">
+        <LinkWithIcon
+          text="Share"
+          isBold={true}
+          icon={
+            <IosShareOutlinedIcon
+              style={{
+                height: 14,
+                width: 14,
+              }}
+            />
+          }
+        />
+      </ShareModal>
     </>
   );
 };

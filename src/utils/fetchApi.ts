@@ -24,6 +24,7 @@ type FetchProps = {
   baseUrl?: string;
   headers?: any;
   type?: "nan" | "an"; //nan means no access needed and an means access needed
+  token?: string;
 };
 
 export const Fetch = async ({
@@ -31,15 +32,20 @@ export const Fetch = async ({
   headers,
   baseUrl = urlApi,
   method = "GET",
+  token,
   type = "nan",
 }: FetchProps) => {
   const options: Partial<FetchProps> = {
     method,
     headers: {
+      "cache-control": "force-cache",
       "Content-Type": "application/json",
       "x-d-a": type, // d-a means devclans-access
     },
   };
+  if (token) {
+    options["headers"]["Authorization"] = `Bearer ${token}`;
+  }
   if (headers) {
     Object.assign(options["headers"], headers);
   }

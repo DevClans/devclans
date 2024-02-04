@@ -5,13 +5,7 @@ import   GoogleProvider from "next-auth/providers/google";
 import { adapter } from "./adapterFunctions";
 import { UserDiscordDetailsProps } from "@/types/mongo/user.types";
 import { zodUserDiscordDetailsSchema } from "@/zod/zod.common";
-
-type MyUser = {
-  id: string;
-  username: string;
-  avatar: string;
-  accessToken: string;
-};
+import { Fetch } from "../fetchApi";
 
 export const authOptions: NextAuthOptions = {
   adapter: adapter,
@@ -20,11 +14,20 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.DISCORD_CLIENT_ID as string,
       clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
       authorization: {
-        params: { scope: 'identify email guilds' },
+        params: {
+          scope: "identify email guilds guilds.members.read",
+        },
       },
       async profile(profile: any, tokens: any) {
         const { id } = profile;
-        // const { accessToken } = tokens;
+        const { access_token } = tokens;
+        const isMember = await Fetch({
+          endpoint: `/middleware/checkServerMembership?discordId=${id}`,
+          method: "GET",
+          token: access_token,
+        });
+        console.log("isMember in profile", isMember);
+        // console.log("access token", tokens);
         const isData = zodUserDiscordDetailsSchema.safeParse({
           ...profile,
           _id: id,
@@ -34,10 +37,12 @@ export const authOptions: NextAuthOptions = {
         discordDetails = isData.data;
         return {
           id: id,
+          username: profile.username,
           discordId: id,
           discordDetails,
           email: profile.email,
           emailVerified: profile.verified,
+          isMember: isMember?.isMember,
         };
       },
     }),
@@ -53,35 +58,39 @@ export const authOptions: NextAuthOptions = {
       }
     })
   ],
+  session: {
+    strategy: "database",
+  },
   callbacks: {
-    async jwt(params) {
-      const { token, user } = params;
-
-      if (user) {
-        const { id, username, avatar, accessToken } = user as MyUser;
-        token.id = id;
-        token.username = username;
-        token.avatar = avatar;
-        token.discordAccessToken = accessToken;
-      }
-
-      return token;
-    },
     async session({ session, token, user }: any) {
      // console.log("SESSION", session, "TOKEN", token, "USER", user);
       session.user = {
         _id: user.id,
-        username: user.discordDetails?.username,
+        username: user.username || user.discordDetails?.username,
         avatar: user.discordDetails?.avatar,
         discordId: user.discordId,
       } as any;
       return session;
     },
-    // signIn: async (user: any, account: any, profile: any) => {
-    //   console.log("signIn");
-    //   check if is discord member
-    //   return false;
-    // },
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
+    },
+    // https://next-auth.js.org/configuration/callbacks#sign-in-callback
+    signIn: async ({ user, account, profile, email, credentials }: any) => {
+      // console.log("signIn", user, account, profile, email, credentials);
+      if (process.env.NODE_ENV === "development") return true;
+      const isMember = await Fetch({
+        endpoint: `/middleware/checkServerMembership?discordId=${profile?.id}`,
+        method: "GET",
+        token: account?.access_token,
+      });
+      console.log("isMember", isMember);
+      return isMember?.isMember || false;
+    },
   },
   events: {
     signIn: async (message) => {

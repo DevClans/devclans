@@ -1,15 +1,30 @@
+import LeftSidebar from "@/components/userPage/LeftSidebar";
+import MiddleSection from "@/components/userPage/MiddleSection";
+import RightSidebar from "@/components/userPage/RightSidebar";
 import UserOverview from "@/components/userPage/UserOverview";
+import UserProjects from "@/components/userPage/UserProjects";
+import selectUserUsername from "@/lib/selectUserUsername";
 import userQuestions from "@/lib/userQuestions";
 import { InfoWithIconProps } from "@/types/list.types";
-import { UserProps } from "@/types/mongo/user.types";
-import {
+import type {
+  LookingForMembersProps,
+  UserProps,
+} from "@/types/mongo/user.types";
+import type { PageProps } from "@/types/page.types";
+import type {
   ProjectDetailsItemProps,
   ToogleListItemProps,
 } from "@/types/toggleList.types";
 import { Fetch } from "@/utils/fetchApi";
 
-const page = async ({ params }: { params: { id: string } }) => {
+type UserPageProps = {
+  params: { id: string };
+  searchParams: { tab: string };
+};
+
+const page = async ({ params, searchParams }: UserPageProps) => {
   const { id } = params;
+  const tab: string = (searchParams?.tab as string) || "overview";
   const userData: UserProps = await Fetch({
     endpoint: `/user/${id}`,
   });
@@ -22,6 +37,7 @@ const page = async ({ params }: { params: { id: string } }) => {
   }
   const questions = userData.questions;
   const arr = userQuestions({ questions });
+  const username = selectUserUsername({ userProps: userData });
   const convertInfoToProjectDetails = (
     infoItems: InfoWithIconProps[]
   ): ProjectDetailsItemProps[] => {
@@ -51,11 +67,87 @@ const page = async ({ params }: { params: { id: string } }) => {
     });
   };
   const test = convertInfoToProjectDetails(arr);
+  const ele: { [key: string]: JSX.Element } = {
+    overview: (
+      <UserOverview
+        data={test}
+        username={username}
+        githubDetails={userData["githubDetails"]}
+      />
+    ),
+    projects: (
+      <UserProjects
+        ownedProjects={
+          userData["ownedProjects"]?.length > 0 &&
+          typeof userData["ownedProjects"] == "object"
+            ? (userData["ownedProjects"] as any)
+            : []
+        }
+        contributedProjects={
+          userData["contributedProjects"]?.length > 0 &&
+          typeof userData["contributedProjects"] == "object"
+            ? (userData["contributedProjects"] as any)
+            : []
+        }
+      />
+    ),
+    // experience: <UserExperience />,
+  };
   return (
     <>
-      <UserOverview data={test} />
+      <LeftSidebar
+        {...userData}
+        username={username}
+        searchParams={searchParams}
+      />
+      <Common
+        level={userData["skillLevel"]}
+        username={username}
+        questions={userData["questions"]}
+        params={params}
+        searchParams={searchParams}
+      >
+        {ele[tab] || (
+          <div className={"card2 w100 p-5 !rounded-[10px]"}>
+            <p>No data found</p>
+          </div>
+        )}
+      </Common>
     </>
   );
 };
 
 export default page;
+
+const Common = ({
+  children,
+  params,
+  username,
+  questions,
+  searchParams,
+  level,
+}: PageProps & {
+  username: UserProps["username"];
+  questions: UserProps["questions"];
+} & React.PropsWithChildren &
+  LookingForMembersProps) => {
+  return (
+    <div
+      className="flex flex-col items-center  
+    xl:flex-row 
+    lg:items-start lg:justify-between md:peer-data-[state=active]:pl-[300px] md:peer-data-[state=not-active]:pl-[80px] lg:peer-data-[state=not-active]:pl-[90px] lg:peer-data-[state=active]:pl-[310px] relative md:-z-10 w100 md:py-6 gap-6"
+    >
+      {/* middle scroll */}
+      <MiddleSection
+        params={params}
+        username={username || ""}
+        questions={questions}
+        searchParams={searchParams}
+      >
+        {children}
+      </MiddleSection>
+      {/* right sidebar */}
+      <RightSidebar username={username || ""} level={level} />
+    </div>
+  );
+};

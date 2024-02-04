@@ -3,13 +3,19 @@ import { projectSearchItemKeys } from "@/types/mongo/project.types";
 import { mongoFilter } from "./mongoFilter";
 import { userSearchInfoKeys } from "@/types/mongo/user.types";
 
-export const mongoProjects = async (
-  find: any = {},
-  page: number = 1,
-  search: string,
-  filterQuery: Record<string, any>,
-  type: "projects" | "users" = "projects"
-) => {
+export const mongoProjects = async ({
+  filterQuery = {},
+  find = {},
+  search,
+  page = 1,
+  type = "projects",
+}: {
+  find: any;
+  page?: number;
+  search?: string;
+  filterQuery?: Record<string, any>;
+  type?: "projects" | "users";
+}) => {
   const model = type == "projects" ? ProjectModel : UserModel;
   try {
     const andCond = mongoFilter(search, filterQuery, type);

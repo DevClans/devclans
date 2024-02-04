@@ -1,36 +1,38 @@
-"use client";
 import { ButtonProps } from "@/types";
 import ButtonUserSection from "../buttons/ButtonUserSection";
-import { useState } from "react";
 
 const ButtonGroupUserSections = ({
   data,
   containerClassName,
   containerStyle,
+  active,
   ...rest
 }: {
   data: ButtonProps[];
   containerClassName?: string;
   containerStyle?: React.CSSProperties;
 } & Partial<ButtonProps>) => {
-  const [active, setActive] = useState(0);
+  // const [isActive, setActive] = useState(active);
+  // console.log(isActive, "isActive");
   return (
     <>
       <div
         className={
-          "frc gap-2 btnRow w-100 !justify-normal " + containerClassName
+          "frc gap-2 btnRow w-100 !justify-normal sticky top-0  py-2 backdrop-blur-[12px] scrollbar-hide " +
+          containerClassName
         }
         style={containerStyle}
       >
         {data.map((item, i) => (
           <ButtonUserSection
+            // className="backdrop-blur-[15px]"
             {...rest}
-            active={active === i}
+            active={active === item.label?.toString().toLowerCase()}
             key={i}
             {...item}
-            onClick={() => {
-              setActive(i);
-            }}
+            // onClick={() => {
+            //   setActive(item.label?.toString().toLowerCase());
+            // }}
           />
         ))}
       </div>

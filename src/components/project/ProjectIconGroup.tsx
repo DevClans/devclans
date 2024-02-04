@@ -1,30 +1,31 @@
 "use client";
 import { ButtonBookmark, ButtonIcon, ButtonLike, IosShareRounded } from "..";
 import { Types } from "mongoose";
+import ButtonShare from "../buttons/ButtonShare";
+import { ShareProps } from "@/types/link.types";
 
 const ProjectIconGroup = ({
   bookmarkCount,
   likesCount,
   showLabels = true,
-  title
+  _id,
+  url,
+  message,
 }: {
   bookmarkCount?: number;
   likesCount?: number;
   showLabels?: boolean;
-  title?:Types.ObjectId;
-}) => {
+  _id?: Types.ObjectId;
+} & ShareProps) => {
   return (
     <>
       <div className="frc gap-[10px]">
-        <ButtonIcon
-          label={showLabels ? "share" : ""}
-          icon={<IosShareRounded fontSize="small" />}
-        />
+        <ButtonShare showLabels={showLabels} url={url} message={message} />
         {typeof bookmarkCount == "number" && (
-          <ButtonBookmark bookmarksCount={bookmarkCount} />
+          <ButtonBookmark _id={_id || ""} bookmarksCount={bookmarkCount} />
         )}
         {typeof likesCount == "number" && (
-          <ButtonLike likesCount={likesCount} title={title}/>
+          <ButtonLike likeCount={likesCount} _id={_id || ""} />
         )}
       </div>
     </>

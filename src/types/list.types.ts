@@ -1,7 +1,7 @@
 export type ListItemProps = {
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
-  onEndIconClick?: (text: string) => Promise<void>;
+  onEndIconClick?: (text: string) => Promise<any>;
   text: string;
   href?: string;
 };

@@ -6,8 +6,10 @@ import {
   zodUserDiscordDetailsSchema,
   zodUserFormSchema,
 } from "@/zod/zod.common";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { z } from "zod";
+import { ProjectProps } from "./project.types";
+import { ListItemProps } from "../list.types";
 
 // Define the User interface extending mongoose.Document
 export interface UserProps extends UserTeamItemProps, UserSearchInfoProps {
@@ -34,6 +36,11 @@ export type UserQuestionsProps = {
   careerGoal?: string;
   proudAchievement?: string;
   recentWork?: string;
+};
+
+export type UserProjectProps = {
+  ownedProjects: ProjectProps[];
+  contributedProjects: ProjectProps[];
 };
 
 export type UserDiscordDetailsProps = z.infer<
@@ -130,7 +137,6 @@ export type ContactDetailsProps = {
 };
 
 export type UserTeamProps = { team: UserTeamItemProps[] };
-
 export enum UserRedisKeys {
   list = "users",
   data = "userData",
@@ -139,3 +145,8 @@ export enum UserRedisKeys {
   search = "userSearch",
 }
 export type UserFormProps = z.infer<typeof zodUserFormSchema>;
+export type LookingForMembersProps = {
+  username: string;
+  _id?: Types.ObjectId;
+  level?: MemberLevelType;
+};

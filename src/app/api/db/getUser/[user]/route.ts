@@ -1,30 +1,27 @@
-import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/dbConnect';
-import { UserModel } from "@/model/schema";
-import  { stringSchema, userSchema } from "@/zod/zod.common"
+import { NextResponse } from "next/server";
+import dbConnect from "@/lib/dbConnect";
+import { UserModel } from "@/mongodb/models";
+import { stringSchema, userSchema } from "@/zod/zod.common";
 
-async function handler(req:Request,{ params }:{ params : { user: string }}) {
-  try{
+async function handler(req: Request, { params }: { params: { user: string } }) {
+  try {
     await dbConnect();
-    
-    const user  = params.user;
-    stringSchema.parse(user);
-    
-    if (!user) {
-        return NextResponse.json({ message: 'User not found' });
-      }
 
-   
+    const user = params.user;
+    stringSchema.parse(user);
+
+    if (!user) {
+      return NextResponse.json({ message: "User not found" });
+    }
+
     const u = await UserModel.findOne({
-      username : user
+      username: user,
     });
-      userSchema.parse(u);
-      
-     
-      return  NextResponse.json(u);
+    userSchema.parse(u);
+
+    return NextResponse.json(u);
+  } catch (error) {
+    return NextResponse.json(error);
+  }
 }
-catch(error){
-  return NextResponse.json(error);
-}
-}
-export { handler as GET }
+export { handler as GET };
