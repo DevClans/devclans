@@ -61,6 +61,7 @@ export const authOptions: NextAuthOptions = {
     },
     // https://next-auth.js.org/configuration/callbacks#sign-in-callback
     signIn: async ({ user, account, profile, email, credentials }: any) => {
+      if (process.env.NODE_ENV === "development") return true;
       // console.log("signIn", user, account, profile, email, credentials);
       const isMember = await Fetch({
         endpoint: `/middleware/checkServerMembership?discordId=${profile?.id}`,

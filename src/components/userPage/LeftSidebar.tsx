@@ -38,6 +38,7 @@ const LeftSidebar = async ({
           <div className="md:group-data-[state=not-active]/left:h-[50px] h-[200px] w100 relative">
             <ProductImg
               src={avatar}
+              isUser={true}
               fill={true}
               className={``}
               style={{

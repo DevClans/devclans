@@ -1,6 +1,6 @@
 import { ImageProps } from "@/types";
-import Image from "next/image";
 import { Avatar } from "..";
+import ImageComp from "../ImageComp";
 
 const ProductImg = ({
   src,
@@ -11,7 +11,12 @@ const ProductImg = ({
   style,
   fill,
   isAvatar = false,
-}: Partial<ImageProps> & { src: string; isAvatar?: boolean }) => {
+  isUser = false,
+}: Partial<ImageProps> & {
+  src: string;
+  isAvatar?: boolean;
+  isUser?: boolean;
+}) => {
   let imgProps: Partial<ImageProps> = {
     width: width || 428,
     height: height || 255,
@@ -38,7 +43,7 @@ const ProductImg = ({
   };
   if (isAvatar) return <Avatar {...imageProps}>{alt}</Avatar>;
 
-  return <Image {...imageProps} />;
+  return <ImageComp {...imageProps} isUser={isUser} />;
 };
 
 export default ProductImg;

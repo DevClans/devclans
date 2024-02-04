@@ -20,7 +20,7 @@ const ListPages = async ({
     <>
       <LightLine />
       <div className="py-15 w100 commonCard">
-        <h1 className="py-2 text-5xl ">{heading} Projects</h1>
+        <h1 className="py-2 text-4xl ">{heading} Projects</h1>
       </div>
       <LightLine />
       <div className="container py-7">

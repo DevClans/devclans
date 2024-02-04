@@ -38,7 +38,7 @@ const ButtonMenuToggle = ({ className }: Partial<ButtonProps>) => {
     <>
       <MuiIconButton
         id="menuIcon"
-        className={`${className} group/menu text-heading`}
+        className={`${className} group/menu text-subH`}
         data-state="open"
         onClick={handleClick}
       >
