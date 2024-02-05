@@ -69,4 +69,4 @@ async function checkServerMembership(req: NextRequest, res: NextResponse) {
   }
 }
 
-export { checkServerMembership as GET };
+export { checkServerMembership as GET, checkServerMembership as POST };

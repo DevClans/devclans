@@ -1,13 +1,12 @@
 import { withAuth } from "next-auth/middleware";
-import { getSession } from "next-auth/react";
 import { NextResponse } from "next/server";
 
 // middleware is applied to all routes, use conditionals to select
 
 export default withAuth(
-  async function middleware(req: any) {
-    const session = await getSession({ req });
-    console.log("session in middleware", session);
+  function middleware(req: any) {
+    // const session = await getSession({ req }); //not working
+    // console.log("session in middleware", session);
     console.log("Incoming request:", req.method, req.url);
     return NextResponse.next();
   },
