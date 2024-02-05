@@ -32,7 +32,7 @@ const LeftMenuBottomBar = () => {
             <IconTwitter className="" />
           </div>
           <MuiIconButton
-            className="text-text md:group-data-[state=not-active]/left:w-full md:group-data-[state=active]/left:mr-2"
+            className="!text-text md:group-data-[state=not-active]/left:w-full md:group-data-[state=active]/left:mr-2"
             onClick={() => {
               toogleActive();
             }}

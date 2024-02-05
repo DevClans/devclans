@@ -22,7 +22,7 @@ const Header = ({ searchParams }: PageProps) => {
           <FilePlus2 size={20} color={colors.subH} />
         </IconWithBg>
         <ButtonLogin />
-        <ButtonMenuToggle className="visible lg:hidden" />
+        <ButtonMenuToggle className="visible lg:!hidden" />
       </div>
       <OpenMenu />
     </div>
