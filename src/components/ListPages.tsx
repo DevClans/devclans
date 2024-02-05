@@ -4,6 +4,7 @@ import { ProjectSearchItemProps } from "@/types/mongo/project.types";
 import { PageProps } from "@/types/page.types";
 import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 import { Fetch } from "@/utils/fetchApi";
+import CommonHero from "./CommonHero";
 
 const ListPages = async ({
   params,
@@ -18,11 +19,7 @@ const ListPages = async ({
     }));
   return (
     <>
-      <LightLine />
-      <div className="py-15 w100 commonCard">
-        <h1 className="py-2 text-4xl ">{heading} Projects</h1>
-      </div>
-      <LightLine />
+      <CommonHero heading={`${heading} Projects`} />
       <div className="container py-7">
         {sesssion ? (
           list.length > 0 ? (

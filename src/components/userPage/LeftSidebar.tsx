@@ -64,7 +64,10 @@ const LeftSidebar = async ({
             /> */}
             {session && session.user._id === _id ? (
               // <Link href="/project/new">Create Project</Link>
-              <ButtonBlue href="/project/new" label={"Create Project"} />
+              <ButtonBlue
+                href={`/user/${_id}?mode=edit`}
+                label={"Edit Profile"}
+              />
             ) : (
               <ButtonConnect
                 className={`userBtn md:group-data-[state=active]/left:h-10  md:group-data-[state=not-active]/left:h-15 gap-1 ${""}}`}

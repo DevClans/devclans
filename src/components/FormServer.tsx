@@ -2,6 +2,7 @@ import { FormServerProps } from "@/types/form.types";
 import MultipleSelectChip from "./MultiSelect";
 import { ErrorMessage } from "@hookform/error-message";
 import { ButtonSecondary } from ".";
+import CommonHero from "./CommonHero";
 
 const FormServer = ({
   zodFormShape,
@@ -13,11 +14,13 @@ const FormServer = ({
   register,
   formId,
   formState: { isSubmitting, errors },
-}: FormServerProps) => {
+  isEdit = false,
+  defaultValues,
+}: FormServerProps & { isEdit?: boolean; defaultValues?: any }) => {
   return (
     <>
+      <CommonHero heading={heading} />
       <div className="w100 container p-6">
-        <h1 className="text-[36px]">{heading}</h1>
         <form
           id={formId || "userForm"}
           className="fcfs gap-4 w100"
@@ -52,13 +55,13 @@ const FormServer = ({
                       {option}
                     </option>
                   ))}
-                  
                 </select>
               );
               const multiSelectEle = (
                 <MultipleSelectChip
                   register={register}
                   name={name as any}
+                  defaultValue={defaultValues?.[name]}
                   options={options as string[]}
                 />
               );
@@ -73,15 +76,16 @@ const FormServer = ({
               if (typeof condition == "boolean" && condition == false) {
                 return null;
               }
-              const isRequired =
-                condition ||
-                (name.includes(".")
-                  ? false
-                  : zodFormShape[name as keyof typeof zodFormShape]
-                  ? !zodFormShape[
-                      name as keyof typeof zodFormShape
-                    ].isOptional()
-                  : false);
+              const isRequired = isEdit
+                ? false
+                : condition ||
+                  (name.includes(".")
+                    ? false
+                    : zodFormShape[name as keyof typeof zodFormShape]
+                    ? !zodFormShape[
+                        name as keyof typeof zodFormShape
+                      ].isOptional()
+                    : false);
               // console.log(
               //   "isRequired",
               //   isRequired,
@@ -116,8 +120,8 @@ const FormServer = ({
             render={({ message }) => <p className="error">{message}</p>}
           />
           <ButtonSecondary
-            label={isSubmitting ? "Loading..." : "Update Profile"}
-            disabled={isSubmitting}
+            label={"Update Profile"}
+            loading={isSubmitting}
             type="submit"
             form={formId || "userForm"}
           />

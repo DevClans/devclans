@@ -46,13 +46,17 @@ export default function MultipleSelectChip({
   options,
   register,
   name,
+  defaultValue,
 }: {
   options: string[];
   name: string;
   register: UseFormRegister<any>;
+  defaultValue?: string[];
 }) {
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState<string[]>([]);
+  const [personName, setPersonName] = React.useState<string[]>(
+    defaultValue || []
+  );
 
   const handleChange = (event: SelectChangeEvent<typeof personName>) => {
     const {

@@ -13,6 +13,7 @@ import { ListItemProps } from "../list.types";
 
 // Define the User interface extending mongoose.Document
 export interface UserProps extends UserTeamItemProps, UserSearchInfoProps {
+  isMember?: boolean;
   skillLevel?: MemberLevelType;
   domain?: ProjectDomainType; // domain you are currenty studying
   bio?: string;

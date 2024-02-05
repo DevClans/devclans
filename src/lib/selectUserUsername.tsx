@@ -13,8 +13,8 @@ const selectUserUsername = ({
 }): string => {
   const avtr = username || userProps?.username;
   const dc =
-    discordUsername ||
     userProps?.discordDetails?.global_name ||
+    discordUsername ||
     userProps?.discordDetails?.username;
   const gh = gitUsername || userProps?.githubDetails?.username;
   let res = "";
