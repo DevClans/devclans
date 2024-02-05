@@ -1,4 +1,5 @@
 export type ButtonProps = {
+  title?: string;
   label: string | number | React.ReactNode;
   activeLabel?: string | number | React.ReactNode;
   icon?: React.ReactNode;
@@ -11,7 +12,7 @@ export type ButtonProps = {
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
       | React.MouseEvent<HTMLAnchorElement, MouseEvent>,
     label: string | number
-  ) => void;
+  ) => any;
   color?: string;
   href?: string;
   activeIcon?: React.ReactNode;

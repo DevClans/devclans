@@ -1,3 +1,4 @@
+import FormNewUser from "@/components/FormNewUser";
 import LeftSidebar from "@/components/userPage/LeftSidebar";
 import MiddleSection from "@/components/userPage/MiddleSection";
 import RightSidebar from "@/components/userPage/RightSidebar";
@@ -8,6 +9,7 @@ import userQuestions from "@/lib/userQuestions";
 import { InfoWithIconProps } from "@/types/list.types";
 import type {
   LookingForMembersProps,
+  UserFormProps,
   UserProps,
 } from "@/types/mongo/user.types";
 import type { PageProps } from "@/types/page.types";
@@ -15,26 +17,39 @@ import type {
   ProjectDetailsItemProps,
   ToogleListItemProps,
 } from "@/types/toggleList.types";
+import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 import { Fetch } from "@/utils/fetchApi";
+import { zodUserFormSchemaObj } from "@/zod/zod.common";
 
 type UserPageProps = {
   params: { id: string };
-  searchParams: { tab: string };
+  searchParams: { tab?: string; mode?: string };
 };
 
 const page = async ({ params, searchParams }: UserPageProps) => {
   const { id } = params;
   const tab: string = (searchParams?.tab as string) || "overview";
+  const mode: string = searchParams?.mode as string;
   const userData: UserProps = await Fetch({
     endpoint: `/user/${id}`,
   });
-  console.log("user data", userData);
+  // console.log("user data", userData);
   if (
     !userData ||
     (userData && ("error" in userData || "message" in userData))
   ) {
     return <div>user not found</div>;
   }
+
+  const session: any = await getServerSessionForServer();
+  // console.log("mode", mode, session?.user?._id, userData._id);
+  if (mode == "edit" && session?.user?._id == userData._id) {
+    const data = zodUserFormSchemaObj.partial().safeParse(userData);
+    if (data.success) {
+      return <FormNewUser defaultValues={data.data as UserFormProps} />;
+    }
+  }
+
   const questions = userData.questions;
   const arr = userQuestions({ questions });
   const username = selectUserUsername({ userProps: userData });

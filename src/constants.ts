@@ -10,3 +10,5 @@ export const urlUser = (id?: Types.ObjectId) =>
   commonUrl + `/user${id ? "/" + id : ""}`;
 export const urlProject = (id?: Types.ObjectId) =>
   commonUrl + `/project${id ? "/" + id : ""}`;
+export const fallbackImg = "/produtImgFallback.png";
+export const fallbackImgUser = "/userImgFallback.png";

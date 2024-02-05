@@ -27,7 +27,7 @@ export const createProjectUser = async (
     }
     console.log("Profile updated successfully");
     toast.success("Form submitted successfully");
-    return data;
+    return response;
   } catch (error: any) {
     console.error("Error updating profile", error.message);
     setError("root", {

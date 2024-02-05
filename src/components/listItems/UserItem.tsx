@@ -42,6 +42,7 @@ const UserItem = async ({
               src={avtr}
               alt={username}
               fill={true}
+              isUser={true}
               // isAvatar={true}
               className="w-full h-full"
               style={{

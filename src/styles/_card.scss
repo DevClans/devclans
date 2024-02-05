@@ -115,7 +115,23 @@
     );
   padding: 20px;
 }
-
+a.cardGrad:hover {
+  background: radial-gradient(
+      80.09% 69.44% at 50% 0%,
+      rgba(125, 168, 255, 0.2) 0%,
+      rgba(128, 170, 255, 0) 100%
+    ),
+    radial-gradient(
+      31.92% 71.68% at 50% 0.45%,
+      rgba(213, 227, 255, 0.1) 0%,
+      rgba(86, 115, 172, 0) 100%
+    ),
+    radial-gradient(
+      40.15% 99.55% at 50% 0.45%,
+      rgba(86, 115, 172, 0.1) 0%,
+      rgba(86, 115, 172, 0) 100%
+    );
+}
 .cardHeader {
   border-radius: 20px;
   box-shadow: 0px 4px 5.3px 0px rgba(20, 26, 37, 0.2) inset,

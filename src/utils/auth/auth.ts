@@ -5,6 +5,15 @@ import { UserDiscordDetailsProps } from "@/types/mongo/user.types";
 import { zodUserDiscordDetailsSchema } from "@/zod/zod.common";
 import { Fetch } from "../fetchApi";
 
+const isServerMember = async (discordId: string, token: string) => {
+  const isMember = await Fetch({
+    endpoint: `/middleware/checkServerMembership?discordId=${discordId}`,
+    method: "GET",
+    token: token,
+  });
+  return isMember?.isMember;
+};
+
 export const authOptions: NextAuthOptions = {
   adapter: adapter,
   providers: [
@@ -19,11 +28,7 @@ export const authOptions: NextAuthOptions = {
       async profile(profile: any, tokens: any) {
         const { id } = profile;
         const { access_token } = tokens;
-        const isMember = await Fetch({
-          endpoint: `/middleware/checkServerMembership?discordId=${id}`,
-          method: "GET",
-          token: access_token,
-        });
+        const isMember = await isServerMember(id, access_token);
         console.log("isMember in profile", isMember);
         // console.log("access token", tokens);
         const isData = zodUserDiscordDetailsSchema.safeParse({
@@ -35,12 +40,12 @@ export const authOptions: NextAuthOptions = {
         discordDetails = isData.data;
         return {
           id: id,
-          username: profile.username,
+          username: discordDetails.global_name || discordDetails.username,
           discordId: id,
           discordDetails,
           email: profile.email,
           emailVerified: profile.verified,
-          isMember: isMember?.isMember,
+          isMember: isMember,
         };
       },
     }),
@@ -61,15 +66,21 @@ export const authOptions: NextAuthOptions = {
     },
     // https://next-auth.js.org/configuration/callbacks#sign-in-callback
     signIn: async ({ user, account, profile, email, credentials }: any) => {
+      if (process.env.NODE_ENV === "development") return true;
+      if (account.provider != "discord") {
+        return "/error?error=betaNotAvailable";
+      }
       // console.log("signIn", user, account, profile, email, credentials);
-      const isMember = await Fetch({
-        endpoint: `/middleware/checkServerMembership?discordId=${profile?.id}`,
-        method: "GET",
-        token: account?.access_token,
-      });
+      const isMember = await isServerMember(profile.id, account.accessToken);
       console.log("isMember", isMember);
-      return isMember?.isMember || false;
+      if (!isMember) {
+        return "/error?error=notMember";
+      }
+      return true;
     },
+  },
+  pages: {
+    newUser: "/user/new",
   },
   events: {
     signIn: async (message) => {

@@ -3,7 +3,7 @@ import Link from "next/link";
 const Logo = () => {
   return (
     <>
-      <Link href={"/"} className="" id="logo">
+      <Link title="Devclans Logo" href={"/"} className="" id="logo">
         Devclans
       </Link>
     </>
