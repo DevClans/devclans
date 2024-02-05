@@ -28,6 +28,7 @@ export const authOptions: NextAuthOptions = {
       async profile(profile: any, tokens: any) {
         const { id } = profile;
         const { access_token } = tokens;
+        // console.log("tokens in profile", tokens);
         const isMember = await isServerMember(id, access_token);
         console.log("isMember in profile", isMember);
         // console.log("access token", tokens);
@@ -71,7 +72,7 @@ export const authOptions: NextAuthOptions = {
         return "/error?error=betaNotAvailable";
       }
       // console.log("signIn", user, account, profile, email, credentials);
-      const isMember = await isServerMember(profile.id, account.accessToken);
+      const isMember = await isServerMember(profile.id, account.access_token);
       console.log("isMember", isMember);
       if (!isMember) {
         return "/error?error=notMember";

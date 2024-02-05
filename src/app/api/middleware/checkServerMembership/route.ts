@@ -29,8 +29,14 @@ async function isDiscordServerMember(
 }
 
 // TODO add proper checks
-const zodDiscordAccessTOken = z.string();
-const zodDiscordId = z.string();
+const zodDiscordAccessTOken = z.string({
+  required_error: "Access Token is required",
+  invalid_type_error: "Access Token must be a string",
+});
+const zodDiscordId = z.string({
+  required_error: "Discord ID is required",
+  invalid_type_error: "Discord ID must be a string",
+});
 
 async function checkServerMembership(req: NextRequest, res: NextResponse) {
   try {

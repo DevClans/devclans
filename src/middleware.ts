@@ -53,7 +53,6 @@ export default withAuth(
         if (
           req.nextUrl.pathname.startsWith("/api") &&
           accessNeeded &&
-          !token &&
           !nextSession
         ) {
           console.log("access not allowed");
