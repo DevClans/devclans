@@ -1,36 +1,41 @@
 "use client";
+import { CircularProgress } from "@mui/material";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const ButtonLogin = () => {
+  const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
 
-  useEffect(() => {
-    console.log(session);
-    // Check if the session is not present (user is logged out) and show a toast
-    if (!session) {
-      toast.info("Successfully Logged Out");
-    } else {
-      toast.success("Successfully Logged In");
-    }
-  }, [session]); // Re-run the effect when the session changes
-
-  const handleLogin = () => {
-    signIn();
+  const handleLogin = async () => {
+    setLoading(true);
+    await signIn();
+    setLoading(false);
   };
 
-  const handleLogout = () => {
-    signOut();
+  const handleLogout = async () => {
+    setLoading(true);
+    await signOut();
+    toast.info("Successfully Logged Out");
+    setLoading(false);
   };
 
   return (
-    <div>
-      <button onClick={session ? handleLogout : handleLogin} id="btnLogin">
-        {session ? "Logout" : "Login"}
-      </button>
-    </div>
+    <button
+      disabled={loading}
+      onClick={session ? handleLogout : handleLogin}
+      id="btnLogin"
+    >
+      {loading ? (
+        <CircularProgress size={14} color="inherit" />
+      ) : session ? (
+        "Logout"
+      ) : (
+        "Login"
+      )}
+    </button>
   );
 };
 

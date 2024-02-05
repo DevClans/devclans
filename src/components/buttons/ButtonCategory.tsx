@@ -2,6 +2,7 @@
 import { ButtonProps } from "@/types/button.types";
 import IconAll from "../icons/IconAll";
 import ButtonLink from "./ButtonLink";
+import { useState } from "react";
 
 const ButtonCategory = ({
   icon = <IconAll />,
@@ -23,7 +24,10 @@ const ButtonCategory = ({
   };
   return (
     <ButtonLink
-      href={href || `/explore?category=${label}`}
+      href={
+        href ||
+        (String(label).toLowerCase() == "all" ? "?" : `?domain=${label}`)
+      }
       label={
         <>
           {icon}

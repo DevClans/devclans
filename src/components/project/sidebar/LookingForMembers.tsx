@@ -1,12 +1,23 @@
 import Image from "next/image";
 import BottomBar from "../../TextBars/BottomBar";
 import { LinkShare } from "@/components";
+import { msgLookingForMember } from "@/lib/constants.messages";
+import { urlProject, urlUser } from "@/constants";
+import { LookingForMembersProps } from "@/types/mongo/user.types";
 
-const LookingForMembers = () => {
+const LookingForMembers = ({
+  username,
+  _id,
+  level = "beginner",
+}: LookingForMembersProps) => {
+  // console.log("LookingForMembersProps", username, _id, level);
+  if (!level) {
+    return null;
+  }
   return (
-    <div className="fcc w100">
+    <div className="fcc w100 ">
       <div
-        className="relative w100 fccc h-[70px]"
+        className="relative w100 fccc h-[70px] pl-[90px] pr-3"
         style={{
           background:
             "linear-gradient(270deg, #F7D391 0.1%, rgba(176, 200, 245, 0.93) 99.92%)",
@@ -26,17 +37,24 @@ const LookingForMembers = () => {
         />
         {/* text */}
         <p className="text-border">
-          hello
-          <span className="font-semibold">wowo</span>
+          Looking for
+          <span className="font-bold mx-1">{level}</span>
+          dev bro
         </p>
       </div>
-      <BottomBar
-        text={
-          <>
-            Tell cohort friends about this opportunity <LinkShare href={"/"} />
-          </>
-        }
-      />
+      {Boolean(_id && username) && (
+        <BottomBar
+          text={
+            <span className="w100">
+              Tell cohort friends about this opportunity{" "}
+              <LinkShare
+                url={urlUser(_id) || urlProject(_id)}
+                message={msgLookingForMember(username, level)}
+              />
+            </span>
+          }
+        />
+      )}
     </div>
   );
 };

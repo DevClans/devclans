@@ -12,7 +12,10 @@ const selectUserUsername = ({
   userProps?: Partial<UserProps>;
 }): string => {
   const avtr = username || userProps?.username;
-  const dc = discordUsername || userProps?.discordDetails?.username;
+  const dc =
+    userProps?.discordDetails?.global_name ||
+    discordUsername ||
+    userProps?.discordDetails?.username;
   const gh = gitUsername || userProps?.githubDetails?.username;
   let res = "";
   if (avtr) res = avtr;

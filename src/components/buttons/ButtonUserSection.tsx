@@ -20,12 +20,12 @@ const ButtonUserSection = ({
       <ButtonLink
         label={
           active ? (
-            <>
+            <span className="text-nowrap">
               <span className="rounded-[20px] px-1 bg-subH text-bg mr-1">
                 {label}
               </span>
               {activeLabel || "Learn More"}
-            </>
+            </span>
           ) : (
             label
           )

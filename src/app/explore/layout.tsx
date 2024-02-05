@@ -1,12 +1,14 @@
 import FilterMenu from "@/components/FilterMenu";
 import HeroExplore from "@/components/explore/HeroExplore";
 
-const layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <HeroExplore />
-      <div className="container py-[30px] h-max gap-[30px] frfssb">
-        {children}
+      <div className="w100 relative fcc">
+        <div className="container py-[30px] h-max gap-[30px] frfssb">
+          {children || <h3>Searching...</h3>}
+        </div>
         <FilterMenu />
       </div>
       {/* filter results */}
@@ -14,4 +16,4 @@ const layout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default layout;
+export default Layout;

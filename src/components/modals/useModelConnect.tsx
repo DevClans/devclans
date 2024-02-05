@@ -12,6 +12,7 @@ import colors from "@/lib/colors";
 import { contactMethodsMap } from "@/lib/contactMethods";
 import { ModalConnectProps } from "@/types/modal.types";
 import { ContactDetailsProps } from "@/types/mongo/user.types";
+import ButtonClose from "../buttons/ButtonClose";
 
 const useModalConnect = ({ isActive = false, team }: ModalConnectProps) => {
   const [open, setOpen] = useState(isActive);
@@ -28,12 +29,7 @@ const useModalConnect = ({ isActive = false, team }: ModalConnectProps) => {
   const ModalComponent = ({ text }: { text: string }) => (
     <Modal onClose={handleClose} open={open} className="fccc">
       <div className="card2 fcfs gap-5 max-w-[380px] max-h-[600px] p-[30px] w100 relative">
-        <MuiIconButton
-          className="z-10 absolute top-1 right-1"
-          onClick={handleClose}
-        >
-          <CloseRounded className="text-text" />
-        </MuiIconButton>
+        <ButtonClose onClick={handleClose} />
         <h2 className="font-normal ">
           <span className="text-primary font-bold">Connect</span> with the
           user(s) on their

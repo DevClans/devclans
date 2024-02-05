@@ -11,10 +11,12 @@ const ButtonIcon = ({
   setActive,
   className,
   style,
+  disabled
 }: Partial<ButtonProps>) => {
   const labelString = label?.toString();
   return (
     <button
+      disabled={disabled}
       className={`frc card rounded-[10px] gap-[5px] ${className}`}
       onClick={(e) => {
         if (onClick) {

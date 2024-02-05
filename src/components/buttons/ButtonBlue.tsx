@@ -1,19 +1,23 @@
 "use client";
 import { ButtonProps } from "@/types";
 import { ArrowRightAltRounded } from "..";
+import ButtonLink from "./ButtonLink";
 
-const ButtonBlue = ({ style, className, label, onClick }: ButtonProps) => {
+const ButtonBlue = ({ className, label, ...props }: ButtonProps) => {
   return (
-    <button
-      onClick={(e) => onClick && onClick(e, label as string)}
+    <ButtonLink
       className={
-        "bg-primary px-4 w100 h-[50px] rounded-[10px] text-sm " + className
+        "bg-primary gap-y-0 frc flex-wrap px-4 w100 h-[50px] rounded-[10px] text-sm " +
+        className
       }
-      style={style}
-    >
-      {label}
-      <ArrowRightAltRounded fontSize={"medium"} />
-    </button>
+      label={
+        <>
+          {label}
+          <ArrowRightAltRounded fontSize={"medium"} />
+        </>
+      }
+      {...props}
+    />
   );
 };
 

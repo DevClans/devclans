@@ -1,20 +1,21 @@
-import { ProjectProps } from "@/types/mongo/project.types";
+import { ProjectSearchItemProps } from "@/types/mongo/project.types";
 import ProductImg from "../project/ProjectImg";
 import { ProjectIconGroup, ProjectStage } from "..";
 import ItemsTemplate from "./ItemsTemplate";
 import { PageProps } from "@/types/page.types";
+import { urlProject } from "@/constants";
+import { msgSharingProject } from "@/lib/constants.messages";
 
 const ProjectItem = ({
   needMembers,
   imgs,
   _id,
-  desc,
   title,
-  techStack,
+  skills,
   team,
-  searchParams,
-}: Partial<ProjectProps> & Partial<PageProps>) => {
-  const teamNames = ["John", "Doe", "Jane", "Doe"];
+  ...rest
+}: ProjectSearchItemProps & Partial<PageProps>) => {
+  const teamNames = team?.map((t) => t.username) || [];
   return (
     <>
       <ItemsTemplate
@@ -37,28 +38,29 @@ const ProjectItem = ({
           <>
             <ProjectStage />
             <ProjectIconGroup
+              url={urlProject(_id)}
+              message={msgSharingProject(title || "")}
               showLabels={false}
               bookmarkCount={0}
               likesCount={0}
+              _id={_id}
             />
           </>
         }
         rightMessage={
           <div className="frc gap-1">
             <p>Searching For :</p>
-            <p className="text-highlight">{needMembers || "Beginers"}</p>
+            <p className="text-highlight capitalize">
+              {needMembers || "Beginers"}
+            </p>
           </div>
         }
         detailHeading="Team"
-        detailDesc={teamNames.join(", ") || "team names"}
-        chipArr={techStack || []}
-        searchParams={searchParams}
-        baseUrl={"/project/"}
+        detailDesc={teamNames.join(", ")}
+        chipArr={skills || []}
+        baseUrl={"/project"}
         _id={_id?.toString() || ""}
-        desc={
-          desc ||
-          "Some cool description about the group. Some cool description about the group."
-        }
+        {...rest}
       />
     </>
   );

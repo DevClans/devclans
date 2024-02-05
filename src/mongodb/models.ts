@@ -9,6 +9,8 @@ import { devStages } from "@/lib/devStages";
 import { memberLevels } from "@/lib/memberLevel";
 import { discordDetailsSchema } from "./discordModel";
 import { userGithubDetailsSchema } from "./githubModal";
+import projectRepoSchema from "./projectRepoDetails";
+import { projectDomains } from "@/lib/domains";
 
 const userSchema = new mongoose.Schema<UserMongoProps>(
   {
@@ -16,7 +18,7 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
     githubDetails: { type: userGithubDetailsSchema },
     domain: {
       type: String,
-      enum: ["frontend", "backend", "fullstack", "designer", "other"],
+      enum: projectDomains,
     },
     username: { type: String, unique: true },
     avatar: { type: String },
@@ -89,43 +91,41 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
     createdAt: { type: Date, default: Date.now, required: true },
     updatedAt: { type: Date, default: Date.now, required: true },
     discordDetails: { type: discordDetailsSchema },
+    isMember: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
 
-const likeSchema = new mongoose.Schema<LikeProps>(
-  {
-    user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
-    project: { type: mongoose.Types.ObjectId, ref: "Project", required: true },
-    // timestamp: { type: Date, default: Date.now },
-  },
-  { timestamps: true }
-);
+const likeSchema = new mongoose.Schema<LikeProps>({
+  user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
+  project: { type: mongoose.Types.ObjectId, ref: "Project", required: true },
+  timestamp: { type: Date, default: Date.now },
+});
 
-const bookmarkSchema = new mongoose.Schema<BookmarkProps>(
-  {
-    user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
-    project: { type: mongoose.Types.ObjectId, ref: "Project", required: true },
-    // // targt and targetType in case we want to bookmark both users and projects
-    // target: {
-    //   type: mongoose.Types.ObjectId,
-    //   required: true,
-    //   refPath: 'targetType',
-    // },
-    // targetType: { type: String, enum: ['User', 'Project'], required: true },
-    // timestamp: { type: Date, default: Date.now },
-  },
-  { timestamps: true }
-);
+const bookmarkSchema = new mongoose.Schema<BookmarkProps>({
+  user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
+  project: { type: mongoose.Types.ObjectId, ref: "Project", required: true },
+  timestamp: { type: Date, default: Date.now },
+  // // targt and targetType in case we want to bookmark both users and projects
+  // target: {
+  //   type: mongoose.Types.ObjectId,
+  //   required: true,
+  //   refPath: 'targetType',
+  // },
+  // targetType: { type: String, enum: ['User', 'Project'], required: true },
+  // timestamp: { type: Date, default: Date.now },
+});
 
 const projectSchema = new mongoose.Schema<ProjectProps>(
   {
     title: { type: String, required: true },
     desc: { type: String, required: true },
     owner: { type: mongoose.Types.ObjectId, ref: "User", required: true },
+    //owner:{ type: String, required:true },
     contributors: [{ type: mongoose.Types.ObjectId, ref: "User", default: [] }],
+    //contributors:[{ type:String, default:[]}],
     topics: [{ type: String, default: [] }], // ml, android
-    techStack: [{ type: String, default: [] }], // tech: html, css
+    skills: [{ type: String, default: [] }], // tech: html, css
     repoName: { type: String, default: "" },
     likesCount: { type: Number, default: 0 },
     bookmarkCount: { type: Number, default: 0 },
@@ -169,15 +169,7 @@ const projectSchema = new mongoose.Schema<ProjectProps>(
       default: "idea",
     },
     published: { type: Boolean, default: false },
-    repoDetails: {
-      description: { type: String, default: "" },
-      stars: { type: Number, default: 0 },
-      forks: { type: Number, default: 0 },
-      watchers: { type: Number, default: 0 },
-      topics: [{ type: String, default: [] }],
-      commits: { type: Number, default: 0 },
-      lastCommit: { type: Date, default: Date.now },
-    },
+    repoDetails: projectRepoSchema,
   },
   { timestamps: true }
 );

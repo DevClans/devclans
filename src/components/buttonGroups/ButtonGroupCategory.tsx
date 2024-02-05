@@ -8,40 +8,41 @@ import IconML from "../icons/IconML";
 import IconCode from "../icons/IconCode";
 import IconSystemDesign from "../icons/IconSystemDesign";
 import { useSearchParams } from "next/navigation";
+import { getFilters, toggleFilter } from "@/utils/filterFunctions";
 
 const dummyCategories = [
   {
     icon: <IconAll />,
-    label: "All",
+    label: "all",
   },
   {
     icon: <IconAndroid />,
-    label: "Android",
+    label: "android",
   },
   {
     icon: <IconWeb />,
-    label: "Web",
+    label: "web",
   },
   {
     icon: <IconML />,
-    label: "Machine L.",
+    label: "machine l.",
   },
   {
     icon: <IconCode />,
-    label: "Code",
+    label: "code",
   },
   {
     icon: <IconSystemDesign />,
-    label: "System Design",
+    label: "system design",
   },
 ];
 const ButtonGroupCategory = () => {
   const searchParams = useSearchParams();
+  const { filters, newParams } = getFilters(searchParams);
   // let categories: string[] = (searchParams.get("category") || "")
   //   .split(",")
   //   .filter(Boolean);
-  const newParams = new URLSearchParams(searchParams.toString());
-  const category = searchParams.get("category") || "";
+  const domain = filters["domain"] || [];
   // console.log(
   //   searchParams,
   //   categories,
@@ -49,7 +50,7 @@ const ButtonGroupCategory = () => {
   //   newParams,
   //   newParams.toString()
   // )
-  const [active, setActive] = useState<string>(category || "All");
+  const [active, setActive] = useState<string>(domain[0] || "all");
   const handleClick = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     label: string
@@ -59,18 +60,24 @@ const ButtonGroupCategory = () => {
   return (
     <div className="btnRow">
       {dummyCategories.map(({ label, icon }) => {
-        // const newCategories = categories.includes(label)
-        //   ? categories
-        //   : [...categories, label];
-        // newParams.set("category", newCategories.join(","));
-        newParams.set("category", label);
+        // console.log(label, "label");
+        if (label === "all") {
+          delete filters["domain"];
+          newParams.set("filters", JSON.stringify(filters));
+        }
+        const { newParams: params } = toggleFilter(
+          newParams,
+          filters,
+          "domain",
+          label === "all" ? "" : label
+        );
         return (
           <ButtonCategory
-            href={`/explore?${newParams.toString()}`}
+            href={`?${params.toString()}`}
             key={label}
             icon={icon}
             label={label}
-            active={active === label}
+            active={active?.toLowerCase() === label?.toLowerCase()}
             onClick={(e) => handleClick(e as any, label)}
           />
         );

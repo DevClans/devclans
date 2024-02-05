@@ -1,5 +1,6 @@
-import { urlApi } from "@/constants";
 import { FetchProjectProps } from "@/types/fetch.types";
+import { ProjectProps } from "@/types/mongo/project.types";
+import { Fetch } from "@/utils/fetchApi";
 
 // Function to generate a random hex color
 const getRandomColor = () => {
@@ -12,13 +13,18 @@ const getRandomColor = () => {
 };
 
 const ProjectData = async (projectId: string) => {
-  const fetchData = async (): Promise<FetchProjectProps | null> => {
+  const fetchData = async (): Promise<ProjectProps | null> => {
     // Function body
     try {
-      const response = await fetch(urlApi + `/project/${projectId}`, {
-        cache: "no-store",
+      const res = await Fetch({
+        endpoint: `/project/${projectId}`,
+        method: "GET",
       });
-      const data: FetchProjectProps = await response.json();
+      const { data, message } = res || {};
+      // console.log("data", data, message);
+      if (message) {
+        throw new Error(message);
+      }
       return data;
     } catch (error) {
       console.error("Error fetching project details:", error);
@@ -26,14 +32,14 @@ const ProjectData = async (projectId: string) => {
     }
   };
 
-  const projectData = await fetchData();
+  const projectData = (await fetchData()) as ProjectProps;
 
   const renderLanguages = () => {
-    if (!(projectData && (projectData as { languages: any }).languages)) {
+    if (!projectData?.repoDetails?.languages) {
       return null;
     }
 
-    const languagesObject = (projectData as { languages: any }).languages;
+    const languagesObject = projectData.repoDetails.languages;
     const totalBytes: any = Object.values(languagesObject).reduce(
       (acc: any, percentage: any) => acc + percentage,
       0

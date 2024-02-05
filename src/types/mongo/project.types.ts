@@ -1,7 +1,16 @@
-import mongoose from "mongoose";
-import { UserProps, UserTeamProps } from "./user.types";
+import { zodProjectOwnerSchema } from "./../../zod/zod.common";
+import { ProjectDomainType } from "./../../lib/domains";
+import mongoose, { Types } from "mongoose";
+import {
+  ContactDetailsProps,
+  LookingForMembersProps,
+  UserProps,
+  UserTeamProps,
+} from "./user.types";
 import { DevStagesType } from "@/lib/devStages";
 import { MemberLevelType } from "@/lib/memberLevel";
+import { zodProjectFormSchema } from "@/zod/zod.common";
+import { z } from "zod";
 export type FetchProjectDetailsItemProps = {
   title: string;
   desc: string;
@@ -18,10 +27,11 @@ export type ProjectProps = ProjectTeamProps & {
   _id?: mongoose.Types.ObjectId;
   title: string;
   desc: string;
+  domain: ProjectDomainType;
   owner: mongoose.Types.ObjectId | Partial<UserProps>;
   contributors: mongoose.Types.ObjectId[] | Partial<UserProps>[];
   topics: string[];
-  techStack: string[];
+  skills: string[];
   repoName: string;
   likesCount: number;
   bookmarkCount: number;
@@ -37,17 +47,33 @@ export type ProjectProps = ProjectTeamProps & {
   repoDetails: Partial<ProjectRepoDetailsProps>;
 };
 
-export type ProjectRepoDetailsProps = {
+export type ProjectRepoDetailsProps = ProjectFilesProps & {
   description: string;
-  stars: number;
+  owner: string;
+  watchers_count: number;
   forks: number;
   watchers: number;
   topics: string[];
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: Date;
+  updated_at: Date;
   commits: number;
   lastCommit: Date;
+  languages: Record<string, number>;
 };
+
+export const ProjectRepoDetailsKeys: string[] = [
+  "description",
+  "owner",
+  "watchers_count",
+  "forks",
+  "watchers",
+  "topics",
+  "created_at",
+  "updated_at",
+  "commits",
+  "lastCommit",
+  "languages",
+];
 export type ProjectTeamProps = (
   | UserTeamProps
   | {
@@ -80,4 +106,45 @@ export type ProjectInputProps = Omit<
 export type ProjectFilesProps = {
   readme: string;
   contributing: string;
+};
+
+export enum ProjectRedisKeys {
+  list = "projects",
+  data = "projectData",
+  github = "projectGithub",
+  discord = "projectDiscord",
+  search = "projectSearches",
+}
+
+export type ProjectSearchItemProps = {
+  needMembers?: MemberLevelType;
+  imgs: string[];
+  _id?: mongoose.Types.ObjectId;
+  desc: string;
+  title: string;
+  skills: string[];
+  owner: Types.ObjectId | z.infer<typeof zodProjectOwnerSchema>;
+  team: {
+    username?: string;
+    _id: mongoose.Types.ObjectId;
+  }[];
+};
+
+export const projectSearchItemKeys: string[] = [
+  "needMembers",
+  "imgs",
+  "_id",
+  "desc",
+  "owner",
+  "title",
+  "skills",
+  "team",
+];
+
+export type ProjectFormProps = z.infer<typeof zodProjectFormSchema>;
+
+export type UserSidebarProps = UserTeamProps & {
+  links: ProjectProps["projectLinks"];
+  needMembers: LookingForMembersProps;
+  contact: ContactDetailsProps[];
 };

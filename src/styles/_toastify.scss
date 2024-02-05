@@ -1,6 +1,8 @@
 :root {
   --toastify-color-info: var(--primary) !important;
   --toastify-color-success: var(--green) !important;
+  --toastify-color-warning: var(--yellowDark) !important;
+  --toastify-color-error: var(--red) !important;
   --toastify-text-color-dark: var(--heading) !important;
 }
 
@@ -18,4 +20,14 @@
 .Toastify__progress-bar--success {
   height: 2px !important;
   background: var(--green) !important;
+}
+
+.Toastify__progress-bar--warning {
+  height: 2px !important;
+  background: var(--yellowDark) !important;
+}
+
+.Toastify__progress-bar--error {
+  height: 2px !important;
+  background: var(--red) !important;
 }

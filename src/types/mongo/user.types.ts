@@ -1,12 +1,20 @@
 import { MemberLevelType } from "./../../lib/memberLevel";
 import { contactMethodsMap, contactMethodsType } from "@/lib/contactMethods";
+import { ProjectDomainType } from "@/lib/domains";
 import { skills } from "@/lib/skills";
-import mongoose from "mongoose";
+import {
+  zodUserDiscordDetailsSchema,
+  zodUserFormSchema,
+} from "@/zod/zod.common";
+import mongoose, { Types } from "mongoose";
+import { z } from "zod";
+import { ProjectProps } from "./project.types";
 
 // Define the User interface extending mongoose.Document
-export interface UserProps extends UserTeamItemProps {
+export interface UserProps extends UserTeamItemProps, UserSearchInfoProps {
+  isMember?: boolean;
   skillLevel?: MemberLevelType;
-  domain?: "frontend" | "backend" | "fullstack" | "designer" | "other"; // domain you are currenty studying
+  domain?: ProjectDomainType; // domain you are currenty studying
   bio?: string;
   phone?: string;
   email?: string;
@@ -30,18 +38,27 @@ export type UserQuestionsProps = {
   recentWork?: string;
 };
 
-export type UserDiscordDetailsProps = {
-  _id: string;
-  username: string;
-  discriminator: string;
-  avatar?: string;
-  accent_color?: string;
-  bot?: boolean;
-  global_name?: string;
-  banner?: string;
-  verified?: boolean;
-  email?: string;
+export type UserProjectProps = {
+  ownedProjects: ProjectProps[];
+  contributedProjects: ProjectProps[];
 };
+
+export type UserDiscordDetailsProps = z.infer<
+  typeof zodUserDiscordDetailsSchema
+>;
+
+export const userDiscordDetailsKeys: string[] = [
+  "_id",
+  "username",
+  "discriminator",
+  "avatar",
+  "accent_color",
+  "bot",
+  "global_name",
+  "banner",
+  "verified",
+  "email",
+];
 
 export type UserGithubDetailsProps = {
   accessToken?: string;
@@ -54,19 +71,61 @@ export type UserGithubDetailsProps = {
   bio?: string;
   twitter_username?: string;
   login: string;
+  readme?: string;
 };
+export const userGithubDetailsKeys: string[] = [
+  "accessToken",
+  "refreshToken",
+  "username",
+  "avatar_url",
+  "node_id",
+  "name",
+  "company",
+  "bio",
+  "twitter_username",
+  "login",
+];
 
 export type UserTeamItemProps = {
-  githubId: string;
-  discordId: string;
-  discordDetails: UserDiscordDetailsProps;
-  githubDetails: UserGithubDetailsProps;
+  githubId: string; // username
+  discordId: string; // username
   username?: string;
   avatar?: string;
   _id: mongoose.Types.ObjectId;
   contactMethod: contactMethodsType;
   contactMethodId: string;
 };
+
+export const userTeamItemKeys: string[] = [
+  "githubId",
+  "discordId",
+  "username",
+  "avatar",
+  "_id",
+  "contactMethod",
+  "contactMethodId",
+];
+
+export type UserSearchInfoProps = {
+  avatar?: string;
+  bio?: string;
+  skills: Array<(typeof skills)[number]>;
+  discordDetails: UserDiscordDetailsProps;
+  githubDetails?: UserGithubDetailsProps;
+  skillLevel?: MemberLevelType;
+  username?: string;
+  _id: mongoose.Types.ObjectId;
+};
+export const userSearchInfoKeys: string[] = [
+  "avatar",
+  "bio",
+  "skills",
+  "discordDetails",
+  "githubDetails",
+  "skillLevel",
+  "username",
+  "_id",
+];
 
 export type UserMongoProps = Omit<UserProps, "githubId">;
 
@@ -78,3 +137,16 @@ export type ContactDetailsProps = {
 };
 
 export type UserTeamProps = { team: UserTeamItemProps[] };
+export enum UserRedisKeys {
+  list = "users",
+  data = "userData",
+  github = "userGithub",
+  discord = "userDiscord",
+  search = "userSearch",
+}
+export type UserFormProps = z.infer<typeof zodUserFormSchema>;
+export type LookingForMembersProps = {
+  username: string;
+  _id?: Types.ObjectId;
+  level?: MemberLevelType;
+};

@@ -1,10 +1,18 @@
-import { SvgProps } from "@/types";
+"use client";
+import { ButtonProps } from "@/types";
+import ButtonLink from "../buttons/ButtonLink";
 
-const IconWithBg = ({ icon }: { icon: React.ReactNode }) => {
+const IconWithBg = ({
+  children,
+  icon,
+  ...rest
+}: React.PropsWithChildren & Partial<ButtonProps>) => {
   return (
-    <div style={{}} className="p-[10px] card rounded-[5px]">
-      {icon}
-    </div>
+    <ButtonLink
+      className="p-[10px] cardGrad rounded-[5px]"
+      label={icon || children}
+      {...rest}
+    />
   );
 };
 

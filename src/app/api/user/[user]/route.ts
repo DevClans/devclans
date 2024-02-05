@@ -1,7 +1,98 @@
+import { getOctokit } from "@/github/config.github";
+import getGithubReadme from "@/github/repos/gh.getReadme";
 import { UserModel } from "@/mongodb/models";
+import redisClient from "@/redis/config";
+import { projectSearchItemKeys } from "@/types/mongo/project.types";
+import {
+  UserProps,
+  UserRedisKeys,
+  UserSearchInfoProps,
+  userGithubDetailsKeys,
+  userSearchInfoKeys,
+} from "@/types/mongo/user.types";
 import dbConnect from "@/utils/mongoose.config";
 import { Types } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
+
+const getUserData = async (user: string, select: string) => {
+  try {
+    const u: UserProps | UserSearchInfoProps | null = await UserModel.findById(
+      new Types.ObjectId(user)
+    )
+      .select(select)
+      .populate("ownedProjects", projectSearchItemKeys.join(" "))
+      // TODO get only ids and check in cache and then get missing data if load increases
+      .lean();
+    return u;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getGithubData = async (
+  userId: string,
+  userInfo: any,
+  userAccessToken?: string
+) => {
+  try {
+    let getData = true;
+    const githubData = await redisClient.hget(UserRedisKeys.github, userId);
+    if (githubData) {
+      Object.assign(userInfo["githubDetails"], JSON.parse(githubData));
+      // check if it contains all fields
+      // TODO add zod check here
+      for (const key of userGithubDetailsKeys) {
+        if (!userInfo[key]) {
+          getData = true;
+          break;
+        }
+      }
+    }
+    if (getData && userAccessToken) {
+      // get data from github api
+      const githubapi = await getOctokit({ accessToken: userAccessToken });
+      if (!githubapi || !(githubapi.type === "auth")) {
+        console.error("error getting github api");
+        return;
+      }
+      // get github related data
+      const githubData: any = await githubapi.api.request("GET /user", {
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      });
+      const githubUsername = githubData.data.username;
+      // get github readme
+      const readme = getGithubReadme({ username: githubUsername });
+      if (readme) {
+        // add readme to dataset
+        userInfo["githubDetails"]["readme"] = readme;
+      }
+      console.info("githubData", githubData);
+      const skipKeys = ["accessToken", "refreshToken"];
+      for (const key of userGithubDetailsKeys) {
+        if (githubData.data[key] && !skipKeys.includes(key)) {
+          userInfo["githubDetails"][key] = githubData.data[key];
+        }
+      }
+      // store data
+      redisClient.hset(
+        UserRedisKeys.github,
+        userId,
+        JSON.stringify(userInfo["githubDetails"])
+      );
+      redisClient.expire(UserRedisKeys.github, 60 * 60 * 24 * 1); // 1 day
+    } else {
+      if (getData) {
+        console.error("error getting github api");
+      } else {
+        console.info("user github cache hit");
+      }
+    }
+  } catch (error) {
+    // console.error("error in user github data", error);
+  }
+};
 
 async function handler(
   req: NextRequest,
@@ -10,18 +101,86 @@ async function handler(
   try {
     await dbConnect();
 
-    const { user } = params;
-    if (!user || typeof user !== "string") {
+    const { user: userId } = params;
+    // TODO add zod check here
+    if (!userId || typeof userId !== "string") {
       return NextResponse.json({ message: "Invalid user parameter" });
     }
+    // is user in cache? check users key
+    const userInfo: UserProps | UserSearchInfoProps | Record<string, any> = {};
+    const userInCache = await redisClient.hget(UserRedisKeys.list, userId);
+    Object.assign(userInfo, userInCache ? JSON.parse(userInCache) : {}); // info like: username, avatar, etc
+    if (userInCache) {
+      console.info("users cache hit");
+      // * GETTING USER DETAILS
+      try {
+        // check for user data in cache in userData key
+        const userData = await redisClient.hget(UserRedisKeys.data, userId);
+        // if user data is in cache, add it to user object
+        if (userData) {
+          console.info("usersdata cache hit");
+          Object.assign(userInfo, JSON.parse(userData));
+        } else {
+          // get some details
+          const u: UserProps | UserSearchInfoProps | null = await getUserData(
+            userId,
+            "-" + userSearchInfoKeys.join(" -")
+          ); // to get all fields except userSearchInfoKeys as they already exist in userInfo
+          if (!u) {
+            return NextResponse.json({ message: "User not found" });
+          }
+          Object.assign(userInfo, u);
+          // add to cache
+          redisClient.hset(UserRedisKeys.data, userId, JSON.stringify(u));
+          redisClient.expire("usersData", 60 * 60 * 24 * 7); // 1 week
+        }
+      } catch (error) {
+        console.error("error in user details data", error);
+        throw error;
+      }
+      // * GETTING USER GITHUB DETAILS
+      const githubAccessToken: string | undefined =
+        userInfo["githubDetails"]?.accessToken;
+      await getGithubData(userId, userInfo, githubAccessToken);
+    } else {
+      // get all details
+      const u: UserProps | UserSearchInfoProps | null = await getUserData(
+        userId,
+        ""
+      );
+      if (!u) {
+        return NextResponse.json({ message: "User not found" });
+      }
+      Object.assign(userInfo, u);
+      // add to cache by separating userSearchInfoKeys and other keys
+      const userDetailsData: any = {};
+      const userSearchInfoData: any = {};
+      for (const key of Object.keys(userInfo)) {
+        if (userSearchInfoKeys.includes(key)) {
+          userSearchInfoData[key] = userInfo[key];
+        } else {
+          userDetailsData[key] = userInfo[key];
+        }
+      }
+      redisClient.hset(
+        UserRedisKeys.list,
+        userId,
+        JSON.stringify(userSearchInfoData)
+      );
+      redisClient.expire(UserRedisKeys.list, 60 * 60 * 24 * 7); // 1 week
+      redisClient.hset(
+        UserRedisKeys.data,
+        userId,
+        JSON.stringify(userDetailsData)
+      );
+      redisClient.expire(UserRedisKeys.data, 60 * 60 * 24 * 7); // 1 week
+    }
 
-    const u = await UserModel.findById({
-      _id: new Types.ObjectId(user),
-    });
+    // if yes, return from cache
 
-    return NextResponse.json(u);
+    return NextResponse.json(userInfo);
   } catch (error) {
-    console.log("error in user route", error);
+    console.error("error in user route", error);
     return NextResponse.json({ message: "error in user route", error });
   }
 }

@@ -7,9 +7,13 @@ export const contactMethodsMap = {
     `https://twitter.com/messages/compose?recipient_id=${username}&text=${
       text || ""
     }`,
+  email: (username: string) => `mailto:${username}`,
 };
 
-export const contactMethods = Object.keys(contactMethodsMap);
+export const contactMethods: [string, ...string[]] = [
+  ...Object.keys(contactMethodsMap),
+] as [string, ...string[]];
 
 export type contactMethodsType = keyof typeof contactMethodsMap;
+
 // "discord" | "email" | "whatsapp" | "telegram" | "twitter"

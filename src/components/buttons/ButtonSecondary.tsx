@@ -8,6 +8,7 @@ const ButtonSecondary = ({
   style,
   onClick,
   href,
+  ...rest
 }: ButtonProps) => {
   return (
     <ButtonLink
@@ -16,6 +17,7 @@ const ButtonSecondary = ({
       label={label || "Button"}
       href={href}
       className={`text-sm border-text w100 rounded-[10px] py-2  border ${className}`}
+      {...rest}
     />
   );
 };

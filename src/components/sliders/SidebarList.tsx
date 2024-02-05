@@ -33,15 +33,15 @@ const SidebarList = ({
                 ) : (
                   item.startIcon
                 )}
-                <p className=" ">{item.text}</p>
+                <p className=" ">{item.text || item.href}</p>
               </Link>
-              <IconButton
+              <div
                 onClick={() => {
                   item.onEndIconClick && item.onEndIconClick(item.text);
                 }}
               >
                 {item.endIcon}
-              </IconButton>
+              </div>
             </div>
           )
         )

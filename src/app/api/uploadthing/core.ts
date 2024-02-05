@@ -2,7 +2,7 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 const f = createUploadthing();
 const auth = (req: Request) => ({ id: "fakeId" }); 
- 
+
 export const ourFileRouter = {
   imageUploader: f({ image: { maxFileSize: "4MB" } })
     .middleware(async ({ req }) => {
@@ -16,5 +16,5 @@ export const ourFileRouter = {
       return { uploadedBy: metadata.userId };
     }),
 } satisfies FileRouter;
- 
+
 export type OurFileRouter = typeof ourFileRouter;

@@ -1,23 +1,10 @@
-export const debounce = (
-  func: (...args: any[]) => void,
-  wait: number,
-  immediate: boolean = false
-): ((...args: any[]) => void) => {
-  let timeout: NodeJS.Timeout | null = null;
-  return function (this: any, ...args: any[]) {
-    const context = this;
-    const later = () => {
-      console.log("later");
-      timeout = null;
-      if (!immediate) func.apply(context, args);
-    };
-    const callNow = immediate && !timeout;
-    clearTimeout(timeout as NodeJS.Timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(context, args);
+export const debounce = (func: Function, delay: number) => {
+  let timeoutId: ReturnType<typeof setTimeout>;
+  return (...args: any[]) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
   };
 };
-
 export const debounceOnChange = debounce(
   (
     onChange: ((event: Event, value: number) => void) | undefined,

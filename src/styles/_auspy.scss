@@ -47,6 +47,7 @@ body {
     }
   }
 
+  textarea::placeholder,
   input::placeholder {
     opacity: 0.4;
   }
@@ -54,13 +55,16 @@ body {
   .fs0 {
     flex-shrink: 0;
   }
+  button {
+    @apply fccc;
+  }
   // RESPONSIVE BUTTON GROUP
   .btnRow {
     @apply frcsb overflow-visible w100;
   }
   @media screen and (max-width: 768px) {
     .btnRow {
-      @apply frc gap-3 overflow-scroll;
+      @apply frc gap-3 overflow-x-scroll scrollbar;
     }
   }
   // SCROLLBAR
@@ -72,16 +76,23 @@ body {
     overflow-x: hidden;
   }
 
+  .scrollbar-hide::-webkit-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    height: 0;
+    width: 0;
+  }
   .scrollbar::-webkit-scrollbar,
-  .scrollbarHidden::-webkit-scrollbar,
   .scrollbar-x::-webkit-scrollbar {
     height: 5px;
+    width: 5px;
   }
 
   .scrollbar:hover::-webkit-scrollbar,
   .scrollbar-x:hover::-webkit-scrollbar {
     transition: heigth 2s ease;
     height: 5px;
+    width: 5px;
   }
 
   .scrollbar::-webkit-scrollbar-thumb,

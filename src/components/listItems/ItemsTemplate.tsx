@@ -1,5 +1,5 @@
 import { PageProps } from "@/types/page.types";
-import { ButtonConnect, ButtonSecondary, ChipGroup } from "..";
+import { ButtonBlue, ButtonConnect, ButtonSecondary, ChipGroup } from "..";
 import Link from "next/link";
 
 type ItemsTemplateProps = Partial<PageProps> & {
@@ -28,7 +28,7 @@ const ItemsTemplate = ({
   desc,
   title,
 }: ItemsTemplateProps) => {
-  const url = `${baseUrl}${_id}`;
+  const url = `${baseUrl}/${_id}`;
   return (
     <>
       <div className="lg:frfssb fcc relative p-2 h-max min-h-[200px] gap-5 w100 card2">
@@ -42,24 +42,31 @@ const ItemsTemplate = ({
               <h2>{title}</h2>
             </Link>
           )}
-          <p>
-            {desc ||
-              "Some cool description about the group. Some cool description about the group."}
-            {".."}
-            <Link className="text-priDarker font-medium" href={baseUrl + _id}>
-              {" "}
-              Read More
-            </Link>
-          </p>
+          {desc && (
+            <p>
+              {desc ||
+                "Some cool description about the group. Some cool description about the group."}
+              {".."}
+              <Link
+                className="text-priDarker font-medium"
+                href={baseUrl + "/" + _id}
+              >
+                {" "}
+                Read More
+              </Link>
+            </p>
+          )}
           {Boolean(detailDesc && detailHeading) && (
             <div className="frc gap-1">
               <p>{detailHeading}</p>
-              <p className="text-highlight font-medium">
-                {detailDesc || "team names"}
-              </p>
+              <p className="text-highlight font-medium">{detailDesc}</p>
             </div>
           )}
-          <ChipGroup arr={chipArr || []} searchParams={searchParams} />
+          <ChipGroup
+            arr={chipArr || []}
+            searchParams={searchParams}
+            baseUrl={`explore/${baseUrl}s`}
+          />
         </div>
         {/* CONTACT AND CALL TO ACTIONS */}
         <div className="fcfssb h-full lg:min-h-[200px] lg:border-l border-t lg:border-t-0 pt-2 gap-2 lg:pt-0 border-border lg:pl-5 lg:max-w-[222px] w100 ">
@@ -67,8 +74,8 @@ const ItemsTemplate = ({
           {rightMessage || "Learn something new about me. Visit my profile!"}
           {/* buttons */}
           <div className="fcc w100 gap-2">
-            <ButtonSecondary href={url} label={"View Project"} />
-            <ButtonConnect label={"Chat With Team"} />
+            <ButtonSecondary href={url} label={"View"} />
+            <ButtonBlue href={url} label={"Ask A Question"} />
           </div>
         </div>
       </div>

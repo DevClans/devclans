@@ -1,92 +1,20 @@
-import Text from "@/components/Text";
-import {
-  Checkbox,
-  FormGroup,
-  FormControlLabel,
-} from "@/components/mui/muiComponents";
-import SliderInputBar from "./sliders/SliderInputBar";
-import { FilterChipProps, FilterSidebarProps, SliderProps } from "@/types";
+import { FilterSidebarProps, SliderProps } from "@/types";
+import CheckBoxItem from "./CheckBoxItem";
 
-const CheckboxGrp = ({
-  data,
-  addFilter,
-  removeFilter,
-  filters,
-}: FilterSidebarProps) => {
+const CheckboxGrp = ({ data }: Partial<FilterSidebarProps>) => {
   return (
     <div className="flex flex-col" style={{ rowGap: 30 }}>
-      {data.map(
+      {data?.map(
         ({ heading, key, title, type, data, ...sliderProps }, index) => (
           <div key={index}>
-            <Text type="semi16" textClass=" text-sm font-medium">
-              {heading || title}
-            </Text>
-            <FormGroup>
-              {/* this component can use slider as well as checkbox */}
-              {type == "slider" ? (
-                <SliderInputBar
-                  {...(sliderProps as SliderProps)}
-                  onChange={(e, value) => {
-                    console.log("change value", value);
-                    addFilter({
-                      key,
-                      label: value.toString(),
-                    });
-                  }}
-                />
-              ) : (
-                data.map(({ label }, i) => {
-                  const labelString = label?.toString().toLowerCase();
-                  const checkked = Boolean(
-                    filters[key?.toLowerCase()] && labelString in filters[key]
-                  );
-                  const currentFilter: FilterChipProps = {
-                    key,
-                    label: labelString,
-                  };
-                  // console.log("checked", filters[key]);
-                  const onChange = (
-                    e: React.SyntheticEvent<Element, Event>,
-                    checked = checkked
-                  ) => {
-                    // console.log("checked", checked);
-                    if (checked) {
-                      // if already in filter
-                      return removeFilter(currentFilter);
-                    }
-
-                    addFilter(currentFilter);
-                  };
-                  return (
-                    <FormControlLabel
-                      onChange={onChange}
-                      key={i + labelString}
-                      control={
-                        // <button
-                        //   onClick={(e) => {
-                        //     // e.stopPropagation();
-                        //     console.log("link click");
-                        //     onChange(e);
-                        //   }}
-                        //   // href={{
-                        //   //   pathname: "/explore",
-                        //   // }}
-                        // >
-                        <Checkbox
-                          size="small"
-                          style={{
-                            color: "inherit",
-                          }}
-                          // onChange={onChange}
-                        />
-                        // </button>
-                      }
-                      label={<Text type="medi16">{label}</Text>}
-                    />
-                  );
-                })
-              )}
-            </FormGroup>
+            <h3 className="">{heading || title}</h3>
+            <CheckBoxItem
+              key={index}
+              type={type || ""}
+              data={data}
+              title={heading || title || ""}
+              sliderProps={sliderProps as SliderProps}
+            />
           </div>
         )
       )}

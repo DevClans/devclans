@@ -19,7 +19,7 @@
 
 h1 {
   text-align: center;
-  font-size: 74px;
+  font-size: clamp(44px, 7vh, 74px);
   font-style: normal;
   font-weight: 600;
   line-height: 115%; /* 85.1px */
@@ -121,5 +121,9 @@ pre {
   h2 {
     margin-top: 25px;
     margin-bottom: 5px;
+  }
+  h4 {
+    margin-bottom: 20px;
+    gap: 5px;
   }
 }

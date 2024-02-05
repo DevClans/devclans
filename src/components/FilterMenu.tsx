@@ -1,25 +1,16 @@
-"use client";
-import { FilterChipMap, FilterChipProps } from "@/types";
+import { PageProps } from "@/types/page.types";
 import CheckboxGrp from "./CheckboxGrp";
 import { dummyFilterSteps } from "@/dummy/dummy.filter";
-import { useState } from "react";
+import ButtonCloseFilter from "./buttons/ButtonCloseFilter";
 
-const FilterMenu = () => {
-  const [filters, setFilters] = useState<FilterChipMap>({});
-  // * CLEAR ALL FILTERS
-  const clearFilters = () => {
-    setFilters({});
-  };
-  const addFilter = (chip: FilterChipProps) => {};
-  const removeFilter = (chip: FilterChipProps) => {};
+const FilterMenu = (props: PageProps) => {
   return (
-    <div id="filterMenu" className="cardGrad" style={{}}>
-      <CheckboxGrp
-        filters={filters}
-        removeFilter={removeFilter}
-        addFilter={addFilter}
-        data={dummyFilterSteps}
-      />
+    <div id="filterMenu" className="relative cardGrad w100" style={{}}>
+      <ButtonCloseFilter />
+      <div className="frcsb w100">
+        <h2>Filters</h2>
+      </div>
+      <CheckboxGrp {...props} data={dummyFilterSteps} />
     </div>
   );
 };

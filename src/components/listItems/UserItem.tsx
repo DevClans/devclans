@@ -1,12 +1,14 @@
-import { UserProps } from "@/types/mongo/user.types";
+import { UserSearchInfoProps } from "@/types/mongo/user.types";
 import { ProjectIconGroup } from "..";
 import ProductImg from "../project/ProjectImg";
 import ItemsTemplate from "./ItemsTemplate";
 import userAvatar from "@/lib/userAvatar";
 import selectUserUsername from "@/lib/selectUserUsername";
 import { PageProps } from "@/types/page.types";
+import { msgSharingUser } from "@/lib/constants.messages";
+import { urlUser } from "@/constants";
 
-const UserItem = ({
+const UserItem = async ({
   avatar,
   bio,
   skills,
@@ -16,20 +18,20 @@ const UserItem = ({
   username,
   _id,
   searchParams,
-}: UserProps & Partial<PageProps>) => {
-  const { username: discordUsername, avatar: disAvatar } = discordDetails || {};
-  const {
-    avatar_url: gitAvatar,
-    bio: gitBio,
-    username: gitUsername,
-    login,
-  } = githubDetails || {};
-  const avtr = userAvatar({
+}: UserSearchInfoProps & Partial<PageProps>) => {
+  const { avatar: disAvatar, _id: disID } = discordDetails || {};
+  const { avatar_url: gitAvatar, bio: gitBio, login } = githubDetails || {};
+  const avtr = await userAvatar({
     avatar,
     discordImg: disAvatar,
     gitubImg: gitAvatar,
+    discordId: disID,
   });
-  const usernm = selectUserUsername({ username, discordUsername, gitUsername });
+  const usernm = selectUserUsername({
+    username,
+    userProps: { discordDetails, githubDetails },
+  });
+
   return (
     <>
       <ItemsTemplate
@@ -40,6 +42,7 @@ const UserItem = ({
               src={avtr}
               alt={username}
               fill={true}
+              isUser={true}
               // isAvatar={true}
               className="w-full h-full"
               style={{
@@ -52,7 +55,11 @@ const UserItem = ({
         detailsHeader={
           <>
             <h2>{usernm || "Username"}</h2>
-            <ProjectIconGroup showLabels={false} />
+            <ProjectIconGroup
+              showLabels={false}
+              url={urlUser(_id)}
+              message={msgSharingUser(usernm)}
+            />
           </>
         }
         rightMessage={
@@ -64,7 +71,7 @@ const UserItem = ({
         detailDesc={skillLevel as string}
         chipArr={skills}
         baseUrl={"/user/"}
-        _id={_id.toString()}
+        _id={_id?.toString()}
         desc={bio || gitBio || ""}
       />
     </>

@@ -1,7 +1,7 @@
 #btnLogin {
   display: flex;
   width: 65px;
-  padding: 11px 35px;
+  padding: 12px 35px;
   justify-content: center;
   align-items: center;
   gap: 10px;
@@ -22,7 +22,7 @@
 #btnHero {
   display: inline-flex;
   height: 60px;
-  padding: 0px 174px;
+  padding: 0px clamp(70px, 20vw, 174px);
   justify-content: center;
   align-items: center;
   gap: 10px;
