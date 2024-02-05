@@ -43,10 +43,19 @@ const page = async ({ params, searchParams }: UserPageProps) => {
 
   const session: any = await getServerSessionForServer();
   // console.log("mode", mode, session?.user?._id, userData._id);
-  if (mode == "edit" && session?.user?._id == userData._id) {
-    const data = zodUserFormSchemaObj.partial().safeParse(userData);
-    if (data.success) {
-      return <FormNewUser defaultValues={data.data as UserFormProps} />;
+  if (mode == "edit") {
+    if (session?.user?._id != userData._id) {
+      const data = zodUserFormSchemaObj.partial().safeParse(userData);
+      return (
+        // ! here it can be a problem as we are using userData directly
+        <FormNewUser
+          defaultValues={
+            data.success ? (data.data as UserFormProps) : (userData as any)
+          }
+        />
+      );
+    } else {
+      console.error("You are not authorized to edit this user");
     }
   }
 
@@ -118,9 +127,9 @@ const page = async ({ params, searchParams }: UserPageProps) => {
       <Common
         level={userData["skillLevel"]}
         username={username}
-        questions={userData["questions"]}
         params={params}
         searchParams={searchParams}
+        {...userData}
       >
         {ele[tab] || (
           <div className={"card2 w100 p-5 !rounded-[10px]"}>
@@ -141,6 +150,7 @@ const Common = ({
   questions,
   searchParams,
   level,
+  _id,
 }: PageProps & {
   username: UserProps["username"];
   questions: UserProps["questions"];
@@ -150,7 +160,7 @@ const Common = ({
     <div
       className="flex flex-col items-center  
     xl:flex-row 
-    lg:items-start lg:justify-between md:peer-data-[state=active]:pl-[300px] md:peer-data-[state=not-active]:pl-[80px] lg:peer-data-[state=not-active]:pl-[90px] lg:peer-data-[state=active]:pl-[310px] relative md:-z-10 w100 md:py-6 gap-6"
+    lg:items-start lg:justify-between md:peer-data-[state=active]:pl-[300px] md:peer-data-[state=not-active]:pl-[80px] lg:peer-data-[state=not-active]:pl-[90px] lg:peer-data-[state=active]:pl-[310px] relative md:-z-10 w100 md:pt-6 pb-6 gap-6"
     >
       {/* middle scroll */}
       <MiddleSection
@@ -162,7 +172,7 @@ const Common = ({
         {children}
       </MiddleSection>
       {/* right sidebar */}
-      <RightSidebar username={username || ""} level={level} />
+      <RightSidebar _id={_id} username={username || ""} level={level} />
     </div>
   );
 };

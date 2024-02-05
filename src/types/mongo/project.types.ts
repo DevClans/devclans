@@ -1,3 +1,4 @@
+import { zodProjectOwnerSchema } from "./../../zod/zod.common";
 import { ProjectDomainType } from "./../../lib/domains";
 import mongoose, { Types } from "mongoose";
 import {
@@ -122,7 +123,7 @@ export type ProjectSearchItemProps = {
   desc: string;
   title: string;
   skills: string[];
-  owner: Types.ObjectId;
+  owner: Types.ObjectId | z.infer<typeof zodProjectOwnerSchema>;
   team: {
     username?: string;
     _id: mongoose.Types.ObjectId;

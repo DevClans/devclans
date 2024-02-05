@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { skills } from "@/lib/skills";
-import { Types, Schema } from "mongoose";
+import { Types } from "mongoose";
 import { memberLevels } from "@/lib/memberLevel";
 import { devStages } from "@/lib/devStages";
 import { contactMethods } from "@/lib/contactMethods";
@@ -32,7 +32,7 @@ export const zodGithubAccessToken = z
   .refine((value) => /^[a-fA-F0-9]{40}$/.test(value), {
     message: "Invalid GitHub access token format",
   });
-const ownerSchema = z.object({
+export const zodProjectOwnerSchema = z.object({
   _id: zodMongoId,
   githubId: z.string().min(1).max(50),
   githubDetails: z
@@ -123,7 +123,7 @@ export const zodUserSearchInfoSchema = z.object({
   skills: z.array(z.enum(skills)).default([]),
   githubDetails: userGithubDetailsSchema.optional(),
   bio: stringSchema.min(10).max(100),
-  username: stringSchema.min(1).max(50),
+  username: stringSchema.max(50).min(1).optional(),
   avatar: z.string().optional(),
   discordDetails: zodUserDiscordDetailsSchema,
   _id: z.any(),
@@ -131,6 +131,7 @@ export const zodUserSearchInfoSchema = z.object({
 
 export const zodUserDataCommonSchema = z.object({
   contactMethod: z.enum(contactMethods as any),
+  contactMethodId: z.string().max(120).optional(),
   socials: z.object({
     twitter: z
       .string()
@@ -192,7 +193,7 @@ export const zodUserDataCommonSchema = z.object({
     .optional(),
   questions: z.object({
     currentCompany: z.string().max(250).optional(),
-    careerGoal: z.enum(["remote", "faang", "startup"]).default("remote"),
+    careerGoal: z.array(z.enum(["remote", "faang", "startup"])),
     proudAchievement: z.string().max(250).optional(),
     recentWork: z.string().max(250).optional(),
   }),
@@ -266,6 +267,8 @@ export const zodProjectSearchInfoSchema = z.object({
     .nullable()
     .default("beginner"),
   imgs: z.array(z.string()).default([]),
+  _id: zodMongoId,
+  owner: zodProjectOwnerSchema,
 });
 export const zodRepoDetailsSchema = z
   .object({

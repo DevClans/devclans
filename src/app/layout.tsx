@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import type { Metadata, Viewport } from "next";
 import { Poppins, Bebas_Neue } from "next/font/google";
 import "./globals.scss";
@@ -61,6 +62,7 @@ export default async function RootLayout({
             toastClassName={"card"}
           />
         </ReactQueryProvider>
+        <Analytics />
       </body>
     </html>
   );

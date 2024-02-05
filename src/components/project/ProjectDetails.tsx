@@ -45,8 +45,8 @@ const ProjectDetails = ({
   }
   return (
     <div className={`w100 fcfs p-3 card2 ${className}`} style={style}>
-      {heading && <h2 className={"mb-6 " + headingClass}>{heading}</h2>}
-      <div className={containerClass + " w100 fcc gap-6 "}>
+      {heading && <h2 className={"mb-3 mb:mb-6 " + headingClass}>{heading}</h2>}
+      <div className={containerClass + " w100 fcc gap-2 mb:gap-6 "}>
         {dummydata.map((item, index) => (
           <>
             <ProjectDetailsItem {...item} key={index} />
