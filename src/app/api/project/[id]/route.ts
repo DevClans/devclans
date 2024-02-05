@@ -46,7 +46,7 @@ export async function GET(
       if (obj.owner && "githubDetails" in obj.owner) {
         githubAccessToken = obj.owner.githubDetails?.accessToken || "";
         // remove from project
-        delete obj.owner.githubDetails?.accessToken;
+        // delete obj.owner.githubDetails?.accessToken;
       }
     };
     const setProjectDataRedis = async (obj: ProjectProps) => {
@@ -75,7 +75,7 @@ export async function GET(
       isProject = zodProjectSearchInfoSchema.safeParse(
         JSON.parse(projectString)
       );
-      console.info("isProject", isProject.success);
+      console.info("isProject", !isProject.success && isProject.error);
     }
     if (isProject.success && projectString) {
       console.info("projects cache hit");
@@ -142,13 +142,14 @@ export async function GET(
       );
       redisClient.expire(ProjectRedisKeys.list, 60 * 60 * 24 * 7); // 1 week
       setProjectDataRedis(detailsData);
-      projectInfo.owner &&
-        "githubDetails" in projectInfo.owner &&
-        delete projectInfo.owner.githubDetails?.accessToken;
+      // projectInfo.owner &&
+      //   "githubDetails" in projectInfo.owner &&
+      //   delete projectInfo.owner.githubDetails?.accessToken;
       Object.assign(project, projectInfo);
     }
     // * GETTING GITHUB DATA
     await getGithubData(id, project, githubAccessToken);
+    console.info("sending project", project);
 
     return NextResponse.json({
       data: project,
@@ -228,7 +229,7 @@ const getGithubData = async (
     ];
     // check if all repoDetails fields are in cache. get missing fields
     if (success) {
-      console.info("github data cache hit");
+      console.info("github data cache hit", githubData);
       Object.assign(project, { repoDetails: JSON.parse(githubData) });
     } else {
       console.info("fetching github data");
@@ -240,6 +241,7 @@ const getGithubData = async (
         reponame &&
         `https://api.github.com/repos/${username}/${reponame}`;
       if (!githubUrl) {
+        console.error("Error fetching github data: githubUrl not found");
         return { readme, contributing, languagePercentages };
       }
       console.info("userAccessToken", userAccessToken);
@@ -446,6 +448,7 @@ const getGithubData = async (
       );
       redisClient.expire(ProjectRedisKeys.github, 60 * 60 * 24 * 7); // 1 week
     }
+    console.info("repoDetails", repoDetails);
     return {
       readme: repoDetails["readme"],
       contributing: repoDetails["contributing"],

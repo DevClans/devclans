@@ -15,6 +15,7 @@ import { useSession } from "next-auth/react";
 import { createProjectUser } from "@/utils/createProjectUser";
 import { ProjectFormProps } from "@/types/mongo/project.types";
 import { useRouter } from "next/navigation";
+import selectUserContactId from "@/lib/selectUserContactId";
 
 const FormNewUser = ({
   defaultValues: dv,
@@ -36,6 +37,7 @@ const FormNewUser = ({
     });
 
   const onSubmit: SubmitHandler<UserFormProps> = async (data) => {
+    data.contactMethodId = selectUserContactId(data);
     const res = await createProjectUser(
       "/user/update",
       data,
@@ -88,11 +90,11 @@ const FormNewUser = ({
       name: "contactMethod",
       options: contactMethods,
     },
-    {
-      label: `Contact ID (${contactMethod}):`,
-      name: "questions.contactId",
-      condition: ["telegram"].includes(contactMethod),
-    },
+    // {
+    //   label: `Contact ID (${contactMethod}):`,
+    //   name: "contactMethodId",
+    //   condition: ["telegram"].includes(contactMethod),
+    // },
     {
       label: "Email:",
       name: "email",
@@ -126,6 +128,7 @@ const FormNewUser = ({
       label: "Career Goal:",
       name: "questions.careerGoal",
       options: ["remote", "faang", "startup"],
+      multi: true,
     },
   ];
   useEffect(() => {

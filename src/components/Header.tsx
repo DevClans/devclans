@@ -5,7 +5,6 @@ import ButtonLogin from "./buttons/ButtonLogin";
 import ButtonMenuToggle from "./buttons/ButtonMenuToggle";
 import { FilePlus2 } from "lucide-react";
 import colors from "@/lib/colors";
-import Link from "next/link";
 import { IconWithBg } from ".";
 
 const Header = ({ searchParams }: PageProps) => {

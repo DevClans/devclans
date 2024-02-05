@@ -65,6 +65,7 @@ const LeftSidebar = async ({
             {session && session.user._id === _id ? (
               // <Link href="/project/new">Create Project</Link>
               <ButtonBlue
+                disabled={session && session.user._id !== _id}
                 href={`/user/${_id}?mode=edit`}
                 label={"Edit Profile"}
               />

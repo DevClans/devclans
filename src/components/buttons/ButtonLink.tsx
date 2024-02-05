@@ -21,7 +21,7 @@ const ButtonLink = ({
   const progress = <CircularProgress color="inherit" size={14} />;
   const handleClick = async (e: any) => {
     setClicked(true);
-    if (disabled || loading) {
+    if (disabled || loading || clicked) {
       e.preventDefault();
       return;
     }
@@ -51,7 +51,7 @@ const ButtonLink = ({
     <button
       {...rest}
       title={(typeof label == "string" && label) || title || "Button"}
-      disabled={loading || disabled}
+      disabled={loading || disabled || clicked}
       className={`${className}`}
       onClick={handleClick}
       style={{ ...style }}

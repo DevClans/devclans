@@ -26,7 +26,7 @@ const AboutTheRepo = ({ readme, contributing }: ProjectFilesProps) => {
     },
   ];
   return (
-    <div className="card2 p-5 w100 ">
+    <div className="card2 p-3 md:p-5 w100 ">
       <h2 className="mb-5">About the repo</h2>
       <div className="fcfs w100">
         <div className={`${anyOpen ? "fcc" : "lg:frfssb fcc"} w100 gap-5`}>
