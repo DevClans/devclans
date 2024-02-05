@@ -126,18 +126,18 @@ const ButtonLike = ({
     try {
       // console.log(work);
       setLoading(true);
-      const response = await fetch(`http://localhost:3000/api/db/${work}`, {
-        method: "POST",
-        body: JSON.stringify({
-          userId: userId,
-          projectId: projectId,
-        }),
+      const data = await Fetch({
+        endpoint: `/db/${work}`,
+        method: "post",
         headers: {
           "Content-Type": "application/json",
         },
+        body: {
+          userId: userId,
+          projectId: projectId,
+        },
       });
-      //console.log(title);
-      const data = await response.json();
+      //console.log(title)
       //console.log(liked);
       if (data) {
         setLoading(false);

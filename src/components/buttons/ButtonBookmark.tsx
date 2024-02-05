@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Types } from "mongoose";
 import { toast } from "react-toastify";
+import { Fetch } from "@/utils/fetchApi";
 
 const ButtonBookmark = ({
   bookmarksCount,
@@ -38,17 +39,9 @@ const ButtonBookmark = ({
         return;
       }
       try {
-        const response = await fetch(
-          `http://localhost:3000/api/db/getProject/${ownerId}/${projectId}`,
-          {
-            method: "GET",
-
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const data = await response.json();
+        const data = await Fetch({
+          endpoint: `/db/getProject/${ownerId}/${projectId}`,
+        });
         if (data) {
           console.log(data.bookmarkCount);
 
@@ -64,16 +57,9 @@ const ButtonBookmark = ({
         return;
       }
       try {
-        const response = await fetch(
-          `http://localhost:3000/api/db/getBookmarked/${userId}/${projectId}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const data = await response.json();
+        const data = await Fetch({
+          endpoint: `/db/getBookmarked/${userId}/${projectId}`,
+        });
         // console.log("This is data");
         //console.log(data);
         if (data.length > 0) {
@@ -129,18 +115,18 @@ const ButtonBookmark = ({
     try {
       console.log(work);
       setLoading(true);
-      const response = await fetch(`http://localhost:3000/api/db/${work}`, {
-        method: "POST",
-        body: JSON.stringify({
-          userId: ownerId,
-          projectId: projectId,
-        }),
+      const data = await Fetch({
+        endpoint: `/db/${work}`,
+        method: "post",
         headers: {
           "Content-Type": "application/json",
         },
+        body: {
+          userId: ownerId,
+          projectId: projectId,
+        },
       });
       //console.log(title);
-      const data = await response.json();
       if (data) {
         setLoading(false);
         console.log(liked);

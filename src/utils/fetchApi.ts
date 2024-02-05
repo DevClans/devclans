@@ -25,6 +25,7 @@ type FetchProps = {
   headers?: any;
   type?: "nan" | "an"; //nan means no access needed and an means access needed
   token?: string;
+  body?: any;
 };
 
 export const Fetch = async ({
@@ -34,6 +35,7 @@ export const Fetch = async ({
   method = "GET",
   token,
   type = "nan",
+  body,
 }: FetchProps) => {
   const options: Partial<FetchProps> = {
     method,
@@ -48,6 +50,9 @@ export const Fetch = async ({
   }
   if (headers) {
     Object.assign(options["headers"], headers);
+  }
+  if (body) {
+    options["body"] = JSON.stringify(body);
   }
   try {
     const res = await fetch((baseUrl || urlApi) + (endpoint || ""), options);
