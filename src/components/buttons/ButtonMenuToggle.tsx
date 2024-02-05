@@ -5,6 +5,7 @@ import { CloseRounded, MuiIconButton } from "..";
 import { ButtonProps } from "@/types";
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { Menu, X } from "lucide-react";
 
 const ButtonMenuToggle = ({ className }: Partial<ButtonProps>) => {
   const preventScroll = () => {
@@ -53,17 +54,19 @@ const ButtonMenuToggle = ({ className }: Partial<ButtonProps>) => {
     <>
       <MuiIconButton
         id="menuIcon"
-        className={`${className} group/menu text-subH`}
+        className={`${className} group/menu !text-subH`}
         data-state="open"
         onClick={handleClick}
       >
         <CloseRounded
           fontSize="medium"
-          className="group-data-[state=close]/menu:hidden"
+          className="group-data-[state=close]/menu:!hidden"
         />
+        {/* <X size={24} className="group-data-[state=close]/menu:hidden" />
+        <Menu size={24} className="group-data-[state=open]/menu:hidden" /> */}
         <MenuRounded
           fontSize="medium"
-          className="group-data-[state=open]/menu:hidden"
+          className="group-data-[state=open]/menu:!hidden"
         />
       </MuiIconButton>
     </>

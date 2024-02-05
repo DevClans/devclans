@@ -1,3 +1,4 @@
+import type { Config } from "tailwindcss";
 import { withUt } from "uploadthing/tw";
 export const tailwindColors = {
   border: "#132341",
@@ -44,4 +45,4 @@ export default withUt({
     },
   },
   plugins: [],
-});
+}) satisfies Config;

@@ -45,6 +45,7 @@
     "react-toastify": "^9.1.3",
     "redis-server": "^1.2.2",
     "sass": "^1.69.7",
+    "sharp": "^0.33.2",
     "uploadthing": "^6.2.0",
     "zod": "^3.22.4"
   },
