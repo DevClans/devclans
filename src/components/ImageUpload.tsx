@@ -7,8 +7,9 @@ import { useState } from "react";
 const ImageUpload = () => {
   const [imageUrl, setImageUrl] = useState<string>("");
   return (
-    <div>
+    <>
       <UploadButton
+        className="w100"
         endpoint="imageUploader"
         onClientUploadComplete={(res) => {
           setImageUrl(res[0].url);
@@ -24,7 +25,7 @@ const ImageUpload = () => {
           <Image src={imageUrl} alt="Uploaded Image" width={500} height={300} />
         </div>
       ) : null}
-    </div>
+    </>
   );
 };
 

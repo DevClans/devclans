@@ -1,4 +1,3 @@
-import { FetchProjectDetailsItemProps } from "./mongo/project.types";
 import { BooleanStateProps } from "./state.types";
 
 export type ToogleListItemProps = {
@@ -9,6 +8,8 @@ export type ToogleListItemProps = {
     desc?: string; // desc like desc,solution,needHelp
   }[]; // title like desc,solution,needHelp
   // data: Omit<FetchProjectDetailsItemProps, "solution" | "needHelp">; // title like desc,solution,needHelp
+  style?: React.CSSProperties;
+  className?: string;
 };
 
 export type ProjectDetailsItemProps = {

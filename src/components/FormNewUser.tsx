@@ -166,6 +166,7 @@ const FormNewUser = ({
           defaultValues={defaultValues}
           isEdit={isEdit}
           heading="Lets Create Your Profile"
+          setValue={setValue}
           buttons={
             <ButtonBlue
               className="mt-4"

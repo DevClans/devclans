@@ -1,7 +1,7 @@
 import { env } from "node:process";
 import { Redis } from "ioredis";
 
-const redisClient = new Redis(env.REDIS_URL as string);
+const redisClient = new Redis("redis://localhost:6379");
 
 redisClient.on("connect", () => {
   console.log("Redis connected", process.env.PORT);

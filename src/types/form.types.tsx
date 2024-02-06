@@ -5,6 +5,7 @@ export type InputFieldProps = {
   options?: string[];
   condition?: boolean;
   multi?: boolean;
+  editableList?: any; // preview only available for toogle list
 };
 export type FormClientProps = {
   zodSchema: any;
@@ -24,4 +25,5 @@ export type FormServerProps = {
     isSubmitting: boolean;
   };
   heading: string;
+  setValue: any;
 };

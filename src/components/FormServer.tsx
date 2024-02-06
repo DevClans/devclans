@@ -3,6 +3,7 @@ import MultipleSelectChip from "./MultiSelect";
 import { ErrorMessage } from "@hookform/error-message";
 import { ButtonSecondary } from ".";
 import CommonHero from "./CommonHero";
+import EditableLIst from "./EditableLIst";
 
 const FormServer = ({
   zodFormShape,
@@ -12,17 +13,19 @@ const FormServer = ({
   onSubmit,
   commonClass,
   register,
-  formId,
+  formId = "userForm",
   formState: { isSubmitting, errors },
   isEdit = false,
   defaultValues,
+  setValue,
 }: FormServerProps & { isEdit?: boolean; defaultValues?: any }) => {
+  console.log("errors", errors);
   return (
     <>
       <CommonHero heading={heading} />
       <div className="w100 container p-6">
         <form
-          id={formId || "userForm"}
+          id={formId}
           className="fcfs gap-4 w100"
           // action={`${urlApi}/user/profile`}
           // onSuccess={() => {
@@ -36,11 +39,36 @@ const FormServer = ({
         >
           {/* New fields */}
           {fieldsArray.map(
-            ({ label, name, options, type, condition, multi = false }, i) => {
+            (
+              {
+                label,
+                name,
+                options,
+                type,
+                condition,
+                multi = false,
+                editableList,
+              },
+              i
+            ) => {
               // const conditions:any = {}
               // if (typeof condition == "boolean" && condition) {
               //   conditions.required = true
               // }
+              const editableListEle = (
+                <EditableLIst
+                  setValue={setValue}
+                  defaultValues={defaultValues}
+                  name={name}
+                  editableList={editableList || []}
+                />
+              );
+              const textareaEle = (
+                <textarea
+                  className={` ${commonClass}`}
+                  {...register(name as any)}
+                ></textarea>
+              );
               const selectEle = (
                 <select
                   className={` ${commonClass}`}
@@ -69,7 +97,7 @@ const FormServer = ({
                 <input
                   {...register(name as any)}
                   type={type || "text"}
-                  className={` ${commonClass}`}
+                  className={`${type == "checkbox" && "!w-fit"} ${commonClass}`}
                 />
               );
               // console.log("condition", condition, name);
@@ -94,15 +122,19 @@ const FormServer = ({
               // );
 
               return (
-                <div key={i + "parent"} className={`fcc gap-2 w100`}>
+                <div key={i + "parent"} className={`fcfs gap-2 w100`}>
                   {/* <div className=""> */}
-                  <label className="w100 text-xs">
+                  <label className="w100">
                     {isRequired && "*"} {label}
                   </label>
-                  {Boolean(options)
+                  {Boolean(editableList)
+                    ? editableListEle
+                    : Boolean(options)
                     ? multi
                       ? multiSelectEle
                       : selectEle
+                    : type == "textarea"
+                    ? textareaEle
                     : inputEle}
                   {/* </div> */}
                   <ErrorMessage
@@ -123,7 +155,7 @@ const FormServer = ({
             label={"Update Profile"}
             loading={isSubmitting}
             type="submit"
-            form={formId || "userForm"}
+            form={formId}
           />
         </form>
         {buttons}

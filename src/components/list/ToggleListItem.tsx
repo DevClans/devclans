@@ -6,10 +6,12 @@ const ToggleListItem = ({
   heading,
   data,
   open = false,
+  className,
+  style,
 }: ToogleListItemProps) => {
   return (
     <>
-      <details className="w100" open={open}>
+      <details className={`w100 ${className}`} style={style} open={open}>
         <summary className="w100 frcsb">
           <p className="text-highlight capitalize font-medium">
             {heading || "Heading"}

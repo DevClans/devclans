@@ -289,17 +289,17 @@ export const zodProjectDetailsSchema = z.object({
   challenges: z
     .array(
       z.object({
-        title: z.string().default(""),
-        desc: z.string().default(""),
-        solution: z.string().default(""),
+        title: z.string(),
+        desc: z.string(),
+        solution: z.string().optional(),
       })
     )
     .optional(),
   futureGoals: z
     .array(
       z.object({
-        title: z.string().default(""),
-        desc: z.string().default(""),
+        title: z.string(),
+        desc: z.string(),
         needHelp: z.boolean().default(false),
       })
     )
@@ -307,8 +307,8 @@ export const zodProjectDetailsSchema = z.object({
   memberReq: z
     .array(
       z.object({
-        title: z.string().default(""),
-        desc: z.string().default(""),
+        title: z.string(),
+        desc: z.string(),
       })
     )
     .optional(),
@@ -328,12 +328,12 @@ export const zodProjectDataSchema = z.object({
   contributors: z.string().array().default([]),
   // Add other properties if needed
   topics: z.array(z.string()).default([]),
-  repoName: z.string().max(50).default(""),
+  repoName: z.string().max(50),
   likesCount: z.number().default(0),
   bookmarkCount: z.number().default(0),
   projectLinks: stringArraySchema.default([]),
   projectDetails: zodProjectDetailsSchema,
-  video: z.string().default(""),
+  video: z.string(),
   devStage: z.enum(devStages as any).default("idea"),
   published: z.boolean().default(false),
   repoDetails: zodRepoDetailsSchema,
@@ -347,8 +347,8 @@ export const projectSchema = z.object({
 export const zodProjectFormSchema = z.object({
   title: z.string().min(3).max(50),
   desc: z.string().min(10).max(180),
-  skills: z.string().array().default([]),
-  team: z.string().array().default([]),
+  skills: z.enum(skills).array().default([]),
+  team: z.array(zodMongoId).optional(),
   needMembers: z
     .enum(memberLevels as any)
     .nullable()
@@ -361,7 +361,7 @@ export const zodProjectFormSchema = z.object({
   projectDetails: zodProjectDetailsSchema,
   devStage: z.enum(devStages as any).default("idea"),
   published: z.boolean().default(false),
-  domain: z.enum(projectDomains),
+  domain: z.array(z.enum(projectDomains)),
 });
 export const projectArraySchema = z.array(projectSchema);
 
