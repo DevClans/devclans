@@ -4,10 +4,11 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import UserAvatarMenu from "../AvatarMenu";
 
 const ButtonLogin = () => {
   const [loading, setLoading] = useState(false);
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
 
   const handleLogin = async () => {
     setLoading(true);
@@ -21,6 +22,9 @@ const ButtonLogin = () => {
     toast.info("Successfully Logged Out");
     setLoading(false);
   };
+  if (session) {
+    return <UserAvatarMenu username={session?.user?.username} />;
+  }
 
   return (
     <button
