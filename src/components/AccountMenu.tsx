@@ -71,7 +71,7 @@ export default function AccountMenu({
 }) {
   const { data: session }: any = useSession();
   const userState = session?.user;
-  console.log("userState", userState, session);
+  // console.log("userState", userState, session);
   const open = Boolean(anchorEl);
 
   const handleClose = () => {

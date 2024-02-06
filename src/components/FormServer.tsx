@@ -19,7 +19,7 @@ const FormServer = ({
   defaultValues,
   setValue,
 }: FormServerProps & { isEdit?: boolean; defaultValues?: any }) => {
-  console.log("errors", errors);
+  // console.log("errors", errors);
   return (
     <>
       <CommonHero heading={heading} />

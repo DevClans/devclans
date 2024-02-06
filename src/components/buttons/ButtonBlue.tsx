@@ -3,7 +3,7 @@ import { ButtonProps } from "@/types";
 import { ArrowRightAltRounded } from "..";
 import ButtonLink from "./ButtonLink";
 
-const ButtonBlue = ({ className, label, ...props }: ButtonProps) => {
+const ButtonBlue = ({ className, label, disabled, ...props }: ButtonProps) => {
   return (
     <ButtonLink
       className={
@@ -13,9 +13,10 @@ const ButtonBlue = ({ className, label, ...props }: ButtonProps) => {
       label={
         <>
           {label}
-          <ArrowRightAltRounded fontSize={"medium"} />
+          {!disabled && <ArrowRightAltRounded fontSize={"medium"} />}
         </>
       }
+      disabled={disabled}
       {...props}
     />
   );
