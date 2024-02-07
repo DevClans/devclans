@@ -1,6 +1,6 @@
 "use client";
 import { InputFieldProps } from "@/types/form.types";
-import { UserFormProps } from "@/types/mongo/user.types";
+import { UserFormProps, UserProps } from "@/types/mongo/user.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import FormServer from "./FormServer";
@@ -14,7 +14,6 @@ import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { createProjectUser } from "@/utils/createProjectUser";
 import { ProjectFormProps } from "@/types/mongo/project.types";
-import { useRouter } from "next/navigation";
 import selectUserContactId from "@/lib/selectUserContactId";
 
 const FormNewUser = ({
@@ -22,14 +21,17 @@ const FormNewUser = ({
 }: {
   defaultValues?: UserFormProps | ProjectFormProps;
 }) => {
-  const router = useRouter();
-  const isEdit = Boolean(dv);
+  const isEdit = false;
   const searchParams = useSearchParams();
   const { data }: any = useSession();
-  const githubUsername = searchParams.get("githubUsername");
   const session = data?.user;
-  const defaultValues = dv || {};
-  console.log("defaultValues", defaultValues);
+  const defaultValues: UserProps | UserFormProps =
+    (dv as unknown as UserProps) || {};
+  const githubUsername =
+    searchParams.get("githubUsername") ||
+    defaultValues?.githubId ||
+    defaultValues?.githubDetails?.login;
+  // console.log("defaultValues", defaultValues);
   const { watch, setError, setValue, handleSubmit, ...form } =
     useForm<UserFormProps>({
       defaultValues: defaultValues as any,
@@ -45,9 +47,9 @@ const FormNewUser = ({
       setError
     );
     console.log("res", res, session);
-    if (res && userid) {
-      router.push(`/user/${userid}?tab=overview`);
-    }
+    // if (res && userid) {
+    //   router.push(`/user/${userid}?tab=overview`);
+    // }
     return data;
   };
   const contactMethod = watch("contactMethod");
@@ -155,7 +157,7 @@ const FormNewUser = ({
     // TODO encrypt the user id
     console.log("CLIENT_ID", CLIENT_ID, CALLBACK_URL);
     const state = userid;
-    const SCOPES = "read:user,user:email";
+    const SCOPES = "read:user,user:email,repo";
     window.location.href = `${GITHUB_AUTH_URL}?client_id=${CLIENT_ID}&redirect_uri=${CALLBACK_URL}&scope=${SCOPES}${
       state ? `&state=${state}` : ""
     }`;
@@ -177,6 +179,7 @@ const FormNewUser = ({
             <ButtonBlue
               disabled={Boolean(githubUsername)}
               className="mt-4"
+              type="button"
               label={githubUsername ? "Connected" : "Connect Your GitHub"}
               onClick={handleConnectGitHub}
             />
