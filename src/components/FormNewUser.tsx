@@ -39,7 +39,7 @@ const FormNewUser = ({
   const onSubmit: SubmitHandler<UserFormProps> = async (data) => {
     data.contactMethodId = selectUserContactId(data);
     const res = await createProjectUser(
-      "/user/update",
+      "/user/update/" + userid,
       data,
       session,
       setError

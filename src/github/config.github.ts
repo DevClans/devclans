@@ -18,7 +18,7 @@ export const getOctokit = async ({
         api: await app.getInstallationOctokit(installationId),
         type: "app",
       };
-    } else if (zodGithubAccessToken.parse(accessToken)) {
+    } else if (zodGithubAccessToken.safeParse(accessToken).success) {
       return {
         api: new Octokit({
           auth: accessToken,

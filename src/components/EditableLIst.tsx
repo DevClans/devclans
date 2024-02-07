@@ -117,7 +117,7 @@ const EditableLIst = ({
             </>
           )}
           <ButtonSecondary
-            className="!w-fit px-2"
+            className="!w-fit px-2 mb-2"
             label="Add"
             type="button"
             onClick={handleAdd}

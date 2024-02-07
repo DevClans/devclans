@@ -7,11 +7,12 @@ import { contactMethods } from "@/lib/contactMethods";
 import { projectDomains } from "@/lib/domains";
 import { zodUserTeamItemSchema } from "./users/zod.userTeam";
 
-export const zodMongoId = z
-  .string()
-  .refine((value) => Types.ObjectId.isValid(value), {
+export const zodMongoId = z.union([
+  z.string().refine((value) => Types.ObjectId.isValid(value), {
     message: "something worong with object id",
-  });
+  }),
+  z.instanceof(Types.ObjectId).transform((id) => id.toString()),
+]);
 export const MySchema = z.object({
   owner: z.string().refine((value) => Types.ObjectId.isValid(value), {
     message: "Invalid ObjectId",
@@ -29,18 +30,24 @@ export const zodDateString = z.date().refine(
 );
 export const zodGithubAccessToken = z
   .string()
-  .refine((value) => /^[a-fA-F0-9]{40}$/.test(value), {
+  .min(30)
+  .max(60)
+  .refine((value) => /^[a-zA-Z0-9_]+$/.test(value), {
     message: "Invalid GitHub access token format",
   });
-export const zodProjectOwnerSchema = z.object({
-  _id: zodMongoId,
-  githubId: z.string().min(1).max(50),
-  githubDetails: z
-    .object({
-      accessToken: zodGithubAccessToken,
-    })
-    .optional(),
-});
+export const zodProjectOwnerSchema = z.union([
+  z.object({
+    _id: zodMongoId,
+    githubId: z.string().min(1).max(50).optional(),
+    githubDetails: z
+      .object({
+        accessToken: zodGithubAccessToken,
+        login: z.string().min(1).max(50),
+      })
+      .optional(),
+  }),
+  zodMongoId,
+]);
 
 export const stringSchema = z.string();
 
@@ -270,20 +277,19 @@ export const zodProjectSearchInfoSchema = z.object({
   _id: zodMongoId,
   owner: zodProjectOwnerSchema,
 });
-export const zodRepoDetailsSchema = z
-  .object({
-    description: z.string().min(10).max(100),
-    stars: z.number().max(1000000),
-    forks: z.number().max(10000),
-    watchers: z.number().max(1000000),
-    topics: z.array(z.string()).max(20).default([]).optional(),
-    commits: z.number().max(10000).optional(),
-    lastCommit: zodDateString,
-    readme: z.string().max(3000),
-    contributing: z.string().max(3000),
-    languages: z.record(z.number()),
-  })
-  .optional();
+export const zodRepoDetailsSchema = z.object({
+  description: z.string().min(10).max(100),
+  stars: z.number().max(1000000),
+  forks: z.number().max(10000),
+  watchers: z.number().max(1000000),
+  topics: z.array(z.string()).max(20).default([]).optional(),
+  commits: z.number().max(10000).optional(),
+  lastCommit: zodDateString,
+  readme: z.string().max(3000),
+  contributing: z.string().max(3000),
+  languages: z.record(z.number()),
+});
+
 export const zodProjectDetailsSchema = z.object({
   problem: z.string().max(180),
   challenges: z
@@ -336,16 +342,15 @@ export const zodProjectDataSchema = z.object({
   video: z.string(),
   devStage: z.enum(devStages as any).default("idea"),
   published: z.boolean().default(false),
-  repoDetails: zodRepoDetailsSchema,
+  repoDetails: zodRepoDetailsSchema.optional(),
 });
 
-export const projectSchema = z.object({
-  ...zodProjectSearchInfoSchema.shape,
-  ...zodProjectDataSchema.shape,
-});
+export const projectSchema = zodProjectDataSchema.merge(
+  zodProjectSearchInfoSchema
+);
 
 export const zodProjectFormSchema = z.object({
-  title: z.string().min(3).max(50),
+  title: z.string().trim().min(3).max(50),
   desc: z.string().min(10).max(180),
   skills: z.enum(skills).array().default([]),
   team: z.array(zodMongoId).optional(),
@@ -355,14 +360,35 @@ export const zodProjectFormSchema = z.object({
     .default("beginner"),
   imgs: z.array(z.string()).default([]),
   topics: z.array(z.string()).default([]),
-  repoName: z.string().max(50).default(""),
-  projectLinks: z.array(z.string()).default([]),
-  video: z.string().default(""),
+  repoName: z
+    .string()
+    .trim()
+    .startsWith("https://github.com")
+    .min("https://github.com".length + 3)
+    .max(100),
+  // .refine((item) => item.startsWith("https://github.com"), {
+  //   message: "Invalid github url",
+  // })
+  // .transform((item) => item.split("https://github.com")[1]),
+  projectLinks: z.array(z.string().trim()).default([]),
+  video: z.string().trim().default(""),
   projectDetails: zodProjectDetailsSchema,
   devStage: z.enum(devStages as any).default("idea"),
   published: z.boolean().default(false),
   domain: z.array(z.enum(projectDomains)),
 });
+
+export const zodProjectFormSchemaServer = zodProjectFormSchema
+  .omit({ repoName: true })
+  .extend({
+    repoName: z
+      .string()
+      .trim()
+      .startsWith("https://github.com")
+      .min("https://github.com".length + 3)
+      .max(100)
+      .transform((item) => item.split("https://github.com")[1]),
+  });
 export const projectArraySchema = z.array(projectSchema);
 
 export const likeAndBkMarkSchema = z.object({

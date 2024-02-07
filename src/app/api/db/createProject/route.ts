@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import { UserModel, ProjectModel } from "@/mongodb/models";
-import {
-  stringSchema,
-  zodProjectFormSchema,
-  userSchema,
-  projectSchema,
-  zodMongoId,
-} from "@/zod/zod.common";
+import { zodMongoId, zodProjectFormSchemaServer } from "@/zod/zod.common";
+import updateAllCache from "@/redis/updateUserCache";
+import { getGithubData } from "@/utils/getGithubDataForProject";
+import { UserRedisKeys } from "@/types/mongo/user.types";
+import redisClient from "@/redis/config";
 
 async function handler(req: Request) {
   try {
@@ -16,32 +14,67 @@ async function handler(req: Request) {
     const body = await req.json();
     const { id, data } = body;
     const userid = zodMongoId.parse(id);
-    const dataSet = zodProjectFormSchema.parse(data);
+    const dataSet = zodProjectFormSchemaServer.parse(data);
     // fetch and ADD GITHUB DATA
     console.log("data recieved ", dataSet, "from id ", userid);
 
-    // const user = await UserModel.findOne({"_id":id});
-
-    // if (!user) {
-    //   return NextResponse.json({ message: 'User not found' });
-    // }
-
     // Create a new project
-    const createdProject = new ProjectModel({ ...dataSet, owner: userid });
-    await createdProject.save();
-    // Update the user's projects array
-    const projectId = createdProject._id;
+    const createdProject = await ProjectModel.create({
+      ...dataSet,
+      owner: userid,
+    });
+    const projectData = createdProject.toObject();
+    const projectId = zodMongoId.parse(createdProject._id);
     console.log("new project id", projectId);
-
-    const updatedUser = await UserModel.findOneAndUpdate(
+    // add project info in cache
+    console.log("Update project data cache...");
+    await updateAllCache(projectId, createdProject, "projects");
+    console.log("Project data cache updated");
+    // update user data
+    console.log("Updating user data cache...");
+    const updatedUser: any = await UserModel.findOneAndUpdate(
       { _id: userid },
       { $push: { ownedProjects: projectId } },
-
       { new: true } // Return the updated document
-    );
-    console.log("updated user ", updatedUser);
+    )
+      .select(
+        "githubId githubDetails.accessToken githubDetails.username githubDetails.login"
+      )
+      .lean();
+    console.log("Updated user profile:", updatedUser);
+    // update user cache
+    console.log("getting user data cache...");
+    const cacheUserData = redisClient.hget(UserRedisKeys.github, userid);
+    if (typeof cacheUserData == "string") {
+      try {
+        console.log("updating user data in cache in createProject");
+        const userdata = JSON.parse(cacheUserData);
+        userdata.ownedProjects.push(projectId);
+        redisClient.hset(UserRedisKeys.data, userid, JSON.stringify(userdata));
+        console.log("user data in cache updated in createProject");
+      } catch (error) {
+        console.error(
+          "Error updating user data cache in createProject:",
+          error
+        );
+      }
+    }
+    //  we are getting entire data and updating entire cache. but this is not optimal. just getting updated info will be nicer.
 
-    console.log("done");
+    // fetching and add github data
+    getGithubData(
+      projectId,
+      { ...projectData, owner: updatedUser },
+      updatedUser?.githubDetails?.accessToken || ""
+    ).then((data) => {
+      if (data) {
+        console.log("Github data fetched");
+      } else {
+        console.log("Github data fetched failed");
+      }
+    });
+
+    console.log("Project successfully created");
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

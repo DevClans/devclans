@@ -44,14 +44,20 @@ const FormNewProject = () => {
   const onSubmit: SubmitHandler<ProjectFormProps> = async (data) => {
     try {
       console.log("clicked", data);
+      // const dt = zodProjectFormSchema.parse(data);
+      // console.log(dt);
+      // return;
       return await createProjectUser(
         "/db/createProject",
         data,
         session,
         setError
       );
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
+      console.log(err, "in catch block of onSubmit in FormNewProject");
+      setError("root", {
+        message: err?.message,
+      });
     }
   };
   // const onSubmit = ()=>{
