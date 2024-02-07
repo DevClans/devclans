@@ -14,7 +14,7 @@ const UserOverview = ({
   username: string;
   githubDetails?: UserProps["githubDetails"];
 }) => {
-  const { readme, username: githubUsername, login } = githubDetails || {};
+  const { readme, login } = githubDetails || {};
   const removeHashTag = (str: string) => str?.replace("#", "") || "E2E8FF8C";
   const urlSettings = `&theme=transparent&bg_color=081121&title_color=${removeHashTag(
     colors.priDark
@@ -27,12 +27,12 @@ const UserOverview = ({
     <>
       <div id="overview" className="cardCommon gap-4 flex flex-col w100">
         <h3>{username ? username + "'s" : ""} Activity</h3>
-        <GitHubGraph username={login || githubUsername || ""} />
+        <GitHubGraph username={login || ""} />
       </div>
-      {readme && (
+      {typeof readme == "string" && (
         <ReactMarkdown className="cardCommon markdown">{readme}</ReactMarkdown>
       )}
-      {githubUsername && (
+      {login && (
         <div className="cardCommon  fcfs gap-2">
           <div className="fcfs gap-1 mb-2">
             <h3 className="">Githubs Stats</h3>

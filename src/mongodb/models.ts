@@ -15,6 +15,7 @@ import { projectDomains } from "@/lib/domains";
 const userSchema = new mongoose.Schema<UserMongoProps>(
   {
     discordId: { type: String, required: true },
+    githubId: { type: String },
     githubDetails: { type: userGithubDetailsSchema },
     domain: {
       type: String,

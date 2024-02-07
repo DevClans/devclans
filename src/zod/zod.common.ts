@@ -66,17 +66,22 @@ const isValidHexColorVariableLength = (value: any) => {
   const hexString = value.toString(16); // Convert integer to hexadecimal string
   return /^#?([0-9A-F]{6}|[0-9A-F]{7}|[0-9A-F]{8})$/i.test(hexString); // Regular expression to validate hexadecimal color code with variable length
 };
-export const userGithubDetailsSchema = z.object({
-  accessToken: z.string(),
-  username: z.string().max(50),
+export const zodUserGithubDetailsSchemaForFrontend = z.object({
   avatar_url: z.string().optional(),
   node_id: z.string().optional(),
   name: z.string().trim().max(255).optional(),
-  company: z.string().trim().max(255).optional(),
-  bio: z.string().trim().max(500).optional(),
+  company: z.string().trim().max(255).nullable().optional(),
+  bio: z.string().trim().max(500).nullable().optional(),
   twitter_username: z.string().trim().max(50).optional(),
   login: z.string().min(1).trim(),
+  readme: z.string().max(3000).optional(),
 });
+
+export const zodUserGithubDetailsSchema = z
+  .object({
+    accessToken: z.string(),
+  })
+  .merge(zodUserGithubDetailsSchemaForFrontend);
 
 export const zodUserDiscordDetailsSchema = z.object({
   _id: z.string().refine((value) => /^\d{17,19}$/.test(value), {
@@ -128,7 +133,8 @@ export const zodUserDiscordDetailsSchema = z.object({
 export const zodUserSearchInfoSchema = z.object({
   skillLevel: z.enum(memberLevels as any).optional(),
   skills: z.array(z.enum(skills)).default([]),
-  githubDetails: userGithubDetailsSchema.optional(),
+  // githubDetails: userGithubDetailsSchema,
+  githubId: z.string().max(50).optional(),
   bio: stringSchema.min(10).max(100),
   username: stringSchema.max(50).min(1).optional(),
   avatar: z.string().optional(),
