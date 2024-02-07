@@ -1,14 +1,13 @@
 "use client";
 import Menu, { MenuProps } from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Logout from "@mui/icons-material/Logout";
-import { Divider, styled } from "@mui/material";
+import { styled } from "@mui/material";
 import { Dashboard } from "@mui/icons-material";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import colors from "@/lib/colors";
 import { LightLine } from ".";
+import { editProfile } from "@/paths";
+import { urlUser } from "@/constants";
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -46,18 +45,7 @@ const StyledMenu = styled((props: MenuProps) => (
     },
   },
 }));
-const userMenuItems = [
-  {
-    title: "Bookmarks",
-    link: "/bookmarks",
-    icon: <Dashboard fontSize="small" />,
-  },
-  {
-    title: "Likes",
-    link: "/likes",
-    icon: <Dashboard fontSize="small" />,
-  },
-];
+
 export default function AccountMenu({
   anchorEl,
   setAnchorEl,
@@ -73,7 +61,25 @@ export default function AccountMenu({
   const userState = session?.user;
   // console.log("userState", userState, session);
   const open = Boolean(anchorEl);
-
+  const userMenuItems = [
+    {
+      title: "Bookmarks",
+      link: "/bookmarks",
+      icon: <Dashboard fontSize="small" />,
+    },
+    {
+      title: "Likes",
+      link: "/likes",
+    },
+    {
+      title: "View Profile",
+      link: urlUser(userState?._id as string),
+    },
+    {
+      title: "Edit Profile",
+      link: editProfile(userState?._id as string),
+    },
+  ];
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -89,7 +95,9 @@ export default function AccountMenu({
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
     >
       <div className="px-4 py-2 fcfs gap-2 w100">
-        <h3 className="!text-subH w100">{userState?.username}</h3>
+        <Link href={"/user/" + userState?._id}>
+          <h3 className="!text-subH w100">{userState?.username}</h3>
+        </Link>
         <LightLine />
         {userMenuItems.map(({ link, title }, i) => (
           <Link
@@ -104,6 +112,7 @@ export default function AccountMenu({
             <h4 className="font-medium w100">{title}</h4>
           </Link>
         ))}
+        <LightLine />
         <button
           className="w100 !items-start"
           onClick={() => {

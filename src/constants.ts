@@ -6,9 +6,9 @@ export const urlApi = commonUrl + "/api";
 export const urlDb =
   process.env.MONGO_URL || "mongodb://localhost:27017/devclans";
 export const urlGithub = (username: string) => `https://github.com/${username}`;
-export const urlUser = (id?: Types.ObjectId) =>
+export const urlUser = (id?: Types.ObjectId | string) =>
   commonUrl + `/user${id ? "/" + id : ""}`;
-export const urlProject = (id?: Types.ObjectId) =>
+export const urlProject = (id?: Types.ObjectId | string) =>
   commonUrl + `/project${id ? "/" + id : ""}`;
 export const fallbackImg = "/produtImgFallback.png";
 export const fallbackImgUser = "/userImgFallback.png";
