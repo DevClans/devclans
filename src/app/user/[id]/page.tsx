@@ -19,7 +19,7 @@ import type {
 } from "@/types/toggleList.types";
 import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 import { Fetch } from "@/utils/fetchApi";
-import { zodUserFormSchemaObj } from "@/zod/zod.common";
+import { userSchema } from "@/zod/zod.common";
 
 type UserPageProps = {
   params: { id: string };
@@ -33,7 +33,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
   const userData: UserProps = await Fetch({
     endpoint: `/user/${id}`,
   });
-  // console.log("user data", userData);
+  console.log("user data", userData);
   if (
     !userData ||
     (userData && ("error" in userData || "message" in userData))
@@ -42,10 +42,10 @@ const page = async ({ params, searchParams }: UserPageProps) => {
   }
 
   const session: any = await getServerSessionForServer();
-  // console.log("mode", mode, session?.user?._id, userData._id);
+  console.log("mode", mode, session?.user?._id, userData._id);
   if (mode == "edit") {
-    if (session?.user?._id != userData._id) {
-      const data = zodUserFormSchemaObj.partial().safeParse(userData);
+    if (session?.user?._id == userData._id) {
+      const data = userSchema.partial().safeParse(userData);
       return (
         // ! here it can be a problem as we are using userData directly
         <FormNewUser

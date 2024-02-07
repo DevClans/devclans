@@ -1,6 +1,10 @@
-import { UserFormProps, UserRedisKeys } from "@/types/mongo/user.types";
 import {
-  userGithubDetailsSchema,
+  UserFormProps,
+  UserProps,
+  UserRedisKeys,
+} from "@/types/mongo/user.types";
+import {
+  zodUserGithubDetailsSchema,
   zodProjectDataSchema,
   zodProjectSearchInfoSchema,
   zodRepoDetailsSchema,
@@ -10,12 +14,13 @@ import {
 import redisClient from "./config";
 import {
   ProjectFormProps,
+  ProjectProps,
   ProjectRedisKeys,
 } from "@/types/mongo/project.types";
 
 export default async function updateAllCache(
   id: string,
-  formData: UserFormProps | ProjectFormProps,
+  formData: UserFormProps | UserProps | ProjectProps | ProjectFormProps,
   type: "users" | "projects" = "users",
   updateGithubCache: boolean = false
 ) {
@@ -31,7 +36,7 @@ export default async function updateAllCache(
       : zodUserSearchInfoSchema;
     const ZodGithubSchema = isProject
       ? zodRepoDetailsSchema
-      : userGithubDetailsSchema;
+      : zodUserGithubDetailsSchema;
     const searchInfoCache = ZodSearchSchema.partial().parse(formData);
     const dataCache = ZodDataSchema.partial().parse(formData);
     const githubCache = ZodGithubSchema.partial().parse(formData);
