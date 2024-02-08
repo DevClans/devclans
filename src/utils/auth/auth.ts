@@ -7,6 +7,8 @@ import { UserDiscordDetailsProps } from "@/types/mongo/user.types";
 import { zodUserDiscordDetailsSchema } from "@/zod/zod.common";
 import { Fetch } from "../fetchApi";
 
+
+
 export const authOptions: NextAuthOptions = {
   adapter: adapter,
   providers: [
@@ -72,25 +74,53 @@ export const authOptions: NextAuthOptions = {
       } as any;
       return session;
     },
-    async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
-      if (url.startsWith("/")) return `${baseUrl}${url}`
-      // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url
-      return baseUrl
-    },
+
+    // async redirect({ url="/explore/projects", baseUrl=" http://localhost:3000" }) {
+    //   // Allows relative callback URLs
+    //   if (url.startsWith("/")) {
+    //     console.log(`${baseUrl}${url}`)
+    //     return `${baseUrl}${url}`
+    //   }
+    //   // Allows callback URLs on the same origin
+    //   else if (new URL(url).origin === baseUrl) {
+    //     console.log("This is "+url);
+    //     return url
+    //   }
+    //   return baseUrl
+    // },
     // https://next-auth.js.org/configuration/callbacks#sign-in-callback
-    signIn: async ({ user, account, profile, email, credentials }: any) => {
-      // console.log("signIn", user, account, profile, email, credentials);
-      if (process.env.NODE_ENV === "development") return true;
-      const isMember = await Fetch({
-        endpoint: `/middleware/checkServerMembership?discordId=${profile?.id}`,
-        method: "GET",
-        token: account?.access_token,
-      });
-      console.log("isMember", isMember);
-      return isMember?.isMember || false;
-    },
+
+
+//     signIn: async ({ user, account, profile, email, credentials }: any) => {
+//       // console.log("signIn", user, account, profile, email, credentials);
+// if (process.env.NODE_ENV === "development") return true;
+//       const isMember = await Fetch({
+//         endpoint: `/middleware/checkServerMembership?discordId=${profile?.id}`,
+//         method: "GET",
+//         token: account?.access_token,
+//       });
+//       console.log("isMember", isMember);
+//       return isMember?.isMember || false;
+//     },
+
+
+signIn: async ({ user, account, profile, email, credentials }: any) => {
+  // if (process.env.NODE_ENV === "development") return true;
+  if (account.provider != "discord") {
+    return "/error?error=betaNotAvailable";
+  }
+  console.log("signIn", user, account, profile, email, credentials);
+  const isMember = await Fetch({
+    endpoint: `/middleware/checkServerMembership?discordId=${profile?.id}`,
+    method: "GET",
+    token: account?.access_token,
+  });
+  console.log("isMember", isMember);
+  if (!isMember || !isMember?.isMember) {
+    return "/error?error=notMember";
+  }
+  return true;
+},
   },
   events: {
     signIn: async (message) => {

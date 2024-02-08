@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 const ButtonLogin = () => {
   const { data: session } = useSession();
+
   
 
   useEffect( () => {
@@ -27,6 +28,7 @@ const ButtonLogin = () => {
         }
         else{
           console.log("Google");
+          
          
         }       
       }
@@ -36,7 +38,7 @@ const ButtonLogin = () => {
   }, [session]); // Re-run the effect when the session changes
 
   const handleLogin = () => {
-    signIn();
+     signIn();
   };
 
   const handleLogout = () => {
