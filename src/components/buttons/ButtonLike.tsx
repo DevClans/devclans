@@ -19,7 +19,7 @@ const ButtonLike = ({
 }) => {
   const projectId = _id;
   const [liked, setLiked] = useState(true);
-  const [likesCount, setLikeCount] = useState(0);
+  const [likesCount, setLikeCount] = useState(likeCount);
   const [loading, setLoading] = useState(false);
   const { data: session }: any = useSession();
 
@@ -165,6 +165,7 @@ const ButtonLike = ({
       <ButtonIcon
         active={!liked}
         setActive={setLiked}
+        disabled={loading}
         label={loading ? "Loading" : likesCount?.toString()}
         activeIcon={<FavoriteRounded color="primary" fontSize="small" />}
         icon={<FavoriteBorderRounded fontSize="small" />}
