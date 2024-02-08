@@ -31,6 +31,7 @@ const FormNewUser = ({
     searchParams.get("githubUsername") ||
     defaultValues?.githubId ||
     defaultValues?.githubDetails?.login;
+  // TODO this should be based on access token. if we have access token then user is connected
   // console.log("defaultValues", defaultValues);
   const { watch, setError, setValue, handleSubmit, ...form } =
     useForm<UserFormProps>({
@@ -180,7 +181,9 @@ const FormNewUser = ({
               disabled={Boolean(githubUsername)}
               className="mt-4"
               type="button"
-              label={githubUsername ? "Connected" : "Connect Your GitHub"}
+              label={
+                githubUsername ? "Connected To Github" : "Connect Your GitHub"
+              }
               onClick={handleConnectGitHub}
             />
           }
