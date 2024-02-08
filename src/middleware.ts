@@ -1,12 +1,29 @@
 import { withAuth } from "next-auth/middleware";
-import { NextResponse } from "next/server";
+import { NextResponse  } from "next/server";
+import { Ratelimit } from '@upstash/ratelimit';
+import { kv } from '@vercel/kv';
 
 // middleware is applied to all routes, use conditionals to select
 
+const ratelimit = new Ratelimit({
+  redis: kv,
+  // 5 requests from the same IP in 10 seconds
+  limiter: Ratelimit.slidingWindow(10, '100 s'),
+});
+
+// Define which routes you want to rate limit
+
 export default withAuth(
-  function middleware(req) {
+  async function middleware(req) {
     console.log("Incoming request:", req.method, req.url);
-    return NextResponse.next();
+    const ip = req.ip ?? '127.0.0.1';
+  const { success, pending, limit, reset, remaining } = await ratelimit.limit(
+    ip
+  );
+  console.log(success)
+  return success
+    ? NextResponse.next()
+    : NextResponse.redirect(new URL('/blocked', req.url));
   },
   {
     callbacks: {
@@ -45,6 +62,8 @@ export default withAuth(
     },
   }
 );
+
+
 
 export const config = {
   matcher: ["/api/:path*"],

@@ -155,7 +155,7 @@ const projectSchema = new mongoose.Schema<ProjectProps>(
         },
       ],
     },
-    team: [{ type: mongoose.Types.ObjectId, ref: "User", default: [] }],
+   // team: [{ type: mongoose.Types.ObjectId, ref: "User", default: [] }],
     needMembers: {
       type: String,
       enum: memberLevels,
@@ -169,7 +169,7 @@ const projectSchema = new mongoose.Schema<ProjectProps>(
       default: "idea",
     },
     published: { type: Boolean, default: false },
-    repoDetails: projectRepoSchema,
+    //repoDetails: projectRepoSchema,
   },
   { timestamps: true }
 );

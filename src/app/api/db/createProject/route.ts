@@ -15,10 +15,10 @@ async function handler(req: Request) {
     const body = await req.json();
     const { id, data } = body;
     data.owner = id;
-   const dataSet=  projectSchema.parse(data);
+   //const dataSet=  projectSchema.parse(data);
 
 
-  console.log(data)
+  
 
     const user = await UserModel.findOne({"_id":id});
 
@@ -41,7 +41,7 @@ async function handler(req: Request) {
       
       { new: true } // Return the updated document
     );
-    console.log(updatedUser)
+  
 
 
 console.log("done");

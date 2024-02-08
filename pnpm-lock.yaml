@@ -44,9 +44,15 @@ dependencies:
   '@uploadthing/react':
     specifier: ^6.2.0
     version: 6.2.2(next@14.0.4)(react@18.2.0)(uploadthing@6.3.1)
+  '@upstash/ratelimit':
+    specifier: ^1.0.0
+    version: 1.0.0
   '@vercel/analytics':
     specifier: ^1.1.2
     version: 1.1.2
+  '@vercel/kv':
+    specifier: ^1.0.1
+    version: 1.0.1
   axios:
     specifier: ^1.6.5
     version: 1.6.7
@@ -1388,10 +1394,36 @@ packages:
       std-env: 3.7.0
     dev: false
 
+  /@upstash/core-analytics@0.0.6:
+    resolution: {integrity: sha512-cpPSR0XJAJs4Ddz9nq3tINlPS5aLfWVCqhhtHnXt4p7qr5+/Znlt1Es736poB/9rnl1hAHrOsOvVj46NEXcVqA==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      '@upstash/redis': 1.25.1
+    dev: false
+
+  /@upstash/ratelimit@1.0.0:
+    resolution: {integrity: sha512-IUlc+UKuHJQqXGQi7E3UKV0CKfRZ0g6qeNnbSve940k3xLoM+X3H45MrSwDaH7meMWemztLs0Q4yjkd3ItddCw==}
+    dependencies:
+      '@upstash/core-analytics': 0.0.6
+    dev: false
+
+  /@upstash/redis@1.25.1:
+    resolution: {integrity: sha512-ACj0GhJ4qrQyBshwFgPod6XufVEfKX2wcaihsEvSdLYnY+m+pa13kGt1RXm/yTHKf4TQi/Dy2A8z/y6WUEOmlg==}
+    dependencies:
+      crypto-js: 4.2.0
+    dev: false
+
   /@vercel/analytics@1.1.2:
     resolution: {integrity: sha512-CodhkLCQ/EHzjX8k+Qg+OzTBY0UadykrcfolfSOJVZZY/ZJM5nbhztm9KdbYvMfqKlasAr1+OYy0ThZnDA/MYA==}
     dependencies:
       server-only: 0.0.1
+    dev: false
+
+  /@vercel/kv@1.0.1:
+    resolution: {integrity: sha512-uTKddsqVYS2GRAM/QMNNXCTuw9N742mLoGRXoNDcyECaxEXvIHG0dEY+ZnYISV4Vz534VwJO+64fd9XeSggSKw==}
+    engines: {node: '>=14.6'}
+    dependencies:
+      '@upstash/redis': 1.25.1
     dev: false
 
   /@vladfrangu/async_event_emitter@2.2.4:
@@ -1943,6 +1975,10 @@ packages:
       shebang-command: 2.0.0
       which: 2.0.2
     dev: true
+
+  /crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
+    dev: false
 
   /css-select@5.1.0:
     resolution: {integrity: sha512-nwoRF1rvRRnnCqqY7updORDsuqKzqYJ28+oSMaJMMgOauh3fvwHqMS7EZpIPqK8GL+g9mKxF1vP/ZjSeNjEVHg==}
