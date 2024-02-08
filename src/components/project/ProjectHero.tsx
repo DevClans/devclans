@@ -2,8 +2,12 @@ import { ProjectStage, ProjectIconGroup, ChipGroup } from "@/components";
 import ProductImg from "@/components/project/ProjectImg";
 import { urlProject } from "@/constants";
 import { msgSharingProject } from "@/lib/constants.messages";
-import { ProjectProps } from "@/types/mongo/project.types";
+import {
+  ProjectProps,
+  ProjectRepoDetailsProps,
+} from "@/types/mongo/project.types";
 import { PageProps } from "@/types/page.types";
+import ProjectRepoDetails from "./ProjectRepoDetails";
 
 const ProjectHero = ({
   skills = ["react", "nextjs", "typescript", "tailwindcss"],
@@ -15,7 +19,11 @@ const ProjectHero = ({
   bookmarkCount,
   searchParams,
   desc,
-}: ProjectProps & PageProps) => {
+  repoDetails,
+}: Omit<ProjectProps, "repoDetails"> &
+  PageProps & {
+    repoDetails: Partial<ProjectRepoDetailsProps>;
+  }) => {
   const data = {
     title,
     desc,
@@ -34,14 +42,19 @@ const ProjectHero = ({
             _id={data._id}
           />
         </div>
-        <h1 className="text-4xl">{data.title}</h1>
-        <p>{data.desc}</p>
-        {/* chips */}
-        <ChipGroup
-          arr={skills}
-          searchParams={searchParams}
-          baseUrl="/explore/projects"
-        />
+        <div className="frfssb w100 flex-wrap">
+          <div className="fcfs gap-5">
+            <h1 className="text-4xl text-left ">{data.title}</h1>
+            <p>{data.desc}</p>
+            {/* chips */}
+            <ChipGroup
+              arr={skills}
+              searchParams={searchParams}
+              baseUrl="/explore/projects"
+            />
+          </div>
+          <ProjectRepoDetails {...repoDetails} />
+        </div>
       </div>
       {/* images */}
       <div className="relative w100">

@@ -19,19 +19,18 @@ export const getGithubData = async (
   accessToken: string
 ) => {
   try {
+    console.info("-- getting github data --");
     const projectData = projectSchema.partial().parse(project);
     const userAccessToken =
       accessToken ||
       (typeof projectData.owner != "string" &&
         projectData.owner?.githubDetails?.accessToken);
-    console.info("projectData", projectData);
     let readme: string | null = "";
     let contributing: string | null = "";
     let languagePercentages: { [key: string]: number } | null = null;
     const repoDetails: any = {};
 
     // Check if readme is in cache
-    console.info("-- getting github data --");
     const githubDataString = await redisClient.hget(
       ProjectRedisKeys.github,
       projectId
@@ -64,7 +63,7 @@ export const getGithubData = async (
     ];
     // check if all repoDetails fields are in cache. get missing fields
     if (success) {
-      console.info("github data cache hit", githubData);
+      console.info("github data cache hit");
       Object.assign(project, { repoDetails: JSON.parse(githubData) });
     } else {
       console.info("fetching github data");
@@ -90,7 +89,7 @@ export const getGithubData = async (
         return { readme, contributing, languagePercentages };
       }
       console.info("githubUrl =>", githubUrl);
-      console.info("userAccessToken", userAccessToken);
+      console.info("userAccessToken", Boolean(userAccessToken));
       if (userAccessToken) {
         console.info("have access to user accesstoken");
         let default_branch = "";

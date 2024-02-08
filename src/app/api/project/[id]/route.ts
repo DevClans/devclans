@@ -76,7 +76,7 @@ export async function GET(
       isProject = zodProjectSearchInfoSchema.safeParse(
         JSON.parse(projectString)
       );
-      console.info("isProject", !isProject.success && isProject.error);
+      console.info("isProject", isProject.success || isProject.error);
     }
     if (isProject.success && projectString) {
       console.info("projects search info cache hit");

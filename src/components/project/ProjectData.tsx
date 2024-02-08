@@ -1,5 +1,8 @@
 import { FetchProjectProps } from "@/types/fetch.types";
-import { ProjectProps } from "@/types/mongo/project.types";
+import {
+  ProjectProps,
+  ProjectRepoDetailsProps,
+} from "@/types/mongo/project.types";
 import { Fetch } from "@/utils/fetchApi";
 
 // Function to generate a random hex color
@@ -36,7 +39,7 @@ const ProjectData = async (projectId: string) => {
 
   const renderLanguages = () => {
     if (!projectData?.repoDetails?.languages) {
-      return null;
+      return [];
     }
 
     const languagesObject = projectData.repoDetails.languages;
@@ -55,10 +58,10 @@ const ProjectData = async (projectId: string) => {
 
     return languages;
   };
-
+  const languages: ProjectRepoDetailsProps["languages"] = renderLanguages();
   return {
     projectData,
-    renderLanguages,
+    renderLanguages: languages,
   };
 };
 
