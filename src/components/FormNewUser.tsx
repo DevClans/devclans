@@ -1,11 +1,9 @@
 "use client";
 import { InputFieldProps } from "@/types/form.types";
-import { UserFormProps, UserProps } from "@/types/mongo/user.types";
+import { UserFormProps } from "@/types/mongo/user.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import FormServer from "./FormServer";
-import { urlApi } from "@/constants";
-import { toast } from "react-toastify";
 import { skills } from "@/lib/skills";
 import { projectDomains } from "@/lib/domains";
 import { contactMethods } from "@/lib/contactMethods";
@@ -15,37 +13,42 @@ import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { createProjectUser } from "@/utils/createProjectUser";
+import { ProjectFormProps } from "@/types/mongo/project.types";
+import { useRouter } from "next/navigation";
+import selectUserContactId from "@/lib/selectUserContactId";
 
-const FormNewUser = () => {
+const FormNewUser = ({
+  defaultValues: dv,
+}: {
+  defaultValues?: UserFormProps | ProjectFormProps;
+}) => {
+  const router = useRouter();
+  const isEdit = Boolean(dv);
   const searchParams = useSearchParams();
   const { data }: any = useSession();
   const githubUsername = searchParams.get("githubUsername");
   const session = data?.user;
-  const defaultValues = {
-    contactMethod: "discord",
-    domain: "web" as any,
-    skills: [] as any,
-    socials: {
-      twitter: "",
-      linkedin: "",
-      website: "",
-      telegram: "",
-    },
-    questions: {
-      careerGoal: "remote",
-      currentCompany: "asd",
-      proudAchievement: "asd",
-      recentWork: "asd",
-    },
-    bio: "asdasdfdafa",
-  };
-  const { watch, setError, setValue, ...form } = useForm<UserFormProps>({
-    defaultValues: defaultValues as any,
-    resolver: zodResolver(zodUserFormSchema),
-  });
+  const defaultValues = dv || {};
+  console.log("defaultValues", defaultValues);
+  const { watch, setError, setValue, handleSubmit, ...form } =
+    useForm<UserFormProps>({
+      defaultValues: defaultValues as any,
+      resolver: zodResolver(zodUserFormSchema),
+    });
 
-  const onSubmit: SubmitHandler<UserProps> = async (data) => {
-    return await createProjectUser("/user/update", data, session, setError);
+  const onSubmit: SubmitHandler<UserFormProps> = async (data) => {
+    data.contactMethodId = selectUserContactId(data);
+    const res = await createProjectUser(
+      "/user/update",
+      data,
+      session,
+      setError
+    );
+    console.log("res", res, session);
+    if (res && session?._id) {
+      router.push(`/user/${session._id}?tab=overview`);
+    }
+    return data;
   };
   const contactMethod = watch("contactMethod");
   const commonClass: string = "w100";
@@ -87,11 +90,11 @@ const FormNewUser = () => {
       name: "contactMethod",
       options: contactMethods,
     },
-    {
-      label: `Contact ID (${contactMethod}):`,
-      name: "questions.contactId",
-      condition: ["telegram"].includes(contactMethod),
-    },
+    // {
+    //   label: `Contact ID (${contactMethod}):`,
+    //   name: "contactMethodId",
+    //   condition: ["telegram"].includes(contactMethod),
+    // },
     {
       label: "Email:",
       name: "email",
@@ -125,6 +128,7 @@ const FormNewUser = () => {
       label: "Career Goal:",
       name: "questions.careerGoal",
       options: ["remote", "faang", "startup"],
+      multi: true,
     },
   ];
   useEffect(() => {
@@ -159,6 +163,8 @@ const FormNewUser = () => {
     <>
       {
         <FormServer
+          defaultValues={defaultValues}
+          isEdit={isEdit}
           heading="Lets Create Your Profile"
           buttons={
             <ButtonBlue
@@ -169,7 +175,7 @@ const FormNewUser = () => {
           }
           {...form}
           zodFormShape={userFormShape}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           commonClass={commonClass}
           fieldsArray={fieldsArray}
         />

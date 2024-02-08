@@ -19,7 +19,7 @@ const UserProjects = ({
     );
   }
   return (
-    <>
+    <div className="w100 fcfs gap-3">
       {/* OWNED PROJECTS */}
       {ownedProjects?.map((project, i) => (
         <ProjectItem
@@ -28,7 +28,7 @@ const UserProjects = ({
           owner={project.owner as Types.ObjectId}
         /> // Cast the owner property to ObjectId
       ))}
-    </>
+    </div>
   );
 };
 

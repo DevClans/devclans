@@ -11,7 +11,6 @@ import { discordDetailsSchema } from "./discordModel";
 import { userGithubDetailsSchema } from "./githubModal";
 import projectRepoSchema from "./projectRepoDetails";
 import { projectDomains } from "@/lib/domains";
-import { string } from "zod";
 
 const userSchema = new mongoose.Schema<UserMongoProps>(
   {
@@ -92,6 +91,7 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
     createdAt: { type: Date, default: Date.now, required: true },
     updatedAt: { type: Date, default: Date.now, required: true },
     discordDetails: { type: discordDetailsSchema },
+    isMember: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

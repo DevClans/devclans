@@ -1,9 +1,9 @@
-import dbConnect from '@/lib/dbConnect';
-import { NextResponse } from 'next/server';
-import { MongoClient } from 'mongodb';
-import  { stringSchema, projectArraySchema } from "@/zod/zod.common"
+import dbConnect from "@/lib/dbConnect";
+import { NextResponse } from "next/server";
+import { MongoClient } from "mongodb";
+import { stringSchema, projectArraySchema } from "@/zod/zod.common";
 
-const client = new MongoClient(process.env.DATABASE_URL!);
+const client = new MongoClient(process.env.MONGO_URL!);
 
 async function handler(req: Request) {
   await dbConnect();

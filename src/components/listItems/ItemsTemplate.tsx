@@ -1,5 +1,5 @@
 import { PageProps } from "@/types/page.types";
-import { ButtonConnect, ButtonSecondary, ChipGroup } from "..";
+import { ButtonBlue, ButtonConnect, ButtonSecondary, ChipGroup } from "..";
 import Link from "next/link";
 
 type ItemsTemplateProps = Partial<PageProps> & {
@@ -75,7 +75,7 @@ const ItemsTemplate = ({
           {/* buttons */}
           <div className="fcc w100 gap-2">
             <ButtonSecondary href={url} label={"View"} />
-            <ButtonConnect style={{ height: 45 }} label={"Ask A Question"} />
+            <ButtonBlue href={url} label={"Ask A Question"} />
           </div>
         </div>
       </div>

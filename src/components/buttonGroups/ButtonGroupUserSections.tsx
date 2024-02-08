@@ -18,7 +18,7 @@ const ButtonGroupUserSections = ({
     <>
       <div
         className={
-          "frc gap-2 btnRow w-100 !justify-normal sticky top-0  py-2 backdrop-blur-[12px] scrollbar-hide " +
+          "frc gap-2 btnRow w-100 z-50 !justify-normal sticky top-0  py-2 backdrop-blur-[12px] scrollbar-hide " +
           containerClassName
         }
         style={containerStyle}

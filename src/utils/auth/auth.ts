@@ -8,6 +8,14 @@ import { zodUserDiscordDetailsSchema } from "@/zod/zod.common";
 import { Fetch } from "../fetchApi";
 
 
+const isServerMember = async (discordId: string, token: string) => {
+  const isMember = await Fetch({
+    endpoint: `/middleware/checkServerMembership?discordId=${discordId}`,
+    method: "GET",
+    token: token,
+  });
+  return isMember?.isMember;
+};
 
 export const authOptions: NextAuthOptions = {
   adapter: adapter,
@@ -23,11 +31,7 @@ export const authOptions: NextAuthOptions = {
       async profile(profile: any, tokens: any) {
         const { id } = profile;
         const { access_token } = tokens;
-        const isMember = await Fetch({
-          endpoint: `/middleware/checkServerMembership?discordId=${id}`,
-          method: "GET",
-          token: access_token,
-        });
+        const isMember = await isServerMember(id, access_token);
         console.log("isMember in profile", isMember);
         // console.log("access token", tokens);
         const isData = zodUserDiscordDetailsSchema.safeParse({
@@ -39,12 +43,12 @@ export const authOptions: NextAuthOptions = {
         discordDetails = isData.data;
         return {
           id: id,
-          username: profile.username,
+          username: discordDetails.global_name || discordDetails.username,
           discordId: id,
           discordDetails,
           email: profile.email,
           emailVerified: profile.verified,
-          isMember: isMember?.isMember,
+          isMember: isMember,
         };
       },
     }),
@@ -121,6 +125,10 @@ signIn: async ({ user, account, profile, email, credentials }: any) => {
   }
   return true;
 },
+
+  },
+  pages: {
+    newUser: "/user/new",
   },
   events: {
     signIn: async (message) => {

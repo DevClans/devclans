@@ -48,8 +48,10 @@ const Page = async ({
           contact={(data.team as UserTeamItemProps[]).map((item) => {
             return {
               name: item.username || "Username",
-              contactId: item.contactMethodId,
-              contactMethod: item.contactMethod,
+              contactId: item.contactMethodId || item.discordId,
+              contactMethod: item.contactMethodId
+                ? item.contactMethod
+                : "discord",
               icon: selectIconForLinks(item.contactMethod),
             };
           })}

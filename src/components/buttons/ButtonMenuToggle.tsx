@@ -7,6 +7,15 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 const ButtonMenuToggle = ({ className }: Partial<ButtonProps>) => {
+  const preventScroll = () => {
+    document.body.style.height = "100vh";
+    document.body.style.overflow = "hidden";
+  };
+  const continueScroll = () => {
+    document.body.style.height = "auto";
+    document.body.style.overflowX = "hidden";
+    document.body.style.overflowY = "auto";
+  };
   const handleClick = () => {
     console.log("ButtonMenuToggle clicked");
     const menu = document.getElementById("menuIcon");
@@ -15,9 +24,13 @@ const ButtonMenuToggle = ({ className }: Partial<ButtonProps>) => {
     if (menuState === "open") {
       menu?.setAttribute("data-state", "close");
       openMenu?.style.setProperty("display", "none");
+      document.body.style.height = "auto";
+      document.body.style.overflow = "auto";
+      continueScroll();
     } else {
       menu?.setAttribute("data-state", "open");
       openMenu?.style.setProperty("display", "flex");
+      preventScroll();
     }
   };
   const pathname = usePathname();
@@ -28,8 +41,10 @@ const ButtonMenuToggle = ({ className }: Partial<ButtonProps>) => {
     if (menuState === "open") {
       menu?.setAttribute("data-state", "close");
       openMenu?.style.setProperty("display", "none");
+      continueScroll();
     }
     console.log("pathname", pathname, pathname === "/");
+    // TO REMOVE HEADER BG
     if (pathname === "/") {
       document.getElementById("header")?.setAttribute("data-ishome", "true");
     }
@@ -38,7 +53,7 @@ const ButtonMenuToggle = ({ className }: Partial<ButtonProps>) => {
     <>
       <MuiIconButton
         id="menuIcon"
-        className={`${className} group/menu text-heading`}
+        className={`${className} group/menu text-subH`}
         data-state="open"
         onClick={handleClick}
       >

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { skills } from "@/lib/skills";
-import { Types, Schema } from "mongoose";
+import { Types } from "mongoose";
 import { memberLevels } from "@/lib/memberLevel";
 import { devStages } from "@/lib/devStages";
 import { contactMethods } from "@/lib/contactMethods";
@@ -32,7 +32,7 @@ export const zodGithubAccessToken = z
   .refine((value) => /^[a-fA-F0-9]{40}$/.test(value), {
     message: "Invalid GitHub access token format",
   });
-const ownerSchema = z.object({
+export const zodProjectOwnerSchema = z.object({
   _id: zodMongoId,
   githubId: z.string().min(1).max(50),
   githubDetails: z
@@ -86,7 +86,7 @@ export const zodUserDiscordDetailsSchema = z.object({
   }),
   // https://cdn.discordapp.com/avatars/746713386380689509/bd71d4c78ff1b8b234addd5393436661.png
   accent_color: z
-    .number()
+    .union([z.number(), z.string()])
     .nullable()
     .refine((value) => isValidHexColorVariableLength(value), {
       message: "Invalid hexadecimal color code with variable length",
@@ -118,89 +118,141 @@ export const zodUserDiscordDetailsSchema = z.object({
     .optional(),
   // Add other properties and validations as needed
 });
+export const zodUserSearchInfoSchema = z.object({
+  skillLevel: z.enum(memberLevels as any).optional(),
+  skills: z.array(z.enum(skills)).default([]),
+  githubDetails: userGithubDetailsSchema.optional(),
+  bio: stringSchema.min(10).max(100),
+  username: stringSchema.max(50).min(1).optional(),
+  avatar: z.string().optional(),
+  discordDetails: zodUserDiscordDetailsSchema,
+  _id: z.any(),
+});
 
-export const zodUserFormSchema = z
-  .object({
-    githubDetails: userGithubDetailsSchema.optional(),
-    bio: stringSchema.min(10).max(100),
-    contactMethod: z.enum(contactMethods as any),
-    skills: z.array(z.enum(skills)).optional(),
-    socials: z.object({
-      twitter: stringSchema.max(150).optional(),
-      telegram: stringSchema.max(150).optional(),
-      linkedin: stringSchema.max(150).optional(),
-      website: stringSchema.max(150).optional(),
-    }),
-    phone: z
+export const zodUserDataCommonSchema = z.object({
+  contactMethod: z.enum(contactMethods as any),
+  contactMethodId: z.string().max(120).optional(),
+  socials: z.object({
+    twitter: z
       .string()
-      .max(13)
       .nullable()
-      .refine((value) => (value ? /^[0-9]{10}$/.test(value) : true), {
-        message: "Invalid phone number!",
-      })
+      .refine(
+        (value) =>
+          value
+            ? value.startsWith("https://x.com/") && value.length < 150
+            : true,
+        {
+          message: "Invalid Twitter URL! Must start with 'https://x.com/'.",
+        }
+      )
       .optional(),
-    email: z
+    telegram: z.string().max(150).optional(),
+    linkedin: z
       .string()
-      .email()
-      .min(10)
-      .max(100)
       .nullable()
-      .refine((value) => (value ? /\S+@\S+\.\S+/.test(value) : true), {
-        message: "Invalid email address!",
-      })
+      .refine(
+        (value) =>
+          value
+            ? value.startsWith("https://linkedin.com/in/") && value.length < 150
+            : true,
+        {
+          message:
+            "Invalid Twitter URL! Must start with 'https://linkedin.com/in/'.",
+        }
+      )
       .optional(),
-    questions: z.object({
-      currentCompany: z.string().max(250).optional(),
-      careerGoal: z.enum(["remote", "faang", "startup"]).default("remote"),
-      proudAchievement: z.string().max(250).optional(),
-      recentWork: z.string().max(250).optional(),
-    }),
-    domain: z.enum(projectDomains),
-  })
-  .superRefine((value, context) => {
-    if (value.contactMethod === "whatsapp" && !value.phone) {
-      context.addIssue({
-        code: "custom",
-        message: "Phone number is required for WhatsApp contact method",
-        path: ["phone"],
-      });
-    }
-    if (value.contactMethod === "telegram" && !value.socials.telegram) {
-      context.addIssue({
-        code: "custom",
-        message: "Telegram username is required for Telegram contact method",
-        path: ["socials", "telegram"],
-      });
-    }
-    if (value.contactMethod === "email" && !value.email) {
-      context.addIssue({
-        code: "custom",
-        message: "Email is required for Email contact method",
-        path: ["email"],
-      });
-    }
-    if (value.contactMethod === "twitter" && !value.socials.twitter) {
-      context.addIssue({
-        code: "custom",
-        message: "Twitter username is required for Twitter contact method",
-        path: ["socials", "twitter"],
-      });
-    }
-    // return true;
-  });
+    website: z
+      .string()
+      .nullable()
+      .refine(
+        (value) =>
+          value ? value.startsWith("https://") && value.length < 150 : true,
+        {
+          message: "Invalid Twitter URL! Must start with 'https://'.",
+        }
+      )
+      .optional(),
+  }),
+  phone: z
+    .string()
+    .max(13)
+    .nullable()
+    .refine((value) => (value ? /^[0-9]{10}$/.test(value) : true), {
+      message: "Invalid phone number!",
+    })
+    .optional(),
+  email: z
+    .string()
+    .email()
+    .min(10)
+    .max(100)
+    .nullable()
+    .refine((value) => (value ? /\S+@\S+\.\S+/.test(value) : true), {
+      message: "Invalid email address!",
+    })
+    .optional(),
+  questions: z.object({
+    currentCompany: z.string().max(250).optional(),
+    careerGoal: z.array(z.enum(["remote", "faang", "startup"])),
+    proudAchievement: z.string().max(250).optional(),
+    recentWork: z.string().max(250).optional(),
+  }),
+  domain: z.enum(projectDomains),
+});
+export const zodUserDataSchema = z.object({
+  discordId: z.string().min(5).max(50),
+  ownedProjects: z.array(ownedProjects),
+  contributedProjects: z.array(ownedProjects),
+  createdAt: zodDateString,
+  updatedAt: zodDateString,
+  ...zodUserDataCommonSchema.shape,
+});
+export const zodUserFormSchemaObj = z.object({
+  skillLevel: z.enum(memberLevels as any).optional(),
+  skills: z.array(z.enum(skills)).optional(),
+  bio: stringSchema.min(10).max(100),
+  ...zodUserDataCommonSchema.shape,
+});
+const zodUserFormSuperRefine = (value: any, context: any) => {
+  if (value.contactMethod === "whatsapp" && !value.phone) {
+    context.addIssue({
+      code: "custom",
+      message: "Phone number is required for WhatsApp contact method",
+      path: ["phone"],
+    });
+  }
+  if (value.contactMethod === "telegram" && !value.socials.telegram) {
+    context.addIssue({
+      code: "custom",
+      message: "Telegram username is required for Telegram contact method",
+      path: ["socials", "telegram"],
+    });
+  }
+  if (value.contactMethod === "email" && !value.email) {
+    context.addIssue({
+      code: "custom",
+      message: "Email is required for Email contact method",
+      path: ["email"],
+    });
+  }
+  if (value.contactMethod === "twitter" && !value.socials.twitter) {
+    context.addIssue({
+      code: "custom",
+      message: "Twitter username is required for Twitter contact method",
+      path: ["socials", "twitter"],
+    });
+  }
+  // return true;
+};
+export const zodUserFormSchema = zodUserFormSchemaObj.superRefine(
+  zodUserFormSuperRefine
+);
 
 export const userFormShape = zodUserFormSchema._def.schema.shape;
 
 export const userSchema = z.object({
   ...userFormShape,
-  discordId: z.string().min(5).max(50),
-  username: stringSchema.max(50).min(1),
-  avatar: z.string().optional(),
-  ownedProjects: z.array(ownedProjects),
-  contributedProjects: z.array(ownedProjects),
-  discordDetails: zodUserDiscordDetailsSchema.optional(),
-  createdAt: zodDateString,
-  updatedAt: zodDateString,
+  ...zodUserSearchInfoSchema.shape,
 });
 
 export const userArraySchema = z.array(userSchema);
@@ -215,6 +267,8 @@ export const zodProjectSearchInfoSchema = z.object({
     .nullable()
     .default("beginner"),
   imgs: z.array(z.string()).default([]),
+  _id: zodMongoId,
+  owner: zodProjectOwnerSchema,
 });
 export const zodRepoDetailsSchema = z
   .object({

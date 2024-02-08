@@ -14,6 +14,7 @@ const ratelimit = new Ratelimit({
 // Define which routes you want to rate limit
 
 export default withAuth(
+
   async function middleware(req) {
     console.log("Incoming request:", req.method, req.url);
     const ip = req.ip ?? '127.0.0.1';
@@ -30,12 +31,30 @@ export default withAuth(
   {
     callbacks: {
       authorized: ({ req, token }) => {
+        // console.log("token", token);
+        // if (
+        //   req.nextUrl.pathname.startsWith("/user/") &&
+        //   req.nextUrl.searchParams.get("mode") == "edit"
+        // ) {
+        //   if (!token) {
+        //     return false;
+        //   }
+        //   if (req.nextUrl.pathname.split("user/")[1] != token?.id) {
+        //     return false;
+        //   }
+        // }
+
         // return true;
-        if (req.nextUrl.pathname.startsWith("/api/uploadthing")) {
+        if (
+          req.nextUrl.pathname.startsWith("/api/uploadthing") ||
+          req.nextUrl.pathname.startsWith("/api/auth/session")
+        ) {
           return true;
         }
         console.log("authorized", req.nextUrl.pathname, token);
-        const nextSession = req.cookies.get("next-auth.session-token");
+        const nextSession =
+          req.cookies.get("next-auth.session-token") ||
+          req.cookies.get("__Secure-next-auth.session-token");
         // console.log(
         //   "nextSession",
         //   nextSession,

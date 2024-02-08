@@ -1,19 +1,18 @@
 "use client";
 import { ButtonProps } from "@/types";
+import ButtonLink from "../buttons/ButtonLink";
 
 const IconWithBg = ({
-  icon,
   children,
-  onClick,
+  icon,
+  ...rest
 }: React.PropsWithChildren & Partial<ButtonProps>) => {
   return (
-    <button
-      onClick={onClick as any}
-      style={{}}
-      className="p-[10px] card rounded-[5px]"
-    >
-      {icon || children}
-    </button>
+    <ButtonLink
+      className="p-[10px] cardGrad rounded-[5px]"
+      label={icon || children}
+      {...rest}
+    />
   );
 };
 
