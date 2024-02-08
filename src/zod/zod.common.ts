@@ -329,7 +329,7 @@ export const zodProjectSearchInfoSchema = z.object({
   owner: zodProjectOwnerSchema,
 });
 export const zodRepoDetailsSchema = z.object({
-  description: z.string().min(10).max(100),
+  description: z.string().min(10).max(100).nullable(),
   stars: z.number().max(1000000),
   forks: z.number().max(10000),
   watchers: z.number().max(1000000),
@@ -337,7 +337,7 @@ export const zodRepoDetailsSchema = z.object({
   commits: z.number().max(10000).optional(),
   lastCommit: zodDateString,
   readme: z.string().max(3000),
-  contributing: z.string().max(3000),
+  contributing: z.string().max(3000).nullable().optional(),
   languages: z.record(z.number()),
 });
 

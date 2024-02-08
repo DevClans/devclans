@@ -16,10 +16,14 @@ import { Types } from "mongoose";
 export const getGithubData = async (
   projectId: string,
   project: any,
-  userAccessToken: string
+  accessToken: string
 ) => {
   try {
     const projectData = projectSchema.partial().parse(project);
+    const userAccessToken =
+      accessToken ||
+      (typeof projectData.owner != "string" &&
+        projectData.owner?.githubDetails?.accessToken);
     console.info("projectData", projectData);
     let readme: string | null = "";
     let contributing: string | null = "";
@@ -61,7 +65,7 @@ export const getGithubData = async (
     // check if all repoDetails fields are in cache. get missing fields
     if (success) {
       console.info("github data cache hit", githubData);
-      Object.assign(projectData, { repoDetails: JSON.parse(githubData) });
+      Object.assign(project, { repoDetails: JSON.parse(githubData) });
     } else {
       console.info("fetching github data");
       // Fetch GitHub data
@@ -279,7 +283,7 @@ export const getGithubData = async (
         }
       );
       // setting project info
-      projectData.repoDetails = repoDetails;
+      project.repoDetails = repoDetails;
 
       console.info("updateRes for repodetails", Boolean(updateRes));
       // store in cache
