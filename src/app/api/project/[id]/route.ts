@@ -16,6 +16,7 @@ import {
 } from "@/types/mongo/project.types";
 import { UserProps, userTeamItemKeys } from "@/types/mongo/user.types";
 import { getGithubData } from "@/utils/getGithubDataForProject";
+import updateAllCache from "@/redis/updateUserCache";
 
 const zodCheck = z.object({
   id: zodMongoId,
@@ -65,9 +66,12 @@ export async function GET(
       );
       redisClient.expire(ProjectRedisKeys.data, 60 * 60 * 24 * 7); // 1 week
     };
+    console.info("Fetching project search info for id:", id);
     const projectString = await redisClient.hget(ProjectRedisKeys.list, id);
     // console.info("Project found in cache:", project);
     let isProject: any = {};
+    let getProjectSearchInfo = false;
+    let getProjectData = false;
     if (projectString) {
       isProject = zodProjectSearchInfoSchema.safeParse(
         JSON.parse(projectString)
@@ -75,75 +79,85 @@ export async function GET(
       console.info("isProject", !isProject.success && isProject.error);
     }
     if (isProject.success && projectString) {
-      console.info("projects cache hit");
-      Object.assign(project, JSON.parse(projectString));
-      // project is in cache
-      // check if project data is in cache
-      const projectDataString = await redisClient.hget(
-        ProjectRedisKeys.data,
-        id
-      );
-      console.info("projectDataString recieved", Boolean(projectDataString));
-      const projectData = projectDataString && JSON.parse(projectDataString);
-      const isProjectData: any = zodProjectDataSchema.safeParse(projectData);
-      console.info("isProjectData", isProjectData.success);
-      if (isProjectData.success) {
-        console.info("projects data cache hit");
-        // project data is in cache
-        setGithubAccessToken(projectData);
-        Object.assign(project, projectData);
-      } else {
-        console.info("projects data cache miss");
-        // get project data from db except the search info as it is already in cache
-        const projectInfo = await getProjectFromMongo(
-          id,
-          "-" + projectSearchItemKeys.join(" -")
-        );
-        // check if project exists in db
-        if (!projectInfo) {
-          console.error("Project not found");
-          throw new Error("Project not found");
-        }
-
-        // add to cache
-        setProjectDataRedis(projectInfo);
-
-        Object.assign(project, projectInfo);
-      }
+      console.info("projects search info cache hit");
+      Object.assign(project, isProject.data);
     } else {
-      console.info("projects cache miss");
-      const projectInfo: any = await getProjectFromMongo(id);
+      console.info("projects search info cache miss");
+      getProjectSearchInfo = true;
+    }
+
+    // project is in cache
+    // check if project data is in cache
+    console.info("Fetching project data for id:", id);
+    const projectDataString = await redisClient.hget(ProjectRedisKeys.data, id);
+    console.info("projectDataString recieved", Boolean(projectDataString));
+    const projectData = projectDataString && JSON.parse(projectDataString);
+    const isProjectData: any = zodProjectDataSchema.safeParse(projectData);
+    console.info("isProjectData", isProjectData.success);
+
+    if (isProjectData.success) {
+      console.info("projects data cache hit");
+      // project data is in cache
+      setGithubAccessToken(projectData);
+      Object.assign(project, projectData);
+    } else {
+      console.info("projects data cache miss");
+      getProjectData = true;
+    }
+
+    if (getProjectData || getProjectSearchInfo) {
+      // * GETTING DATA FROM DB
+      console.info("Fetching project data from db for id:", id);
+      let select = "";
+      // get both
+      if (!(getProjectData && getProjectSearchInfo)) {
+        if (getProjectSearchInfo) {
+          // get only search info data
+          select += projectSearchItemKeys.join(" ");
+        } else {
+          select += "-" + projectSearchItemKeys.join(" -");
+        }
+      }
+
+      const projectInfo: ProjectProps | null = await getProjectFromMongo(
+        id,
+        select
+      );
       // check if project exists in db
       if (!projectInfo) {
         console.error("Project not found");
         throw new Error("Project not found");
       }
-
-      const detailsData: any = {};
-      const searchInfoData: any = {};
-      for (const key of Object.keys(projectInfo)) {
-        if (projectSearchItemKeys.includes(key)) {
-          searchInfoData[key] = projectInfo[key];
+      // * SETTING CACHE
+      console.log("setting prject cache");
+      if (!select) {
+        // we got all data
+        updateAllCache(projectInfo._id.toString(), projectInfo, "projects");
+      } else {
+        if (getProjectSearchInfo) {
+          console.log("setting search info cache");
+          // we got only search info
+          redisClient.hset(
+            ProjectRedisKeys.list,
+            id,
+            JSON.stringify(projectInfo)
+          );
+          redisClient.expire(ProjectRedisKeys.list, 60 * 60 * 24 * 2);
         } else {
-          detailsData[key] = projectInfo[key];
+          console.log("setting data cache");
+          // we got only project data
+          redisClient.hset(
+            ProjectRedisKeys.data,
+            id,
+            JSON.stringify(zodProjectDataSchema.parse(projectInfo))
+          );
+          redisClient.expire(ProjectRedisKeys.list, 60 * 60 * 24 * 2);
         }
       }
-      // add to cache
-      console.info("adding project to cache");
-      console.info("searchInfoData", searchInfoData);
-      console.info("detailsData", detailsData);
-      redisClient.hset(
-        ProjectRedisKeys.list,
-        id,
-        JSON.stringify(searchInfoData)
-      );
-      redisClient.expire(ProjectRedisKeys.list, 60 * 60 * 24 * 7); // 1 week
-      setProjectDataRedis(detailsData);
-      // projectInfo.owner &&
-      //   "githubDetails" in projectInfo.owner &&
-      //   delete projectInfo.owner.githubDetails?.accessToken;
+      // * SETTING RESPONSE OBJECT
       Object.assign(project, projectInfo);
     }
+
     // * GETTING GITHUB DATA
     await getGithubData(id, project, githubAccessToken);
     console.info("sending project", project);
@@ -170,7 +184,10 @@ const getProjectFromMongo = async (id: string, select = "") => {
       new Types.ObjectId(id)
     )
       .select(select + "-repoDetails")
-      .populate("owner", "githubId githubDetails.accessToken")
+      .populate(
+        "owner",
+        "githubId githubDetails.accessToken githubDetails.login"
+      )
       .populate("team", userTeamItemKeys.join(" "))
       .lean();
     return project;

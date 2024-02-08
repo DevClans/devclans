@@ -1,7 +1,7 @@
-import { ProjectRepoDetailsProps } from "@/types/mongo/project.types";
+import { ProjectRepoDetailsMongoProps } from "@/types/mongo/project.types";
 import { Schema } from "mongoose";
 
-const projectRepoSchema = new Schema<ProjectRepoDetailsProps>({
+const projectRepoSchema = new Schema<ProjectRepoDetailsMongoProps>({
   description: { type: String, trim: true, maxlength: 255 },
   watchers_count: { type: Number, required: true, min: 0 },
   forks: { type: Number, required: true, min: 0 },
