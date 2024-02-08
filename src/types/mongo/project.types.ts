@@ -24,7 +24,7 @@ export type FetchProjectDetailsProps = {
   memberReq: Omit<FetchProjectDetailsItemProps, "solution" | "needHelp">;
 };
 export type ProjectProps = ProjectTeamProps & {
-  _id?: mongoose.Types.ObjectId;
+  _id: mongoose.Types.ObjectId;
   title: string;
   desc: string;
   domain: ProjectDomainType;
@@ -44,10 +44,9 @@ export type ProjectProps = ProjectTeamProps & {
   updatedAt: Date;
   published: boolean;
   createdAt: Date;
-  repoDetails: Partial<ProjectRepoDetailsProps>;
+  repoDetails: Partial<ProjectRepoDetailsMongoProps>;
 };
-
-export type ProjectRepoDetailsProps = ProjectFilesProps & {
+export type ProjectRepoDetailsProps = {
   description: string;
   owner: string;
   watchers_count: number;
@@ -58,8 +57,17 @@ export type ProjectRepoDetailsProps = ProjectFilesProps & {
   updated_at: Date;
   commits: number;
   lastCommit: Date;
-  languages: Record<string, number>;
+  languages: {
+    name: string;
+    color: string;
+    percentage: number;
+  }[];
 };
+
+export type ProjectRepoDetailsMongoProps = ProjectFilesProps &
+  Omit<ProjectRepoDetailsProps, "languages"> & {
+    languages: Record<string, number>;
+  };
 
 export const ProjectRepoDetailsKeys: string[] = [
   "description",
