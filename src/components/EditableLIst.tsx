@@ -16,25 +16,28 @@ const EditableLIst = ({
   editableList,
   name,
   defaultValues,
+  limit,
 }: {
   setValue: any;
   isEdit?: boolean;
   name: string;
   defaultValues?: any;
   editableList: any;
+  limit?: number;
 }) => {
   const thirdLabel = () => {
     if (editableList.solution) {
       return "Solution";
     }
     if (editableList.needHelp) {
-      return "Need Help";
+      return "Need Help: You Want External Contributors?";
     }
     return "";
   };
 
   const thirdLabelVal = thirdLabel();
-  const type = name.split(".")[1] || "challenges";
+  const type: "challenges" | "futureGoals" =
+    (name.split(".")[1] as any) || "challenges";
   const [list, setList] = useState<Record<string, listProps>>(
     defaultValues[name] || {}
   );
@@ -43,15 +46,15 @@ const EditableLIst = ({
   const [solution, setSolution] = useState<string | boolean>("");
 
   const handleAdd = () => {
-    if (input.length > 0) {
+    if (input.length > 0 && limit ? Object.keys(list).length < limit : true) {
       const data: listProps = {
         title: input,
         desc: desc,
       };
-      if (thirdLabelVal == "Solution") {
+      if (type == "challenges") {
         data.solution = solution as string;
       }
-      if (thirdLabelVal == "Need Help") {
+      if (type == "futureGoals") {
         data.needHelp = Boolean(solution);
       }
       setList((prev) => ({
@@ -87,7 +90,7 @@ const EditableLIst = ({
 
   return (
     <div className="w100 fcfs">
-      <div className="frfssb flex-wrap md:flex-nowrap gap-4 w100">
+      <div className="flex lg:flex-row flex-col lg:justify-between lg:items-start flex-wrap md:flex-nowrap gap-4 w100">
         <div className="fcfs gap-2 w100">
           <label>Title</label>
           <input
@@ -103,11 +106,11 @@ const EditableLIst = ({
               <label>{thirdLabelVal}</label>
               {thirdLabelVal == "Solution" ? (
                 <textarea
-                  className="w100"
+                  className="w100 scrollbar-x"
                   value={solution as string}
                   onChange={handleSolutionChange}
                 />
-              ) : thirdLabelVal == "Need Help" ? (
+              ) : type == "futureGoals" ? (
                 <input
                   type="checkbox"
                   checked={Boolean(solution)}
@@ -124,10 +127,10 @@ const EditableLIst = ({
           />
         </div>
         <div className="fcfs gap-2 w100">
-          <p>Preview</p>
+          <p>Preview: This is how the details will look to viewers</p>
           <ToggleListItem
             open={true}
-            className="hidden lg:flex"
+            className=" lg:max-w-[50vw]"
             heading={input}
             data={[
               {
@@ -135,29 +138,31 @@ const EditableLIst = ({
                 desc: desc,
               },
               {
-                title: thirdLabelVal,
+                title: thirdLabelVal?.split(":")[0] || "",
                 desc: solution as string,
               },
             ]}
           />
         </div>
       </div>
-      <div className="w100 card2 p-5">
-        <p>Challenges Added</p>
-        {typeof list == "object" &&
-          Object.keys(list).map((item, i) => (
-            <ListItem
-              item={list[item].title as string}
-              desc={list[item].desc as string}
-              solution={
-                list[item].solution || String(list[item].needHelp) || ""
-              }
-              i={i}
-              key={i}
-              onClick={() => handleRemove(item)}
-              className="relative"
-            />
-          ))}
+      <div className="w100 cardCommon p-5 mt-2">
+        <h4 className="text-subH">Items added to {type}</h4>
+        <ol className="w100" type="1">
+          {typeof list == "object" &&
+            Object.keys(list).map((item, i) => (
+              <ListItem
+                item={list[item].title as string}
+                desc={list[item].desc as string}
+                solution={
+                  list[item].solution || String(list[item].needHelp) || ""
+                }
+                i={i}
+                key={i}
+                onClick={() => handleRemove(item)}
+                className="relative"
+              />
+            ))}
+        </ol>
       </div>
     </div>
   );
@@ -177,17 +182,21 @@ const ListItem = ({
   solution: string;
 } & Partial<ButtonProps>) => {
   return (
-    <>
-      <div className="frcsb p-5">
-        <div className="frc w100">
-          <p>{item}</p>
+    <li className="frcsb p-[2px]">
+      <div className="frc w100">
+        <p className="mr-1">{i + 1}. </p>
+        <p>
+          {item}
           {`, `}
-          <p>{desc}</p>
-          {`, `}
-          <p>{solution}</p>
-        </div>
-        <ButtonClose {...buttonProps} />
+        </p>
+        {desc && (
+          <p>
+            {desc} {`, `}
+          </p>
+        )}
+        {solution && <p>{solution}</p>}
       </div>
-    </>
+      <ButtonClose {...buttonProps} />
+    </li>
   );
 };

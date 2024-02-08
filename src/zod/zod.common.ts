@@ -417,7 +417,24 @@ export const zodProjectFormSchema = z.object({
   // })
   // .transform((item) => item.split("https://github.com")[1]),
   projectLinks: z.array(z.string().trim()).default([]),
-  video: z.string().trim().default(""),
+  video: z
+    .string()
+    .trim()
+    .refine(
+      (str) => {
+        if (
+          str.startsWith("https://www.youtube.com") ||
+          str.startsWith("https://www.loom.com")
+        ) {
+          return true;
+        }
+        return false;
+      },
+      {
+        message: "Invalid video link",
+      }
+    )
+    .optional(),
   projectDetails: zodProjectDetailsSchema,
   devStage: z.enum(devStages as any).default("idea"),
   published: z.boolean().default(false),

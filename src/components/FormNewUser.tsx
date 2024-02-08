@@ -15,6 +15,7 @@ import { useSession } from "next-auth/react";
 import { createProjectUser } from "@/utils/createProjectUser";
 import { ProjectFormProps } from "@/types/mongo/project.types";
 import selectUserContactId from "@/lib/selectUserContactId";
+import LogedOutScreen from "./LogedOutScreen";
 
 const FormNewUser = ({
   defaultValues: dv,
@@ -166,7 +167,7 @@ const FormNewUser = ({
   // console.log("contactMethod", contactMethod === "whatsapp");
 
   if (!session) {
-    return <p className="">You need to be logged in to view your profile.</p>;
+    return <LogedOutScreen />;
   }
   return (
     <>

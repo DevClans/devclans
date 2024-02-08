@@ -23,10 +23,10 @@ const FormServer = ({
   return (
     <>
       <CommonHero heading={heading} />
-      <div className="w100 container p-6">
+      <div className="w100 container p-6 pt-15">
         <form
           id={formId}
-          className="fcfs gap-4 w100"
+          className="fcfs gap-[50px] w100"
           // action={`${urlApi}/user/profile`}
           // onSuccess={() => {
           //   alert("onSuccess");
@@ -48,6 +48,8 @@ const FormServer = ({
                 condition,
                 multi = false,
                 editableList,
+                desc,
+                limit,
               },
               i
             ) => {
@@ -57,6 +59,7 @@ const FormServer = ({
               // }
               const editableListEle = (
                 <EditableLIst
+                  limit={limit}
                   setValue={setValue}
                   defaultValues={defaultValues}
                   name={name}
@@ -87,6 +90,7 @@ const FormServer = ({
               );
               const multiSelectEle = (
                 <MultipleSelectChip
+                  limit={limit}
                   register={register}
                   name={name as any}
                   defaultValue={defaultValues?.[name]}
@@ -124,9 +128,12 @@ const FormServer = ({
               return (
                 <div key={i + "parent"} className={`fcfs gap-2 w100`}>
                   {/* <div className=""> */}
-                  <label className="w100">
-                    {isRequired && "*"} {label}
-                  </label>
+                  <div className="fcfs gap-1">
+                    <h3 className="w100 text-xl  text-highlight ">
+                      {isRequired && "*"} {label}
+                    </h3>
+                    {desc && <p>{desc}</p>}
+                  </div>
                   {Boolean(editableList)
                     ? editableListEle
                     : Boolean(options)

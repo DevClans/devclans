@@ -131,3 +131,8 @@ pre {
 label {
   font-size: 12px;
 }
+
+p {
+  word-break: break-all;
+  white-space: normal;
+}

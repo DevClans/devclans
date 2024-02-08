@@ -7,117 +7,100 @@ import { InputFieldProps } from "@/types/form.types";
 export const dummyProjectFormSchemaFields: InputFieldProps[] = [
   {
     label: "Title",
+    desc: "What would you like to call your project?",
     name: "title",
   },
   {
     label: "Description",
+    desc: "Briefly describe what your project is about.",
     name: "desc",
     type: "textarea",
   },
   {
+    label: "Problem",
+    desc: "Describe the problem your project aims to solve.",
+    name: "projectDetails.problem",
+  },
+  {
+    label: "Domains",
+    desc: "Specify the domains or fields your project is related to.",
+    name: "domain",
+    multi: true,
+    options: projectDomains as any,
+    limit: 3,
+  },
+  {
     label: "Tech Stack",
+    desc: "List the technologies or tools used in your project.",
     name: "skills",
     multi: true,
+    limit: 10,
     options: skills as any, // Add options here if needed
+  },
+  {
+    label: "Development Stage",
+    desc: "Select the current development stage of your project.",
+    name: "devStage",
+    options: devStages,
   },
   // {
   //   label: "Team",
+  //   desc: "Select the team members involved in the project.",
   //   name: "team",
   //   // Assuming zodUserTeamItemSchema is defined elsewhere
   //   // and represents the schema for team members
   // },
   {
-    label: "Need Members",
-    name: "needMembers",
-    options: memberLevels as any, // Assuming memberLevels is defined elsewhere
+    label: "Repository Github Link",
+    desc: "Paste the github link to your project repository. (if available)",
+    name: "repoName",
   },
   // {
   //   label: "Images",
+  //   desc: "Upload images related to your project.",
   //   name: "imgs",
   // },
   // {
   //   label: "Topics In Selected Domains",
+  //   desc: "Choose topics within selected domains.",
   //   name: "topics",
   //   multi:true
   // },
   {
-    label: "Repository Name",
-    name: "repoName",
-  },
-  // {
-  //   label: "Project Links",
-  //   name: "projectLinks",
-  // },
-  {
     label: "Video",
+    desc: "Provide a link to a video showcasing your project (if available). Only YouTube or Loom links are supported.",
     name: "video",
   },
   {
-    label: "Project Details - Problem",
-    name: "projectDetails.problem",
+    label: "Need Members",
+    desc: "Specify if you are looking for team members.",
+    name: "needMembers",
+    options: memberLevels as any, // Assuming memberLevels is defined elsewhere
   },
   {
     label: "Challenges",
+    desc: "List any challenges you encountered during the project development.",
     name: "projectDetails.challenges",
+    limit: 5,
     editableList: {
       solution: true,
     },
   },
   {
     label: "Future Goals",
+    desc: "Outline the future goals or milestones for your project.",
     name: "projectDetails.futureGoals",
+    limit: 5,
     editableList: {
       needHelp: true,
     },
   },
-  // {
-  //   label: "Project Details - Challenges - Title",
-  //   name: "projectDetails.challenges.title",
-  // },
-  // {
-  //   label: "Project Details - Challenges - Description",
-  //   name: "projectDetails.challenges.desc",
-  // },
-  // {
-  //   label: "Project Details - Challenges - Solution",
-  //   name: "projectDetails.challenges.solution",
-  // },
-  // {
-  //   label: "Project Details - Future Goals - Title",
-  //   name: "projectDetails.futureGoals.title",
-  // },
-  // {
-  //   label: "Project Details - Future Goals - Description",
-  //   name: "projectDetails.futureGoals.desc",
-  // },
-  // {
-  //   label: "Project Details - Future Goals - Need Help",
-  //   name: "projectDetails.futureGoals.needHelp",
-  //   type: "checkbox",
-  // },
-  // {
-  //   label: "Project Details - Member Requirements - Title",
-  //   name: "projectDetails.memberReq.title",
-  // },
-  // {
-  //   label: "Project Details - Member Requirements - Description",
-  //   name: "projectDetails.memberReq.desc",
-  // },
-  {
-    label: "Development Stage",
-    name: "devStage",
-    options: devStages,
-  },
+
   {
     label: "Published",
+    desc: "Check this box if your project has been published or made public.",
     name: "published",
     type: "checkbox",
-  },
-  {
-    label: "Domains",
-    name: "domain",
-    multi: true,
-    options: projectDomains,
   },
 ];
 // ChunkLoadError: Loading chunk app/layout failed.

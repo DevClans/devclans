@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { dummyProjectFormSchemaFields } from "@/dummy/dummy.project.form";
 import { createProjectUser } from "@/utils/createProjectUser";
 import ImageUpload from "./ImageUpload";
+import LogedOutScreen from "./LogedOutScreen";
 
 const FormNewProject = () => {
   const { data }: any = useSession();
@@ -69,7 +70,7 @@ const FormNewProject = () => {
   const fieldsArray: InputFieldProps[] = dummyProjectFormSchemaFields;
 
   if (!session) {
-    return <p className="">You need to be logged in to create a project.</p>;
+    return <LogedOutScreen />;
   }
   return (
     <>

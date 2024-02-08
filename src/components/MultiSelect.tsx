@@ -47,11 +47,13 @@ export default function MultipleSelectChip({
   register,
   name,
   defaultValue,
+  limit,
 }: {
   options: string[];
   name: string;
   register: UseFormRegister<any>;
   defaultValue?: string[];
+  limit?: number;
 }) {
   const theme = useTheme();
   // theme.typography.fontFamily = "var(--poppins)";
@@ -128,6 +130,10 @@ export default function MultipleSelectChip({
     const {
       target: { value },
     } = event;
+    const len = value.length;
+    if (limit && len > limit) {
+      return;
+    }
     setPersonName(
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value

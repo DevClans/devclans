@@ -2,10 +2,12 @@ export type InputFieldProps = {
   name: string;
   label: string;
   type?: string;
+  desc?: string;
   options?: string[];
   condition?: boolean;
   multi?: boolean;
   editableList?: any; // preview only available for toogle list
+  limit?: number;
 };
 export type FormClientProps = {
   zodSchema: any;
