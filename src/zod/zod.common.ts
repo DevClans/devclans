@@ -5,7 +5,6 @@ import { memberLevels } from "@/lib/memberLevel";
 import { devStages } from "@/lib/devStages";
 import { contactMethods } from "@/lib/contactMethods";
 import { projectDomains } from "@/lib/domains";
-import { zodUserTeamItemSchema } from "./users/zod.userTeam";
 
 export const zodMongoId = z.union([
   z.string().refine((value) => Types.ObjectId.isValid(value), {
@@ -13,11 +12,57 @@ export const zodMongoId = z.union([
   }),
   z.instanceof(Types.ObjectId).transform((id) => id.toString()),
 ]);
+export const zodRepoName = z
+  .string()
+  .trim()
+  .startsWith("https://github.com")
+  .min("https://github.com".length + 3)
+  .max(100)
+  .refine(
+    (item) => {
+      const str = item.split("https://github.com")[1];
+      if (str.startsWith("/") && str.substring(1).split("/").length >= 2)
+        return true;
+      return false;
+    },
+    {
+      message: "Invalid github reponame",
+    }
+  );
+
+const zodRepoNameStored = z
+  .string()
+  .trim()
+  .min(3)
+  .max(100)
+  .refine(
+    (item) => {
+      if (item.startsWith("/") && item.substring(1).split("/").length >= 2)
+        return true;
+      return false;
+    },
+    {
+      message: "Invalid github reponame",
+    }
+  );
 export const MySchema = z.object({
   owner: z.string().refine((value) => Types.ObjectId.isValid(value), {
     message: "Invalid ObjectId",
   }),
 });
+const team = z.object({
+  githubId: z.string(),
+  discordId: z.string().regex(/^\d{17,19}$/), // Ensure it's a valid Discord ID
+  username: z.string().optional(),
+  avatar: z.string().url().optional(), // Ensure it's a valid URL if present
+  _id: zodMongoId,
+  contactMethod: z.enum(contactMethods).default("discord"), // Replace with the actual contact methods
+  contactMethodId: z.string().optional(),
+});
+export const zodUserTeamItemSchema = z.array(
+  z.union([zodMongoId, team.partial()])
+);
+
 export const zodDateString = z.date().refine(
   (value) => {
     const date = new Date(value);
@@ -274,7 +319,7 @@ export const zodProjectSearchInfoSchema = z.object({
   title: z.string().min(3).max(50),
   desc: z.string().min(10).max(180),
   skills: z.array(z.string()).default([]),
-  team: z.array(zodUserTeamItemSchema).default([]),
+  team: zodUserTeamItemSchema.optional(),
   needMembers: z
     .enum(memberLevels as any)
     .nullable()
@@ -337,10 +382,10 @@ const StringArrayParser = z
   .transform((data) => data.split(","));
 
 export const zodProjectDataSchema = z.object({
-  contributors: z.string().array().default([]),
+  contributors: z.array(zodMongoId).default([]),
   // Add other properties if needed
   topics: z.array(z.string()).default([]),
-  repoName: z.string().max(50),
+  repoName: zodRepoNameStored,
   likesCount: z.number().default(0),
   bookmarkCount: z.number().default(0),
   projectLinks: stringArraySchema.default([]),
@@ -359,19 +404,14 @@ export const zodProjectFormSchema = z.object({
   title: z.string().trim().min(3).max(50),
   desc: z.string().min(10).max(180),
   skills: z.enum(skills).array().default([]),
-  team: z.array(zodMongoId).optional(),
+  team: zodUserTeamItemSchema.optional(),
   needMembers: z
     .enum(memberLevels as any)
     .nullable()
     .default("beginner"),
   imgs: z.array(z.string()).default([]),
   topics: z.array(z.string()).default([]),
-  repoName: z
-    .string()
-    .trim()
-    .startsWith("https://github.com")
-    .min("https://github.com".length + 3)
-    .max(100),
+  repoName: zodRepoName.optional(),
   // .refine((item) => item.startsWith("https://github.com"), {
   //   message: "Invalid github url",
   // })
@@ -387,13 +427,9 @@ export const zodProjectFormSchema = z.object({
 export const zodProjectFormSchemaServer = zodProjectFormSchema
   .omit({ repoName: true })
   .extend({
-    repoName: z
-      .string()
-      .trim()
-      .startsWith("https://github.com")
-      .min("https://github.com".length + 3)
-      .max(100)
-      .transform((item) => item.split("https://github.com")[1]),
+    repoName: zodRepoName
+      .transform((item) => item.split("https://github.com")[1])
+      .optional(),
   });
 export const projectArraySchema = z.array(projectSchema);
 
