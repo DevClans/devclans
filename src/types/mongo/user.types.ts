@@ -141,4 +141,5 @@ export type LookingForMembersProps = {
   username: string;
   _id?: Types.ObjectId;
   level?: MemberLevelType;
+  type?: "projects" | "users";
 };

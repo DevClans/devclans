@@ -101,4 +101,9 @@ body {
     border: 1px solid var(--border);
     border-radius: 5px;
   }
+  .hover:hover {
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.3s ease-in-out;
+  }
 }

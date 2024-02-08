@@ -50,22 +50,23 @@ const ShareModal = ({
           </div>
           <div className="frcsb w100 gap-2">
             <FacebookShareButton
+              key={1}
               url={shareUrl}
               quote={shareMsg}
               // hashtag={"#nextshare"}
             >
               <FacebookIcon size={32} round />
             </FacebookShareButton>
-            <WhatsappShareButton url={shareUrl} title={shareMsg}>
+            <WhatsappShareButton key={2} url={shareUrl} title={shareMsg}>
               <WhatsappIcon size={32} round />
             </WhatsappShareButton>
-            <TwitterShareButton url={shareUrl} title={shareMsg}>
+            <TwitterShareButton key={3} url={shareUrl} title={shareMsg}>
               <TwitterIcon size={32} round />
             </TwitterShareButton>
-            <TelegramShareButton url={shareUrl} title={shareMsg}>
+            <TelegramShareButton key={4} url={shareUrl} title={shareMsg}>
               <TelegramIcon size={32} round />
             </TelegramShareButton>
-            <LinkedinShareButton url={shareUrl} title={shareMsg}>
+            <LinkedinShareButton key={5} url={shareUrl} title={shareMsg}>
               <LinkedinIcon size={32} round />
             </LinkedinShareButton>
           </div>
@@ -91,7 +92,7 @@ const ShareModal = ({
   return (
     <>
       <div className={"frc gap-[10px] " + className} style={style}>
-        <div onClick={handleShareButtonClick}>
+        <div onClick={handleShareButtonClick} className="hover">
           {children || <ButtonShare url={url} message={message} />}
         </div>
         <Modal

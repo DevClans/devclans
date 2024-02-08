@@ -41,7 +41,7 @@ const ProjectSidebar = ({
   );
   return (
     <div className="lg:sticky lg:top-[40px] fcc lg:max-w-[360px] w100 gap-[30px]">
-      <LookingForMembers {...needMembers} />
+      <LookingForMembers type="projects" {...needMembers} />
       <ProjectLinks links={links} />
       <ProjectTeam contact={contact} list={teamData} />
     </div>
