@@ -1,5 +1,5 @@
 import { UserProps } from "@/types/mongo/user.types";
-const discordImgUrl = (userid: string, avatar: string) => {
+export const discordImgUrl = (userid: string, avatar: string) => {
   if (!userid || !avatar) return "";
   return `https://cdn.discordapp.com/avatars/${userid}/${avatar}.png`;
 };

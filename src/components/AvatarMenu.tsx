@@ -1,10 +1,18 @@
 "use client";
 import { useState } from "react";
 import AccountMenu from "./AccountMenu";
-import { CircularProgress } from "@mui/material";
+import { Avatar, CircularProgress } from "@mui/material";
+import { useSession } from "next-auth/react";
+import { discordImgUrl } from "@/lib/userAvatar";
 
 const UserAvatarMenu = ({ username }: { username: string }) => {
   const [clicked, setCliked] = useState<boolean>(false);
+  const session: any = useSession();
+  const avatarUrl = discordImgUrl(
+    session.data?.user?.discordId,
+    session.data?.user?.avatar
+  );
+  console.log("avatarUrl", avatarUrl);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     if (anchorEl) {
@@ -19,15 +27,25 @@ const UserAvatarMenu = ({ username }: { username: string }) => {
         style={{
           height: 40,
           width: 40,
-          background: `trasparent`,
-          border: "1px solid var(--primary)",
-          borderRadius: "50%",
           color: "var(--white)",
         }}
         onClick={handleClick}
         className="uppercase font-semibold fccc loginBtnStyle"
       >
-        {clicked ? <CircularProgress color="inherit" size={14} /> : username[0]}
+        {clicked ? (
+          <CircularProgress color="inherit" size={14} />
+        ) : (
+          <Avatar
+            className="loginBtnStyle !text-base"
+            sx={{
+              fontFamily: "var(--poppins)",
+            }}
+            src={avatarUrl}
+            alt={username}
+          >
+            {username[0]}
+          </Avatar>
+        )}
       </button>
       <AccountMenu
         setAnchorEl={setAnchorEl}
