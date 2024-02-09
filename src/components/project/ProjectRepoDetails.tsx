@@ -1,8 +1,12 @@
 import { languagesColors } from "@/lib/languagesColors";
-import { ProjectRepoDetailsProps } from "@/types/mongo/project.types";
-import { IconGithub, IconOpenInNew, LinkWithIcon } from "..";
+import {
+  ProjectProps,
+  ProjectRepoDetailsProps,
+} from "@/types/mongo/project.types";
+import { IconOpenInNew, LinkWithIcon } from "..";
 import { Calendar, GitCommitHorizontal, Github, Star } from "lucide-react";
 import colors from "@/lib/colors";
+import { urlGithubRepo } from "@/constants";
 
 const ProjectRepoDetails = ({
   languages,
@@ -11,7 +15,10 @@ const ProjectRepoDetails = ({
   created_at,
   updated_at,
   watchers_count,
-}: Partial<ProjectRepoDetailsProps>) => {
+  repoName,
+}: Partial<ProjectRepoDetailsProps> & {
+  repoName: ProjectProps["repoName"];
+}) => {
   const dateString = (date?: string | Date) =>
     date && new Date(date).toDateString().substring(4);
   const moreDetails = [
@@ -50,7 +57,7 @@ const ProjectRepoDetails = ({
             icon={<IconOpenInNew color={colors.heading} size={12} />}
             iconLeft={<Github size={12} />}
             text="Github"
-            href=""
+            href={urlGithubRepo({ repoName })}
           />
         </div>
         <div className="flex flex-col gap-2">

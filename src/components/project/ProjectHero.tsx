@@ -20,6 +20,7 @@ const ProjectHero = ({
   searchParams,
   desc,
   repoDetails,
+  repoName,
 }: Omit<ProjectProps, "repoDetails"> &
   PageProps & {
     repoDetails: Partial<ProjectRepoDetailsProps>;
@@ -53,7 +54,7 @@ const ProjectHero = ({
               baseUrl="/explore/projects"
             />
           </div>
-          <ProjectRepoDetails {...repoDetails} />
+          <ProjectRepoDetails repoName={repoName} {...repoDetails} />
         </div>
       </div>
       {/* images */}

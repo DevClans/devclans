@@ -25,7 +25,7 @@ const Page = async ({
     projectData: FetchProjectProps["data"] | null;
     renderLanguages: ProjectRepoDetailsProps["languages"];
   } = await ProjectData(id);
-  console.log("data for id", id, "=> ", data);
+  console.log("data for id", id, "=> ", Boolean(data));
   if (!data) {
     return <>No data Found With Id {id}</>;
   }
