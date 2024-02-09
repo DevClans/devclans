@@ -16,7 +16,7 @@ const selectUserUsername = ({
     userProps?.discordDetails?.global_name ||
     discordUsername ||
     userProps?.discordDetails?.username;
-  const gh = gitUsername || userProps?.githubDetails?.username;
+  const gh = gitUsername || userProps?.githubDetails?.login;
   let res = "";
   if (avtr) res = avtr;
   else if (dc) res = dc;
