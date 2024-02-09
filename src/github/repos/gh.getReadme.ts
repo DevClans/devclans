@@ -13,17 +13,15 @@ export default async function getGithubReadme({
     }) {
   try {
     // check input
-    const check = z.object({
-      readmeUrl: z
-        .string()
-        .startsWith("https://api.github.com/repos/")
-        .endsWith("/readme"),
-      username: z.string(),
-    });
-    const params = check.parse({ readmeUrl, username });
-    const { readmeUrl: rUrl, username: uname } = params;
+    const readme = z
+      .string()
+      .startsWith("https://api.github.com/repos/")
+      .endsWith("/readme")
+      .safeParse(readmeUrl);
+    const rUrl = readme.success ? readme.data : "";
+    const uname = z.string().min(1).max(100).parse(username);
     const url = rUrl || `https://api.github.com/repos/${uname}/${uname}/readme`;
-
+    console.info("getting github readme", url);
     // run data fetch
     const readmeResponse = await fetch(url);
 

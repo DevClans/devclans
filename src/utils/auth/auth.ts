@@ -4,6 +4,7 @@ import { adapter } from "./adapterFunctions";
 import { UserDiscordDetailsProps } from "@/types/mongo/user.types";
 import { zodUserDiscordDetailsSchema } from "@/zod/zod.common";
 import { Fetch } from "../fetchApi";
+import selectUserUsername from "@/lib/selectUserUsername";
 
 const isServerMember = async (discordId: string, token: string) => {
   const isMember = await Fetch({
@@ -57,9 +58,10 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token, user }: any) {
       // console.log("SESSION", session, "TOKEN", token, "USER", user);
+      const username = selectUserUsername({ userProps: user });
       session.user = {
         _id: user.id,
-        username: user.username || user.discordDetails?.username,
+        username: username,
         avatar: user.discordDetails?.avatar,
         discordId: user.discordId,
       } as any;

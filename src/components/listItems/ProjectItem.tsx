@@ -5,8 +5,9 @@ import ItemsTemplate from "./ItemsTemplate";
 import { PageProps } from "@/types/page.types";
 import { urlProject } from "@/constants";
 import { msgSharingProject } from "@/lib/constants.messages";
+import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 
-const ProjectItem = ({
+const ProjectItem = async ({
   needMembers,
   imgs,
   _id,
@@ -15,10 +16,14 @@ const ProjectItem = ({
   team,
   ...rest
 }: ProjectSearchItemProps & Partial<PageProps>) => {
+  const session: any = await getServerSessionForServer();
+  const userid = session?.user?._id;
   const teamNames = team?.map((t) => t.username) || [];
+  const isOwner = userid === rest.owner;
   return (
     <>
       <ItemsTemplate
+        isOwner={isOwner}
         img={
           <div className="lg:max-w-[335px] min-h-[200px] relative w-full">
             <ProductImg
@@ -48,9 +53,9 @@ const ProjectItem = ({
           </>
         }
         rightMessage={
-          <div className="frc gap-1">
-            <p>Searching For :</p>
-            <p className="text-highlight capitalize">
+          <div className="frc flex-wrap gap-x-1">
+            <p className="text-nowrap">Searching For :</p>
+            <p className="text-highlight capitalize text-nowrap">
               {needMembers || "Beginers"}
             </p>
           </div>

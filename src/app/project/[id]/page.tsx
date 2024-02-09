@@ -8,6 +8,7 @@ import {
 } from "@/components";
 import { selectIconForLinks } from "@/lib/socialIcons";
 import { FetchProjectProps } from "@/types/fetch.types";
+import { ProjectRepoDetailsProps } from "@/types/mongo/project.types";
 import { UserTeamItemProps } from "@/types/mongo/user.types";
 import { PageProps } from "@/types/page.types";
 import { convertProjectDetails } from "@/utils/convertProjectDetails";
@@ -20,9 +21,11 @@ const Page = async ({
   const {
     projectData: data,
     renderLanguages,
-  }: { projectData: FetchProjectProps["data"] | null; renderLanguages: any } =
-    await ProjectData(id);
-  console.log("data for id", id, "=> ", data);
+  }: {
+    projectData: FetchProjectProps["data"] | null;
+    renderLanguages: ProjectRepoDetailsProps["languages"];
+  } = await ProjectData(id);
+  console.log("data for id", id, "=> ", Boolean(data));
   if (!data) {
     return <>No data Found With Id {id}</>;
   }
@@ -36,7 +39,15 @@ const Page = async ({
       <LightLine />
       <div className="container p-[30px] gap-[30px] flex flex-col items-center  lg:flex-row lg:items-start lg:justify-between w100">
         <div className="w100 fcc gap-[30px]">
-          <ProjectHero {...data} params={params} searchParams={searchParams} />
+          <ProjectHero
+            {...data}
+            repoDetails={{
+              ...data.repoDetails,
+              languages: renderLanguages,
+            }}
+            params={params}
+            searchParams={searchParams}
+          />
           <AboutTheRepo {...files} />
           {convertedProjectDetails && (
             <ProjectDetails data={convertedProjectDetails} />

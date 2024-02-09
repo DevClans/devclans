@@ -3,19 +3,26 @@ import { ButtonProps } from "@/types";
 import { ArrowRightAltRounded } from "..";
 import ButtonLink from "./ButtonLink";
 
-const ButtonBlue = ({ className, label, ...props }: ButtonProps) => {
+const ButtonBlue = ({
+  className,
+  label,
+  disabled,
+  icon,
+  ...props
+}: ButtonProps) => {
   return (
     <ButtonLink
       className={
-        "bg-primary gap-y-0 frc flex-wrap px-4 w100 h-[50px] rounded-[10px] text-sm " +
+        "bg-primary gap-y-0 frc flex-wrap px-1 w100 /h-[50px] py-2 rounded-[10px] text-sm " +
         className
       }
       label={
         <>
           {label}
-          <ArrowRightAltRounded fontSize={"medium"} />
+          {!disabled && (icon || <ArrowRightAltRounded fontSize={"medium"} />)}
         </>
       }
+      disabled={disabled}
       {...props}
     />
   );

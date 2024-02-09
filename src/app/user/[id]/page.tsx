@@ -1,4 +1,5 @@
 import FormNewUser from "@/components/FormNewUser";
+import CreateNewProject from "@/components/userPage/CreateNewProject";
 import LeftSidebar from "@/components/userPage/LeftSidebar";
 import MiddleSection from "@/components/userPage/MiddleSection";
 import RightSidebar from "@/components/userPage/RightSidebar";
@@ -19,7 +20,7 @@ import type {
 } from "@/types/toggleList.types";
 import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 import { Fetch } from "@/utils/fetchApi";
-import { zodUserFormSchemaObj } from "@/zod/zod.common";
+import { userSchema } from "@/zod/zod.common";
 
 type UserPageProps = {
   params: { id: string };
@@ -33,7 +34,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
   const userData: UserProps = await Fetch({
     endpoint: `/user/${id}`,
   });
-  // console.log("user data", userData);
+  console.log("user data", Boolean(userData));
   if (
     !userData ||
     (userData && ("error" in userData || "message" in userData))
@@ -42,10 +43,10 @@ const page = async ({ params, searchParams }: UserPageProps) => {
   }
 
   const session: any = await getServerSessionForServer();
-  // console.log("mode", mode, session?.user?._id, userData._id);
+  console.log("mode", mode, session?.user?._id, userData._id);
   if (mode == "edit") {
-    if (session?.user?._id != userData._id) {
-      const data = zodUserFormSchemaObj.partial().safeParse(userData);
+    if (session?.user?._id == userData._id) {
+      const data = userSchema.partial().safeParse(userData);
       return (
         // ! here it can be a problem as we are using userData directly
         <FormNewUser
@@ -100,20 +101,23 @@ const page = async ({ params, searchParams }: UserPageProps) => {
       />
     ),
     projects: (
-      <UserProjects
-        ownedProjects={
-          userData["ownedProjects"]?.length > 0 &&
-          typeof userData["ownedProjects"] == "object"
-            ? (userData["ownedProjects"] as any)
-            : []
-        }
-        contributedProjects={
-          userData["contributedProjects"]?.length > 0 &&
-          typeof userData["contributedProjects"] == "object"
-            ? (userData["contributedProjects"] as any)
-            : []
-        }
-      />
+      <>
+        <CreateNewProject />
+        <UserProjects
+          ownedProjects={
+            userData["ownedProjects"]?.length > 0 &&
+            typeof userData["ownedProjects"] == "object"
+              ? (userData["ownedProjects"] as any)
+              : []
+          }
+          contributedProjects={
+            userData["contributedProjects"]?.length > 0 &&
+            typeof userData["contributedProjects"] == "object"
+              ? (userData["contributedProjects"] as any)
+              : []
+          }
+        />
+      </>
     ),
     // experience: <UserExperience />,
   };

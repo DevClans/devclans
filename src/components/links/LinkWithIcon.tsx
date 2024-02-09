@@ -8,6 +8,7 @@ const LinkWithIcon = ({
   isBold = false,
   href,
   fontSize,
+  iconLeft,
 }: {
   target?: string;
   text: string;
@@ -15,6 +16,7 @@ const LinkWithIcon = ({
   isBold?: boolean;
   href?: string;
   fontSize?: number;
+  iconLeft?: React.ReactNode;
 }) => {
   const commonStyle: React.CSSProperties = {
     fontSize: fontSize || 12,
@@ -39,6 +41,7 @@ const LinkWithIcon = ({
   };
   const innerHtml = (
     <>
+      {iconLeft}
       {text || "Link"}
       {icon}
     </>

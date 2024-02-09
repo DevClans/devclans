@@ -8,6 +8,8 @@ import { userFormShape, zodProjectFormSchema } from "@/zod/zod.common";
 import { useSession } from "next-auth/react";
 import { dummyProjectFormSchemaFields } from "@/dummy/dummy.project.form";
 import { createProjectUser } from "@/utils/createProjectUser";
+import ImageUpload from "./ImageUpload";
+import LogedOutScreen from "./LogedOutScreen";
 
 const FormNewProject = () => {
   const { data }: any = useSession();
@@ -15,8 +17,7 @@ const FormNewProject = () => {
   const defaultValues: ProjectFormProps = {
     title: "My Awesome Project",
     desc: "This project aims to revolutionize...",
-    skills: ["JavaScript", "React", "Node.js"],
-    team: ["John Doe", "Jane Smith"],
+    skills: ["javascript"],
     needMembers: "intermediate",
     imgs: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
     topics: ["Web Development", "Machine Learning"],
@@ -25,7 +26,7 @@ const FormNewProject = () => {
     video: "https://youtube.com/watch?v=abc123",
     devStage: "development",
     published: true,
-    domain: "web",
+    domain: ["web"],
     projectDetails: {
       futureGoals: [
         {
@@ -37,23 +38,27 @@ const FormNewProject = () => {
       problem: "This project aims to revolutionize...",
     },
   };
-  const { watch, setError, setValue, handleSubmit, ...form } =
-    useForm<ProjectFormProps>({
-      defaultValues: defaultValues as any,
-      // resolver: zodResolver(zodProjectFormSchema),
-    });
-  console.log(watch());
-  const onSubmit: SubmitHandler<ProjectProps> = async (data) => {
+  const { watch, setError, handleSubmit, ...form } = useForm<ProjectFormProps>({
+    defaultValues: defaultValues as any,
+    resolver: zodResolver(zodProjectFormSchema),
+  });
+  const onSubmit: SubmitHandler<ProjectFormProps> = async (data) => {
     try {
-      console.log("clicked");
+      console.log("clicked", data);
+      // const dt = zodProjectFormSchema.parse(data);
+      // console.log(dt);
+      // return;
       return await createProjectUser(
         "/db/createProject",
         data,
         session,
         setError
       );
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
+      console.log(err, "in catch block of onSubmit in FormNewProject");
+      setError("root", {
+        message: err?.message,
+      });
     }
   };
   // const onSubmit = ()=>{
@@ -65,17 +70,18 @@ const FormNewProject = () => {
   const fieldsArray: InputFieldProps[] = dummyProjectFormSchemaFields;
 
   if (!session) {
-    return <p className="">You need to be logged in to create a project.</p>;
+    return <LogedOutScreen />;
   }
   return (
     <>
       <FormServer
+        defaultValues={defaultValues}
         heading="Create A New Project"
         {...form}
         formId="projectForm"
         zodFormShape={userFormShape}
-        onSubmit={handleSubmit(onSubmit as any)}
-        // onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit)}
+        buttons={<ImageUpload />}
         commonClass={commonClass}
         fieldsArray={fieldsArray}
       />

@@ -25,6 +25,9 @@ export const socialIcons: Record<string, React.ReactNode> = {
 };
 
 export const selectIconForLinks = (link: string) => {
+  if (!link) {
+    return socialIcons.website;
+  }
   let type = "website";
   if (link.includes("github")) type = "github";
   else if (link.includes("discord")) type = "discord";

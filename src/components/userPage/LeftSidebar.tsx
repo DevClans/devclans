@@ -1,5 +1,11 @@
 import { ContactDetailsProps, UserProps } from "@/types/mongo/user.types";
-import { ButtonBlue, ButtonConnect, ChipGroup, LightLine } from "..";
+import {
+  ButtonBlue,
+  ButtonConnect,
+  ButtonSecondary,
+  ChipGroup,
+  LightLine,
+} from "..";
 import ProductImg from "../project/ProjectImg";
 import LeftMenuBottomBar from "./LeftMenuBottomBar";
 import userAvatar from "@/lib/userAvatar";
@@ -64,9 +70,10 @@ const LeftSidebar = async ({
             /> */}
             {session && session.user._id === _id ? (
               // <Link href="/project/new">Create Project</Link>
-              <ButtonBlue
+              <ButtonSecondary
                 disabled={session && session.user._id !== _id}
                 href={`/user/${_id}?mode=edit`}
+                className="text-center"
                 label={"Edit Profile"}
               />
             ) : (

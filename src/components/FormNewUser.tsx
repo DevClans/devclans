@@ -1,6 +1,6 @@
 "use client";
 import { InputFieldProps } from "@/types/form.types";
-import { UserFormProps } from "@/types/mongo/user.types";
+import { UserFormProps, UserProps } from "@/types/mongo/user.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import FormServer from "./FormServer";
@@ -14,40 +14,44 @@ import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { createProjectUser } from "@/utils/createProjectUser";
 import { ProjectFormProps } from "@/types/mongo/project.types";
-import { useRouter } from "next/navigation";
 import selectUserContactId from "@/lib/selectUserContactId";
+import LogedOutScreen from "./LogedOutScreen";
 
 const FormNewUser = ({
   defaultValues: dv,
 }: {
   defaultValues?: UserFormProps | ProjectFormProps;
 }) => {
-  const router = useRouter();
-  const isEdit = Boolean(dv);
+  const isEdit = false;
   const searchParams = useSearchParams();
   const { data }: any = useSession();
-  const githubUsername = searchParams.get("githubUsername");
   const session = data?.user;
-  const defaultValues = dv || {};
-  console.log("defaultValues", defaultValues);
+  const defaultValues: UserProps | UserFormProps =
+    (dv as unknown as UserProps) || {};
+  const githubUsername =
+    searchParams.get("githubUsername") ||
+    defaultValues?.githubId ||
+    defaultValues?.githubDetails?.login;
+  // TODO this should be based on access token. if we have access token then user is connected
+  // console.log("defaultValues", defaultValues);
   const { watch, setError, setValue, handleSubmit, ...form } =
     useForm<UserFormProps>({
       defaultValues: defaultValues as any,
       resolver: zodResolver(zodUserFormSchema),
     });
-
+  const userid = session?._id;
   const onSubmit: SubmitHandler<UserFormProps> = async (data) => {
     data.contactMethodId = selectUserContactId(data);
     const res = await createProjectUser(
-      "/user/update",
+      "/user/update/" + userid,
       data,
       session,
       setError
     );
     console.log("res", res, session);
-    if (res && session?._id) {
-      router.push(`/user/${session._id}?tab=overview`);
-    }
+    // if (res && userid) {
+    //   router.push(`/user/${userid}?tab=overview`);
+    // }
     return data;
   };
   const contactMethod = watch("contactMethod");
@@ -149,15 +153,21 @@ const FormNewUser = ({
   const handleConnectGitHub = () => {
     const GITHUB_AUTH_URL = "https://github.com/login/oauth/authorize";
     const CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
-    const CALLBACK_URL = process.env.NEXT_PUBLIC_GITHUB_CALLBACK_URL;
-    const SCOPES = "read:user,user:email";
-
-    window.location.href = `${GITHUB_AUTH_URL}?client_id=${CLIENT_ID}&redirect_uri=${CALLBACK_URL}&scope=${SCOPES}`;
+    const CALLBACK_URL =
+      process.env.NEXT_PUBLIC_GITHUB_CALLBACK_URL +
+      `${userid ? `?userid=${userid}` : ""}`; // both id and query works
+    // TODO encrypt the user id
+    console.log("CLIENT_ID", CLIENT_ID, CALLBACK_URL);
+    const state = userid;
+    const SCOPES = "read:user,user:email,repo";
+    window.location.href = `${GITHUB_AUTH_URL}?client_id=${CLIENT_ID}&redirect_uri=${CALLBACK_URL}&scope=${SCOPES}${
+      state ? `&state=${state}` : ""
+    }`;
   };
   // console.log("contactMethod", contactMethod === "whatsapp");
 
   if (!session) {
-    return <p className="">You need to be logged in to view your profile.</p>;
+    return <LogedOutScreen />;
   }
   return (
     <>
@@ -166,10 +176,15 @@ const FormNewUser = ({
           defaultValues={defaultValues}
           isEdit={isEdit}
           heading="Lets Create Your Profile"
+          setValue={setValue}
           buttons={
             <ButtonBlue
+              disabled={Boolean(githubUsername)}
               className="mt-4"
-              label={"Connect Your GitHub"}
+              type="button"
+              label={
+                githubUsername ? "Connected To Github" : "Connect Your GitHub"
+              }
               onClick={handleConnectGitHub}
             />
           }

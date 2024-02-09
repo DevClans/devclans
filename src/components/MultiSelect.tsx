@@ -47,13 +47,81 @@ export default function MultipleSelectChip({
   register,
   name,
   defaultValue,
+  limit,
 }: {
   options: string[];
   name: string;
   register: UseFormRegister<any>;
   defaultValue?: string[];
+  limit?: number;
 }) {
   const theme = useTheme();
+  // theme.typography.fontFamily = "var(--poppins)";
+  // theme.palette.mode = "dark";
+  // theme.components = {
+  //   MuiChip: {
+  //     defaultProps: {
+  //       style: {
+  //         backgroundColor: colors.priDarker,
+  //         color: colors.heading,
+  //       },
+  //     },
+  //   },
+  //   MuiAutocomplete: {
+  //     defaultProps: {
+  //       ChipProps: {
+  //         style: {
+  //           backgroundColor: colors.priDarker,
+  //           color: colors.heading,
+  //         },
+  //       },
+  //     },
+  //     styleOverrides: {
+  //       root: {
+  //         backgroundColor: colors.border,
+  //         color: colors.text,
+  //         border: `1px solid ${colors.border}`,
+  //       },
+  //       paper: {
+  //         styles: {
+  //           backgroundColor: colors.border,
+  //           color: colors.text,
+  //         },
+  //       },
+  //     },
+  //   },
+  //   MuiButtonBase: {
+  //     defaultProps: {
+  //       style: {
+  //         fontSize: 14,
+  //       },
+  //     },
+  //   },
+  //   MuiInputBase: {
+  //     defaultProps: {
+  //       style: {
+  //         color: colors.text,
+  //       },
+  //     },
+  //     styleOverrides: {
+  //       root: {
+  //         color: colors.text,
+  //       },
+  //     },
+  //   },
+  //   MuiOutlinedInput: {
+  //     defaultProps: {
+  //       style: {
+  //         color: colors.text,
+  //       },
+  //     },
+  //     styleOverrides: {
+  //       root: {
+  //         color: colors.text,
+  //       },
+  //     },
+  //   },
+  // };
   const [personName, setPersonName] = React.useState<string[]>(
     defaultValue || []
   );
@@ -62,6 +130,10 @@ export default function MultipleSelectChip({
     const {
       target: { value },
     } = event;
+    const len = value.length;
+    if (limit && len > limit) {
+      return;
+    }
     setPersonName(
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value

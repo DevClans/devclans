@@ -13,13 +13,6 @@ export const userGithubDetailsSchema = new Schema<UserGithubDetailsProps>(
         message: (props: any) => `${props.value} is not a valid accessToken!`,
       },
     },
-    username: {
-      type: String,
-      required: true,
-      trim: true,
-      minlength: 1,
-      unique: true,
-    },
     avatar_url: { type: String },
     node_id: { type: String },
     name: { type: String, trim: true, maxlength: 255 },

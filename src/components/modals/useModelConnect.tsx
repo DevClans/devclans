@@ -7,7 +7,7 @@ import {
   RadioGroup,
 } from "@mui/material";
 import { useState } from "react";
-import { ButtonBlue, CloseRounded, MuiIconButton } from "..";
+import { ButtonBlue } from "..";
 import colors from "@/lib/colors";
 import { contactMethodsMap } from "@/lib/contactMethods";
 import { ModalConnectProps } from "@/types/modal.types";

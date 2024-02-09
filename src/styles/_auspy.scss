@@ -57,6 +57,7 @@ body {
   }
   button {
     @apply fccc;
+    text-align: center;
   }
   // RESPONSIVE BUTTON GROUP
   .btnRow {
@@ -100,5 +101,10 @@ body {
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 5px;
+  }
+  .hover:hover {
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.3s ease-in-out;
   }
 }

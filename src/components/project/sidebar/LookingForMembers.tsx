@@ -9,6 +9,7 @@ const LookingForMembers = ({
   username,
   _id,
   level = "beginner",
+  type = "users",
 }: LookingForMembersProps) => {
   // console.log("LookingForMembersProps", username, _id, level);
   if (!level) {
@@ -48,7 +49,7 @@ const LookingForMembers = ({
             <span className="w100">
               Tell cohort friends about this opportunity{" "}
               <LinkShare
-                url={urlUser(_id) || urlProject(_id)}
+                url={type == "users" ? urlUser(_id) : urlProject(_id)}
                 message={msgLookingForMember(username, level)}
               />
             </span>

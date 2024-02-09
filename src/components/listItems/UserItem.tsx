@@ -7,29 +7,29 @@ import selectUserUsername from "@/lib/selectUserUsername";
 import { PageProps } from "@/types/page.types";
 import { msgSharingUser } from "@/lib/constants.messages";
 import { urlUser } from "@/constants";
+import Link from "next/link";
 
 const UserItem = async ({
   avatar,
   bio,
   skills,
   discordDetails,
-  githubDetails,
   skillLevel,
   username,
+  githubId,
   _id,
   searchParams,
 }: UserSearchInfoProps & Partial<PageProps>) => {
   const { avatar: disAvatar, _id: disID } = discordDetails || {};
-  const { avatar_url: gitAvatar, bio: gitBio, login } = githubDetails || {};
   const avtr = await userAvatar({
     avatar,
     discordImg: disAvatar,
-    gitubImg: gitAvatar,
     discordId: disID,
   });
   const usernm = selectUserUsername({
     username,
-    userProps: { discordDetails, githubDetails },
+    gitUsername: githubId,
+    userProps: { discordDetails },
   });
 
   return (
@@ -54,7 +54,9 @@ const UserItem = async ({
         }
         detailsHeader={
           <>
-            <h2>{usernm || "Username"}</h2>
+            <Link href={urlUser(_id)}>
+              <h2>{usernm || "Username"}</h2>
+            </Link>
             <ProjectIconGroup
               showLabels={false}
               url={urlUser(_id)}
@@ -72,7 +74,7 @@ const UserItem = async ({
         chipArr={skills}
         baseUrl={"/user/"}
         _id={_id?.toString()}
-        desc={bio || gitBio || ""}
+        desc={bio || ""}
       />
     </>
   );

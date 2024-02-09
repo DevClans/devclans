@@ -158,7 +158,8 @@ const ButtonBookmark = ({
         setActive={setLiked}
         className={`${className}`}
         onClick={handleClick}
-        label={loading ? "Loading" : bookmarkCount.toString()}
+        disabled={loading}
+        label={loading ? "Loading" : bookmarkCount?.toString()}
         activeIcon={<BookmarkRounded color="primary" fontSize="small" />}
         icon={<BookmarkBorderOutlined fontSize="small" />}
       />

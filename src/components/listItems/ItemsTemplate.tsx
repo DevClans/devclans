@@ -18,6 +18,7 @@ type ItemsTemplateProps = Partial<PageProps> & {
 const ItemsTemplate = ({
   searchParams,
   img,
+  isOwner = false,
   detailsHeader,
   rightMessage,
   detailHeading,
@@ -27,8 +28,9 @@ const ItemsTemplate = ({
   _id,
   desc,
   title,
-}: ItemsTemplateProps) => {
+}: ItemsTemplateProps & { isOwner?: boolean }) => {
   const url = `${baseUrl}/${_id}`;
+  const editUrl = `${baseUrl}/${_id}?mode=edit`;
   return (
     <>
       <div className="lg:frfssb fcc relative p-2 h-max min-h-[200px] gap-5 w100 card2">
@@ -48,7 +50,7 @@ const ItemsTemplate = ({
                 "Some cool description about the group. Some cool description about the group."}
               {".."}
               <Link
-                className="text-priDarker font-medium"
+                className="text-priDarker text-nowrap font-medium"
                 href={baseUrl + "/" + _id}
               >
                 {" "}
@@ -75,7 +77,10 @@ const ItemsTemplate = ({
           {/* buttons */}
           <div className="fcc w100 gap-2">
             <ButtonSecondary href={url} label={"View"} />
-            <ButtonBlue href={url} label={"Ask A Question"} />
+            <ButtonBlue
+              href={isOwner ? editUrl : url}
+              label={isOwner ? "Update" : "Ask A Question"}
+            />
           </div>
         </div>
       </div>
