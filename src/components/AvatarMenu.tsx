@@ -12,7 +12,7 @@ const UserAvatarMenu = ({ username }: { username: string }) => {
     session.data?.user?.discordId,
     session.data?.user?.avatar
   );
-  console.log("avatarUrl", avatarUrl);
+  // console.log("avatarUrl", avatarUrl);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     if (anchorEl) {

@@ -56,10 +56,13 @@ export const Fetch = async ({
   }
   try {
     const res = await fetch((baseUrl || urlApi) + (endpoint || ""), options);
+    if (res.status > 200) {
+      throw new Error(res.statusText);
+    }
     const data = await res.json();
     return data;
   } catch (error) {
-    console.log(error, "error in fetch");
+    console.log(error, "error in Fetch");
     return [];
   }
 };

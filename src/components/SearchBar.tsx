@@ -16,6 +16,7 @@ const SearchBar = () => {
     setSearch(value);
     // to search just after stopping typing
     newParams.set("search", value);
+    console.log("newParams", newParams.toString());
     router.push("?" + newParams.toString());
   }, 300);
   const link = (search: string) => {
