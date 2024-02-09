@@ -63,16 +63,19 @@ export const zodUserTeamItemSchema = z.array(
   z.union([zodMongoId, team.partial()])
 );
 
-export const zodDateString = z.date().refine(
-  (value) => {
-    const date = new Date(value);
-    return !isNaN(date.getTime());
-  },
-  {
-    message: "Invalid date string",
-    path: [], // path is filled out by zod
-  }
-);
+export const zodDateString = z.union([
+  z.date(),
+  z.string().refine(
+    (value) => {
+      const date = new Date(value);
+      return !isNaN(date.getTime());
+    },
+    {
+      message: "Invalid date string",
+      path: [], // path is filled out by zod
+    }
+  ),
+]);
 export const zodGithubAccessToken = z
   .string()
   .min(30)
@@ -330,7 +333,7 @@ export const zodProjectSearchInfoSchema = z.object({
 });
 export const zodRepoDetailsSchema = z.object({
   description: z.string().min(10).max(100).nullable(),
-  stars: z.number().max(1000000),
+  watchers_count: z.number().max(1000000),
   forks: z.number().max(10000),
   watchers: z.number().max(1000000),
   topics: z.array(z.string()).max(20).default([]).optional(),
