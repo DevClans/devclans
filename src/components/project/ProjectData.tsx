@@ -66,25 +66,3 @@ const ProjectData = async (projectId: string) => {
 };
 
 export default ProjectData;
-// <div>
-//   <h2 className="text-lg font-semibold mb-2">Languages Used</h2>
-//   <div className="flex flex-col space-y-2">
-//     <div className="flex items-center space-x-2">
-//       {languages.map(({ name, percentage, color }) => (
-//         <div
-//           key={name}
-//           className="flex-grow bg-green-400 h-6 rounded-md"
-//           style={{ width: `${percentage}%`, backgroundColor: color }}
-//         ></div>
-//       ))}
-//     </div>
-//     <div className="flex space-x-2">
-//       {languages.map(({ name, percentage }) => (
-//         <div key={name} className="text-sm font-medium">
-//           {name} ({Number(percentage).toFixed(2)}%)
-//         </div>
-//       ))}
-//     </div>
-//   </div>
-// </div>
-// );

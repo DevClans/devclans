@@ -45,7 +45,7 @@ const ProjectRepoDetails = ({
     <>
       <div className="border border-border rounded-[10px] p-3 fcfs gap-2 lg:max-w-[360px]">
         <div className="frcsb w100">
-          <h4 className="">Languages Used</h4>
+          <h4 className="">Repo Details</h4>
           <LinkWithIcon
             icon={<IconOpenInNew color={colors.heading} size={12} />}
             iconLeft={<Github size={12} />}
