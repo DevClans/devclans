@@ -34,7 +34,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
   const userData: UserProps = await Fetch({
     endpoint: `/user/${id}`,
   });
-  console.log("user data", userData);
+  console.log("user data", Boolean(userData));
   if (
     !userData ||
     (userData && ("error" in userData || "message" in userData))

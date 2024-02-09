@@ -2,6 +2,7 @@
 import colors from "@/lib/colors";
 import { useState } from "react";
 import GitHubCalendar from "react-github-calendar";
+
 const GitHubGraph = ({ username }: { username: string }) => {
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear);

@@ -3,6 +3,7 @@ import { ExpandDetailsBoxProps } from "@/types/toggleList.types";
 import { IconCollapse, IconExpand, IconReadme } from "@/components";
 import colors from "@/lib/colors";
 import ReactMarkdown from "react-markdown";
+// import { useMemo } from "react";
 const ExpandDetailsBox = ({
   heading,
   data,
@@ -10,6 +11,14 @@ const ExpandDetailsBox = ({
   isActive,
   setActive,
 }: ExpandDetailsBoxProps) => {
+  // const dataWihoutComments = useMemo(() => {
+  //   console.log("called");
+  //   return data
+  //     .split("<!--")
+  //     .map((item, i) => (i > 0 ? item.split("-->")[1] : item))
+  //     .join(" ");
+  // }, [data]);
+  // console.log(dataWihoutComments, "dataWihoutComments");
   return (
     <div className="card2 w100 border-t-0">
       <summary

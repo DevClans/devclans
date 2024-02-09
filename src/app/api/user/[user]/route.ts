@@ -188,7 +188,7 @@ async function handler(
       .partial()
       .safeParse(usersInCacheObj);
     if (checkUserSearchInfoCache.success) {
-      console.info("users cache hitt", checkUserSearchInfoCache.data);
+      console.info("users cache hitt", userId);
       Object.assign(userInfo, checkUserSearchInfoCache.data); // info like: username, avatar, etc
       // * GETTING USER DETAILS
       try {
