@@ -48,9 +48,9 @@ const ProjectItem = ({
           </>
         }
         rightMessage={
-          <div className="frc gap-1">
-            <p>Searching For :</p>
-            <p className="text-highlight capitalize">
+          <div className="frc flex-wrap gap-x-1">
+            <p className="text-nowrap">Searching For :</p>
+            <p className="text-highlight capitalize text-nowrap">
               {needMembers || "Beginers"}
             </p>
           </div>

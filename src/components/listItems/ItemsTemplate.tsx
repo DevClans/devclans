@@ -48,7 +48,7 @@ const ItemsTemplate = ({
                 "Some cool description about the group. Some cool description about the group."}
               {".."}
               <Link
-                className="text-priDarker font-medium"
+                className="text-priDarker text-nowrap font-medium"
                 href={baseUrl + "/" + _id}
               >
                 {" "}
