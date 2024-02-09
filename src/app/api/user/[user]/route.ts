@@ -66,6 +66,7 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
         Object.assign(dataForCache, data.data);
         githubUsername = data.data.login;
         if (data.data.readme) {
+          console.info("user github readme cache hit");
           getreadme = false;
         }
       } else {
@@ -87,7 +88,7 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
       }
     }
     if (userAccessToken) {
-      console.info("getting data from github api");
+      console.info("can get data from github api");
       // get data from github api
       const githubapi = await getOctokit({ accessToken: userAccessToken });
       if (githubapi && githubapi.type === "auth") {
@@ -105,28 +106,30 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
             zodUserGithubDetailsSchema.partial().parse(githubData.data)
           );
         }
-        // try getting readme from github api
-        console.info("getting user github readme from github api");
-        const readme = await githubapi.api.request(
-          "GET /repos/{owner}/{repo}/contents/{path}",
-          {
-            owner: githubUsername,
-            repo: githubUsername,
-            path: "README.md",
-            ref: "main",
-            headers: {
-              "X-GitHub-Api-Version": "2022-11-28",
-            },
+        if (getreadme) {
+          // try getting readme from github api
+          console.info("getting user github readme from github api");
+          const readme = await githubapi.api.request(
+            "GET /repos/{owner}/{repo}/contents/{path}",
+            {
+              owner: githubUsername,
+              repo: githubUsername,
+              path: "README.md",
+              ref: "main",
+              headers: {
+                "X-GitHub-Api-Version": "2022-11-28",
+              },
+            }
+          );
+          console.info("readme from github", readme);
+          if (readme.status == 200) {
+            getreadme = false;
+            const readmeContent = Buffer.from(
+              (readme.data as any).content,
+              "base64"
+            ).toString();
+            dataForCache["readme"] = readmeContent;
           }
-        );
-        console.info("readme from github", readme);
-        if (readme.status == 200) {
-          getreadme = false;
-          const readmeContent = Buffer.from(
-            (readme.data as any).content,
-            "base64"
-          ).toString();
-          dataForCache["readme"] = readmeContent;
         }
       } else console.error("error getting github api");
     } else
@@ -151,14 +154,16 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
       userInfo["githubDetails"],
       zodUserGithubDetailsSchemaForFrontend.parse(dataForCache)
     );
-    // store data
-    console.info("adding user github data in cache", dataForCache, userId);
-    redisClient.hset(
-      UserRedisKeys.github,
-      userId,
-      JSON.stringify(dataForCache)
-    );
-    redisClient.expire(UserRedisKeys.github, 60 * 60 * 24 * 1); // 1 day
+    if (getData || getreadme) {
+      // store data
+      console.info("adding user github data in cache", dataForCache, userId);
+      redisClient.hset(
+        UserRedisKeys.github,
+        userId,
+        JSON.stringify(dataForCache)
+      );
+      redisClient.expire(UserRedisKeys.github, 60 * 60 * 24 * 1); // 1 day
+    }
   } catch (error) {
     console.error("error in user getgithubdata", error);
   }
