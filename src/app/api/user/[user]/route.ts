@@ -54,7 +54,8 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
     );
     if (githubDataFromCache) {
       const data = zodUserGithubDetailsSchema.safeParse(
-        JSON.parse(githubDataFromCache)
+        typeof githubDataFromCache == "string" &&
+          JSON.parse(githubDataFromCache)
       );
       if (data.success) {
         console.info("user github cache hit");
@@ -188,7 +189,8 @@ async function handler(
       try {
         // check for user data in cache in userData key
         const userData = await redisClient.hget(UserRedisKeys.data, userId);
-        const userDataObj = JSON.parse(userData || "");
+        const userDataObj =
+          typeof userData == "string" ? JSON.parse(userData) : "";
         const checkUserDataCache = zodUserDataSchema.safeParse(userDataObj);
         // if user data is in cache, add it to user object
         if (checkUserDataCache.success) {
