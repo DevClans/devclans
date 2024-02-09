@@ -3,7 +3,13 @@ import { ButtonProps } from "@/types";
 import { ArrowRightAltRounded } from "..";
 import ButtonLink from "./ButtonLink";
 
-const ButtonBlue = ({ className, label, disabled, ...props }: ButtonProps) => {
+const ButtonBlue = ({
+  className,
+  label,
+  disabled,
+  icon,
+  ...props
+}: ButtonProps) => {
   return (
     <ButtonLink
       className={
@@ -13,7 +19,7 @@ const ButtonBlue = ({ className, label, disabled, ...props }: ButtonProps) => {
       label={
         <>
           {label}
-          {!disabled && <ArrowRightAltRounded fontSize={"medium"} />}
+          {!disabled && (icon || <ArrowRightAltRounded fontSize={"medium"} />)}
         </>
       }
       disabled={disabled}

@@ -1,4 +1,5 @@
 import FormNewUser from "@/components/FormNewUser";
+import CreateNewProject from "@/components/userPage/CreateNewProject";
 import LeftSidebar from "@/components/userPage/LeftSidebar";
 import MiddleSection from "@/components/userPage/MiddleSection";
 import RightSidebar from "@/components/userPage/RightSidebar";
@@ -100,20 +101,23 @@ const page = async ({ params, searchParams }: UserPageProps) => {
       />
     ),
     projects: (
-      <UserProjects
-        ownedProjects={
-          userData["ownedProjects"]?.length > 0 &&
-          typeof userData["ownedProjects"] == "object"
-            ? (userData["ownedProjects"] as any)
-            : []
-        }
-        contributedProjects={
-          userData["contributedProjects"]?.length > 0 &&
-          typeof userData["contributedProjects"] == "object"
-            ? (userData["contributedProjects"] as any)
-            : []
-        }
-      />
+      <>
+        <CreateNewProject />
+        <UserProjects
+          ownedProjects={
+            userData["ownedProjects"]?.length > 0 &&
+            typeof userData["ownedProjects"] == "object"
+              ? (userData["ownedProjects"] as any)
+              : []
+          }
+          contributedProjects={
+            userData["contributedProjects"]?.length > 0 &&
+            typeof userData["contributedProjects"] == "object"
+              ? (userData["contributedProjects"] as any)
+              : []
+          }
+        />
+      </>
     ),
     // experience: <UserExperience />,
   };
