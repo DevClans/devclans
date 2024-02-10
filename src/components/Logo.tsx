@@ -5,7 +5,13 @@ const Logo = () => {
   return (
     <>
       <Link title="Devclans Logo" href={"/"} className="relative" id="logo">
-        <Image src={"/logo.png"} alt="devclans logo" width={76} height={30} />
+        <Image
+          src={"/logo.png"}
+          priority={true}
+          alt="devclans logo"
+          width={76}
+          height={30}
+        />
         <p
           style={{
             fontFamily: "var(--poppins)",
