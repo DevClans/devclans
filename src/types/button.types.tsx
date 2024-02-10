@@ -7,6 +7,7 @@ export type ButtonProps = {
   className?: string;
   active?: boolean | number | string;
   replace?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClick?: (
     e:
       | React.MouseEvent<HTMLButtonElement, MouseEvent>

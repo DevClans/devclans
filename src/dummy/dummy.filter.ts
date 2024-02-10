@@ -1,4 +1,5 @@
 import { projectDomains } from "@/lib/domains";
+import { memberLevels } from "@/lib/memberLevel";
 import { skills } from "@/lib/skills";
 import { FilterSidebarGrpProps } from "@/types";
 
@@ -48,8 +49,13 @@ export const dummyFilterSteps: FilterSidebarGrpProps[] = [
     key: "university",
   },
   {
-    title: "Skills",
+    title: "Tech Stack",
     data: skills as unknown as string[],
     key: "skills",
+  },
+  {
+    title: "Skill Level",
+    data: memberLevels as unknown as string[],
+    key: "skillLevel",
   },
 ];

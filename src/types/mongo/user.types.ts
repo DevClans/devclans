@@ -1,7 +1,6 @@
 import { MemberLevelType } from "./../../lib/memberLevel";
 import { contactMethodsMap, contactMethodsType } from "@/lib/contactMethods";
 import { ProjectDomainType } from "@/lib/domains";
-import { skills } from "@/lib/skills";
 import {
   zodUserGithubDetailsSchema,
   zodUserDiscordDetailsSchema,

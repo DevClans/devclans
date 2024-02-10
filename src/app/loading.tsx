@@ -10,7 +10,7 @@ const loading = () => {
         height={40}
         width={40}
       />
-      <h3 className="text-primary">Loading...</h3>
+      <h3 className="text-priDark">Loading...</h3>
     </div>
   );
 };
