@@ -345,23 +345,23 @@ export const zodRepoDetailsSchema = z.object({
   contributing: z.string().max(3000).nullable().optional(),
   languages: z.record(z.number()),
 });
-
+const commonString = z.string().trim();
 export const zodProjectDetailsSchema = z.object({
   problem: z.string().max(180),
   challenges: z
     .array(
       z.object({
-        title: z.string(),
-        desc: z.string(),
-        solution: z.string().optional(),
+        title: commonString.min(3).max(50),
+        desc: commonString.min(3).max(200).nullable().optional(),
+        solution: commonString.optional(),
       })
     )
     .optional(),
   futureGoals: z
     .array(
       z.object({
-        title: z.string(),
-        desc: z.string(),
+        title: commonString.min(3).max(50),
+        desc: commonString.min(3).max(200).nullable().optional(),
         needHelp: z.boolean().default(false),
       })
     )
@@ -369,8 +369,8 @@ export const zodProjectDetailsSchema = z.object({
   memberReq: z
     .array(
       z.object({
-        title: z.string(),
-        desc: z.string(),
+        title: commonString.min(3).max(50),
+        desc: commonString.min(3).max(200).nullable().optional(),
       })
     )
     .optional(),
