@@ -22,6 +22,7 @@ async function handler(req: Request) {
     const createdProject = await ProjectModel.create({
       ...dataSet,
       owner: userid,
+      team: [userid],
     });
     const projectData = createdProject.toObject();
     const projectId = zodMongoId.parse(createdProject._id);

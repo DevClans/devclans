@@ -56,17 +56,17 @@ export const MySchema = z.object({
     message: "Invalid ObjectId",
   }),
 });
-const team = z.object({
-  githubId: z.string(),
-  discordId: z.string().regex(/^\d{17,19}$/), // Ensure it's a valid Discord ID
-  username: z.string().optional(),
+export const zodTeamContactSchema = z.object({
+  githubId: z.string().optional(),
+  discordId: z.string().min(5).max(50), // Ensure it's a valid Discord ID
+  username: z.string(),
   avatar: z.string().url().optional(), // Ensure it's a valid URL if present
   _id: zodMongoId,
   contactMethod: z.enum(contactMethods).default("discord"), // Replace with the actual contact methods
   contactMethodId: z.string().optional(),
 });
 export const zodUserTeamItemSchema = z
-  .array(z.union([zodMongoId, team.partial()]))
+  .array(z.union([zodMongoId, zodTeamContactSchema.partial()]))
   .max(10);
 
 export const zodDateString = z.union([
@@ -334,7 +334,7 @@ export const zodProjectSearchInfoSchema = z.object({
   title: z.string().min(3).max(50),
   desc: z.string().min(10).max(180),
   skills: z.array(z.string()).max(20).default([]),
-  team: zodUserTeamItemSchema.optional(),
+  team: zodTeamContactSchema.array().optional(),
   skillLevel: z
     .enum(memberLevels as any)
     .nullable()

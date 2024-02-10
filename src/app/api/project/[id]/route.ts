@@ -184,11 +184,16 @@ const getProjectFromMongo = async (id: string, select = "") => {
       new Types.ObjectId(id)
     )
       .select(select + "-repoDetails")
-      .populate(
-        "owner",
-        "githubId githubDetails.accessToken githubDetails.login"
-      )
-      .populate("team", userTeamItemKeys.join(" "))
+      .populate([
+        {
+          path: "owner",
+          select: "githubDetails.accessToken githubDetails.login",
+        },
+        {
+          path: "team",
+          select: userTeamItemKeys.join(" "),
+        },
+      ])
       .lean();
     return project;
   } catch (error) {

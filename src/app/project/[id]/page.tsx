@@ -14,7 +14,11 @@ import { UserTeamItemProps } from "@/types/mongo/user.types";
 import { PageProps } from "@/types/page.types";
 import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 import { convertProjectDetails } from "@/utils/convertProjectDetails";
-import { zodProjectFormSchema, zodRepoName } from "@/zod/zod.common";
+import {
+  zodProjectFormSchema,
+  zodRepoName,
+  zodTeamContactSchema,
+} from "@/zod/zod.common";
 import { z } from "zod";
 
 const Page = async ({
@@ -36,7 +40,7 @@ const Page = async ({
     projectData: FetchProjectProps["data"] | null;
     renderLanguages: ProjectRepoDetailsProps["languages"];
   } = await ProjectData(id);
-  console.log("data for id", id, "=> ", Boolean(data));
+  console.log("data for id", id, "=> ", data);
   if (!data) {
     return <>No data Found With Id {id}</>;
   }
@@ -111,15 +115,22 @@ const Page = async ({
         {/* sidebar */}
         <ProjectSidebar
           links={data.projectLinks}
-          contact={(data.team as UserTeamItemProps[]).map((item) => {
-            return {
-              name: item.username,
-              contactId: item.contactMethodId || item.discordId,
-              contactMethod: item.contactMethodId
-                ? item.contactMethod
-                : "discord",
-              icon: selectIconForLinks(item.contactMethod),
-            };
+          contact={data.team.map((item) => {
+            const a = zodTeamContactSchema.safeParse(item);
+            return a.success
+              ? {
+                  ...a.data,
+                  icon: selectIconForLinks(a.data.contactMethod),
+                  name: a.data.username,
+                  contactId: a.data.contactMethodId || a.data.discordId,
+                  contactMethod: a.data.contactMethod as
+                    | "discord"
+                    | "email"
+                    | "whatsapp"
+                    | "telegram"
+                    | "twitter", // Fix the type of contactMethod
+                }
+              : null;
           })}
           skillLevel={{
             username: data.title,

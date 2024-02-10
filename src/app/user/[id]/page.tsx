@@ -130,10 +130,10 @@ const page = async ({ params, searchParams }: UserPageProps) => {
       />
       <Common
         level={userData["skillLevel"]}
-        username={username}
         params={params}
         searchParams={searchParams}
         {...userData}
+        username={username}
       >
         {ele[tab] || (
           <div className={"card2 w100 p-5 !rounded-[10px]"}>

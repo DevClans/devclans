@@ -78,7 +78,7 @@ export const userGithubDetailsKeys: string[] = [
 export type UserTeamItemProps = {
   githubId: string; // username
   discordId: string; // username
-  username?: string;
+  username: string;
   avatar?: string;
   _id: mongoose.Types.ObjectId;
   contactMethod: contactMethodsType;
@@ -120,12 +120,15 @@ export const userSearchInfoKeys: string[] = [
 export type UserMongoProps = UserProps;
 //  Omit<UserProps, "githubId">;
 
-export type ContactDetailsProps = {
-  name: string;
-  contactId: string;
-  contactMethod: keyof typeof contactMethodsMap;
-  icon?: any;
-};
+export type ContactDetailsProps =
+  | null
+  | undefined
+  | {
+      name: string;
+      contactId: string;
+      contactMethod: keyof typeof contactMethodsMap;
+      icon?: any;
+    };
 
 export type UserTeamProps = { team: UserTeamItemProps[] };
 export enum UserRedisKeys {
