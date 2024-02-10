@@ -18,10 +18,10 @@ import {
   zodUserDataSchema,
   zodUserSearchInfoSchema,
   zodUserGithubDetailsSchemaForFrontend,
+  zodDiscordUsername,
 } from "@/zod/zod.common";
-import { Types, get } from "mongoose";
+import { Types } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 
 const getUserData = async (user: string, select: string) => {
   try {
@@ -168,6 +168,19 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
     console.error("error in user getgithubdata", error);
   }
 };
+const setUseridInCache = async (username: string, id: string) => {
+  try {
+    console.info("setting userid in cache", username, id);
+    await redisClient.set(`${UserRedisKeys.ids}:${username}`, id);
+    await redisClient.expire(
+      `${UserRedisKeys.ids}:${username}`,
+      60 * 60 * 24 * 30
+    ); // 30 day as username is not going to change
+  } catch (error) {
+    console.error("error in setting userid in cache", error);
+  }
+};
+// ? invalidating old username in cache is not necessary as it will expire in 30 days
 
 async function handler(
   req: NextRequest,
@@ -177,8 +190,31 @@ async function handler(
     await dbConnect();
     console.info(" -- fetching user route -- ");
     const { user } = params;
-    const userId = zodMongoId.parse(user);
-    console.info("userId", userId);
+    const isMongoId = zodMongoId.safeParse(user).success;
+    let cachedId;
+    if (!isMongoId) {
+      // check if username
+      const username = zodDiscordUsername.parse(user);
+      // search for id in cache using the username
+      cachedId = await redisClient.get(`${UserRedisKeys.ids}:${username}`);
+
+      // if not found, search in mongodb
+      if (!cachedId) {
+        const id: UserProps | null = await UserModel.findOne({ username })
+          .select("_id")
+          .lean();
+        if (id) {
+          cachedId = id._id;
+          // add to cache
+          await setUseridInCache(username, id._id);
+        }
+      }
+    }
+    const userId = isMongoId ? user : cachedId;
+    if (!userId) {
+      console.info("user not found in cache");
+      throw new Error("User not found");
+    }
     // is user in cache? check users key
     const userInfo: UserProps | UserSearchInfoProps | Record<string, any> = {};
     const userInCache = await redisClient.hget(UserRedisKeys.list, userId);

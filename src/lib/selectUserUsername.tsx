@@ -1,27 +1,21 @@
 import { UserProps } from "@/types/mongo/user.types";
 
-const selectUserUsername = ({
+const selectUserDisplayName = ({
   username,
   discordUsername,
-  gitUsername,
   userProps,
 }: {
   username?: string;
   discordUsername?: string;
-  gitUsername?: string;
   userProps?: Partial<UserProps>;
 }): string => {
-  const avtr = username || userProps?.username;
-  const dc =
+  return (
     userProps?.discordDetails?.global_name ||
     discordUsername ||
-    userProps?.discordDetails?.username;
-  const gh = gitUsername || userProps?.githubDetails?.login;
-  let res = "";
-  if (avtr) res = avtr;
-  else if (dc) res = dc;
-  else if (gh) res = gh;
-  return res;
+    username ||
+    userProps?.discordDetails?.username ||
+    "Username not found"
+  );
 };
 
-export default selectUserUsername;
+export default selectUserDisplayName;

@@ -5,7 +5,7 @@ import MiddleSection from "@/components/userPage/MiddleSection";
 import RightSidebar from "@/components/userPage/RightSidebar";
 import UserOverview from "@/components/userPage/UserOverview";
 import UserProjects from "@/components/userPage/UserProjects";
-import selectUserUsername from "@/lib/selectUserUsername";
+import selectUserDisplayName from "@/lib/selectUserUsername";
 import userQuestions from "@/lib/userQuestions";
 import { InfoWithIconProps } from "@/types/list.types";
 import type {
@@ -28,7 +28,7 @@ type UserPageProps = {
 };
 
 const page = async ({ params, searchParams }: UserPageProps) => {
-  const { id } = params;
+  const { id } = params; // this is can be username or mongo id now
   const tab: string = (searchParams?.tab as string) || "overview";
   const mode: string = searchParams?.mode as string;
   const userData: UserProps = await Fetch({
@@ -62,7 +62,8 @@ const page = async ({ params, searchParams }: UserPageProps) => {
 
   const questions = userData.questions;
   const arr = userQuestions({ questions });
-  const username = selectUserUsername({ userProps: userData });
+  const username = userData.username || userData.discordDetails?.username;
+  const displayName = selectUserDisplayName({ userProps: userData });
   const convertInfoToProjectDetails = (
     infoItems: InfoWithIconProps[]
   ): ProjectDetailsItemProps[] => {
@@ -176,7 +177,7 @@ const Common = ({
         {children}
       </MiddleSection>
       {/* right sidebar */}
-      <RightSidebar _id={_id} username={username || ""} level={level} />
+      <RightSidebar _id={_id} username={username} level={level} />
     </div>
   );
 };

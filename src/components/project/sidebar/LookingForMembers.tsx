@@ -49,7 +49,11 @@ const LookingForMembers = ({
             <span className="w100">
               Tell cohort friends about this opportunity{" "}
               <LinkShare
-                url={type == "users" ? urlUser(_id) : urlProject(_id)}
+                url={
+                  type == "users"
+                    ? urlUser({ username, id: _id })
+                    : urlProject(_id)
+                }
                 message={msgLookingForMember(username, level)}
               />
             </span>

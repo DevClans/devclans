@@ -73,7 +73,10 @@ export default function AccountMenu({
     },
     {
       title: "View Profile",
-      link: urlUser(userState?._id as string),
+      link: urlUser({
+        username: userState?.displayName || userState?.username,
+        id: userState?._id as string,
+      }),
     },
     {
       title: "Edit Profile",

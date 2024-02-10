@@ -137,6 +137,7 @@ export enum UserRedisKeys {
   github = "userGithub",
   discord = "userDiscord",
   search = "userSearch",
+  ids = "userIds",
 }
 export type UserFormProps = z.infer<typeof zodUserFormSchema>;
 export type LookingForMembersProps = {
