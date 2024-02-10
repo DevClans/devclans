@@ -7,8 +7,8 @@ import {
   ProjectRepoDetailsKeys,
 } from "@/types/mongo/project.types";
 import {
-  projectSchema,
   stringSchema,
+  zodGithubDataSchema,
   zodRepoDetailsSchema,
 } from "@/zod/zod.common";
 import axios from "axios";
@@ -21,7 +21,7 @@ export const getGithubData = async (
 ) => {
   try {
     console.info("-- getting github data --");
-    const projectData = projectSchema.partial().parse(project);
+    const projectData = zodGithubDataSchema.partial().parse(project);
     const userAccessToken =
       accessToken ||
       (typeof projectData.owner != "string" &&
