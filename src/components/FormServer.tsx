@@ -76,6 +76,7 @@ const FormServer = ({
                 <select
                   className={` ${commonClass}`}
                   {...register(name as any)}
+                  defaultValue={""}
                 >
                   {options?.map((option: string, i: number) => (
                     <option
@@ -118,12 +119,12 @@ const FormServer = ({
                         name as keyof typeof zodFormShape
                       ].isOptional()
                     : false);
-              // console.log(
-              //   "isRequired",
-              //   isRequired,
-              //   name,
-              //   zodFormShape[name as keyof typeof zodFormShape]?.isOptional()
-              // );
+              console.log(
+                "isRequired",
+                isRequired,
+                name,
+                zodFormShape[name as keyof typeof zodFormShape]?.isOptional()
+              );
 
               return (
                 <div key={i + "parent"} className={`fcfs gap-2 w100`}>

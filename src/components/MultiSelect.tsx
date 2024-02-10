@@ -175,7 +175,7 @@ export default function MultipleSelectChip({
           )}
           MenuProps={MenuProps}
         >
-          {options?.map((name, i) => (
+          {options?.sort().map((name, i) => (
             <MenuItem
               key={i}
               value={name}

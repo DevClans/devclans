@@ -11,8 +11,8 @@ export const dummyProjectFormSchemaFields: InputFieldProps[] = [
     name: "title",
   },
   {
-    label: "Description",
-    desc: "Briefly describe what your project is about.",
+    label: "Tagline",
+    desc: "Briefly describe what your project is about (a short note or catchy intro).",
     name: "desc",
     type: "textarea",
   },
@@ -72,9 +72,9 @@ export const dummyProjectFormSchemaFields: InputFieldProps[] = [
     name: "video",
   },
   {
-    label: "Need Members",
+    label: "Searching Members",
     desc: "Specify if you are looking for team members.",
-    name: "needMembers",
+    name: "skillLevel",
     options: memberLevels as any, // Assuming memberLevels is defined elsewhere
   },
   {
