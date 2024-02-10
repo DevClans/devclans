@@ -56,10 +56,15 @@ export const MySchema = z.object({
     message: "Invalid ObjectId",
   }),
 });
+export const zodDiscordUsername = z
+  .string()
+  .trim()
+  .regex(/^[a-z0-9_.]{2,32}$/, { message: "Invalid Username" }); // Ensure it's a valid Discord username
+
 export const zodTeamContactSchema = z.object({
   githubId: z.string().optional(),
   discordId: z.string().min(5).max(50), // Ensure it's a valid Discord ID
-  username: z.string(),
+  username: zodDiscordUsername,
   avatar: z.string().url().optional(), // Ensure it's a valid URL if present
   _id: zodMongoId,
   contactMethod: z.enum(contactMethods).default("discord"), // Replace with the actual contact methods
@@ -89,6 +94,7 @@ export const zodGithubAccessToken = z
   .refine((value) => /^[a-zA-Z0-9_]+$/.test(value), {
     message: "Invalid GitHub access token format",
   });
+
 export const zodProjectOwnerSchema = z.union([
   z.object({
     _id: zodMongoId,
@@ -143,7 +149,7 @@ export const zodUserDiscordDetailsSchema = z.object({
   _id: z.string().refine((value) => /^\d{17,19}$/.test(value), {
     message: "Invalid Discord ID! Must be a string of 17 to 19 digits.",
   }),
-  username: z.string().min(2).max(32),
+  username: zodDiscordUsername,
   discriminator: z
     .string()
     .refine((value) => /^\d{4}$/.test(value) || value == "0", {
@@ -195,7 +201,7 @@ export const zodUserSearchInfoSchema = z.object({
   // githubDetails: userGithubDetailsSchema,
   githubId: z.string().max(50).optional(),
   bio: stringSchema.min(10).max(100),
-  username: stringSchema.max(50).min(1).optional(),
+  username: zodDiscordUsername,
   avatar: z.string().optional(),
   discordDetails: zodUserDiscordDetailsSchema,
   _id: z.any(),
@@ -420,6 +426,11 @@ export const zodProjectDataSchema = z.object({
 export const projectSchema = zodProjectDataSchema
   .merge(zodProjectSearchInfoSchema)
   .merge(zodRepoDetailsSchema);
+
+export const zodGithubDataSchema = z.object({
+  owner: projectSchema.shape["owner"],
+  repoName: zodRepoNameStored,
+});
 
 export const zodProjectFormSchema = z.object({
   title: z.string().trim().min(3).max(50),
