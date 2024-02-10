@@ -339,6 +339,8 @@ export const zodRepoDetailsSchema = z.object({
   topics: z.array(z.string()).max(20).default([]).optional(),
   commits: z.number().max(10000).optional(),
   lastCommit: zodDateString,
+  created_at: zodDateString.optional(),
+  updated_at: zodDateString.optional(),
   readme: z.string().max(3000),
   contributing: z.string().max(3000).nullable().optional(),
   languages: z.record(z.number()),
