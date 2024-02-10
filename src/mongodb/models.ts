@@ -15,6 +15,7 @@ import { projectDomains } from "@/lib/domains";
 const userSchema = new mongoose.Schema<UserMongoProps>(
   {
     discordId: { type: String, required: true },
+    skillLevel: { type: String, enum: memberLevels, default: "beginner" },
     githubId: { type: String },
     githubDetails: { type: userGithubDetailsSchema },
     domain: {
@@ -157,10 +158,9 @@ const projectSchema = new mongoose.Schema<ProjectProps>(
       ],
     },
     team: [{ type: mongoose.Types.ObjectId, ref: "User", default: [] }],
-    needMembers: {
+    skillLevel: {
       type: String,
       enum: memberLevels,
-      default: null,
     },
     imgs: [{ type: String, default: [] }],
     video: { type: String, default: "" },
@@ -171,6 +171,7 @@ const projectSchema = new mongoose.Schema<ProjectProps>(
     },
     published: { type: Boolean, default: false },
     repoDetails: projectRepoSchema,
+    domain: [{ type: String, enum: projectDomains }],
   },
   { timestamps: true }
 );
