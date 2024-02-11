@@ -22,7 +22,8 @@ const handler = async (
     // find the project with the id
     const project = await ProjectModel.findOneAndUpdate(
       { _id: projectId, owner: userid },
-      { $set: data }
+      { $set: data },
+      { new: true }
     );
     // if not found return 404
     if (!project) {
