@@ -7,7 +7,7 @@ export const toggleFilter = (
   // console.log("data in togglegilter", newParams.toString(), filters);
   const newFilters = { ...filters };
   if (!(newParams instanceof URLSearchParams) || !label || !title) {
-    console.info("newParams is not a URLSearchParams");
+    // console.info("newParams is not a URLSearchParams");
     return {
       newParams,
       newGroup: new Set<string>(),

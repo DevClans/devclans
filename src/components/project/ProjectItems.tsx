@@ -2,6 +2,7 @@ import { ProjectSearchItemProps } from "@/types/mongo/project.types";
 import ToolBox from "../ToolBox";
 import ProjectItem from "../listItems/ProjectItem";
 import { PageProps } from "@/types/page.types";
+import InfiniteScroll from "../InfiniteScroll";
 
 const ProjectItems = ({
   projects,
@@ -20,6 +21,7 @@ const ProjectItems = ({
           <ProjectItem searchParams={searchParams} {...product} key={i} />
         ))
       )}
+      <InfiniteScroll itemsCount={projects.length} />
     </div>
   );
 };

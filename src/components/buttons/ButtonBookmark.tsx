@@ -30,7 +30,7 @@ const ButtonBookmark = ({
 
   const userId = session?.user?._id;
   const ownerId = session?.user?._id;
-  //console.log(title);
+  // console.log(title);
 
   useEffect(() => {
     const fetchLikeCount = async () => {
@@ -43,7 +43,7 @@ const ButtonBookmark = ({
           endpoint: `/db/getProject/${ownerId}/${projectId}`,
         });
         if (data) {
-          console.log(data.bookmarkCount);
+          // console.log(data.bookmarkCount);
 
           setBookmarkCount(data.bookmarkCount);
         }
@@ -60,19 +60,19 @@ const ButtonBookmark = ({
         const data = await Fetch({
           endpoint: `/db/getBookmarked/${userId}/${projectId}`,
         });
-        // console.log("This is data");
-        //console.log(data);
+        console.log("This is data");
+        // console.log(data);
         if (data.length > 0) {
           if (data[0]._id) {
-            console.log("false");
+            // console.log("false");
             setLiked(false);
           } else {
-            console.log("true");
+            // console.log("true");
             setLiked(true);
           }
         } else {
           setLiked(true);
-          console.log(true);
+          // console.log(true);
         }
       } catch (error) {
         console.error("Error fetching initial like count:", error);
@@ -89,7 +89,7 @@ const ButtonBookmark = ({
     }
     const localLikeNumber = localStorage.getItem(`BookmarkNumber_${projectId}`);
     if (localLikeNumber) {
-      console.log("Taken from local storage");
+      // console.log("Taken from local storage");
       setBookmarkCount(JSON.parse(localLikeNumber));
     } else {
       fetchLikeCount();
@@ -113,7 +113,7 @@ const ButtonBookmark = ({
       work = "removeBookmark";
     }
     try {
-      console.log(work);
+      // console.log(work);
       setLoading(true);
       const data = await Fetch({
         endpoint: `/db/${work}`,
@@ -126,15 +126,15 @@ const ButtonBookmark = ({
           projectId: projectId,
         },
       });
-      //console.log(title);
+      // console.log(title);
       if (data) {
         setLoading(false);
-        console.log(liked);
-        console.log(data);
+        // console.log(liked);
+        // console.log(data);
 
         setBookmarkCount(data.project.bookmarkCount);
 
-        console.log(bookmarkCount);
+        // console.log(bookmarkCount);
         localStorage.setItem(
           `BookmarkState_${projectId}_${userId}`,
           JSON.stringify(!liked)
