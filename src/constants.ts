@@ -26,6 +26,6 @@ export const urlUser = ({
     ? `/user${username ? "/" + username : id ? "/" + id : ""}`
     : "";
 export const urlProject = (id?: Types.ObjectId | string) =>
-  urlBase + id ? `/project${id ? "/" + id : ""}` : "";
+  urlBase + (id ? `/project${id ? "/" + id : ""}` : "");
 export const fallbackImg = "/produtImgFallback.png";
 export const fallbackImgUser = "/userImgFallback.png";

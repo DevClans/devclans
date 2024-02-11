@@ -149,7 +149,7 @@ export async function GET(
           redisClient.hset(
             ProjectRedisKeys.data,
             id,
-            JSON.stringify(zodProjectDataSchema.parse(projectInfo))
+            JSON.stringify(zodProjectDataSchema.partial().parse(projectInfo))
           );
           redisClient.expire(ProjectRedisKeys.list, 60 * 60 * 24 * 2);
         }
