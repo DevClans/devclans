@@ -56,9 +56,9 @@
 #filterMenu {
   display: none;
   max-width: 30%;
-  position: absolute;
+  position: sticky;
   top: 0;
-  right: 0;
+  left: 100%;
   width: 100%;
   height: 100vh;
   overflow: scroll;
@@ -82,9 +82,9 @@
     height: 50%;
     padding-top: 0;
     top: unset;
-    right: unset;
+    left: unset;
     position: fixed;
-    backdrop-filter: blur(41.04999923706055px);
+    backdrop-filter: blur(17px);
     // padding-top: 30px;
     @apply scrollbar-x;
   }
