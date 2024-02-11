@@ -140,3 +140,9 @@ a.cardGrad:hover {
   border: 1px solid var(--border, #132341);
   backdrop-filter: blur(27.100000381469727px);
 }
+
+a.navItem:hover {
+  transition: border 0.5s ease;
+  @apply cardGrad;
+  border-radius: 20px;
+}
