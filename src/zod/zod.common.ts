@@ -340,7 +340,7 @@ export const zodProjectSearchInfoSchema = z.object({
   title: z.string().min(3).max(50),
   desc: z.string().min(10).max(180),
   skills: z.array(z.string()).max(20).default([]),
-  team: zodTeamContactSchema.array().optional(),
+  team: zodTeamContactSchema.partial().array().optional(),
   skillLevel: z
     .enum(memberLevels as any)
     .nullable()
@@ -441,7 +441,7 @@ export const zodProjectFormSchema = z.object({
     .enum(memberLevels as any)
     .nullable()
     .optional(),
-  imgs: z.array(z.string()).max(5).default([]),
+  imgs: z.array(z.string().max(100)).max(10).default([]), // https://utfs.io/f/a28b23bf-1255-424d-b95a-8475a50e3e1e-9fxaqt.png
   topics: z.array(z.string()).max(10).default([]),
   repoName: zodRepoName.nullable().optional().default(null),
   // .refine((item) => item.startsWith("https://github.com"), {
