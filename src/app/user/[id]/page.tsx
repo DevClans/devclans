@@ -5,7 +5,7 @@ import MiddleSection from "@/components/userPage/MiddleSection";
 import RightSidebar from "@/components/userPage/RightSidebar";
 import UserOverview from "@/components/userPage/UserOverview";
 import UserProjects from "@/components/userPage/UserProjects";
-import selectUserUsername from "@/lib/selectUserUsername";
+import selectUserDisplayName from "@/lib/selectUserUsername";
 import userQuestions from "@/lib/userQuestions";
 import { InfoWithIconProps } from "@/types/list.types";
 import type {
@@ -28,7 +28,7 @@ type UserPageProps = {
 };
 
 const page = async ({ params, searchParams }: UserPageProps) => {
-  const { id } = params;
+  const { id } = params; // this is can be username or mongo id now
   const tab: string = (searchParams?.tab as string) || "overview";
   const mode: string = searchParams?.mode as string;
   const userData: UserProps = await Fetch({
@@ -50,9 +50,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
       return (
         // ! here it can be a problem as we are using userData directly
         <FormNewUser
-          defaultValues={
-            data.success ? (data.data as UserFormProps) : (userData as any)
-          }
+          defaultValues={data.success ? (data.data as UserFormProps) : userData}
         />
       );
     } else {
@@ -62,7 +60,8 @@ const page = async ({ params, searchParams }: UserPageProps) => {
 
   const questions = userData.questions;
   const arr = userQuestions({ questions });
-  const username = selectUserUsername({ userProps: userData });
+  const username = userData.username || userData.discordDetails?.username;
+  const displayName = selectUserDisplayName({ userProps: userData });
   const convertInfoToProjectDetails = (
     infoItems: InfoWithIconProps[]
   ): ProjectDetailsItemProps[] => {
@@ -130,10 +129,10 @@ const page = async ({ params, searchParams }: UserPageProps) => {
       />
       <Common
         level={userData["skillLevel"]}
-        username={username}
         params={params}
         searchParams={searchParams}
         {...userData}
+        username={username}
       >
         {ele[tab] || (
           <div className={"card2 w100 p-5 !rounded-[10px]"}>
@@ -176,7 +175,7 @@ const Common = ({
         {children}
       </MiddleSection>
       {/* right sidebar */}
-      <RightSidebar _id={_id} username={username || ""} level={level} />
+      <RightSidebar _id={_id} username={username} level={level} />
     </div>
   );
 };

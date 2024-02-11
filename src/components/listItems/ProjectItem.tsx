@@ -8,7 +8,7 @@ import { msgSharingProject } from "@/lib/constants.messages";
 import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 
 const ProjectItem = async ({
-  needMembers,
+  skillLevel,
   imgs,
   _id,
   title,
@@ -56,7 +56,7 @@ const ProjectItem = async ({
           <div className="frc flex-wrap gap-x-1">
             <p className="text-nowrap">Searching For :</p>
             <p className="text-highlight capitalize text-nowrap">
-              {needMembers || "Beginers"}
+              {skillLevel || "Beginers"}
             </p>
           </div>
         }

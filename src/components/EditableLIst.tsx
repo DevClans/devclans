@@ -1,9 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ButtonSecondary, ToggleListItem } from ".";
 import ButtonClose from "./buttons/ButtonClose";
 import { ButtonProps } from "@/types";
-import { ToogleListItemProps } from "@/types/toggleList.types";
+
 type listProps = {
   title: string;
   desc: string;
@@ -34,12 +34,21 @@ const EditableLIst = ({
     }
     return "";
   };
-
   const thirdLabelVal = thirdLabel();
   const type: "challenges" | "futureGoals" =
     (name.split(".")[1] as any) || "challenges";
+  const defaultData = defaultValues?.[name?.split(".")?.[0] || ""]?.[type];
+  const getDefaultList = () => {
+    if (!defaultData || !Array.isArray(defaultData)) return {};
+    const defaultList: Record<string, listProps> = {};
+    for (const item of defaultData) {
+      defaultList[item.title] = item;
+    }
+    return defaultList;
+  };
+  const defaultList = useMemo(getDefaultList, [defaultData]);
   const [list, setList] = useState<Record<string, listProps>>(
-    defaultValues[name] || {}
+    defaultList || {}
   );
   const [input, setInput] = useState<string>("");
   const [desc, setDesc] = useState<string>("");

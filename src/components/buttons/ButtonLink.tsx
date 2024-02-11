@@ -15,6 +15,7 @@ const ButtonLink = ({
   loading = false,
   replace,
   title,
+  onChange,
   ...rest
 }: ButtonProps) => {
   const [clicked, setClicked] = useState(false);

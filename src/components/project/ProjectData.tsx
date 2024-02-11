@@ -30,7 +30,7 @@ const ProjectData = async (projectId: string) => {
       }
       return data;
     } catch (error) {
-      console.error("Error fetching project details:", error);
+      console.error("Error fetching project details frontend:", error);
       return null;
     }
   };

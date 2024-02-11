@@ -9,6 +9,9 @@ const ProjectTeam = ({
   list: ListItemProps[];
   contact: ContactDetailsProps[];
 }) => {
+  if (list?.length === 0) {
+    return null;
+  }
   return (
     <div className="card2 w100">
       <SidebarList

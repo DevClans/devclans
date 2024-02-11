@@ -37,7 +37,7 @@ export type ProjectProps = ProjectTeamProps & {
   bookmarkCount: number;
   projectLinks: string[];
   projectDetails: FetchProjectDetailsProps;
-  needMembers: MemberLevelType;
+  skillLevel: MemberLevelType;
   imgs: string[];
   video: string;
   devStage: DevStagesType;
@@ -125,7 +125,7 @@ export enum ProjectRedisKeys {
 }
 
 export type ProjectSearchItemProps = {
-  needMembers?: MemberLevelType;
+  skillLevel?: MemberLevelType;
   imgs: string[];
   _id?: mongoose.Types.ObjectId;
   desc: string;
@@ -139,7 +139,7 @@ export type ProjectSearchItemProps = {
 };
 
 export const projectSearchItemKeys: string[] = [
-  "needMembers",
+  "skillLevel",
   "imgs",
   "_id",
   "desc",
@@ -153,6 +153,6 @@ export type ProjectFormProps = z.infer<typeof zodProjectFormSchema>;
 
 export type UserSidebarProps = UserTeamProps & {
   links: ProjectProps["projectLinks"];
-  needMembers: LookingForMembersProps;
+  skillLevel: LookingForMembersProps;
   contact: ContactDetailsProps[];
 };

@@ -1,7 +1,6 @@
 import { MemberLevelType } from "./../../lib/memberLevel";
 import { contactMethodsMap, contactMethodsType } from "@/lib/contactMethods";
 import { ProjectDomainType } from "@/lib/domains";
-import { skills } from "@/lib/skills";
 import {
   zodUserGithubDetailsSchema,
   zodUserDiscordDetailsSchema,
@@ -79,7 +78,7 @@ export const userGithubDetailsKeys: string[] = [
 export type UserTeamItemProps = {
   githubId: string; // username
   discordId: string; // username
-  username?: string;
+  username: string;
   avatar?: string;
   _id: mongoose.Types.ObjectId;
   contactMethod: contactMethodsType;
@@ -121,12 +120,15 @@ export const userSearchInfoKeys: string[] = [
 export type UserMongoProps = UserProps;
 //  Omit<UserProps, "githubId">;
 
-export type ContactDetailsProps = {
-  name: string;
-  contactId: string;
-  contactMethod: keyof typeof contactMethodsMap;
-  icon?: any;
-};
+export type ContactDetailsProps =
+  | null
+  | undefined
+  | {
+      name: string;
+      contactId: string;
+      contactMethod: keyof typeof contactMethodsMap;
+      icon?: any;
+    };
 
 export type UserTeamProps = { team: UserTeamItemProps[] };
 export enum UserRedisKeys {
@@ -135,6 +137,7 @@ export enum UserRedisKeys {
   github = "userGithub",
   discord = "userDiscord",
   search = "userSearch",
+  ids = "userIds",
 }
 export type UserFormProps = z.infer<typeof zodUserFormSchema>;
 export type LookingForMembersProps = {

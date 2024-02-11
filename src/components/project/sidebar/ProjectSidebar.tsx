@@ -13,35 +13,38 @@ import { UserSidebarProps } from "@/types/mongo/project.types";
 const ProjectSidebar = ({
   team,
   links,
-  needMembers,
+  skillLevel,
   contact,
 }: UserSidebarProps) => {
+  console.log("team", team);
   const teamData: ListItemProps[] = team.map(
     ({ username, discordId, _id, githubId }) => {
-      return {
-        text: username || "",
-        href: "/user/" + _id,
-        startIcon: (
-          <Avatar
-            style={{
-              border: "2px solid var(--border)",
-              background: colors.cardBg,
-              color: colors.highlight,
-              height: "40px",
-            }}
-            className="uppercase"
-            alt={username}
-          >
-            {username && username[0]}
-          </Avatar>
-        ),
-        endIcon: <LinkGithub href={`/${githubId}`} />,
-      };
+      return (
+        _id && {
+          text: username || "",
+          href: "/user/" + _id,
+          startIcon: (
+            <Avatar
+              style={{
+                border: "2px solid var(--border)",
+                background: colors.cardBg,
+                color: colors.highlight,
+                height: "40px",
+              }}
+              className="uppercase"
+              alt={username}
+            >
+              {username && username[0]}
+            </Avatar>
+          ),
+          endIcon: <LinkGithub href={`/${githubId}`} />,
+        }
+      );
     }
   );
   return (
     <div className="lg:sticky lg:top-[40px] fcc lg:max-w-[360px] w100 gap-[30px]">
-      <LookingForMembers type="projects" {...needMembers} />
+      <LookingForMembers type="projects" {...skillLevel} />
       <ProjectLinks links={links} />
       <ProjectTeam contact={contact} list={teamData} />
     </div>

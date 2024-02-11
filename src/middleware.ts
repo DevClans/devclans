@@ -1,32 +1,36 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
-// import { Ratelimit } from "@upstash/ratelimit";
-// import { kv } from "@vercel/kv";
+import { Ratelimit } from "@upstash/ratelimit";
+import { kv } from "@vercel/kv";
 
 // middleware is applied to all routes, use conditionals to select
-// const cache = new Map();
-// const ratelimit = new Ratelimit({
-//   redis: kv,
-//   timeout: 1000,
-//   analytics: true,
-//   ephemeralCache: cache,
-//   limiter: Ratelimit.slidingWindow(80, "60 s"),
-// });
+const cache = new Map();
+const ratelimit = new Ratelimit({
+  redis: kv,
+  timeout: 1000,
+  analytics: true,
+  ephemeralCache: cache,
+  limiter: Ratelimit.slidingWindow(80, "60 s"),
+});
 export default withAuth(
   async function middleware(req: any) {
     // return NextResponse.next();
-    // console.log("Incoming request:", req.method, req.url, req.ip);
-    // const ip = req.ip ?? "127.0.0.1";
-    // const { success, pending, limit, reset, remaining } = await ratelimit.limit(
-    //   ip
-    // );
-    // console.log("ratelimit", success, await pending, limit, reset, remaining);
-    // return success
-    //   ? NextResponse.next()
-    //   : NextResponse.json(
-    //       { error: "rate limit exceeded" },
-    //       { status: 429, statusText: "Rate imit exceeded" }
-    //     );
+    console.log("Incoming request:", req.method, req.url, req.ip);
+    if (process.env.NODE_ENV === "development") {
+      console.log("dev mode");
+      return NextResponse.next();
+    }
+    const ip = req.ip ?? "127.0.0.1";
+    const { success, pending, limit, reset, remaining } = await ratelimit.limit(
+      ip
+    );
+    console.log("ratelimit", success, await pending, limit, reset, remaining);
+    return success
+      ? NextResponse.next()
+      : NextResponse.json(
+          { error: "rate limit exceeded" },
+          { status: 429, statusText: "Rate imit exceeded" }
+        );
     // // const session = await getSession({ req }); //not working
   },
   {

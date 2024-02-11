@@ -62,3 +62,14 @@ button,
 .button {
   line-height: normal;
 }
+
+// button.cardGrad:disabled,
+// a.cardGrad:disabled {
+//   opacity: 0.5;
+//   cursor: not-allowed;
+// }
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

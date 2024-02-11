@@ -2,23 +2,26 @@ import { ProjectSearchItemProps } from "@/types/mongo/project.types";
 import ToolBox from "../ToolBox";
 import ProjectItem from "../listItems/ProjectItem";
 import { PageProps } from "@/types/page.types";
+import InfiniteScroll from "../InfiniteScroll";
 
 const ProjectItems = ({
   projects,
   searchParams,
 }: { projects: ProjectSearchItemProps[] } & PageProps) => {
-  if (
+  const noProjects =
     !Array.isArray(projects) ||
-    (Array.isArray(projects) && projects.length === 0)
-  ) {
-    return <h3>No projects found</h3>;
-  }
+    (Array.isArray(projects) && projects.length === 0);
   return (
     <div className="fcfs w100 gap-6">
       <ToolBox count={projects.length} />
-      {projects.map((product, i) => (
-        <ProjectItem searchParams={searchParams} {...product} key={i} />
-      ))}
+      {noProjects ? (
+        <h3 className="text-subH">No projects found</h3>
+      ) : (
+        projects.map((product, i) => (
+          <ProjectItem searchParams={searchParams} {...product} key={i} />
+        ))
+      )}
+      <InfiniteScroll itemsCount={projects.length} />
     </div>
   );
 };

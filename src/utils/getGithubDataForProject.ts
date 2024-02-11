@@ -1,4 +1,5 @@
 import { getOctokit } from "@/github/config.github";
+import { getGithubReadmeNew } from "@/github/repos/gh.getReadmeNew";
 import { ProjectModel } from "@/mongodb/models";
 import redisClient from "@/redis/config";
 import {
@@ -6,8 +7,8 @@ import {
   ProjectRepoDetailsKeys,
 } from "@/types/mongo/project.types";
 import {
-  projectSchema,
   stringSchema,
+  zodGithubDataSchema,
   zodRepoDetailsSchema,
 } from "@/zod/zod.common";
 import axios from "axios";
@@ -20,7 +21,7 @@ export const getGithubData = async (
 ) => {
   try {
     console.info("-- getting github data --");
-    const projectData = projectSchema.partial().parse(project);
+    const projectData = zodGithubDataSchema.partial().parse(project);
     const userAccessToken =
       accessToken ||
       (typeof projectData.owner != "string" &&
@@ -28,6 +29,9 @@ export const getGithubData = async (
     let readme: string | null = "";
     let contributing: string | null = "";
     let languagePercentages: { [key: string]: number } | null = null;
+    let githubapi = null;
+    let default_branch = "";
+
     const repoDetails: any = {};
 
     // Check if readme is in cache
@@ -54,17 +58,11 @@ export const getGithubData = async (
     console.log("githubData.success", success);
     const errorPaths = new Set(error?.errors.flatMap((e: any) => e.path));
     console.log("errorPaths", errorPaths);
-    const repoInfoFields = [
-      "description",
-      "stars",
-      "forks",
-      "watchers",
-      "topics",
-    ];
+
     // check if all repoDetails fields are in cache. get missing fields
     if (success) {
       console.info("github data cache hit");
-      Object.assign(project, { repoDetails: JSON.parse(githubData) });
+      Object.assign(project, { repoDetails: githubData });
     } else {
       console.info("fetching github data");
       // Fetch GitHub data
@@ -92,9 +90,8 @@ export const getGithubData = async (
       console.info("userAccessToken", Boolean(userAccessToken));
       if (userAccessToken) {
         console.info("have access to user accesstoken");
-        let default_branch = "";
         // TO GET: REPO INFO
-        const githubapi = await getOctokit({ accessToken: userAccessToken });
+        githubapi = await getOctokit({ accessToken: userAccessToken });
 
         console.info("github api =>", githubapi?.type);
         // get github related data
@@ -174,56 +171,24 @@ export const getGithubData = async (
       }
 
       if (errorPaths.size > 0 ? errorPaths.has("readme") : true) {
-        console.info("fetching readme from github");
-        // README
-        const readmeUrl = `${githubUrl}/readme`;
-
-        try {
-          const readmeResponse = await fetch(readmeUrl);
-          if (!readmeResponse.ok)
-            throw new Error(
-              `GitHub request failed with status ${readmeResponse.status}`
-            );
-          const readmeData = await readmeResponse.json();
-          const readmeContent = Buffer.from(
-            readmeData.content,
-            "base64"
-          ).toString();
-          if (readmeContent) {
-            readme = readmeContent;
-          }
-        } catch (error: any) {
-          console.error(
-            "Error fetching README from GitHub:",
-            readmeUrl,
-            error.message
-          );
-        }
+        readme = await getGithubReadmeNew({
+          githubApi: githubapi,
+          username: username as string,
+          repoName: reponame,
+          githubUrl,
+        });
       } else {
         console.info("readme cache hit");
       }
 
       if (errorPaths.size > 0 ? errorPaths.has("contributing") : true) {
-        console.info("fetching contributing from github");
-        // CONTRIBUTING
-        const contributingUrl = `${githubUrl}/CONTRIBUTING.md`;
-        try {
-          // Fetch CONTRIBUTING content
-          const contributingResponse = await axios.get(contributingUrl);
-          const contributingContent = Buffer.from(
-            contributingResponse.data.content,
-            "base64"
-          ).toString();
-          if (contributingContent) {
-            contributing = contributingContent;
-          }
-        } catch (error: any) {
-          console.error(
-            "Error fetching contri from GitHub:",
-            contributingUrl,
-            error.message
-          );
-        }
+        contributing = await getGithubReadmeNew({
+          githubApi: githubapi,
+          username: username as string,
+          repoName: reponame,
+          githubUrl,
+          type: "contributing",
+        });
       } else {
         console.info("contributing cache hit");
       }
@@ -231,12 +196,18 @@ export const getGithubData = async (
       // LANGUAGE PERCENTAGES
       if (errorPaths.size > 0 ? errorPaths.has("languages") : true) {
         console.info("fetching languages from github");
-        const languagesUrl = `${githubUrl}/languages`;
         try {
           // Fetch languages used
-          const languagesResponse = await axios.get(languagesUrl);
-          const languages = languagesResponse.data;
-
+          const languages = await getGithubReadmeNew({
+            githubApi: githubapi,
+            username: username as string,
+            repoName: reponame,
+            githubUrl,
+            type: "languages",
+          });
+          if (!languages) {
+            throw new Error("Error fetching languages from GitHub");
+          }
           // Calculate the total number of bytes
           const totalBytes: number = Number(
             Object.values(languages).reduce(
@@ -253,11 +224,7 @@ export const getGithubData = async (
             ])
           );
         } catch (error: any) {
-          console.error(
-            "Error fetching languages from GitHub:",
-            languagesUrl,
-            error.message
-          );
+          console.error("Error fetching languages from GitHub:", error.message);
         }
       } else {
         console.info("languages cache hit");
@@ -284,7 +251,7 @@ export const getGithubData = async (
       // setting project info
       project.repoDetails = repoDetails;
 
-      console.info("updateRes for repodetails", Boolean(updateRes));
+      console.info("repodetails updated in db", Boolean(updateRes));
       // store in cache
       redisClient.hset(
         ProjectRedisKeys.github,
@@ -293,7 +260,7 @@ export const getGithubData = async (
       );
       redisClient.expire(ProjectRedisKeys.github, 60 * 60 * 24 * 7); // 1 week
     }
-    console.info("repoDetails", repoDetails);
+    console.info("repoDetails", Boolean(repoDetails));
     return {
       readme: repoDetails["readme"],
       contributing: repoDetails["contributing"],

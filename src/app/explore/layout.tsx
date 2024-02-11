@@ -5,7 +5,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <HeroExplore />
-      <div className="w100 relative fcc">
+      <div className="w100 relative frcsb">
         <div className="container py-[30px] h-max gap-[30px] frfssb">
           {children || <h3>Searching...</h3>}
         </div>

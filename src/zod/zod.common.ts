@@ -15,19 +15,25 @@ export const zodMongoId = z.union([
 export const zodRepoName = z
   .string()
   .trim()
-  .startsWith("https://github.com")
-  .min("https://github.com".length + 3)
+  .min(0) // Allow empty string
   .max(100)
   .refine(
     (item) => {
-      const str = item.split("https://github.com")[1];
-      if (str.startsWith("/") && str.substring(1).split("/").length >= 2)
+      // Check if the string is empty or starts with the given string
+      if (item === "" || item.startsWith("https://github.com")) {
         return true;
+      }
+      // Check if the string starts with "/"
+      if (item.startsWith("/")) {
+        const parts = item.substring(1).split("/");
+        // Check if there are at least two parts after splitting by "/"
+        if (parts.length >= 2) {
+          return true;
+        }
+      }
       return false;
     },
-    {
-      message: "Invalid github reponame",
-    }
+    { message: "Invalid github repo link" }
   );
 
 const zodRepoNameStored = z
@@ -50,29 +56,37 @@ export const MySchema = z.object({
     message: "Invalid ObjectId",
   }),
 });
-const team = z.object({
-  githubId: z.string(),
-  discordId: z.string().regex(/^\d{17,19}$/), // Ensure it's a valid Discord ID
-  username: z.string().optional(),
+export const zodDiscordUsername = z
+  .string()
+  .trim()
+  .regex(/^[a-z0-9_.]{2,32}$/, { message: "Invalid Username" }); // Ensure it's a valid Discord username
+
+export const zodTeamContactSchema = z.object({
+  githubId: z.string().optional(),
+  discordId: z.string().min(5).max(50), // Ensure it's a valid Discord ID
+  username: zodDiscordUsername,
   avatar: z.string().url().optional(), // Ensure it's a valid URL if present
   _id: zodMongoId,
   contactMethod: z.enum(contactMethods).default("discord"), // Replace with the actual contact methods
   contactMethodId: z.string().optional(),
 });
-export const zodUserTeamItemSchema = z.array(
-  z.union([zodMongoId, team.partial()])
-);
+export const zodUserTeamItemSchema = z
+  .array(z.union([zodMongoId, zodTeamContactSchema.partial()]))
+  .max(10);
 
-export const zodDateString = z.date().refine(
-  (value) => {
-    const date = new Date(value);
-    return !isNaN(date.getTime());
-  },
-  {
-    message: "Invalid date string",
-    path: [], // path is filled out by zod
-  }
-);
+export const zodDateString = z.union([
+  z.date(),
+  z.string().refine(
+    (value) => {
+      const date = new Date(value);
+      return !isNaN(date.getTime());
+    },
+    {
+      message: "Invalid date string",
+      path: [], // path is filled out by zod
+    }
+  ),
+]);
 export const zodGithubAccessToken = z
   .string()
   .min(30)
@@ -80,6 +94,7 @@ export const zodGithubAccessToken = z
   .refine((value) => /^[a-zA-Z0-9_]+$/.test(value), {
     message: "Invalid GitHub access token format",
   });
+
 export const zodProjectOwnerSchema = z.union([
   z.object({
     _id: zodMongoId,
@@ -96,13 +111,15 @@ export const zodProjectOwnerSchema = z.union([
 
 export const stringSchema = z.string();
 
-const ownedProjects = z.array(
-  z.object({
-    _id: stringSchema,
-  })
-);
+const ownedProjects = z
+  .array(
+    z.object({
+      _id: stringSchema,
+    })
+  )
+  .max(30);
 
-export const stringArraySchema = z.array(z.string());
+export const stringArraySchema = z.array(z.string()).max(20);
 // Define a custom refinement function to validate the hexadecimal color code with variable length
 const isValidHexColorVariableLength = (value: any) => {
   if (!value) {
@@ -132,7 +149,7 @@ export const zodUserDiscordDetailsSchema = z.object({
   _id: z.string().refine((value) => /^\d{17,19}$/.test(value), {
     message: "Invalid Discord ID! Must be a string of 17 to 19 digits.",
   }),
-  username: z.string().min(2).max(32),
+  username: zodDiscordUsername,
   discriminator: z
     .string()
     .refine((value) => /^\d{4}$/.test(value) || value == "0", {
@@ -176,12 +193,15 @@ export const zodUserDiscordDetailsSchema = z.object({
   // Add other properties and validations as needed
 });
 export const zodUserSearchInfoSchema = z.object({
-  skillLevel: z.enum(memberLevels as any).optional(),
-  skills: z.array(z.enum(skills)).default([]),
+  skillLevel: z
+    .enum(memberLevels as any)
+    .nullable()
+    .optional(),
+  skills: z.array(z.enum(skills)).max(20).default([]),
   // githubDetails: userGithubDetailsSchema,
   githubId: z.string().max(50).optional(),
   bio: stringSchema.min(10).max(100),
-  username: stringSchema.max(50).min(1).optional(),
+  username: zodDiscordUsername,
   avatar: z.string().optional(),
   discordDetails: zodUserDiscordDetailsSchema,
   _id: z.any(),
@@ -251,7 +271,7 @@ export const zodUserDataCommonSchema = z.object({
     .optional(),
   questions: z.object({
     currentCompany: z.string().max(250).optional(),
-    careerGoal: z.array(z.enum(["remote", "faang", "startup"])),
+    careerGoal: z.array(z.enum(["remote", "faang", "startup"])).max(3),
     proudAchievement: z.string().max(250).optional(),
     recentWork: z.string().max(250).optional(),
   }),
@@ -259,15 +279,18 @@ export const zodUserDataCommonSchema = z.object({
 });
 export const zodUserDataSchema = z.object({
   discordId: z.string().min(5).max(50),
-  ownedProjects: z.array(ownedProjects),
-  contributedProjects: z.array(ownedProjects),
+  ownedProjects: z.array(ownedProjects).max(30),
+  contributedProjects: z.array(ownedProjects).max(30),
   createdAt: zodDateString,
   updatedAt: zodDateString,
   ...zodUserDataCommonSchema.shape,
 });
 export const zodUserFormSchemaObj = z.object({
-  skillLevel: z.enum(memberLevels as any).optional(),
-  skills: z.array(z.enum(skills)).optional(),
+  skillLevel: z
+    .enum(memberLevels as any)
+    .nullable()
+    .optional(),
+  skills: z.array(z.enum(skills)).max(20).optional(),
   bio: stringSchema.min(10).max(100),
   ...zodUserDataCommonSchema.shape,
 });
@@ -313,61 +336,64 @@ export const userSchema = z.object({
   ...zodUserSearchInfoSchema.shape,
 });
 
-export const userArraySchema = z.array(userSchema);
-
 export const zodProjectSearchInfoSchema = z.object({
   title: z.string().min(3).max(50),
   desc: z.string().min(10).max(180),
-  skills: z.array(z.string()).default([]),
-  team: zodUserTeamItemSchema.optional(),
-  needMembers: z
+  skills: z.array(z.string()).max(20).default([]),
+  team: zodTeamContactSchema.partial().array().optional(),
+  skillLevel: z
     .enum(memberLevels as any)
     .nullable()
-    .default("beginner"),
-  imgs: z.array(z.string()).default([]),
+    .optional(),
+  imgs: z.array(z.string()).max(5).default([]),
   _id: zodMongoId,
   owner: zodProjectOwnerSchema,
 });
 export const zodRepoDetailsSchema = z.object({
   description: z.string().min(10).max(100).nullable(),
-  stars: z.number().max(1000000),
+  watchers_count: z.number().max(1000000),
   forks: z.number().max(10000),
   watchers: z.number().max(1000000),
   topics: z.array(z.string()).max(20).default([]).optional(),
   commits: z.number().max(10000).optional(),
   lastCommit: zodDateString,
+  created_at: zodDateString.optional(),
+  updated_at: zodDateString.optional(),
   readme: z.string().max(3000),
   contributing: z.string().max(3000).nullable().optional(),
   languages: z.record(z.number()),
 });
-
+const commonString = z.string().trim();
 export const zodProjectDetailsSchema = z.object({
   problem: z.string().max(180),
   challenges: z
     .array(
       z.object({
-        title: z.string(),
-        desc: z.string(),
-        solution: z.string().optional(),
+        title: commonString.min(3).max(50),
+        desc: commonString.min(3).max(200).nullable().optional(),
+        solution: commonString.optional(),
       })
     )
+    .max(5)
     .optional(),
   futureGoals: z
     .array(
       z.object({
-        title: z.string(),
-        desc: z.string(),
+        title: commonString.min(3).max(50),
+        desc: commonString.min(3).max(200).nullable().optional(),
         needHelp: z.boolean().default(false),
       })
     )
+    .max(5)
     .optional(),
   memberReq: z
     .array(
       z.object({
-        title: z.string(),
-        desc: z.string(),
+        title: commonString.min(3).max(50),
+        desc: commonString.min(3).max(200).nullable().optional(),
       })
     )
+    .max(5)
     .optional(),
 });
 
@@ -382,41 +408,47 @@ const StringArrayParser = z
   .transform((data) => data.split(","));
 
 export const zodProjectDataSchema = z.object({
-  contributors: z.array(zodMongoId).default([]),
+  contributors: z.array(zodMongoId).max(20).default([]),
   // Add other properties if needed
-  topics: z.array(z.string()).default([]),
+  topics: z.array(z.string()).max(10).default([]),
   repoName: zodRepoNameStored,
   likesCount: z.number().default(0),
   bookmarkCount: z.number().default(0),
   projectLinks: stringArraySchema.default([]),
   projectDetails: zodProjectDetailsSchema,
-  video: z.string(),
+  video: z.string().nullable().optional(),
   devStage: z.enum(devStages as any).default("idea"),
   published: z.boolean().default(false),
-  repoDetails: zodRepoDetailsSchema.optional(),
+  domain: z.array(z.enum(projectDomains)).max(10),
+  // repoDetails: zodRepoDetailsSchema.optional(),
 });
 
-export const projectSchema = zodProjectDataSchema.merge(
-  zodProjectSearchInfoSchema
-);
+export const projectSchema = zodProjectDataSchema
+  .merge(zodProjectSearchInfoSchema)
+  .merge(zodRepoDetailsSchema);
+
+export const zodGithubDataSchema = z.object({
+  owner: projectSchema.shape["owner"],
+  repoName: zodRepoNameStored,
+});
 
 export const zodProjectFormSchema = z.object({
   title: z.string().trim().min(3).max(50),
   desc: z.string().min(10).max(180),
-  skills: z.enum(skills).array().default([]),
+  skills: z.enum(skills).array().max(20).default([]),
   team: zodUserTeamItemSchema.optional(),
-  needMembers: z
+  skillLevel: z
     .enum(memberLevels as any)
     .nullable()
-    .default("beginner"),
-  imgs: z.array(z.string()).default([]),
-  topics: z.array(z.string()).default([]),
-  repoName: zodRepoName.optional(),
+    .optional(),
+  imgs: z.array(z.string().max(100)).max(10).default([]), // https://utfs.io/f/a28b23bf-1255-424d-b95a-8475a50e3e1e-9fxaqt.png
+  topics: z.array(z.string()).max(10).default([]),
+  repoName: zodRepoName.nullable().optional().default(null),
   // .refine((item) => item.startsWith("https://github.com"), {
   //   message: "Invalid github url",
   // })
   // .transform((item) => item.split("https://github.com")[1]),
-  projectLinks: z.array(z.string().trim()).default([]),
+  projectLinks: z.array(z.string().trim()).max(10).default([]),
   video: z
     .string()
     .trim()
@@ -428,27 +460,32 @@ export const zodProjectFormSchema = z.object({
         ) {
           return true;
         }
+        if (str == "") {
+          return true;
+        }
         return false;
       },
       {
         message: "Invalid video link",
       }
     )
+    .nullable()
     .optional(),
   projectDetails: zodProjectDetailsSchema,
   devStage: z.enum(devStages as any).default("idea"),
   published: z.boolean().default(false),
-  domain: z.array(z.enum(projectDomains)),
+  domain: z.array(z.enum(projectDomains)).max(10),
 });
 
 export const zodProjectFormSchemaServer = zodProjectFormSchema
   .omit({ repoName: true })
   .extend({
     repoName: zodRepoName
-      .transform((item) => item.split("https://github.com")[1])
+      .transform((item) => item?.split("https://github.com")[1])
+      .nullable()
       .optional(),
   });
-export const projectArraySchema = z.array(projectSchema);
+export const projectArraySchema = z.array(projectSchema).max(20);
 
 export const likeAndBkMarkSchema = z.object({
   user: zodMongoId,
@@ -465,7 +502,7 @@ export const zodFilterQuery = z.object({
     .optional()
     .default(parseInt("1")),
   filters: z
-    .union([z.record(z.string().array()), z.string()])
+    .union([z.record(z.string().array().max(30)), z.string()])
     .transform((val) => (typeof val === "string" ? JSON.parse(val) : val))
     .optional()
     .default({}),

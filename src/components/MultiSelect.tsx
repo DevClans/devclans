@@ -56,72 +56,6 @@ export default function MultipleSelectChip({
   limit?: number;
 }) {
   const theme = useTheme();
-  // theme.typography.fontFamily = "var(--poppins)";
-  // theme.palette.mode = "dark";
-  // theme.components = {
-  //   MuiChip: {
-  //     defaultProps: {
-  //       style: {
-  //         backgroundColor: colors.priDarker,
-  //         color: colors.heading,
-  //       },
-  //     },
-  //   },
-  //   MuiAutocomplete: {
-  //     defaultProps: {
-  //       ChipProps: {
-  //         style: {
-  //           backgroundColor: colors.priDarker,
-  //           color: colors.heading,
-  //         },
-  //       },
-  //     },
-  //     styleOverrides: {
-  //       root: {
-  //         backgroundColor: colors.border,
-  //         color: colors.text,
-  //         border: `1px solid ${colors.border}`,
-  //       },
-  //       paper: {
-  //         styles: {
-  //           backgroundColor: colors.border,
-  //           color: colors.text,
-  //         },
-  //       },
-  //     },
-  //   },
-  //   MuiButtonBase: {
-  //     defaultProps: {
-  //       style: {
-  //         fontSize: 14,
-  //       },
-  //     },
-  //   },
-  //   MuiInputBase: {
-  //     defaultProps: {
-  //       style: {
-  //         color: colors.text,
-  //       },
-  //     },
-  //     styleOverrides: {
-  //       root: {
-  //         color: colors.text,
-  //       },
-  //     },
-  //   },
-  //   MuiOutlinedInput: {
-  //     defaultProps: {
-  //       style: {
-  //         color: colors.text,
-  //       },
-  //     },
-  //     styleOverrides: {
-  //       root: {
-  //         color: colors.text,
-  //       },
-  //     },
-  //   },
-  // };
   const [personName, setPersonName] = React.useState<string[]>(
     defaultValue || []
   );
@@ -175,7 +109,7 @@ export default function MultipleSelectChip({
           )}
           MenuProps={MenuProps}
         >
-          {options?.map((name, i) => (
+          {options?.sort().map((name, i) => (
             <MenuItem
               key={i}
               value={name}

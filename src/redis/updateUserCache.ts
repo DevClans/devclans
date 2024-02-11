@@ -60,6 +60,7 @@ export default async function updateAllCache(
 
     console.log(" cache updated successfully.");
   } catch (error) {
+    // TODO maybe if we fail we should clear cache and wait for other requests to update cache
     console.error("Error updating  cache:", error);
   }
 }

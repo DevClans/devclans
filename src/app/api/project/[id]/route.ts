@@ -149,7 +149,7 @@ export async function GET(
           redisClient.hset(
             ProjectRedisKeys.data,
             id,
-            JSON.stringify(zodProjectDataSchema.parse(projectInfo))
+            JSON.stringify(zodProjectDataSchema.partial().parse(projectInfo))
           );
           redisClient.expire(ProjectRedisKeys.list, 60 * 60 * 24 * 2);
         }
@@ -184,11 +184,16 @@ const getProjectFromMongo = async (id: string, select = "") => {
       new Types.ObjectId(id)
     )
       .select(select + "-repoDetails")
-      .populate(
-        "owner",
-        "githubId githubDetails.accessToken githubDetails.login"
-      )
-      .populate("team", userTeamItemKeys.join(" "))
+      .populate([
+        {
+          path: "owner",
+          select: "githubDetails.accessToken githubDetails.login",
+        },
+        {
+          path: "team",
+          select: userTeamItemKeys.join(" "),
+        },
+      ])
       .lean();
     return project;
   } catch (error) {

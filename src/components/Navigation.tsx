@@ -47,8 +47,8 @@ const Navigation = ({
       }
       style={
         replaceStyle || {
-          padding: "15px 40px",
-          gap: "30px",
+          padding: "5px",
+          maxHeight: "47px",
         }
       }
     >
@@ -66,8 +66,8 @@ const Navigation = ({
             <Link
               title={name}
               key={index}
-              className={`flex-shrink-0 text-nowrap ${
-                replaceStyle && "w100 py-3"
+              className={`px-3 navItem rounded-[20px] flex-shrink-0 text-nowrap ${
+                replaceStyle ? "w100 py-3" : "py-2"
               }`}
               href={hreff}
               rel={rel}

@@ -3,7 +3,7 @@ import { ProjectIconGroup } from "..";
 import ProductImg from "../project/ProjectImg";
 import ItemsTemplate from "./ItemsTemplate";
 import userAvatar from "@/lib/userAvatar";
-import selectUserUsername from "@/lib/selectUserUsername";
+import selectUserDisplayName from "@/lib/selectUserUsername";
 import { PageProps } from "@/types/page.types";
 import { msgSharingUser } from "@/lib/constants.messages";
 import { urlUser } from "@/constants";
@@ -15,23 +15,29 @@ const UserItem = async ({
   skills,
   discordDetails,
   skillLevel,
-  username,
+  username: usernm,
   githubId,
   _id,
   searchParams,
 }: UserSearchInfoProps & Partial<PageProps>) => {
-  const { avatar: disAvatar, _id: disID } = discordDetails || {};
+  const {
+    avatar: disAvatar,
+    _id: disID,
+    username: disUsername,
+    global_name,
+  } = discordDetails || {};
   const avtr = await userAvatar({
     avatar,
     discordImg: disAvatar,
     discordId: disID,
   });
-  const usernm = selectUserUsername({
-    username,
-    gitUsername: githubId,
+  const displayName = selectUserDisplayName({
+    username: usernm,
+    discordUsername: global_name,
     userProps: { discordDetails },
   });
-
+  const username = usernm || disUsername;
+  const url = urlUser({ username: username, id: _id?.toString() });
   return (
     <>
       <ItemsTemplate
@@ -54,13 +60,13 @@ const UserItem = async ({
         }
         detailsHeader={
           <>
-            <Link href={urlUser(_id)}>
-              <h2>{usernm || "Username"}</h2>
+            <Link href={url}>
+              <h2>{displayName || "Username"}</h2>
             </Link>
             <ProjectIconGroup
               showLabels={false}
-              url={urlUser(_id)}
-              message={msgSharingUser(usernm)}
+              url={url}
+              message={msgSharingUser(displayName)}
             />
           </>
         }

@@ -19,6 +19,7 @@ const ProjectRepoDetails = ({
 }: Partial<ProjectRepoDetailsProps> & {
   repoName: ProjectProps["repoName"];
 }) => {
+  if (!repoName) return null;
   const dateString = (date?: string | Date) =>
     date && new Date(date).toDateString().substring(4);
   const moreDetails = [

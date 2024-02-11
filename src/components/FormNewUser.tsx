@@ -9,29 +9,32 @@ import { projectDomains } from "@/lib/domains";
 import { contactMethods } from "@/lib/contactMethods";
 import { userFormShape, zodUserFormSchema } from "@/zod/zod.common";
 import { ButtonBlue } from ".";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { createProjectUser } from "@/utils/createProjectUser";
-import { ProjectFormProps } from "@/types/mongo/project.types";
 import selectUserContactId from "@/lib/selectUserContactId";
 import LogedOutScreen from "./LogedOutScreen";
+import { toast } from "react-toastify";
 
 const FormNewUser = ({
   defaultValues: dv,
 }: {
-  defaultValues?: UserFormProps | ProjectFormProps;
+  defaultValues?: UserFormProps | UserProps;
 }) => {
   const isEdit = false;
   const searchParams = useSearchParams();
   const { data }: any = useSession();
   const session = data?.user;
-  const defaultValues: UserProps | UserFormProps =
-    (dv as unknown as UserProps) || {};
+  const [defaultValues, setDefaultValues] = useState<UserProps | UserFormProps>(
+    (dv as unknown as UserProps) || {}
+  );
+  // const defaultValues: UserProps | UserFormProps =
+  //   (dv as unknown as UserProps) || {};
   const githubUsername =
     searchParams.get("githubUsername") ||
-    defaultValues?.githubId ||
-    defaultValues?.githubDetails?.login;
+    ("githubId" in defaultValues && defaultValues?.githubId) ||
+    ("githubDetails" in defaultValues && defaultValues?.githubDetails?.login);
   // TODO this should be based on access token. if we have access token then user is connected
   // console.log("defaultValues", defaultValues);
   const { watch, setError, setValue, handleSubmit, ...form } =
@@ -41,18 +44,30 @@ const FormNewUser = ({
     });
   const userid = session?._id;
   const onSubmit: SubmitHandler<UserFormProps> = async (data) => {
-    data.contactMethodId = selectUserContactId(data);
-    const res = await createProjectUser(
-      "/user/update/" + userid,
-      data,
-      session,
-      setError
-    );
-    console.log("res", res, session);
-    // if (res && userid) {
-    //   router.push(`/user/${userid}?tab=overview`);
-    // }
-    return data;
+    try {
+      if (JSON.stringify(data) === JSON.stringify(defaultValues)) {
+        toast.success("Project Updated Successfully");
+        return;
+      }
+      setDefaultValues(data);
+      data.contactMethodId = selectUserContactId(data);
+      const res = await createProjectUser(
+        "/user/update/" + userid,
+        data,
+        session,
+        setError
+      );
+      console.log("res", res, session);
+      // if (res && userid) {
+      //   router.push(`/user/${userid}?tab=overview`);
+      // }
+      return data;
+    } catch (error: any) {
+      console.error("error in onSubmit of FormNewUser", error);
+      setError("root", {
+        message: error?.message,
+      });
+    }
   };
   const contactMethod = watch("contactMethod");
   const commonClass: string = "w100";

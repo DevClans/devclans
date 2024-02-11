@@ -19,7 +19,7 @@ const useModalConnect = ({ isActive = false, team }: ModalConnectProps) => {
   const [selectedUser, setSelectedUser] = useState<ContactDetailsProps>();
   const handleSend = (user: ContactDetailsProps) => {
     const a = user && contactMethodsMap[user.contactMethod](user.contactId);
-    const newTab = window.open(a, "_blank", "noopener,noreferrer");
+    const newTab = a && window.open(a, "_blank", "noopener,noreferrer");
     if (newTab) {
       newTab.opener = null;
     }
@@ -53,23 +53,26 @@ const useModalConnect = ({ isActive = false, team }: ModalConnectProps) => {
               }
             }}
           >
-            {team.map((member, i) => (
-              <FormControlLabel
-                value={JSON.stringify(member)}
-                key={i}
-                checked={selectedUser?.name === member.name}
-                className="capitalize"
-                control={<Radio style={{ color: colors.text }} />}
-                label={
-                  <p className="text-highlight">
-                    {member.name}
-                    <span className="text-text ml-1">
-                      - {member.contactMethod}
-                    </span>
-                  </p>
-                }
-              />
-            ))}
+            {team.map(
+              (member, i) =>
+                member && (
+                  <FormControlLabel
+                    value={JSON.stringify(member)}
+                    key={i}
+                    checked={selectedUser?.name === member.name}
+                    className="capitalize"
+                    control={<Radio style={{ color: colors.text }} />}
+                    label={
+                      <p className="text-highlight">
+                        {member.name}
+                        <span className="text-text ml-1">
+                          - {member.contactMethod}
+                        </span>
+                      </p>
+                    }
+                  />
+                )
+            )}
           </RadioGroup>
         </FormControl>
         <ButtonBlue

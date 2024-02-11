@@ -24,7 +24,7 @@ const ButtonLike = ({
   const { data: session }: any = useSession();
 
   const userId = session?.user?._id;
-  //console.log(title);
+  // console.log(title);
 
   useEffect(() => {
     const fetchLikeCount = async () => {
@@ -40,7 +40,7 @@ const ButtonLike = ({
 
         //  console.log(data)
         if (data) {
-          console.log(data.likesCount);
+          // console.log(data.likesCount);
 
           setLikeCount(data.likesCount);
         }
@@ -59,19 +59,19 @@ const ButtonLike = ({
           method: "GET",
         });
 
-        console.log("This is data");
-        console.log(data);
+        // console.log("This is data");
+        // console.log(data);
         if (data.length > 0) {
           if (data[0]._id) {
-            console.log("false");
+            // console.log("false");
             setLiked(false);
           } else {
-            console.log("true");
+            // console.log("true");
             setLiked(true);
           }
         } else {
           setLiked(true);
-          console.log(true);
+          // console.log(true);
         }
       } catch (error) {
         console.error("Error fetching initial like count:", error);
@@ -98,7 +98,7 @@ const ButtonLike = ({
 
     const localLikeNumber = localStorage.getItem(`likeNumber_${projectId}`);
     if (localLikeNumber) {
-      console.log("Taken from local storage");
+      // console.log("Taken from local storage");
       setLikeCount(JSON.parse(localLikeNumber));
     } else {
       fetchLikeCount();
@@ -137,13 +137,13 @@ const ButtonLike = ({
           projectId: projectId,
         },
       });
-      //console.log(title)
-      //console.log(liked);
+      // console.log(title)
+      // console.log(liked);
       if (data) {
         setLoading(false);
-        console.log(data);
+        // console.log(data);
 
-        console.log(data.project.likesCount);
+        // console.log(data.project.likesCount);
         localStorage.setItem(
           `likedState_${projectId}_${userId}`,
           JSON.stringify(!liked)

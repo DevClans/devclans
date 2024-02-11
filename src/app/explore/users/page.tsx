@@ -4,6 +4,7 @@ import { Fetch } from "@/utils/fetchApi";
 import { PageProps } from "@/types/page.types";
 import { stringify } from "querystring";
 import ToolBox from "@/components/ToolBox";
+import InfiniteScroll from "@/components/InfiniteScroll";
 
 const Users = async ({ params, searchParams }: Partial<PageProps>) => {
   const str = stringify(searchParams);
@@ -27,6 +28,7 @@ const Users = async ({ params, searchParams }: Partial<PageProps>) => {
       {users.map((user, i) => {
         return <UserItem searchParams={searchParams} key={i} {...user} />;
       })}
+      <InfiniteScroll itemsCount={users.length} />
     </div>
   );
 };
