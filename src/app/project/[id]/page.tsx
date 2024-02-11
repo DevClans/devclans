@@ -44,8 +44,9 @@ const Page = async ({
   if (!data) {
     return <>No data Found With Id {id}</>;
   }
+
   const isOwner =
-    typeof data?.owner == "object"
+    data && data.owner && typeof data.owner == "object"
       ? data.owner._id === userid
       : data.owner === userid;
   // console.log("owner", isOwner, data.owner);
