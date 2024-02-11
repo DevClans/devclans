@@ -16,6 +16,10 @@ export default withAuth(
   async function middleware(req: any) {
     // return NextResponse.next();
     console.log("Incoming request:", req.method, req.url, req.ip);
+    if (process.env.NODE_ENV === "development") {
+      console.log("dev mode");
+      return NextResponse.next();
+    }
     const ip = req.ip ?? "127.0.0.1";
     const { success, pending, limit, reset, remaining } = await ratelimit.limit(
       ip
