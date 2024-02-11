@@ -11,6 +11,8 @@ import { createProjectUser } from "@/utils/createProjectUser";
 import ImageUpload from "./ImageUpload";
 import LogedOutScreen from "./LogedOutScreen";
 import { ButtonBlue } from ".";
+import { toast } from "react-toastify";
+import { useState } from "react";
 
 const FormNewProject = ({
   defaultValues: dv,
@@ -28,15 +30,23 @@ const FormNewProject = ({
   ) {
     dv.repoName = "https://github.com" + dv.repoName;
   }
-  const defaultValues: Partial<ProjectFormProps> = dv || {};
-  const { watch, setError, handleSubmit, ...form } = useForm<ProjectFormProps>({
-    defaultValues: defaultValues as any,
-    resolver: zodResolver(zodProjectFormSchema),
-  });
-  console.log("defaultValues", watch());
+  const [defaultValues, setDefaultValues] = useState<Partial<ProjectFormProps>>(
+    dv || {}
+  );
+  const { watch, setError, handleSubmit, setValue, ...form } =
+    useForm<ProjectFormProps>({
+      defaultValues: defaultValues as any,
+      resolver: zodResolver(zodProjectFormSchema),
+    });
+  // console.log("defaultValues", watch());
   const onSubmit: SubmitHandler<ProjectFormProps> = async (data) => {
     try {
-      console.log("clicked", data);
+      if (JSON.stringify(data) === JSON.stringify(defaultValues)) {
+        toast.success("Project Updated Successfully");
+        return;
+      }
+      setDefaultValues(data);
+      console.log("clicked");
       // const dt = zodProjectFormSchema.parse(data);
       // console.log(dt);
       // return;
@@ -68,19 +78,25 @@ const FormNewProject = ({
         defaultValues={defaultValues}
         heading="Create A New Project"
         {...form}
+        setValue={setValue}
         formId="projectForm"
         zodFormShape={zodProjectFormSchema.shape}
         onSubmit={handleSubmit(onSubmit)}
         buttons={
-          <div className="fcc w100 gap-2 mt-2">
+          <div className="fcfs w100 gap-2">
+            <ImageUpload
+              setValue={setValue}
+              name={"imgs"}
+              defaultImgs={defaultValues["imgs"]}
+            />
             {projectId && (
               <ButtonBlue
+                className="mt-6"
                 type="button"
                 label="View Project"
                 href={projectId && `/project/${projectId}`}
               />
             )}
-            <ImageUpload />
           </div>
         }
         commonClass={commonClass}

@@ -26,7 +26,7 @@ const FormServer = ({
       <div className="w100 container p-6 pt-15">
         <form
           id={formId}
-          className="fcfs gap-[50px] w100"
+          className={`fcfs ${buttons ? "gap-6" : "gap-[50px]"}  w100`}
           // action={`${urlApi}/user/profile`}
           // onSuccess={() => {
           //   alert("onSuccess");
@@ -119,12 +119,12 @@ const FormServer = ({
                         name as keyof typeof zodFormShape
                       ].isOptional()
                     : false);
-              console.log(
-                "isRequired",
-                isRequired,
-                name,
-                zodFormShape[name as keyof typeof zodFormShape]?.isOptional()
-              );
+              // console.log(
+              //   "isRequired",
+              //   isRequired,
+              //   name,
+              //   zodFormShape[name as keyof typeof zodFormShape]?.isOptional()
+              // );
 
               return (
                 <div key={i + "parent"} className={`fcfs gap-2 w100`}>
@@ -154,6 +154,7 @@ const FormServer = ({
               );
             }
           )}
+          {buttons}
           <ErrorMessage
             errors={errors}
             name="root"
@@ -166,7 +167,6 @@ const FormServer = ({
             form={formId}
           />
         </form>
-        {buttons}
       </div>
     </>
   );

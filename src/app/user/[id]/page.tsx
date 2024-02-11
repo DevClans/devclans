@@ -50,9 +50,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
       return (
         // ! here it can be a problem as we are using userData directly
         <FormNewUser
-          defaultValues={
-            data.success ? (data.data as UserFormProps) : (userData as any)
-          }
+          defaultValues={data.success ? (data.data as UserFormProps) : userData}
         />
       );
     } else {
