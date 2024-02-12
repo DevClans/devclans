@@ -15,7 +15,6 @@ const nextConfig = {
       "avatars.githubusercontent.com",
       "cdn.discordapp.com",
       "github-readme-activity-graph.vercel.app",
-      "example.com",
     ],
   },
   async headers() {
