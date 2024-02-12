@@ -1,9 +1,12 @@
 import type { NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import GithubProvider from "next-auth/providers/github";
+import   GoogleProvider from "next-auth/providers/google";
 import { adapter } from "./adapterFunctions";
 import { UserDiscordDetailsProps } from "@/types/mongo/user.types";
 import { zodUserDiscordDetailsSchema } from "@/zod/zod.common";
 import { Fetch } from "../fetchApi";
+
 
 const isServerMember = async (discordId: string, token: string) => {
   const isMember = await Fetch({
@@ -50,13 +53,24 @@ export const authOptions: NextAuthOptions = {
         };
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_SECRET_ID as string,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
+    })
   ],
   session: {
     strategy: "database",
   },
   callbacks: {
     async session({ session, token, user }: any) {
-      // console.log("SESSION", session, "TOKEN", token, "USER", user);
+     // console.log("SESSION", session, "TOKEN", token, "USER", user);
       session.user = {
         _id: user.id,
         username: user.username || user.discordDetails?.username,
@@ -67,6 +81,20 @@ export const authOptions: NextAuthOptions = {
       } as any;
       return session;
     },
+
+    // async redirect({ url="/explore/projects", baseUrl=" http://localhost:3000" }) {
+    //   // Allows relative callback URLs
+    //   if (url.startsWith("/")) {
+    //     console.log(`${baseUrl}${url}`)
+    //     return `${baseUrl}${url}`
+    //   }
+    //   // Allows callback URLs on the same origin
+    //   else if (new URL(url).origin === baseUrl) {
+    //     console.log("This is "+url);
+    //     return url
+    //   }
+    //   return baseUrl
+    // },
     // https://next-auth.js.org/configuration/callbacks#sign-in-callback
     signIn: async ({ user, account, profile, email, credentials }: any) => {
       if (process.env.NODE_ENV === "development") return true;

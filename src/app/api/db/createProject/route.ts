@@ -13,6 +13,7 @@ async function handler(req: Request) {
     console.log("started creating project for user");
     const body = await req.json();
     const { id, data } = body;
+<<<<<<< HEAD
     const userid = zodMongoId.parse(id);
     const dataSet = zodProjectFormSchemaServer.parse(data);
     // fetch and ADD GITHUB DATA
@@ -84,6 +85,43 @@ async function handler(req: Request) {
         error?.issues?.[0]?.message ||
         error?.message ||
         "Error updating user profile",
+=======
+    data.owner = id;
+
+   //const dataSet=  projectSchema.parse(data);
+
+
+    const user = await UserModel.findOne({"_id":id});
+
+
+    if (!user) {
+      return NextResponse.json({ message: 'User not found' });  
+    }
+
+
+    // Create a new project
+    const createdProject = new ProjectModel(data);
+    await createdProject.save();
+    // Update the user's projects array
+   let str = createdProject._id;
+
+
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { _id: user._id },
+      { $push: { projects: str, ownedProjects:str } },
+      
+      { new: true } // Return the updated document
+    );
+  
+
+
+console.log("done");
+
+    return NextResponse.json({
+      message: "Project created and associated with user successfully",
+      user: updatedUser,
+      project: createdProject,
+>>>>>>> 9aa07904b19d30915774daaff8ffd067a88eb449
     });
   }
 }
