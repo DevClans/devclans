@@ -1,6 +1,7 @@
 import { getOctokit } from "@/github/config.github";
 import { getGithubReadmeNew } from "@/github/repos/gh.getReadmeNew";
 import { ProjectModel } from "@/mongodb/models";
+import { redisGet, redisSet } from "@/redis/basicRedis";
 import redisClient from "@/redis/config";
 import {
   ProjectRedisKeys,
@@ -35,28 +36,16 @@ export const getGithubData = async (
     const repoDetails: any = {};
 
     // Check if readme is in cache
-    const githubDataString = await redisClient.hget(
-      ProjectRedisKeys.github,
-      projectId
-    );
-    const {
-      data: githubData,
-      success,
-      error,
-    }: {
-      data?: any;
-      success: boolean;
-      error?: any;
-    } = zodRepoDetailsSchema.safeParse(
-      githubDataString && JSON.parse(githubDataString)
-    );
+    const githubDataString = await redisGet(ProjectRedisKeys.github, projectId);
+    const a = zodRepoDetailsSchema.safeParse(githubDataString);
+    const { success } = a;
+    const githubData = success ? a.data : {};
     // add all found data to final object
-    Object.assign(
-      repoDetails,
-      (githubDataString && JSON.parse(githubDataString)) || {}
-    );
+    Object.assign(repoDetails, githubData);
     console.log("githubData.success", success);
-    const errorPaths = new Set(error?.errors.flatMap((e: any) => e.path));
+    const errorPaths = new Set(
+      !success ? a.error?.errors.flatMap((e: any) => e.path) : []
+    );
     console.log("errorPaths", errorPaths);
 
     // check if all repoDetails fields are in cache. get missing fields
@@ -253,12 +242,7 @@ export const getGithubData = async (
 
       console.info("repodetails updated in db", Boolean(updateRes));
       // store in cache
-      redisClient.hset(
-        ProjectRedisKeys.github,
-        projectId,
-        JSON.stringify(repoDetails)
-      );
-      redisClient.expire(ProjectRedisKeys.github, 60 * 60 * 24 * 7); // 1 week
+      await redisSet(ProjectRedisKeys.github, projectId, repoDetails);
     }
     console.info("repoDetails", Boolean(repoDetails));
     return {

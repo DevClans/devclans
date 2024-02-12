@@ -17,6 +17,7 @@ import {
   ProjectProps,
   ProjectRedisKeys,
 } from "@/types/mongo/project.types";
+import { redisSet } from "./basicRedis";
 
 export default async function updateAllCache(
   id: string,
@@ -46,13 +47,13 @@ export default async function updateAllCache(
     const pipeline = redisClient.pipeline();
 
     // Queue up the batch update operations
-    pipeline.hset(Enum.list, id, JSON.stringify(searchInfoCache));
-    pipeline.hset(Enum.data, id, JSON.stringify(dataCache));
-    pipeline.expire(Enum.data, 60 * 60 * 24 * 2);
-    pipeline.expire(Enum.list, 60 * 60 * 24 * 2); // 2 days
+    pipeline.set(Enum.list + ":" + id, JSON.stringify(searchInfoCache));
+    pipeline.set(Enum.data + ":" + id, JSON.stringify(dataCache));
+    pipeline.expire(Enum.data + ":" + id, 60 * 60 * 24 * 2);
+    pipeline.expire(Enum.list + ":" + id, 60 * 60 * 24 * 2); // 2 days
     if (updateGithubCache) {
-      pipeline.hset(Enum.github, id, JSON.stringify(githubCache));
-      pipeline.expire(Enum.github, 60 * 60 * 24 * 2);
+      pipeline.set(Enum.github + ":" + id, JSON.stringify(githubCache));
+      pipeline.expire(Enum.github + ":" + id, 60 * 60 * 24 * 2);
     }
 
     // Execute the batch operations
@@ -79,11 +80,7 @@ export async function updateUserDataCache(
     const userData = zodUserDataSchema.partial().parse(formData);
     console.log("User data:", userData);
     // Update the user data cache
-    await redisClient.hset(
-      UserRedisKeys.data,
-      userId,
-      JSON.stringify(userData)
-    );
+    await redisSet(UserRedisKeys.data, userId, userData);
   } catch (error) {
     console.error("Error updating user data cache:", error);
   }

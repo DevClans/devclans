@@ -1,6 +1,7 @@
 import { getOctokit } from "@/github/config.github";
 import getGithubReadme from "@/github/repos/gh.getReadme";
 import { UserModel } from "@/mongodb/models";
+import { redisGet, redisSet } from "@/redis/basicRedis";
 import redisClient from "@/redis/config";
 import updateAllCache from "@/redis/updateUserCache";
 import { projectSearchItemKeys } from "@/types/mongo/project.types";
@@ -48,15 +49,9 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
     let getreadme = true;
     let getData = true;
     const dataForCache: UserGithubDetailsProps = {} as UserGithubDetailsProps;
-    const githubDataFromCache = await redisClient.hget(
-      UserRedisKeys.github,
-      userId
-    );
+    const githubDataFromCache = await redisGet(UserRedisKeys.github, userId);
     if (githubDataFromCache) {
-      const data = zodUserGithubDetailsSchema.safeParse(
-        typeof githubDataFromCache == "string" &&
-          JSON.parse(githubDataFromCache)
-      );
+      const data = zodUserGithubDetailsSchema.safeParse(githubDataFromCache);
       if (data.success) {
         console.info("user github cache hit");
         getData = false;
@@ -157,12 +152,7 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
     if (getData || getreadme) {
       // store data
       console.info("adding user github data in cache", dataForCache, userId);
-      redisClient.hset(
-        UserRedisKeys.github,
-        userId,
-        JSON.stringify(dataForCache)
-      );
-      redisClient.expire(UserRedisKeys.github, 60 * 60 * 24 * 1); // 1 day
+      redisSet(UserRedisKeys.github, userId, dataForCache);
     }
   } catch (error) {
     console.error("error in user getgithubdata", error);
@@ -171,11 +161,7 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
 const setUseridInCache = async (username: string, id: string) => {
   try {
     console.info("setting userid in cache", username, id);
-    await redisClient.set(`${UserRedisKeys.ids}:${username}`, id);
-    await redisClient.expire(
-      `${UserRedisKeys.ids}:${username}`,
-      60 * 60 * 24 * 30
-    ); // 30 day as username is not going to change
+    await redisSet(UserRedisKeys.ids, username, id, 60 * 60 * 24 * 30); // 30 day as username is not going to change
   } catch (error) {
     console.error("error in setting userid in cache", error);
   }
@@ -196,7 +182,7 @@ async function handler(
       // check if username
       const username = zodDiscordUsername.parse(user);
       // search for id in cache using the username
-      cachedId = await redisClient.get(`${UserRedisKeys.ids}:${username}`);
+      cachedId = await redisGet(UserRedisKeys.ids, username);
 
       // if not found, search in mongodb
       if (!cachedId) {
@@ -217,9 +203,7 @@ async function handler(
     }
     // is user in cache? check users key
     const userInfo: UserProps | UserSearchInfoProps | Record<string, any> = {};
-    const userInCache = await redisClient.hget(UserRedisKeys.list, userId);
-    const usersInCacheObj =
-      typeof userInCache == "string" && JSON.parse(userInCache);
+    const usersInCacheObj = await redisGet(UserRedisKeys.list, userId);
     const checkUserSearchInfoCache = zodUserSearchInfoSchema
       .partial()
       .safeParse(usersInCacheObj);
@@ -229,9 +213,7 @@ async function handler(
       // * GETTING USER DETAILS
       try {
         // check for user data in cache in userData key
-        const userData = await redisClient.hget(UserRedisKeys.data, userId);
-        const userDataObj =
-          typeof userData == "string" ? JSON.parse(userData) : "";
+        const userDataObj = await redisGet(UserRedisKeys.data, userId);
         const checkUserDataCache = zodUserDataSchema.safeParse(userDataObj);
         // if user data is in cache, add it to user object
         if (checkUserDataCache.success) {
@@ -248,8 +230,7 @@ async function handler(
           }
           Object.assign(userInfo, u);
           // add to cache
-          redisClient.hset(UserRedisKeys.data, userId, JSON.stringify(u));
-          redisClient.expire("usersData", 60 * 60 * 24 * 7); // 1 week
+          await redisSet(UserRedisKeys.data, userId, u);
         }
       } catch (error) {
         console.error("error in user details data", error);

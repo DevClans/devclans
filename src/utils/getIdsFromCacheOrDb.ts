@@ -1,7 +1,7 @@
-import redisClient from "@/redis/config";
 import { ProjectProps, ProjectRedisKeys } from "@/types/mongo/project.types";
 import { UserProps, UserRedisKeys } from "@/types/mongo/user.types";
 import { mongoProjects } from "./mongoGetProjects";
+import { redisGetMany, redisSetMany } from "@/redis/basicRedis";
 
 const getIdsFromCacheOrDb = async ({
   idsToGet,
@@ -29,7 +29,6 @@ const getIdsFromCacheOrDb = async ({
   if (findProjectIds == "none")
     return { dbData: [], resData: [], idsToBeStoredInCache: [] };
   const resData: Props[] = [];
-  const dataFromCache: string[] = [];
   const idsToBeStoredInCache: (string | number)[] = []; // ids to be stored in cache
   let dbData: Props[] = [];
   const isProject = type === "projects";
@@ -38,20 +37,10 @@ const getIdsFromCacheOrDb = async ({
   if (findProjectIds.length > 0) {
     console.log("getting projects from cache");
     // If found in cache, get the data from cache
-    Array.prototype.push.apply(
-      dataFromCache,
-      await redisClient.hmget(Enum.list, ...findProjectIds)
-    );
-    // Collecting IDs not found in cache
-    const idsNotInCache = [];
-    for (let i = 0; i < dataFromCache.length; i++) {
-      if (dataFromCache[i] === null) {
-        idsNotInCache.push(findProjectIds[i]);
-      } else {
-        resData[i] = JSON.parse(dataFromCache[i] as string);
-      }
-    }
-    if (idsNotInCache.length === 0) {
+    const { found, notFound } = await redisGetMany(Enum.list, findProjectIds);
+    Array.prototype.push.apply(resData, found);
+
+    if (notFound.length === 0) {
       // If all the data is found in cache, return the data
       console.log("Sending projects successfully from cache");
       return {
@@ -60,10 +49,10 @@ const getIdsFromCacheOrDb = async ({
         idsToBeStoredInCache,
       };
     }
-    console.log("getting idsNotInCache", idsNotInCache);
+    console.log("getting notFound", notFound);
     // If some data is not found in cache, get the data from database
     dbData = (await mongoProjects({
-      find: { _id: { $in: idsNotInCache } },
+      find: { _id: { $in: notFound } },
       type,
       page,
       search,
@@ -95,15 +84,9 @@ const getIdsFromCacheOrDb = async ({
   Array.prototype.push.apply(resData, dbData);
   // storing data in projects hash
   if (idsToBeStoredInCache.length > 0) {
-    redisClient.hmset(
+    await redisSetMany(
       Enum.list,
-      dbData.reduce(
-        (acc, curr) => ({
-          ...acc,
-          [curr._id?.toString() as string]: JSON.stringify(curr),
-        }),
-        {}
-      )
+      dbData.map((project) => [project._id?.toString() as string, project])
     );
   }
 

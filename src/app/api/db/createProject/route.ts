@@ -5,7 +5,7 @@ import { zodMongoId, zodProjectFormSchemaServer } from "@/zod/zod.common";
 import updateAllCache from "@/redis/updateUserCache";
 import { getGithubData } from "@/utils/getGithubDataForProject";
 import { UserRedisKeys } from "@/types/mongo/user.types";
-import redisClient from "@/redis/config";
+import { redisGet, redisSet } from "@/redis/basicRedis";
 
 async function handler(req: Request) {
   try {
@@ -45,21 +45,17 @@ async function handler(req: Request) {
     console.log("Updated user profile:", updatedUser);
     // update user cache
     console.log("getting user data cache...");
-    const cacheUserData = redisClient.hget(UserRedisKeys.github, userid);
-    if (typeof cacheUserData == "string") {
-      try {
-        console.log("updating user data in cache in createProject");
-        const userdata = JSON.parse(cacheUserData);
-        userdata.ownedProjects.push(projectId);
-        redisClient.hset(UserRedisKeys.data, userid, JSON.stringify(userdata));
-        console.log("user data in cache updated in createProject");
-      } catch (error) {
-        console.error(
-          "Error updating user data cache in createProject:",
-          error
-        );
-      }
+    try {
+      const userdata = await redisGet(UserRedisKeys.github, userid);
+      if (!userdata) throw new Error("no user data found in cache");
+      console.log("updating user data in cache in createProject");
+      userdata.ownedProjects.push(projectId);
+      await redisSet(UserRedisKeys.data, userid, userdata);
+      console.log("user data in cache updated in createProject");
+    } catch (error) {
+      console.error("Error updating user data cache in createProject:", error);
     }
+
     //  we are getting entire data and updating entire cache. but this is not optimal. just getting updated info will be nicer.
 
     // fetching and add github data

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { stringSchema, zodMongoId } from "@/zod/zod.common";
 import dbConnect from "@/lib/dbConnect";
-import { UserModel, BookmarkModel } from "@/mongodb/models";
+import { BookmarkModel } from "@/mongodb/models";
 import { LikeModel } from "@/mongodb/models";
 import { Types } from "mongoose";
 import getIdsFromCacheOrDb from "@/utils/getIdsFromCacheOrDb";
