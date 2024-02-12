@@ -21,7 +21,12 @@ const Contact: FC = () => {
 
   return (
     <>
-      <CommonHero heading="Contact Us" />
+      <CommonHero
+        heading="Connect With"
+        highlightHeading="Devclans"
+        isLeft={true}
+        desc="Want to give an suggestion? report a bug? or even talk to us regarding anything? Fill out the form and we will reply within 48hrs."
+      />
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="container w-full gap-3 p-6 fcc max-w-md mx-auto"
