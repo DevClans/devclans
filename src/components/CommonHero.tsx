@@ -21,7 +21,11 @@ const CommonHero = ({
             <span className="h1Highlight"> {highlightHeading}</span>
           )}
         </h1>
-        {desc && <p className="text-center lg:text-left mt-1">{desc}</p>}
+        {desc && (
+          <p className={`${isLeft ? "" : "text-center"}  lg:text-left mt-1`}>
+            {desc}
+          </p>
+        )}
       </div>
       <LightLine />
     </>
