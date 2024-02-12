@@ -76,80 +76,96 @@ const FormNewUser = ({
     // {
     //   label: "GitHub ID:",
     //   name: "githubId",
+    //   desc: "Enter your GitHub ID.",
     // },
     {
       label: "Bio:",
       name: "bio",
+      desc: "Enter a brief description about yourself.",
     },
     {
       label: "Skills:",
       name: "skills",
       options: skills as any,
       multi: true,
+      desc: "Select your skills from the list.",
+      limit: 10,
     },
     {
       label: "Domain:",
       name: "domain",
       options: projectDomains as any,
+      desc: "Choose your domain of expertise.",
     },
     {
       label: "Current Company:",
       name: "questions.currentCompany",
+      desc: "Specify your current employer.",
     },
     {
       label: "Proud Achievement:",
       name: "questions.proudAchievement",
+      desc: "Share a proud achievement from your career or personal life.",
     },
     {
       label: "Recent Work:",
       name: "questions.recentWork",
+      desc: "Describe your recent work experience or project.",
     },
     {
       label: "Contact Method:",
       name: "contactMethod",
       options: contactMethods,
+      desc: "Select your preferred contact method.",
     },
-    // {
-    //   label: `Contact ID (${contactMethod}):`,
-    //   name: "contactMethodId",
-    //   condition: ["telegram"].includes(contactMethod),
-    // },
     {
       label: "Email:",
       name: "email",
       condition: contactMethod === "email",
+      desc: "Enter your email address.",
     },
     {
       label: "Phone Number:",
       name: "phone",
       type: "number",
       condition: contactMethod === "whatsapp",
+      desc: "Enter your phone number.",
     },
     {
       label: "Twitter Handle:",
       name: "socials.twitter",
       condition: contactMethod === "twitter",
+      desc: "Enter your Twitter handle.",
     },
     {
       label: "LinkedIn Profile:",
       name: "socials.linkedin",
+      desc: "Enter your LinkedIn profile URL.",
     },
     {
       label: "Portfolio:",
       name: "socials.website",
+      desc: "Enter your portfolio website URL.",
     },
     {
       label: "Telegram :",
       name: "socials.telegram",
       condition: contactMethod === "telegram",
+      desc: "Enter your Telegram username.",
     },
     {
       label: "Career Goal:",
       name: "questions.careerGoal",
       options: ["remote", "faang", "startup"],
       multi: true,
+      desc: "Select your career goals.",
+      limit: 3,
     },
   ];
+
+  // Type assertion
+  const fieldsArrayWithDesc = fieldsArray as { desc: string }[];
+
   useEffect(() => {
     console.log("Route Parameter: ", githubUsername);
     const username = Array.isArray(githubUsername)
