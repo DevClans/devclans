@@ -508,3 +508,9 @@ export const zodFilterQuery = z.object({
     .default({}),
   pageLength: z.number().optional().default(20),
 });
+
+export const zodContactForm = z.object({
+  email: z.string().email().max(100).optional(),
+  name: z.string().max(40).optional(),
+  message: z.string().min(10).max(500),
+});

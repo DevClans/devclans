@@ -43,7 +43,7 @@ const ProjectHero = ({
             _id={data._id}
           />
         </div>
-        <div className="frfssb w100 flex-wrap">
+        <div className="frfssb w100 flex-wrap gap-5">
           <div className="fcfs gap-5">
             <h1 className="text-4xl text-left ">{data.title}</h1>
             <p>{data.desc}</p>

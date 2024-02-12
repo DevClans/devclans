@@ -17,6 +17,7 @@ import {
 import { UserProps, userTeamItemKeys } from "@/types/mongo/user.types";
 import { getGithubData } from "@/utils/getGithubDataForProject";
 import updateAllCache from "@/redis/updateUserCache";
+import { redisGet, redisSet } from "@/redis/basicRedis";
 
 const zodCheck = z.object({
   id: zodMongoId,
@@ -50,32 +51,25 @@ export async function GET(
     const setProjectDataRedis = async (obj: ProjectProps) => {
       // TODO encrypt github access token
       setGithubAccessToken(obj);
-      redisClient.hset(
-        ProjectRedisKeys.data,
-        id,
-        JSON.stringify({
-          ...obj,
-          owner: {
-            ...(obj.owner as Partial<UserProps>),
-            githubDetails: {
-              ...(obj.owner as Partial<UserProps>)?.githubDetails,
-              accessToken: githubAccessToken,
-            },
+      await redisSet(ProjectRedisKeys.data, id, {
+        ...obj,
+        owner: {
+          ...(obj.owner as Partial<UserProps>),
+          githubDetails: {
+            ...(obj.owner as Partial<UserProps>)?.githubDetails,
+            accessToken: githubAccessToken,
           },
-        })
-      );
-      redisClient.expire(ProjectRedisKeys.data, 60 * 60 * 24 * 7); // 1 week
+        },
+      });
     };
     console.info("Fetching project search info for id:", id);
-    const projectString = await redisClient.hget(ProjectRedisKeys.list, id);
+    const projectString = await redisGet(ProjectRedisKeys.list, id);
     // console.info("Project found in cache:", project);
     let isProject: any = {};
     let getProjectSearchInfo = false;
     let getProjectData = false;
     if (projectString) {
-      isProject = zodProjectSearchInfoSchema.safeParse(
-        JSON.parse(projectString)
-      );
+      isProject = zodProjectSearchInfoSchema.safeParse(projectString);
       console.info("isProject", isProject.success || isProject.error);
     }
     if (isProject.success && projectString) {
@@ -89,9 +83,8 @@ export async function GET(
     // project is in cache
     // check if project data is in cache
     console.info("Fetching project data for id:", id);
-    const projectDataString = await redisClient.hget(ProjectRedisKeys.data, id);
-    console.info("projectDataString recieved", Boolean(projectDataString));
-    const projectData = projectDataString && JSON.parse(projectDataString);
+    const projectData = await redisGet(ProjectRedisKeys.data, id);
+    console.info("projectData recieved", Boolean(projectData));
     const isProjectData: any = zodProjectDataSchema.safeParse(projectData);
     console.info("isProjectData", isProjectData.success);
 
@@ -137,21 +130,15 @@ export async function GET(
         if (getProjectSearchInfo) {
           console.log("setting search info cache");
           // we got only search info
-          redisClient.hset(
-            ProjectRedisKeys.list,
-            id,
-            JSON.stringify(projectInfo)
-          );
-          redisClient.expire(ProjectRedisKeys.list, 60 * 60 * 24 * 2);
+          redisSet(ProjectRedisKeys.list, id, projectInfo);
         } else {
           console.log("setting data cache");
           // we got only project data
-          redisClient.hset(
+          redisSet(
             ProjectRedisKeys.data,
             id,
-            JSON.stringify(zodProjectDataSchema.partial().parse(projectInfo))
+            zodProjectDataSchema.partial().parse(projectInfo)
           );
-          redisClient.expire(ProjectRedisKeys.list, 60 * 60 * 24 * 2);
         }
       }
       // * SETTING RESPONSE OBJECT

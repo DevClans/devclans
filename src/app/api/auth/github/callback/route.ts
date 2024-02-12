@@ -119,14 +119,12 @@ export async function GET(req: NextRequest) {
       if (githubData.success) {
         console.log("adding user github data in cache");
         const pipeline = redisClient.pipeline();
-        pipeline.hset(
-          UserRedisKeys.list,
-          userid,
+        pipeline.set(
+          UserRedisKeys.list + ":" + userid,
           JSON.stringify(zodUserSearchInfoSchema.partial().parse(updatedUser))
         );
-        pipeline.hset(
-          UserRedisKeys.github,
-          userid,
+        pipeline.set(
+          UserRedisKeys.github + ":" + userid,
           JSON.stringify(githubData.data)
         );
         await pipeline.exec();

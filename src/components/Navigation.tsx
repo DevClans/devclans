@@ -20,12 +20,12 @@ const navigation = [
     rel: "noopener noreferrer",
   },
   {
-    name: "About The Team",
-    href: "/about-us",
+    name: "About Us",
+    href: "/about",
   },
   {
-    name: "contact us",
-    href: "/contact-us",
+    name: "Connect",
+    href: "/connect",
   },
 ];
 const Navigation = ({

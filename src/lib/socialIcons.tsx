@@ -1,4 +1,4 @@
-import { IconGithub, IconTwitter } from "@/components";
+// import { IconGithub, IconTwitter } from "@/components";
 import {
   Linkedin,
   Facebook,
@@ -7,26 +7,30 @@ import {
   Figma,
   Globe,
   Mail,
+  Github,
+  Twitter,
 } from "lucide-react";
 
-export const socialIcons: Record<string, React.ReactNode> = {
-  discord: "Discord",
-  email: <Mail />,
-  whatsapp: "WhatsApp",
-  telegram: "Telegram",
-  linkedin: <Linkedin />,
-  facebook: <Facebook />,
-  instagram: <Instagram />,
-  youtube: <Youtube />,
-  figma: <Figma />,
-  github: <IconGithub />,
-  twitter: <IconTwitter />,
-  website: <Globe />,
+export const socialIcons: any = (props: any) => {
+  return {
+    discord: "Discord",
+    email: <Mail {...props} />,
+    whatsapp: "WhatsApp",
+    telegram: "Telegram",
+    linkedin: <Linkedin {...props} />,
+    facebook: <Facebook {...props} />,
+    instagram: <Instagram {...props} />,
+    youtube: <Youtube {...props} />,
+    figma: <Figma {...props} />,
+    github: <Github {...props} />,
+    twitter: <Twitter {...props} />,
+    website: <Globe {...props} />,
+  };
 };
 
 export const selectIconForLinks = (link: string) => {
   if (!link) {
-    return socialIcons.website;
+    return socialIcons({ size: 16 }).website;
   }
   let type = "website";
   if (link.includes("github")) type = "github";
@@ -37,5 +41,5 @@ export const selectIconForLinks = (link: string) => {
   else if (link.includes("instagram")) type = "instagram";
   else if (link.includes("youtube")) type = "youtube";
   else if (link.includes("figma")) type = "figma";
-  return socialIcons[type];
+  return socialIcons({ size: 16 })[type];
 };
