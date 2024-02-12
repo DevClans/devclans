@@ -184,7 +184,7 @@ const TeamMember = ({
   bio: string;
   links?: string[];
 }) => {
-  console.log("links", links);
+  // console.log("links", links);
   const commonImageProps = {
     style: {
       background:
