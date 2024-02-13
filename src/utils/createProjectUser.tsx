@@ -31,7 +31,8 @@ export const createProjectUser = async (
   } catch (error: any) {
     console.error("Error updating profile", error.message);
     setError("root", {
-      message: error?.message,
+      message:
+        error?.message || "Error in updating profile. Please try again later.",
     });
     return null;
   }

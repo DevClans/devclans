@@ -12,10 +12,10 @@ export async function POST(
   { params }: { params: { user: string } },
   res: NextResponse
 ) {
+  console.log("Updating user profile...");
   // Ensure the user is authenticated
   try {
     await dbConnect();
-    console.log("Updating user profile...");
     const body = await req.json();
     const user = params?.user;
     const { data }: { id: string; data: UserFormProps } = body;

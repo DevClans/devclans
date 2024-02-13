@@ -52,14 +52,14 @@ const FormNewUser = ({
       setDefaultValues(data);
       data.contactMethodId = selectUserContactId(data);
       const res = await createProjectUser(
-        "/user/update/" + userid,
+        `/user/${userid}/update`,
         data,
         session,
         setError
       );
       console.log("res", res, session);
-      // if (res && userid) {
-      //   router.push(`/user/${userid}?tab=overview`);
+      // if (!res && session) {
+      //   throw new Error("Error in our server. Please try again later.");
       // }
       return data;
     } catch (error: any) {

@@ -20,7 +20,11 @@ export const zodRepoName = z
   .refine(
     (item) => {
       // Check if the string is empty or starts with the given string
-      if (item === "" || item.startsWith("https://github.com")) {
+      if (
+        item === "" ||
+        item.startsWith("https://github.com") ||
+        item.startsWith("https://www.github.com")
+      ) {
         return true;
       }
       // Check if the string starts with "/"
@@ -217,7 +221,9 @@ export const zodUserDataCommonSchema = z.object({
       .refine(
         (value) =>
           value
-            ? value.startsWith("https://x.com/") && value.length < 150
+            ? (value.startsWith("https://x.com/") ||
+                value.startsWith("https://www.x.com/")) &&
+              value.length < 150
             : true,
         {
           message: "Invalid Twitter URL! Must start with 'https://x.com/'.",
@@ -231,11 +237,12 @@ export const zodUserDataCommonSchema = z.object({
       .refine(
         (value) =>
           value
-            ? value.startsWith("https://linkedin.com/in/") && value.length < 150
+            ? (value.startsWith("https://linkedin.com/in/") ||
+                value.startsWith("https://www.linkedin.com/in/")) &&
+              value.length < 150
             : true,
         {
-          message:
-            "Invalid Twitter URL! Must start with 'https://linkedin.com/in/'.",
+          message: "Invalid URL!",
         }
       )
       .optional(),
@@ -246,7 +253,7 @@ export const zodUserDataCommonSchema = z.object({
         (value) =>
           value ? value.startsWith("https://") && value.length < 150 : true,
         {
-          message: "Invalid Twitter URL! Must start with 'https://'.",
+          message: "Invalid URL! Must start with 'https://'.",
         }
       )
       .optional(),
@@ -456,7 +463,9 @@ export const zodProjectFormSchema = z.object({
       (str) => {
         if (
           str.startsWith("https://www.youtube.com") ||
-          str.startsWith("https://www.loom.com")
+          str.startsWith("https://www.loom.com") ||
+          str.startsWith("https://youtube.com") ||
+          str.startsWith("https://loom.com")
         ) {
           return true;
         }
