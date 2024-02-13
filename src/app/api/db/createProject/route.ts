@@ -27,11 +27,14 @@ async function handler(req: Request) {
     const projectData = createdProject.toObject();
     const projectId = zodMongoId.parse(createdProject._id);
     console.log("new project id", projectId);
+    // * project cache stopped for now
     // add project info in cache
-    console.log("Update project data cache...");
-    await updateAllCache(projectId, createdProject, "projects");
-    console.log("Project data cache updated");
+    // ? before updating project data cache we need to populate team and owner id. but instead of doing that we can just let cache be updated when we fetch the data.
+    // console.log("Update project data cache...");
+    // await updateAllCache(projectId, createdProject, "projects");
+    // console.log("Project data cache updated");
     // update user data
+
     console.log("Updating user data cache...");
     const updatedUser: any = await UserModel.findOneAndUpdate(
       { _id: userid },
@@ -46,10 +49,18 @@ async function handler(req: Request) {
     // update user cache
     console.log("getting user data cache...");
     try {
-      const userdata = await redisGet(UserRedisKeys.github, userid);
+      const userdata = await redisGet(UserRedisKeys.data, userid);
       if (!userdata) throw new Error("no user data found in cache");
       console.log("updating user data in cache in createProject");
-      userdata.ownedProjects.push(projectId);
+      if (userdata.ownedProjects) {
+        if (userdata.ownedProjects.includes(projectId)) {
+          console.log("project already exists in user data");
+          throw new Error("project already exists in user data");
+        }
+        userdata.ownedProjects.push(projectId);
+      } else {
+        userdata.ownedProjects = [projectId];
+      }
       await redisSet(UserRedisKeys.data, userid, userdata);
       console.log("user data in cache updated in createProject");
     } catch (error) {
@@ -73,7 +84,7 @@ async function handler(req: Request) {
 
     console.log("Project successfully created");
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, id: projectId });
   } catch (error: any) {
     // console.error("Error updating user profile:", error);
     console.error("Error message:", error?.message);

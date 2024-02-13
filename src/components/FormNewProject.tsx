@@ -16,13 +16,14 @@ import { useState } from "react";
 
 const FormNewProject = ({
   defaultValues: dv,
-  projectId,
+  projectId: pid,
 }: {
   defaultValues?: Partial<ProjectFormProps>;
   projectId?: string;
 }) => {
   const { data }: any = useSession();
   const session = data?.user;
+  const [projectId, setProjectId] = useState<string | undefined>(pid);
   if (
     dv?.repoName &&
     (dv?.repoName?.startsWith("/") ||
@@ -53,7 +54,24 @@ const FormNewProject = ({
       const url = projectId
         ? `/project/${projectId}/update`
         : "/db/createProject";
-      return await createProjectUser(url, data, session, setError);
+      const res = await createProjectUser(
+        url,
+        data,
+        session,
+        setError,
+        projectId
+          ? "Project Updated Successfully"
+          : "Yo😎! Project created successfully👍.\n Add more details or view in profile."
+      );
+      console.log("res", res);
+      if (res) {
+        const json = await res.json();
+        console.log("json", json);
+        if (json.id) {
+          setProjectId(json.id);
+        }
+      }
+      return "ok";
     } catch (err: any) {
       console.log(err, "in catch block of onSubmit in FormNewProject");
       setError("root", {
@@ -99,6 +117,7 @@ const FormNewProject = ({
             )}
           </div>
         }
+        buttonMessage={projectId ? "Update Project" : "Create Project"}
         commonClass={commonClass}
         fieldsArray={fieldsArray}
       />

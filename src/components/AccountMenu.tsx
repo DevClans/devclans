@@ -61,6 +61,10 @@ export default function AccountMenu({
   const userState = session?.user;
   // console.log("userState", userState, session);
   const open = Boolean(anchorEl);
+  const userUrl = urlUser({
+    username: userState?.username || userState?.displayName,
+    id: userState?._id as string,
+  });
   const userMenuItems = [
     {
       title: "Bookmarks",
@@ -73,10 +77,7 @@ export default function AccountMenu({
     },
     {
       title: "View Profile",
-      link: urlUser({
-        username: userState?.displayName || userState?.username,
-        id: userState?._id as string,
-      }),
+      link: userUrl,
     },
     {
       title: "Edit Profile",
@@ -98,7 +99,7 @@ export default function AccountMenu({
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
     >
       <div className="px-4 py-2 fcfs gap-2 w100">
-        <Link href={"/user/" + userState?._id}>
+        <Link href={userUrl}>
           <h3 className="!text-subH w100">{userState?.username}</h3>
         </Link>
         <LightLine />

@@ -25,7 +25,13 @@ const Contact: FC = () => {
   async function onSubmit(data: FormData) {
     try {
       // console.log(data, "here");
-      await createProjectUser("/email", data, { _id: true }, setError);
+      await createProjectUser(
+        "/email",
+        data,
+        { _id: true },
+        setError,
+        "Email sent successfully"
+      );
       // await sendEmail(data);
     } catch (error) {
       console.log(error, "error in sending email contact form");

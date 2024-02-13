@@ -39,7 +39,9 @@ const UserAvatarMenu = ({ username }: { username: string }) => {
             className="loginBtnStyle !text-base"
             sx={{
               fontFamily: "var(--poppins)",
-              borderRadius: "none",
+            }}
+            style={{
+              borderRadius: "10px 10px 0 10px",
             }}
             src={avatarUrl}
             alt={username}

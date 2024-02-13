@@ -8,7 +8,7 @@ const ChipGroup = ({
   className,
   baseUrl = "",
 }: {
-  arr: string[];
+  arr?: (string | null)[];
   className?: string;
   baseUrl?: string;
 } & Partial<PageProps>) => {
@@ -18,6 +18,9 @@ const ChipGroup = ({
     <>
       <div className={`${className} frc gap-2 flex-wrap`}>
         {arr?.map((tech, i) => {
+          if (!tech) {
+            return null;
+          }
           const { newParams: params } = toggleFilter(
             newParams,
             filters,

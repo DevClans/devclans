@@ -58,20 +58,22 @@ const ProjectHero = ({
         </div>
       </div>
       {/* images */}
-      <div className="relative w100">
-        <div className="frc gap-2 w100 scrollbar">
-          {imgs?.map((img, i) => (
-            <ProductImg key={i} src={img} />
-          ))}
+      {Array.isArray(imgs) && imgs.length > 0 && (
+        <div className="relative w100">
+          <div className="frc gap-2 w100 scrollbar">
+            {imgs.map((img, i) => (
+              <ProductImg key={i} src={img} />
+            ))}
+          </div>
+          <div
+            className="absolute top-0 h-full w-1/12 right-0 z-10 "
+            style={{
+              background:
+                " linear-gradient(271deg, rgba(2, 11, 28, 0.85) 4.7%, rgba(217, 217, 217, 0.00) 99.35%)",
+            }}
+          />
         </div>
-        <div
-          className="absolute top-0 h-full w-1/12 right-0 z-10 "
-          style={{
-            background:
-              " linear-gradient(271deg, rgba(2, 11, 28, 0.85) 4.7%, rgba(217, 217, 217, 0.00) 99.35%)",
-          }}
-        />
-      </div>
+      )}
     </div>
   );
 };

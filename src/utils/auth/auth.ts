@@ -64,6 +64,9 @@ export const authOptions: NextAuthOptions = {
           user.discordDetails?.global_name || user.discordDetails?.username,
         avatar: user.discordDetails?.avatar,
         discordId: user.discordId,
+        githubId:
+          user.githubDetails?.accessToken &&
+          (user.githubId || user.githubDetails?.login), // add githubId if user has connected github
       } as any;
       return session;
     },

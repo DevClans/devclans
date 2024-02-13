@@ -27,7 +27,7 @@ const ProjectItem = async ({
         img={
           <div className="lg:max-w-[335px] min-h-[200px] relative w-full">
             <ProductImg
-              src={(imgs?.[0] && imgs[0]) || "/homeHero.png"}
+              src={imgs?.[0] && imgs[0]}
               // width={335}
               // height={200}
               fill={true}

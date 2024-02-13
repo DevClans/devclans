@@ -86,7 +86,7 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
     ],
     questions: {
       currentCompany: { type: String },
-      careerGoal: { type: String, enum: ["remote", "faang", "startup"] },
+      careerGoal: [{ type: String, enum: ["remote", "faang", "startup"] }],
       proudAchievement: { type: String },
       recentWork: { type: String },
     },

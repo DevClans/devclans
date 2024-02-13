@@ -1,11 +1,5 @@
 import { ContactDetailsProps, UserProps } from "@/types/mongo/user.types";
-import {
-  ButtonBlue,
-  ButtonConnect,
-  ButtonSecondary,
-  ChipGroup,
-  LightLine,
-} from "..";
+import { ButtonConnect, ButtonSecondary, ChipGroup, LightLine } from "..";
 import ProductImg from "../project/ProjectImg";
 import LeftMenuBottomBar from "./LeftMenuBottomBar";
 import userAvatar from "@/lib/userAvatar";
@@ -20,8 +14,9 @@ const LeftSidebar = async ({
   contactMethod,
   contactMethodId,
   _id,
+  displayName,
   ...rest
-}: Partial<UserProps> & PageProps) => {
+}: Partial<UserProps> & PageProps & { displayName: string }) => {
   const session: any = await getServerSessionForServer();
   const avatar = await userAvatar({ userProps: rest });
   return (
@@ -54,11 +49,18 @@ const LeftSidebar = async ({
               }}
             />
           </div>
-          <h1
-            className={`md:group-data-[state=not-active]/left:text-sm text-[36px] !text-left `}
-          >
-            {username || "Username"}
-          </h1>
+          <div className="fcfs w100 overflow-hidden">
+            <h1
+              className={`md:group-data-[state=not-active]/left:text-sm text-[36px] !text-left text-ellipsis overflow-hidden`}
+            >
+              {displayName || username}
+            </h1>
+            {username && (
+              <p className="text-subH md:group-data-[state=not-active]/left:hidden  w100 text-ellipsis overflow-hidden">
+                {username}
+              </p>
+            )}
+          </div>
           <p className="md:group-data-[state=not-active]/left:hidden">
             {bio || "I'm a full stack developer, I like to make things."}
           </p>

@@ -5,7 +5,8 @@ export const createProjectUser = async (
   endpoint: string,
   data: any,
   session: any,
-  setError: any
+  setError: any,
+  toastMessage?: string
 ) => {
   try {
     console.log("inside handleSubmit");
@@ -26,13 +27,16 @@ export const createProjectUser = async (
       throw new Error(`${response.statusText}`);
     }
     console.log("Profile updated successfully");
-    toast.success("Form submitted successfully");
+    toast.success(toastMessage || "Form submitted successfully", {
+      autoClose: false,
+    });
     return response;
   } catch (error: any) {
     console.error("Error updating profile", error.message);
     setError("root", {
       message:
-        error?.message || "Error in updating profile. Please try again later.",
+        error?.message ||
+        "Sorry, something's not right on our end. Please try again later.",
     });
     return null;
   }

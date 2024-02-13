@@ -1,7 +1,12 @@
 // pages/api/user/profile.ts
 import { UserModel } from "@/mongodb/models";
 import { NextRequest, NextResponse } from "next/server";
-import { zodMongoId, zodUserFormSchema } from "@/zod/zod.common";
+import {
+  zodMongoId,
+  zodUserFormSchema,
+  zodUserFormSchemaObj,
+  zodUserFormSuperRefine,
+} from "@/zod/zod.common";
 import { UserFormProps } from "@/types/mongo/user.types";
 import { Types } from "mongoose";
 import dbConnect from "@/lib/dbConnect";
@@ -19,7 +24,10 @@ export async function POST(
     const body = await req.json();
     const user = params?.user;
     const { data }: { id: string; data: UserFormProps } = body;
-    const userDetails = zodUserFormSchema.parse(data);
+    const userDetails = zodUserFormSchemaObj
+      .partial()
+      .superRefine(zodUserFormSuperRefine)
+      .parse(data);
     console.log("User details:", userDetails);
     const userId = zodMongoId.parse(user, {
       path: ["id"],
