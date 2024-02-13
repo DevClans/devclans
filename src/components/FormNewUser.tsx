@@ -16,6 +16,7 @@ import { createProjectUser } from "@/utils/createProjectUser";
 import selectUserContactId from "@/lib/selectUserContactId";
 import LogedOutScreen from "./LogedOutScreen";
 import { toast } from "react-toastify";
+import { memberLevels } from "@/lib/memberLevel";
 
 const FormNewUser = ({
   defaultValues: dv,
@@ -30,6 +31,7 @@ const FormNewUser = ({
   const [defaultValues, setDefaultValues] = useState<UserProps | UserFormProps>(
     (dv as unknown as UserProps) || {}
   );
+  console.log("defaultValues", defaultValues);
   // const defaultValues: UserProps | UserFormProps =
   //   (dv as unknown as UserProps) || {};
   const githubUsername =
@@ -100,6 +102,11 @@ const FormNewUser = ({
       desc: "Select your skills from the list.",
       limit: 10,
       // min: 3,
+    },
+    {
+      label: "Skill Level:",
+      name: "Select what level you would give yourself for the skills you have in selected domain.",
+      options: memberLevels as any,
     },
     {
       label: "Domain:",
