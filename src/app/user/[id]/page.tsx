@@ -95,7 +95,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
     overview: (
       <UserOverview
         data={test}
-        username={username}
+        username={displayName || username}
         githubDetails={userData["githubDetails"]}
       />
     ),
@@ -123,8 +123,9 @@ const page = async ({ params, searchParams }: UserPageProps) => {
   return (
     <>
       <LeftSidebar
+        displayName={displayName}
         {...userData}
-        username={displayName}
+        username={username}
         searchParams={searchParams}
       />
       <Common
@@ -132,7 +133,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
         params={params}
         searchParams={searchParams}
         {...userData}
-        username={username}
+        username={displayName || username}
       >
         {ele[tab] || (
           <div className={"card2 w100 p-5 !rounded-[10px]"}>
@@ -168,7 +169,7 @@ const Common = ({
       {/* middle scroll */}
       <MiddleSection
         params={params}
-        username={username || ""}
+        username={username}
         questions={questions}
         searchParams={searchParams}
       >

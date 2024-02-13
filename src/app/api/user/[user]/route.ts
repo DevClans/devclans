@@ -2,7 +2,6 @@ import { getOctokit } from "@/github/config.github";
 import getGithubReadme from "@/github/repos/gh.getReadme";
 import { UserModel } from "@/mongodb/models";
 import { redisGet, redisSet } from "@/redis/basicRedis";
-import redisClient from "@/redis/config";
 import updateAllCache from "@/redis/updateUserCache";
 import { projectSearchItemKeys } from "@/types/mongo/project.types";
 import {
@@ -198,8 +197,8 @@ async function handler(
     }
     const userId = isMongoId ? user : cachedId;
     if (!userId) {
-      console.info("user not found in cache");
-      throw new Error("User not found");
+      console.info("user not found in cache", userId);
+      throw new Error("User not found " + userId);
     }
     // is user in cache? check users key
     const userInfo: UserProps | UserSearchInfoProps | Record<string, any> = {};
@@ -226,7 +225,7 @@ async function handler(
             "-" + userSearchInfoKeys.join(" -")
           ); // to get all fields except userSearchInfoKeys as they already exist in userInfo
           if (!u) {
-            return NextResponse.json({ message: "User not found" });
+            return NextResponse.json({ message: "User not found " + userId });
           }
           Object.assign(userInfo, u);
           // add to cache
@@ -241,7 +240,7 @@ async function handler(
       // get all details
       const u: UserProps | null = await getUserData(userId, "");
       if (!u) {
-        return NextResponse.json({ message: "User not found" });
+        return NextResponse.json({ message: "User not found " + +userId });
       }
       Object.assign(userInfo, u);
       // add to cache by separating userSearchInfoKeys and other keys
