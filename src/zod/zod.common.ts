@@ -12,7 +12,7 @@ export const zodMongoId = z.union([
   }),
   z.instanceof(Types.ObjectId).transform((id) => id.toString()),
 ]);
-const skillsSchema = z.array(z.enum(skills)).min(3).max(20).default([]);
+export const skillsSchema = z.array(z.enum(skills)).max(20);
 export const zodRepoName = z
   .string()
   .trim()
@@ -301,7 +301,7 @@ export const zodUserFormSchemaObj = z.object({
     .enum(memberLevels as any)
     .nullable()
     .optional(),
-  skills: skillsSchema,
+  skills: skillsSchema.min(3),
   bio: stringSchema.min(10).max(100),
   ...zodUserDataCommonSchema.shape,
 });

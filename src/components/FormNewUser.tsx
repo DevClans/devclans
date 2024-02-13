@@ -99,7 +99,7 @@ const FormNewUser = ({
       multi: true,
       desc: "Select your skills from the list.",
       limit: 10,
-      min: 3,
+      // min: 3,
     },
     {
       label: "Domain:",
@@ -170,7 +170,7 @@ const FormNewUser = ({
       multi: true,
       desc: "Select your career goals.",
       limit: 3,
-      min: 1,
+      // min: 1,
     },
   ];
 
@@ -194,6 +194,8 @@ const FormNewUser = ({
 
   const handleConnectGitHub = () => {
     setGithubLoading(true);
+    // setting values before redirecting to github
+    setDefaultValues(watch()); // TODO needs testing
     const GITHUB_AUTH_URL = "https://github.com/login/oauth/authorize";
     const CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
     const CALLBACK_URL =
