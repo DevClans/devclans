@@ -9,6 +9,7 @@ export type InputFieldProps = {
   editableList?: any; // preview only available for toogle list
   limit?: number;
   required?: boolean;
+  min?: number;
 };
 export type FormClientProps = {
   zodSchema: any;

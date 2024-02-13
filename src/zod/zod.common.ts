@@ -12,7 +12,7 @@ export const zodMongoId = z.union([
   }),
   z.instanceof(Types.ObjectId).transform((id) => id.toString()),
 ]);
-const skillsSchema = z.array(z.enum(skills).nullable()).max(20).default([]);
+const skillsSchema = z.array(z.enum(skills)).min(3).max(20).default([]);
 export const zodRepoName = z
   .string()
   .trim()
@@ -279,7 +279,10 @@ export const zodUserDataCommonSchema = z.object({
     .optional(),
   questions: z.object({
     currentCompany: z.string().max(250).optional(),
-    careerGoal: z.array(z.enum(["remote", "faang", "startup"])).max(3),
+    careerGoal: z
+      .array(z.enum(["remote", "faang", "startup"]))
+      .min(1)
+      .max(3),
     proudAchievement: z.string().max(250).optional(),
     recentWork: z.string().max(250).optional(),
   }),
@@ -302,7 +305,7 @@ export const zodUserFormSchemaObj = z.object({
   bio: stringSchema.min(10).max(100),
   ...zodUserDataCommonSchema.shape,
 });
-const zodUserFormSuperRefine = (value: any, context: any) => {
+export const zodUserFormSuperRefine = (value: any, context: any) => {
   if (value.contactMethod === "whatsapp" && !value.phone) {
     context.addIssue({
       code: "custom",

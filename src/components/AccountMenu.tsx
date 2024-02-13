@@ -62,7 +62,7 @@ export default function AccountMenu({
   // console.log("userState", userState, session);
   const open = Boolean(anchorEl);
   const userUrl = urlUser({
-    username: userState?.displayName || userState?.username,
+    username: userState?.username || userState?.displayName,
     id: userState?._id as string,
   });
   const userMenuItems = [

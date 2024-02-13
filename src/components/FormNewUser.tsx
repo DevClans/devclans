@@ -34,6 +34,7 @@ const FormNewUser = ({
   //   (dv as unknown as UserProps) || {};
   const githubUsername =
     searchParams.get("githubUsername") ||
+    session?.githubId ||
     ("githubId" in defaultValues && defaultValues?.githubId) ||
     ("githubDetails" in defaultValues && defaultValues?.githubDetails?.login);
   // TODO this should be based on access token. if we have access token then user is connected
@@ -43,15 +44,21 @@ const FormNewUser = ({
       defaultValues: defaultValues as any,
       resolver: zodResolver(zodUserFormSchema),
     });
+  // console.log("defaultValues", defaultValues, watch("questions.careerGoal"));
   const userid = session?._id;
   const onSubmit: SubmitHandler<UserFormProps> = async (data) => {
     try {
+      data.contactMethodId = selectUserContactId(data);
+      // console.log("data", JSON.stringify(data), JSON.stringify(defaultValues));
       if (JSON.stringify(data) === JSON.stringify(defaultValues)) {
-        toast.success("Project Updated Successfully");
+        toast.success("Project Updated Successfully!", {
+          autoClose: false,
+        });
+        console.log("No change in data");
         return;
       }
+      // console.log("setting data", data);
       setDefaultValues(data);
-      data.contactMethodId = selectUserContactId(data);
       const res = await createProjectUser(
         `/user/${userid}/update`,
         data,
@@ -92,6 +99,7 @@ const FormNewUser = ({
       multi: true,
       desc: "Select your skills from the list.",
       limit: 10,
+      min: 3,
     },
     {
       label: "Domain:",
@@ -162,6 +170,7 @@ const FormNewUser = ({
       multi: true,
       desc: "Select your career goals.",
       limit: 3,
+      min: 1,
     },
   ];
 

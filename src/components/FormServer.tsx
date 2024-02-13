@@ -52,6 +52,7 @@ const FormServer = ({
                 desc,
                 limit,
                 required,
+                min,
               },
               i
             ) => {
@@ -113,6 +114,7 @@ const FormServer = ({
               }
               const isRequired =
                 required ||
+                (min && min > 0) ||
                 condition ||
                 (name.includes(".")
                   ? false
@@ -135,7 +137,12 @@ const FormServer = ({
                     <h3 className="w100 text-xl  text-highlight ">
                       {isRequired && "*"} {label}
                     </h3>
-                    {desc && <p>{desc}</p>}
+                    {desc && (
+                      <p>
+                        {desc} {min ? "(min " + min + ")" : ""}{" "}
+                        {limit ? "(max " + limit + ")" : ""}
+                      </p>
+                    )}
                   </div>
                   {Boolean(editableList)
                     ? editableListEle

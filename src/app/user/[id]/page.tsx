@@ -133,7 +133,8 @@ const page = async ({ params, searchParams }: UserPageProps) => {
         params={params}
         searchParams={searchParams}
         {...userData}
-        username={displayName || username}
+        username={username}
+        displayName={displayName}
       >
         {ele[tab] || (
           <div className={"card2 w100 p-5 !rounded-[10px]"}>
@@ -154,10 +155,12 @@ const Common = ({
   questions,
   searchParams,
   level,
+  displayName,
   _id,
 }: PageProps & {
   username: UserProps["username"];
   questions: UserProps["questions"];
+  displayName: string;
 } & React.PropsWithChildren &
   LookingForMembersProps) => {
   return (
@@ -169,7 +172,7 @@ const Common = ({
       {/* middle scroll */}
       <MiddleSection
         params={params}
-        username={username}
+        username={displayName || username}
         questions={questions}
         searchParams={searchParams}
       >

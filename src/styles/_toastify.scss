@@ -7,6 +7,10 @@
   --toastify-font-family: var(--poppins) !important;
 }
 
+.Toastify__toast {
+  font-size: 14px;
+}
+
 .Toastify__progress-bar {
   height: 2px !important;
   background: linear-gradient(
