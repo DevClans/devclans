@@ -44,7 +44,7 @@ const ButtonMenuToggle = ({ className }: Partial<ButtonProps>) => {
       openMenu?.style.setProperty("display", "none");
       continueScroll();
     }
-    console.log("pathname", pathname, pathname === "/");
+    // console.log("pathname", pathname, pathname === "/");
     // TO REMOVE HEADER BG
     if (pathname === "/") {
       document.getElementById("header")?.setAttribute("data-ishome", "true");

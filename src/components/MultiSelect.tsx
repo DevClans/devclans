@@ -99,8 +99,12 @@ export default function MultipleSelectChip({
                 <Chip
                   style={{
                     fontFamily: "var(--poppins)",
+                    border: "1px solid var(--border, #132341)",
+                    background: "var(--cardBg, #081121)",
+                    boxShadow:
+                      "0px 4px 5.3px 0px rgba(20, 26, 37, 0.2) inset, 0px -4px 3px 0px rgba(6, 12, 24, 0.1) inset",
                   }}
-                  className="text-text card"
+                  className="!text-text card"
                   key={i}
                   label={value}
                 />

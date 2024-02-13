@@ -24,7 +24,14 @@ export default withAuth(
     const { success, pending, limit, reset, remaining } = await ratelimit.limit(
       ip
     );
-    console.log("ratelimit", success, await pending, limit, reset, remaining);
+    console.log(
+      "ratelimit: within limit?",
+      success,
+      await pending,
+      limit,
+      reset,
+      remaining
+    );
     return success
       ? NextResponse.next()
       : NextResponse.json(

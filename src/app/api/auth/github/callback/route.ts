@@ -22,9 +22,10 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(baseUrl + "?" + newParams.toString());
     }
 
-    const GITHUB_CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
+    const GITHUB_CLIENT_ID =
+      process.env.GITHUB_CLIENT_ID || process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
     const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
-    console.log(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, "tokens");
+    // console.log(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, "tokens");
     if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
       console.error("vars not set");
       newParams.set("error", "vars_not_set");

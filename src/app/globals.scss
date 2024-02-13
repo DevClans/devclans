@@ -36,8 +36,8 @@
 }
 
 body {
-  background-color: var(--bg);
-  color: var(--text);
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
   position: relative;
   z-index: 0;
 }
