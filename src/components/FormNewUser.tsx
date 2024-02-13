@@ -16,6 +16,7 @@ import { createProjectUser } from "@/utils/createProjectUser";
 import selectUserContactId from "@/lib/selectUserContactId";
 import LogedOutScreen from "./LogedOutScreen";
 import { toast } from "react-toastify";
+import { memberLevels } from "@/lib/memberLevel";
 
 const FormNewUser = ({
   defaultValues: dv,
@@ -30,6 +31,7 @@ const FormNewUser = ({
   const [defaultValues, setDefaultValues] = useState<UserProps | UserFormProps>(
     (dv as unknown as UserProps) || {}
   );
+  console.log("defaultValues", defaultValues);
   // const defaultValues: UserProps | UserFormProps =
   //   (dv as unknown as UserProps) || {};
   const githubUsername =
@@ -99,7 +101,12 @@ const FormNewUser = ({
       multi: true,
       desc: "Select your skills from the list.",
       limit: 10,
-      min: 3,
+      // min: 3,
+    },
+    {
+      label: "Skill Level:",
+      name: "Select what level you would give yourself for the skills you have in selected domain.",
+      options: memberLevels as any,
     },
     {
       label: "Domain:",
@@ -170,7 +177,7 @@ const FormNewUser = ({
       multi: true,
       desc: "Select your career goals.",
       limit: 3,
-      min: 1,
+      // min: 1,
     },
   ];
 
@@ -194,6 +201,8 @@ const FormNewUser = ({
 
   const handleConnectGitHub = () => {
     setGithubLoading(true);
+    // setting values before redirecting to github
+    setDefaultValues(watch()); // TODO needs testing
     const GITHUB_AUTH_URL = "https://github.com/login/oauth/authorize";
     const CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
     const CALLBACK_URL =

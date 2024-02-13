@@ -37,7 +37,7 @@ const UserItem = async ({
     userProps: { discordDetails },
   });
   const username = usernm || disUsername;
-  const url = urlUser({ username: username, id: _id?.toString() });
+  const url = urlUser({ username: usernm, id: _id?.toString() });
   return (
     <>
       <ItemsTemplate

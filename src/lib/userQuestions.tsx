@@ -19,14 +19,15 @@ const userQuestions = ({ questions }: { questions: UserQuestionsProps }) => {
   const ans = {
     currentCompany: (company: any) => `I currently work at ${company}`,
     careerGoal: (word: any) =>
-      `My career goal is to become a ${word.replace(/ /g, " ")}`,
+      `My career goal is to become a ${word?.toString().replace(/ /g, " ")}`,
     proudAchievement: (achievement: any) =>
-      `One of my proudest achievements is ${achievement.replace(/ /g, " ")}`,
+      `One of my proudest achievements is ${achievement
+        ?.toString()
+        .replace(/ /g, " ")}`,
     recentWork: (project: any) =>
-      `I'm currently working on a project related to ${project.replace(
-        / /g,
-        " "
-      )}`,
+      `I'm currently working on a project related to ${project
+        ?.toString()
+        .replace(/ /g, " ")}`,
   };
   const ques: InfoWithIconProps[] = Object.keys(questions || {})
     .map((key) => {
