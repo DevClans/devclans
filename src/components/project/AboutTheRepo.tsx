@@ -5,7 +5,11 @@ import { ProjectFilesProps } from "@/types/mongo/project.types";
 import { ExpandDetailsBoxProps } from "@/types/toggleList.types";
 import { useState } from "react";
 
-const AboutTheRepo = ({ readme, contributing }: ProjectFilesProps) => {
+const AboutTheRepo = ({
+  readme,
+  contributing,
+  title,
+}: ProjectFilesProps & { title: string }) => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const anyOpen = open || open1;
@@ -18,7 +22,7 @@ const AboutTheRepo = ({ readme, contributing }: ProjectFilesProps) => {
       setActive: setOpen,
     },
     {
-      heading: "Contribute.md",
+      heading: "Contributing.md",
       data: contributing,
       isActive: open1,
       icon: <IconContribute color={colors.text} />,
@@ -31,7 +35,7 @@ const AboutTheRepo = ({ readme, contributing }: ProjectFilesProps) => {
       <div className="fcfs w100">
         <div className={`${anyOpen ? "fcc" : "lg:frfssb fcc"} w100 gap-5`}>
           {items.map((item, i) => (
-            <ExpandDetailsBox {...item} key={i} />
+            <ExpandDetailsBox title={title} {...item} key={i} />
           ))}
         </div>
       </div>

@@ -18,13 +18,21 @@ export const urlGithubRepo = ({
 export const urlUser = ({
   id,
   username,
+  onlyEndpoint = false,
 }: {
   id?: Types.ObjectId | string;
   username: string;
-}) =>
-  urlBase + (username || id)
-    ? `/user${username ? "/" + username : id ? "/" + id : ""}`
-    : "";
+  onlyEndpoint?: boolean;
+}) => {
+  const endpoint =
+    username || id
+      ? `/user${username ? "/" + username : id ? "/" + id : ""}`
+      : "";
+  if (onlyEndpoint) {
+    return endpoint;
+  }
+  return urlBase + endpoint;
+};
 export const urlProject = (id?: Types.ObjectId | string) =>
   urlBase + (id ? `/project${id ? "/" + id : ""}` : "");
 export const fallbackImg = "/produtImgFallback.png";

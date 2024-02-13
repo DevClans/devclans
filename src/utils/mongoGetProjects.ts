@@ -20,6 +20,10 @@ export const mongoProjects = async ({
   try {
     const andCond = mongoFilter(search, filterQuery, type);
     const query = { ...find, ...andCond };
+    // to get only published projects
+    if (type == "projects") {
+      query["published"] = true;
+    }
     console.log("mongo query", JSON.stringify(query));
     const dbData = await model
       .find(query)

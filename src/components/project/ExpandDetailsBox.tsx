@@ -10,7 +10,8 @@ const ExpandDetailsBox = ({
   icon,
   isActive,
   setActive,
-}: ExpandDetailsBoxProps) => {
+  title,
+}: ExpandDetailsBoxProps & { title: string }) => {
   // const dataWihoutComments = useMemo(() => {
   //   console.log("called");
   //   return data
@@ -45,7 +46,8 @@ const ExpandDetailsBox = ({
             {/* <ReactMarkdown>{data.substring(0, 100)}</ReactMarkdown>
             <p className=" text-highlight mt-1">Expand for more details</p> */}
             <p className="">
-              <span className="capitalize">{heading}</span> of projectname{" "}
+              <span className="capitalize">{heading}</span> file of{" "}
+              <span className="capitalize">{title}</span>{" "}
             </p>
             <p className="text-highlight mt-1">Expand for more details</p>
           </>

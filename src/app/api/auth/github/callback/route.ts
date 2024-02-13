@@ -128,6 +128,8 @@ export async function GET(req: NextRequest) {
           UserRedisKeys.github + ":" + userid,
           JSON.stringify(githubData.data)
         );
+        pipeline.expire(UserRedisKeys.list + ":" + userid, 60 * 60 * 24 * 2);
+        pipeline.expire(UserRedisKeys.github + ":" + userid, 60 * 60 * 24 * 2);
         await pipeline.exec();
       } else {
         console.error("github data not valid", githubData.error);

@@ -108,7 +108,7 @@ const Page = async ({
             params={params}
             searchParams={searchParams}
           />
-          <AboutTheRepo {...files} />
+          <AboutTheRepo {...files} title={data.title} />
           {convertedProjectDetails && (
             <ProjectDetails data={convertedProjectDetails} />
           )}

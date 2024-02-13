@@ -35,7 +35,10 @@ const handler = async (
     await updateAllCache(projectId, project, "projects");
     console.log("Project data cache updated");
     // return success message
-    return NextResponse.json({ message: "Project updated successfully" });
+    return NextResponse.json({
+      message: "Project updated successfully",
+      id: project._id,
+    });
   } catch (error) {
     console.error("error in update project route", error);
     return NextResponse.error();

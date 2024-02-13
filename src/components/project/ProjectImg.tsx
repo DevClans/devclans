@@ -27,7 +27,7 @@ const ProductImg = ({
     };
   }
   const imageProps = {
-    src: src || "/homeHero.png",
+    src: src,
     className: `card xl:max-h-[255px] xl:max-w-[428px] ${className}`,
     alt: alt || "test",
     ...imgProps,

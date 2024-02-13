@@ -12,6 +12,7 @@ export const zodMongoId = z.union([
   }),
   z.instanceof(Types.ObjectId).transform((id) => id.toString()),
 ]);
+const skillsSchema = z.array(z.enum(skills).nullable()).max(20).default([]);
 export const zodRepoName = z
   .string()
   .trim()
@@ -201,7 +202,7 @@ export const zodUserSearchInfoSchema = z.object({
     .enum(memberLevels as any)
     .nullable()
     .optional(),
-  skills: z.array(z.enum(skills)).max(20).default([]),
+  skills: skillsSchema,
   // githubDetails: userGithubDetailsSchema,
   githubId: z.string().max(50).optional(),
   bio: stringSchema.min(10).max(100),
@@ -297,7 +298,7 @@ export const zodUserFormSchemaObj = z.object({
     .enum(memberLevels as any)
     .nullable()
     .optional(),
-  skills: z.array(z.enum(skills)).max(20).optional(),
+  skills: skillsSchema,
   bio: stringSchema.min(10).max(100),
   ...zodUserDataCommonSchema.shape,
 });
@@ -346,7 +347,7 @@ export const userSchema = z.object({
 export const zodProjectSearchInfoSchema = z.object({
   title: z.string().min(3).max(50),
   desc: z.string().min(10).max(180),
-  skills: z.array(z.string()).max(20).default([]),
+  skills: skillsSchema,
   team: zodTeamContactSchema.partial().array().optional(),
   skillLevel: z
     .enum(memberLevels as any)
@@ -372,7 +373,7 @@ export const zodRepoDetailsSchema = z.object({
 });
 const commonString = z.string().trim();
 export const zodProjectDetailsSchema = z.object({
-  problem: z.string().max(180),
+  problem: z.string().min(3).max(180),
   challenges: z
     .array(
       z.object({
@@ -418,7 +419,7 @@ export const zodProjectDataSchema = z.object({
   contributors: z.array(zodMongoId).max(20).default([]),
   // Add other properties if needed
   topics: z.array(z.string()).max(10).default([]),
-  repoName: zodRepoNameStored,
+  repoName: zodRepoName,
   likesCount: z.number().default(0),
   bookmarkCount: z.number().default(0),
   projectLinks: stringArraySchema.default([]),
@@ -429,20 +430,18 @@ export const zodProjectDataSchema = z.object({
   domain: z.array(z.enum(projectDomains)).max(10),
   // repoDetails: zodRepoDetailsSchema.optional(),
 });
-
 export const projectSchema = zodProjectDataSchema
   .merge(zodProjectSearchInfoSchema)
   .merge(zodRepoDetailsSchema);
 
 export const zodGithubDataSchema = z.object({
   owner: projectSchema.shape["owner"],
-  repoName: zodRepoNameStored,
+  repoName: zodRepoName,
 });
-
 export const zodProjectFormSchema = z.object({
   title: z.string().trim().min(3).max(50),
   desc: z.string().min(10).max(180),
-  skills: z.enum(skills).array().max(20).default([]),
+  skills: skillsSchema,
   team: zodUserTeamItemSchema.optional(),
   skillLevel: z
     .enum(memberLevels as any)

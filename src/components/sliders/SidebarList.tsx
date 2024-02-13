@@ -9,6 +9,9 @@ const SidebarList = ({
   onlyList,
   needIconBg = true,
 }: SidebarListProps) => {
+  if (!list || (Array.isArray(list) && list.length == 0)) {
+    return null;
+  }
   const listEle = (
     <div className="p-5 gap-[10px] fcc w100">
       <h3 className="w100">{heading}</h3>
@@ -33,7 +36,9 @@ const SidebarList = ({
                 ) : (
                   item.startIcon
                 )}
-                <p className=" ">{item.text || item.href}</p>
+                <p className="lg:max-w-[180px] overflow-hidden text-ellipsis">
+                  {item.text || item.href}
+                </p>
               </Link>
               <div
                 onClick={() => {

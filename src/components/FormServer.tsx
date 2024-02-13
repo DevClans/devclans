@@ -18,6 +18,7 @@ const FormServer = ({
   isEdit = false,
   defaultValues,
   setValue,
+  buttonMessage,
 }: FormServerProps & { isEdit?: boolean; defaultValues?: any }) => {
   // console.log("errors", errors);
   return (
@@ -50,6 +51,7 @@ const FormServer = ({
                 editableList,
                 desc,
                 limit,
+                required,
               },
               i
             ) => {
@@ -109,16 +111,16 @@ const FormServer = ({
               if (typeof condition == "boolean" && condition == false) {
                 return null;
               }
-              const isRequired = isEdit
-                ? false
-                : condition ||
-                  (name.includes(".")
-                    ? false
-                    : zodFormShape[name as keyof typeof zodFormShape]
-                    ? !zodFormShape[
-                        name as keyof typeof zodFormShape
-                      ].isOptional()
-                    : false);
+              const isRequired =
+                required ||
+                condition ||
+                (name.includes(".")
+                  ? false
+                  : zodFormShape[name as keyof typeof zodFormShape]
+                  ? !zodFormShape[
+                      name as keyof typeof zodFormShape
+                    ].isOptional()
+                  : false);
               // console.log(
               //   "isRequired",
               //   isRequired,
@@ -161,7 +163,7 @@ const FormServer = ({
             render={({ message }) => <p className="error">{message}</p>}
           />
           <ButtonSecondary
-            label={"Update Profile"}
+            label={buttonMessage || "Update"}
             loading={isSubmitting}
             type="submit"
             form={formId}

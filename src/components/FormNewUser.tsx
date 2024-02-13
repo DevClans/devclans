@@ -26,6 +26,7 @@ const FormNewUser = ({
   const searchParams = useSearchParams();
   const { data }: any = useSession();
   const session = data?.user;
+  const [githubLoading, setGithubLoading] = useState(false);
   const [defaultValues, setDefaultValues] = useState<UserProps | UserFormProps>(
     (dv as unknown as UserProps) || {}
   );
@@ -55,7 +56,8 @@ const FormNewUser = ({
         `/user/${userid}/update`,
         data,
         session,
-        setError
+        setError,
+        "Profile Updated Successfully"
       );
       console.log("res", res, session);
       // if (!res && session) {
@@ -182,6 +184,7 @@ const FormNewUser = ({
   // console.log("errors", errors);
 
   const handleConnectGitHub = () => {
+    setGithubLoading(true);
     const GITHUB_AUTH_URL = "https://github.com/login/oauth/authorize";
     const CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
     const CALLBACK_URL =
@@ -211,10 +214,14 @@ const FormNewUser = ({
           buttons={
             <ButtonBlue
               disabled={Boolean(githubUsername)}
+              loading={githubLoading}
               className="mt-4"
               type="button"
               label={
-                githubUsername ? "Connected To Github" : "Connect Your GitHub"
+                githubUsername
+                  ? "Connected To Github" +
+                    `${githubUsername ? ": " + githubUsername : ""}`
+                  : "Connect Your GitHub"
               }
               onClick={handleConnectGitHub}
             />

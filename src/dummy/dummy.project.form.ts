@@ -20,6 +20,7 @@ export const dummyProjectFormSchemaFields: InputFieldProps[] = [
     label: "Problem",
     desc: "Describe the problem your project aims to solve.",
     name: "projectDetails.problem",
+    required: true,
   },
   {
     label: "Domains",

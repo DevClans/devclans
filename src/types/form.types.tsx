@@ -8,12 +8,14 @@ export type InputFieldProps = {
   multi?: boolean;
   editableList?: any; // preview only available for toogle list
   limit?: number;
+  required?: boolean;
 };
 export type FormClientProps = {
   zodSchema: any;
   type: "user" | "project";
 };
 export type FormServerProps = {
+  buttonMessage?: string;
   formId?: string;
   zodFormShape: any;
   commonClass?: string;

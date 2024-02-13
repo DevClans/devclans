@@ -59,6 +59,7 @@ const LeftSidebar = async ({
           >
             {username || "Username"}
           </h1>
+          <p className="text-subH">{username}</p>
           <p className="md:group-data-[state=not-active]/left:hidden">
             {bio || "I'm a full stack developer, I like to make things."}
           </p>

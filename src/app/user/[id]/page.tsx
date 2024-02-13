@@ -124,7 +124,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
     <>
       <LeftSidebar
         {...userData}
-        username={username}
+        username={displayName}
         searchParams={searchParams}
       />
       <Common
