@@ -1,7 +1,16 @@
+import Image from "next/image";
+
 const loading = () => {
   return (
-    <div className="w-screen h-screen fccc">
-      <h3 className="text-subH">Loading user data...</h3>
+    <div className="w-screen h-screen fccc bg-bg fixed z-50 gap-2">
+      <Image
+        src={"/W.gif"}
+        priority={true}
+        alt="loading icon"
+        height={40}
+        width={40}
+      />
+      <h3 className="text-priDark">Loading...</h3>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const loading = () => {
   return (
-    <div className="w-screen h-screen fccc gap-2">
+    <div className="w-screen h-screen fccc bg-bg fixed z-50 gap-2">
       <Image
         src={"/W.gif"}
         priority={true}
