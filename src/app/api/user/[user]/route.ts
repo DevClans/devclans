@@ -70,7 +70,7 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
       console.info("user github cache miss");
     }
     if (!userAccessToken) {
-      console.info("getting user access token from mongodb");
+      console.info("getting user access token from mongodb", userId);
       const accessToken: UserProps | null = await UserModel.findById(userId)
         .select("githubDetails.accessToken")
         .lean();

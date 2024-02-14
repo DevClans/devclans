@@ -26,6 +26,8 @@ type FetchProps = {
   type?: "nan" | "an"; //nan means no access needed and an means access needed
   token?: string;
   body?: any;
+  revalidate?: false | number;
+  cache?: "no-store" | "no-cache";
 };
 
 export const Fetch = async ({
@@ -36,15 +38,23 @@ export const Fetch = async ({
   token,
   type = "nan",
   body,
+  revalidate = false,
+  cache,
 }: FetchProps) => {
   const options: Partial<FetchProps> = {
     method,
     headers: {
-      "cache-control": "no-store",
+      // "cache-control": "no-store",
       "Content-Type": "application/json",
       "x-d-a": type, // d-a means devclans-access
     },
   };
+  if (typeof revalidate == "number") {
+    (options as any)["next"] = { revalidate };
+  }
+  if (cache) {
+    options["cache"] = cache;
+  }
   if (token) {
     options["headers"]["Authorization"] = `Bearer ${token}`;
   }
@@ -55,6 +65,7 @@ export const Fetch = async ({
     options["body"] = JSON.stringify(body);
   }
   try {
+    console.log("options", options);
     const res = await fetch((baseUrl || urlApi) + (endpoint || ""), options);
     if (res.status > 200) {
       throw new Error(res.statusText);

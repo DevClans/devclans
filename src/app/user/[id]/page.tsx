@@ -28,11 +28,14 @@ type UserPageProps = {
 };
 
 const page = async ({ params, searchParams }: UserPageProps) => {
+  const session: any = await getServerSessionForServer();
   const { id } = params; // this is can be username or mongo id now
   const tab: string = (searchParams?.tab as string) || "overview";
   const mode: string = searchParams?.mode as string;
   const userData: UserProps = await Fetch({
     endpoint: `/user/${id}`,
+    revalidate: session?.user?._id == id && 0,
+    cache: session?.user?._id == id ? "no-store" : undefined,
   });
   console.log("user data", Boolean(userData));
   if (
@@ -42,11 +45,14 @@ const page = async ({ params, searchParams }: UserPageProps) => {
     return <div>user not found</div>;
   }
 
-  const session: any = await getServerSessionForServer();
   console.log("mode", mode, session?.user?._id, userData._id);
   if (mode == "edit") {
     if (session?.user?._id == userData._id) {
       const data = userSchema.partial().safeParse(userData);
+      console.log(
+        "data",
+        data.success ? (data.data as UserFormProps) : userData
+      );
       return (
         // ! here it can be a problem as we are using userData directly
         <FormNewUser
