@@ -12,10 +12,12 @@ const ProductImg = ({
   fill,
   isAvatar = false,
   isUser = false,
+  isVideo,
 }: Partial<ImageProps> & {
   src: string;
   isAvatar?: boolean;
   isUser?: boolean;
+  isVideo?: boolean;
 }) => {
   let imgProps: Partial<ImageProps> = {
     width: width || 428,
@@ -41,6 +43,17 @@ const ProductImg = ({
       ...style,
     },
   };
+  if (isVideo)
+    return (
+      <iframe
+        {...imageProps}
+        {...imgProps}
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+      ></iframe>
+    );
   if (isAvatar) return <Avatar {...imageProps}>{alt}</Avatar>;
 
   return <ImageComp {...imageProps} isUser={isUser} />;
