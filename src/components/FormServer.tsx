@@ -169,12 +169,18 @@ const FormServer = ({
             name="root"
             render={({ message }) => <p className="error">{message}</p>}
           />
-          <ButtonSecondary
-            label={buttonMessage || "Update"}
-            loading={isSubmitting}
-            type="submit"
-            form={formId}
-          />
+          <div className="w100 fcfs gap-1">
+            <p className="w100 text-xs">
+              **Note: Your updates can take up to 6hrs to be publically
+              available.
+            </p>
+            <ButtonSecondary
+              label={buttonMessage || "Update"}
+              loading={isSubmitting}
+              type="submit"
+              form={formId}
+            />
+          </div>
         </form>
       </div>
     </>

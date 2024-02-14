@@ -417,6 +417,34 @@ const StringArrayParser = z
     { message: "Input must be a string" }
   )
   .transform((data) => data.split(","));
+export const zodVideoSchema = z
+  .string()
+  .trim()
+  .refine(
+    (item) => {
+      if (!item) {
+        return true;
+      }
+      // possible youtube links
+      // https://www.youtube.com/watch?v=KK7K08dAtR4
+      // https://www.youtube.com/embed/KK7K08dAtR4
+      // https://youtu.be/KK7K08dAtR4?si=PCAHGyHuNK_yf72S
+      if (
+        item &&
+        (item.startsWith("https://www.youtube.com/") ||
+          item.startsWith("https://youtu.be/") ||
+          item.startsWith("https://youtube.com/") ||
+          item.startsWith("https://www.loom.com/") ||
+          item.startsWith("https://loom.com/"))
+      ) {
+        return true;
+      }
+      return false;
+    },
+    {
+      message: "Invalid video link",
+    }
+  );
 
 export const zodProjectDataSchema = z.object({
   contributors: z.array(zodMongoId).max(20).default([]),
@@ -427,7 +455,7 @@ export const zodProjectDataSchema = z.object({
   bookmarkCount: z.number().default(0),
   projectLinks: stringArraySchema.default([]),
   projectDetails: zodProjectDetailsSchema,
-  video: z.string().nullable().optional(),
+  video: zodVideoSchema.nullable().optional(),
   devStage: z.enum(devStages as any).default("idea"),
   published: z.boolean().default(false),
   domain: z.array(z.enum(projectDomains)).max(10),
@@ -458,30 +486,7 @@ export const zodProjectFormSchema = z.object({
   // })
   // .transform((item) => item.split("https://github.com")[1]),
   projectLinks: z.array(z.string().trim()).max(10).default([]),
-  video: z
-    .string()
-    .trim()
-    .refine(
-      (str) => {
-        if (
-          str.startsWith("https://www.youtube.com") ||
-          str.startsWith("https://www.loom.com") ||
-          str.startsWith("https://youtube.com") ||
-          str.startsWith("https://loom.com")
-        ) {
-          return true;
-        }
-        if (str == "") {
-          return true;
-        }
-        return false;
-      },
-      {
-        message: "Invalid video link",
-      }
-    )
-    .nullable()
-    .optional(),
+  video: zodVideoSchema.nullable().optional(),
   projectDetails: zodProjectDetailsSchema,
   devStage: z.enum(devStages as any).default("idea"),
   published: z.boolean().default(false),

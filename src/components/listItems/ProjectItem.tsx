@@ -53,12 +53,16 @@ const ProjectItem = async ({
           </>
         }
         rightMessage={
-          <div className="frc flex-wrap gap-x-1">
-            <p className="text-nowrap">Searching For :</p>
-            <p className="text-highlight capitalize text-nowrap">
-              {skillLevel || "Beginers"}
-            </p>
-          </div>
+          skillLevel ? (
+            <div className="frc flex-wrap gap-x-1">
+              <p className="text-nowrap">Searching For :</p>
+              <p className="text-highlight capitalize text-nowrap">
+                {skillLevel}
+              </p>
+            </div>
+          ) : (
+            <></>
+          )
         }
         detailHeading="Team"
         detailDesc={teamNames.join(", ")}

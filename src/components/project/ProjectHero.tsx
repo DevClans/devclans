@@ -8,6 +8,7 @@ import {
 } from "@/types/mongo/project.types";
 import { PageProps } from "@/types/page.types";
 import ProjectRepoDetails from "./ProjectRepoDetails";
+import { convertVideoLinkToEmbed } from "@/utils/ConvertYoutubeLinkToEmbed";
 
 const ProjectHero = ({
   skills = ["react", "nextjs", "typescript", "tailwindcss"],
@@ -20,6 +21,7 @@ const ProjectHero = ({
   searchParams,
   desc,
   repoDetails,
+  video,
   repoName,
 }: Omit<ProjectProps, "repoDetails"> &
   PageProps & {
@@ -30,6 +32,7 @@ const ProjectHero = ({
     desc,
     _id,
   };
+  const videoLink = convertVideoLinkToEmbed(video);
   return (
     <div className="card2 py-[30px] w100 fcfs gap-[30px] px-5">
       <div className="gap-5 fcfs w100">
@@ -58,12 +61,15 @@ const ProjectHero = ({
         </div>
       </div>
       {/* images */}
-      {Array.isArray(imgs) && imgs.length > 0 && (
+      {true && (
         <div className="relative w100">
           <div className="frc gap-2 w100 scrollbar">
-            {imgs.map((img, i) => (
-              <ProductImg key={i} src={img} />
-            ))}
+            {typeof videoLink == "string" && (
+              <ProductImg isVideo={true} src={videoLink} />
+            )}
+            {Array.isArray(imgs) &&
+              imgs.length > 0 &&
+              imgs.map((img, i) => <ProductImg key={i} src={img} />)}
           </div>
           <div
             className="absolute top-0 h-full w-1/12 right-0 z-10 "

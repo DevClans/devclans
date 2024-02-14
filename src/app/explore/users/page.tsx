@@ -11,9 +11,9 @@ const Users = async ({ params, searchParams }: Partial<PageProps>) => {
   const users: UserProps[] =
     (await Fetch({
       endpoint: "/user" + (str ? `?${str}` : ""),
-      headers: {
-        "cache-control": "no-store",
-      } as any,
+      // headers: {
+      //   "cache-control": "no-store",
+      // } as any,
     })) || [];
   // console.log(users, "users in frontend");
   if (!Array.isArray(users) || (Array.isArray(users) && users.length === 0)) {

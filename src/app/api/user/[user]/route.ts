@@ -70,7 +70,7 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
       console.info("user github cache miss");
     }
     if (!userAccessToken) {
-      console.info("getting user access token from mongodb");
+      console.info("getting user access token from mongodb", userId);
       const accessToken: UserProps | null = await UserModel.findById(userId)
         .select("githubDetails.accessToken")
         .lean();
@@ -178,6 +178,7 @@ async function handler(
     const isMongoId = zodMongoId.safeParse(user).success;
     let cachedId;
     if (!isMongoId) {
+      console.info("user is not mongo id", user);
       // check if username
       const username = zodDiscordUsername.parse(user);
       // search for id in cache using the username
@@ -185,10 +186,12 @@ async function handler(
 
       // if not found, search in mongodb
       if (!cachedId) {
+        console.info("user not found in cache", username, "getting from db");
         const id: UserProps | null = await UserModel.findOne({ username })
           .select("_id")
           .lean();
         if (id) {
+          console.info("user found in db", id);
           cachedId = id._id;
           // add to cache
           await setUseridInCache(username, id._id);
