@@ -9,7 +9,7 @@ export const redisSet = async (
   try {
     if (!enumVal || !key || !value) return;
     await redisClient.set(enumVal + ":" + key, JSON.stringify(value));
-    await redisClient.expire(enumVal + ":" + key, expiry || 3600 * 24 * 2);
+    await redisClient.expire(enumVal + ":" + key, expiry || 3600 * 3); // 3hrs default for now
   } catch (error) {
     console.log(error, "failed setting data in redisSet", enumVal, key);
   }

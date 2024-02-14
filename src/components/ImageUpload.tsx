@@ -33,7 +33,10 @@ const ImageUpload = ({
           container: "card2 w100",
         }}
         onBeforeUploadBegin={(files: File[]) => {
-          if (defaultImgs && defaultImgs.length + files.length > 4) {
+          if (
+            Array.isArray(defaultImgs) &&
+            defaultImgs.length + files.length > 4
+          ) {
             alert("You can only upload 10 images");
             return files.slice(0, 10 - defaultImgs.length);
           }

@@ -49,11 +49,11 @@ export default async function updateAllCache(
     // Queue up the batch update operations
     pipeline.set(Enum.list + ":" + id, JSON.stringify(searchInfoCache));
     pipeline.set(Enum.data + ":" + id, JSON.stringify(dataCache));
-    pipeline.expire(Enum.data + ":" + id, 60 * 60 * 24 * 2);
-    pipeline.expire(Enum.list + ":" + id, 60 * 60 * 24 * 2); // 2 days
+    pipeline.expire(Enum.data + ":" + id, 60 * 60 * 3);
+    pipeline.expire(Enum.list + ":" + id, 60 * 60 * 3); // 3 hrs
     if (updateGithubCache) {
       pipeline.set(Enum.github + ":" + id, JSON.stringify(githubCache));
-      pipeline.expire(Enum.github + ":" + id, 60 * 60 * 24 * 2);
+      pipeline.expire(Enum.github + ":" + id, 60 * 60 * 3);
     }
 
     // Execute the batch operations

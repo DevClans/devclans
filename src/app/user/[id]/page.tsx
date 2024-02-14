@@ -37,7 +37,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
     revalidate: session?.user?._id == id && 0,
     cache: session?.user?._id == id ? "no-store" : undefined,
   });
-  console.log("user data", Boolean(userData));
+  console.log("user data", userData);
   if (
     !userData ||
     (userData && ("error" in userData || "message" in userData))

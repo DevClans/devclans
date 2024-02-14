@@ -58,7 +58,10 @@ export async function getDataQuery(
         ? idsToBeStoredInCache
         : ([0, 0] as any))
     ); //zadd(key, score1, member1, score2, member2, ...)
-    redisClient.expire(searchKey, 60 * 60 * 3); // 3 hrs
+    redisClient.expire(
+      searchKey,
+      idsToBeStoredInCache.length > 0 ? 60 * 60 * 3 : 60 * 10
+    ); // 3 hrs if something else 10 mins
     // }
     console.log("Sending projects successfully");
     return NextResponse.json(resData);

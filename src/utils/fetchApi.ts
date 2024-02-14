@@ -65,7 +65,7 @@ export const Fetch = async ({
     options["body"] = JSON.stringify(body);
   }
   try {
-    console.log("options", options);
+    // console.log("options", options);
     const res = await fetch((baseUrl || urlApi) + (endpoint || ""), options);
     if (res.status > 200) {
       throw new Error(res.statusText);
