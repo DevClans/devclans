@@ -33,6 +33,7 @@ export async function getDataQuery(
 
     // Check if the result is already in the cache
     const zcache = await redisClient.zrange(searchKey, 0, -1);
+    console.log(zcache, "zcache");
     const cachedProjectIds =
       zcache.length == 1 && zcache[0] == "0" ? "none" : zcache;
     if (cachedProjectIds == "none") {

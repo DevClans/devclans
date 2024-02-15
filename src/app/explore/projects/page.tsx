@@ -11,8 +11,12 @@ const Projects = async ({ params, searchParams }: Partial<PageProps>) => {
   const projects: ProjectSearchItemProps[] =
     (await Fetch({
       endpoint: "/project" + (str ? `?${str}` : ""),
+      revalidate: 3600 * 3, // TODO - set revalidate time
     })) || [];
-  // console.log(projects, "projects in frontend");
+  console.log(
+    Array.isArray(projects) && projects.length > 0,
+    "projects in frontend"
+  );
   return <ProjectItems projects={projects} searchParams={searchParams} />;
 };
 export default Projects;

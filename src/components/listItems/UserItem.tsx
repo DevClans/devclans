@@ -72,7 +72,7 @@ const UserItem = async ({
         }
         rightMessage={
           <p className="text-highlight font-medium">
-            You can remember by my name
+            {/* TODO need to add some user info here */}
           </p>
         }
         detailHeading={"Skill Level"}
