@@ -32,9 +32,12 @@ const AboutUsPage: React.FC = () => {
       bio: "Full Stack Developer",
     },
     {
-      name: "Siddhant",
-      src: "https://avatars.githubusercontent.com/u/101110768?v=4",
-      bio: "a full-stack engineer who loves building neat user interfaces that are highly functional, interactive and serve the experience of the application.",
+      name: "Siddhant | TA Rayleigh",
+      src: "https://i.postimg.cc/YqhWJH9c/photo-2024-02-15-20-00-57.jpg",
+      bio: "a full-stack engineer who is obsessed with building & breaking things while dedicating a part of his time as a teaching assistant at 100xDevs. x/twitter is hands down the best place to connect with him.",
+      links: [
+        "https://x.com/siddhantxh",
+      ],
     },
   ];
   const data = [
@@ -45,7 +48,7 @@ const AboutUsPage: React.FC = () => {
           <br /> Problem
         </>
       ),
-      desc: "We believe software development is broken today - thousands of tools, hundreds of tabs, and a lack of integration results in a slow, painful development process and a poor developer experience.",
+      desc: "We believe intra-cohort networking is broken today —over 20,000 developers in various sub-channels of 1 discord server. Now, although discord is a great communication channel, it is not as great a collaborative platform.",
     },
     {
       heading: (
@@ -54,7 +57,7 @@ const AboutUsPage: React.FC = () => {
           <br /> building?
         </>
       ),
-      desc: "We believe software development is broken today - thousands of tools, hundreds of tabs, and a lack of integration results in a slow, painful development process and a poor developer experience.",
+      desc: "We are building an end-to-end solution for intra-cohort networking where you can find your proficiency level based projects to work on, like minded individuals, mentors, accountability groups and who knows, even your next co-founders —all within the community.",
     },
     {
       heading: (
@@ -63,7 +66,7 @@ const AboutUsPage: React.FC = () => {
           <br /> Mission
         </>
       ),
-      desc: "We believe software development is broken today - thousands of tools, hundreds of tabs, and a lack of integration results in a slow, painful development process and a poor developer experience.",
+      desc: "We're on a mission to ignite the collective brilliance of 20,000 developers, creating an environment where collaboration fuels innovation and opportunities, eventually leading to global recognition of the 100xdevs community.",
       content: (
         <div className="fcfs w100 mt-6 md:mt-15">
           <h5 className="text-subH">how it all started</h5>
@@ -87,7 +90,7 @@ const AboutUsPage: React.FC = () => {
           <br /> core team
         </>
       ),
-      desc: "We believe software development is broken today - thousands of tools, hundreds of tabs, and a lack of integration results in a slow, painful development process and a poor developer experience.",
+      desc: "The most fascinating part of working on this problem is the mere fact that the core team of devclans luckily met in the Community's Discord Server. Despite the slim chances of connecting in such a disorganized platform, we fortunately crossed paths. Having witnessed the challenges of fragmented networking firsthand, we felt well-positioned to a craft a solution.",
       content: (
         <div
           className=" w100 gap-7 flex flex-col  mt-6 md:mt-[100px]"
@@ -112,8 +115,8 @@ const AboutUsPage: React.FC = () => {
           About <span className="h1Highlight">Devclans</span>
         </h1>
         <p className="text-center lg:text-left ">
-          Devclans is build by developers met in 100xdevs cohort by Harkirat
-          singh
+          Devclans is built by developers who met in 100xdevs cohort by Harkirat
+          Singh
         </p>
         <Link href={"https://x.com/kirat_tw/status/1745624233101713723?s=20"}>
           <Image
@@ -232,3 +235,16 @@ const TeamMember = ({
     </div>
   );
 };
+
+
+// The Problem
+// We believe intra-cohort networking is broken today —over 20,000 developers in various sub-channels of 1 discord server. Now, although discord is a great communication channel, it is not as great a collaborative platform.
+
+// What are we building?
+// We are building an end-to-end solution for intra-cohort networking where you can find proficiency level based projects to work on, like minded individuals, mentors, accountability groups and who knows, even your next co-founders —all within the community.
+
+// Our Mission
+// We're on a mission to ignite the collective brilliance of 20,000 developers, creating an environment where collaboration fuels innovation and opportunities, eventually leading to global recognition of the 100xdevs community.
+
+// Core Team
+// The most fascinating part of working on this problem is the mere fact that the core team of devclans luckily met on the Discord server. Despite the slim chances of connecting in such a disorganized platform, we fortunately crossed paths. Having witnessed the challenges of fragmented networking firsthand, we felt well-positioned to a craft a solution.

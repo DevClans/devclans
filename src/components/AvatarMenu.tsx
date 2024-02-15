@@ -46,7 +46,7 @@ const UserAvatarMenu = ({ username }: { username: string }) => {
             src={avatarUrl}
             alt={username}
           >
-            {username[0]}
+            {username ? username[0] : null}
           </Avatar>
         )}
       </button>
