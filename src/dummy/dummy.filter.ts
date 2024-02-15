@@ -46,7 +46,7 @@ export const dummyFilterSteps: FilterSidebarGrpProps[] = [
   {
     title: "Domain",
     data: projectDomains as unknown as string[],
-    key: "university",
+    key: "domain",
   },
   {
     title: "Tech Stack",

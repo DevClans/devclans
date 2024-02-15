@@ -56,6 +56,7 @@ export const dummyProjectFormSchemaFields: InputFieldProps[] = [
     label: "Repository Github Link",
     desc: "Paste the github link to your project repository. (if available)",
     name: "repoName",
+    // TODO can add default value here while creating a new project. and ask user to just add ending value
   },
   // {
   //   label: "Images",

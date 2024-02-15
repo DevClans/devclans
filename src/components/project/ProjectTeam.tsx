@@ -14,6 +14,7 @@ const ProjectTeam = ({
   }
   return (
     <div className="card2 w100">
+      {/* TODO show user avatars in team list  */}
       <SidebarList
         needIconBg={false}
         onlyList={true}

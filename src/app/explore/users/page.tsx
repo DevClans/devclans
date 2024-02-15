@@ -14,6 +14,7 @@ const Users = async ({ params, searchParams }: Partial<PageProps>) => {
       // headers: {
       //   "cache-control": "no-store",
       // } as any,
+      revalidate: 3600 * 3, // TODO - set revalidate time
     })) || [];
   // console.log(users, "users in frontend");
   if (!Array.isArray(users) || (Array.isArray(users) && users.length === 0)) {

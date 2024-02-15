@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { ProjectModel } from "@/mongodb/models";
 import dbConnect from "@/utils/mongoose.config";
 import { Types } from "mongoose";
-import redisClient from "@/redis/config";
 import { z } from "zod";
 import {
   zodMongoId,

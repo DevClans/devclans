@@ -33,7 +33,7 @@ export const convertProjectDetails = (
     });
   });
   convertedData.push({
-    heading: "Challenges We Faced",
+    heading: "Challenges Faced",
     data: challengesData,
   });
   const futureGoalsData: ToogleListItemProps[] = [];
