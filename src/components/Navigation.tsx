@@ -10,7 +10,7 @@ const navigation = [
     href: "/explore/projects",
   },
   {
-    name: "Find Coder Bhai",
+    name: "Find Friends",
     href: "/explore/users",
   },
   {

@@ -34,7 +34,7 @@ const AboutUsPage: React.FC = () => {
     {
       name: "Siddhant | TA Rayleigh",
       src: "https://i.postimg.cc/YqhWJH9c/photo-2024-02-15-20-00-57.jpg",
-      bio: "a full-stack engineer who is obsessed with building & breaking things while dedicating a part of his time as a teaching assistant at 100xDevs. x/twitter is hands down the easiest place to connect with him.",
+      bio: "a full-stack engineer who is obsessed with building & breaking things while dedicating a part of his time as a teaching assistant at 100xDevs. x/twitter is hands down the best place to connect with him.",
       links: [
         "https://x.com/siddhantxh",
       ],

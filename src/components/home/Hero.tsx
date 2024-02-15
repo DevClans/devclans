@@ -13,7 +13,7 @@ const Hero = () => {
             className="text-center lg:text-left text-base lg:text-[20px]"
             style={{}}
           >
-            Connect with thousands of developer bhais from 100xdevs cohort
+            Connect with thousands of developers from the 100xdevs cohort
           </p>
         </div>
         <ButtonHero />
