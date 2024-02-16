@@ -160,9 +160,19 @@ export const zodUserDiscordDetailsSchema = z.object({
     .refine((value) => /^\d{4}$/.test(value) || value == "0", {
       message: "Invalid discriminator! Must be a string of 4 digits.",
     }),
-  avatar: z.string().regex(/^[0-9a-fA-F]{32}$/, {
-    message: "Invalid 32-character hexadecimal string",
-  }),
+  avatar: z.string().max(100).nullable(),
+  // .refine(
+  //   (value) => {
+  //     if (!value) {
+  //       return true;
+  //     } else {
+  //       return Boolean(value.match(/^[0-9a-fA-F]{32}$/));
+  //     }
+  //   },
+  //   {
+  //     message: "Invalid avatar path",
+  //   }
+  // ),
   // https://cdn.discordapp.com/avatars/746713386380689509/bd71d4c78ff1b8b234addd5393436661.png
   accent_color: z
     .union([z.number(), z.string()])
@@ -172,7 +182,7 @@ export const zodUserDiscordDetailsSchema = z.object({
     })
     .optional(),
   bot: z.boolean().optional(),
-  global_name: z.string().default(""),
+  global_name: z.string().nullable().default(""),
   banner: z
     .string()
     .nullable()

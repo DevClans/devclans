@@ -1,8 +1,8 @@
 import type { NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import { adapter } from "./adapterFunctions";
-import { UserDiscordDetailsProps } from "@/types/mongo/user.types";
-import { zodUserDiscordDetailsSchema } from "@/zod/zod.common";
+// import { UserDiscordDetailsProps } from "@/types/mongo/user.types";
+// import { zodUserDiscordDetailsSchema } from "@/zod/zod.common";
 import { Fetch } from "../fetchApi";
 
 const isServerMember = async (discordId: string, token: string) => {
