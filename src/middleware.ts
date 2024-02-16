@@ -1,12 +1,13 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
-import { kv } from "@vercel/kv";
+import { Redis } from "@upstash/redis";
+// import { kv } from "@vercel/kv";
 
 // middleware is applied to all routes, use conditionals to select
 const cache = new Map();
 const ratelimit = new Ratelimit({
-  redis: kv,
+  redis: Redis.fromEnv(),
   timeout: 1000,
   analytics: true,
   ephemeralCache: cache,
