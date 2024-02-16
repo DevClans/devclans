@@ -11,7 +11,7 @@ const userAvatar = async ({
   discordId,
 }: {
   avatar?: string;
-  discordImg?: string;
+  discordImg?: string | null;
   gitubImg?: string;
   userProps?: Partial<UserProps>;
   discordId?: string;
