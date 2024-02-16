@@ -32,18 +32,18 @@ export const authOptions: NextAuthOptions = {
         const isMember = await isServerMember(id, access_token);
         console.log("isMember in profile", isMember);
         // console.log("access token", tokens);
-        const isData = zodUserDiscordDetailsSchema.safeParse({
-          ...profile,
-          _id: id,
-        });
-        let discordDetails: UserDiscordDetailsProps | null = null;
-        if (!isData.success) throw new Error(isData.error.message);
-        discordDetails = isData.data;
+        // const isData = zodUserDiscordDetailsSchema.safeParse({
+        //   ...profile,
+        //   _id: id,
+        // });
+        // let discordDetails: UserDiscordDetailsProps | null = null;
+        // if (!isData.success) throw new Error(isData.error.message);
+        // discordDetails = isData.data;
         return {
           id: id,
-          username: discordDetails.username,
+          username: profile.username,
           discordId: id,
-          discordDetails,
+          discordDetails: { ...profile, _id: id },
           email: profile.email,
           emailVerified: profile.verified,
           isMember: isMember,
