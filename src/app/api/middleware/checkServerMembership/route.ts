@@ -49,7 +49,11 @@ async function checkServerMembership(req: NextRequest, res: NextResponse) {
     console.log("accessToken in server", accessToken, userDiscordId);
     // Add regex validation check for accessToken
 
-    const serverId = ["1187795083387474000", "1171768226691162162"]; // Replace with the actual Discord server ID
+    const serverId = [
+      "1187795083387474000",
+      "1171768226691162162",
+      "1208061297858584606",
+    ]; // Replace with the actual Discord server ID
     // "662267976984297473" id for false check
     const isMember = await isDiscordServerMember(accessToken, serverId);
 
