@@ -136,12 +136,12 @@ const isValidHexColorVariableLength = (value: any) => {
 export const zodUserGithubDetailsSchemaForFrontend = z.object({
   avatar_url: z.string().optional(),
   node_id: z.string().optional(),
-  name: z.string().trim().max(255).optional(),
+  name: z.string().trim().max(255).nullable().optional(),
   company: z.string().trim().max(255).nullable().optional(),
   bio: z.string().trim().max(500).nullable().optional(),
-  twitter_username: z.string().trim().max(50).optional(),
+  twitter_username: z.string().trim().max(50).nullable().optional(),
   login: z.string().min(1).trim(),
-  readme: z.string().max(3000).optional(),
+  readme: z.string().max(3000).nullable().optional(),
 });
 
 export const zodUserGithubDetailsSchema = z
