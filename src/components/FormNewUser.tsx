@@ -209,7 +209,7 @@ const FormNewUser = ({
       process.env.NEXT_PUBLIC_GITHUB_CALLBACK_URL +
       `${userid ? `?userid=${userid}` : ""}`; // both id and query works
     // TODO encrypt the user id
-    console.log("CLIENT_ID", CLIENT_ID, CALLBACK_URL);
+    // console.log("CLIENT_ID", CLIENT_ID, CALLBACK_URL);
     const state = userid;
     const SCOPES = "read:user,user:email,repo";
     window.location.href = `${GITHUB_AUTH_URL}?client_id=${CLIENT_ID}&redirect_uri=${CALLBACK_URL}&scope=${SCOPES}${

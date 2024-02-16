@@ -35,7 +35,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
   const userData: UserProps = await Fetch({
     endpoint: `/user/${id}`,
     revalidate: session?.user?._id == id && 0,
-    cache: session?.user?._id == id ? "no-store" : undefined,
+    // cache: session?.user?._id == id ? "no-store" : undefined,
   });
   console.log("user data", userData);
   if (
