@@ -6,7 +6,7 @@ const selectUserDisplayName = ({
   userProps,
 }: {
   username?: string;
-  discordUsername?: string;
+  discordUsername?: string | null;
   userProps?: Partial<UserProps>;
 }): string => {
   return (

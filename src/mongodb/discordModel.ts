@@ -30,13 +30,13 @@ export const discordDetailsSchema: Schema<UserDiscordDetailsProps> =
     },
     avatar: {
       type: String,
-      default: "",
-      validate: {
-        validator: (value: string) =>
-          /^https:\/\/cdn.discordapp.com/.test(value), // Example: Check if it's a valid URL
-        message: (props: { value: string }) =>
-          `${props.value} is not a valid avatar URL!`,
-      },
+      maxlength: 100,
+      // validate: {
+      //   validator: (value: string | null) =>
+      //     /^https:\/\/cdn.discordapp.com/.test(value as string), // Example: Check if it's a valid URL
+      //   message: (props: { value: string }) =>
+      //     `${props.value} is not a valid avatar URL!`,
+      // },
     },
     accent_color: {
       type: String,
@@ -58,12 +58,13 @@ export const discordDetailsSchema: Schema<UserDiscordDetailsProps> =
     banner: {
       type: String,
       default: "",
-      validate: {
-        validator: (value: string) =>
-          /^https:\/\/cdn.discordapp.com/.test(value), // Example: Check if it's a valid URL
-        message: (props: { value: string }) =>
-          `${props.value} is not a valid banner URL!`,
-      },
+      maxlength: 100,
+      // validate: {
+      //   validator: (value: string) =>
+      //     /^https:\/\/cdn.discordapp.com/.test(value), // Example: Check if it's a valid URL
+      //   message: (props: { value: string }) =>
+      //     `${props.value} is not a valid banner URL!`,
+      // },
     },
     verified: {
       type: Boolean,
