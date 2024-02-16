@@ -2,7 +2,6 @@ import { getOctokit } from "@/github/config.github";
 import { getGithubReadmeNew } from "@/github/repos/gh.getReadmeNew";
 import { ProjectModel } from "@/mongodb/models";
 import { redisGet, redisSet } from "@/redis/basicRedis";
-import redisClient from "@/redis/config";
 import {
   ProjectRedisKeys,
   ProjectRepoDetailsKeys,

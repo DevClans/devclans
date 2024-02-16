@@ -35,7 +35,6 @@ export const userGithubDetailsSchema = new Schema<UserGithubDetailsProps>(
       required: true,
       trim: true,
       minlength: 1,
-      unique: true,
     },
     readme: {
       type: String,
