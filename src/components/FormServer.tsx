@@ -15,12 +15,13 @@ const FormServer = ({
   register,
   formId = "userForm",
   formState: { isSubmitting, errors },
-  isEdit = false,
+  isNew = false,
   defaultValues,
   setValue,
   buttonMessage,
-}: FormServerProps & { isEdit?: boolean; defaultValues?: any }) => {
+}: FormServerProps & { isNew?: boolean; defaultValues?: any }) => {
   // console.log("errors", errors);
+  const isUser = formId == "userForm";
   return (
     <>
       <CommonHero heading={heading} />
@@ -60,6 +61,12 @@ const FormServer = ({
               // if (typeof condition == "boolean" && condition) {
               //   conditions.required = true
               // }
+              const splitName = name.split(".");
+              const defaultValue =
+                splitName.length == 2
+                  ? defaultValues[splitName[0]]?.[splitName[1]]
+                  : defaultValues[name];
+              // console.log("defaultValue", defaultValue);
               const editableListEle = (
                 <EditableLIst
                   limit={limit}
@@ -97,7 +104,7 @@ const FormServer = ({
                   limit={limit}
                   register={register}
                   name={name as any}
-                  defaultValue={defaultValues?.[name]}
+                  defaultValue={defaultValue}
                   options={options as string[]}
                 />
               );
@@ -170,10 +177,13 @@ const FormServer = ({
             render={({ message }) => <p className="error">{message}</p>}
           />
           <div className="w100 fcfs gap-1">
-            <p className="w100 text-xs">
-              **Note: Your updates can take up to 6hrs to be publically
-              available.
-            </p>
+            {isNew && (
+              <p className="w100 text-xs">
+                **Note: New {isUser ? "user" : "project"} can take upto{" "}
+                <b>3hrs</b> to be available on{" "}
+                <b>{isUser ? "Find Friends" : "Find Projects"} </b>page.
+              </p>
+            )}
             <ButtonSecondary
               label={buttonMessage || "Update"}
               loading={isSubmitting}

@@ -25,20 +25,18 @@ const FormNewUser = ({
 }) => {
   const isEdit = false;
   const searchParams = useSearchParams();
+  const newUser = searchParams.get("new");
   const { data }: any = useSession();
   const session = data?.user;
   const [githubLoading, setGithubLoading] = useState(false);
   const [defaultValues, setDefaultValues] = useState<UserProps | UserFormProps>(
     (dv as unknown as UserProps) || {}
   );
-  console.log("defaultValues", defaultValues);
+  // console.log("defaultValues", defaultValues);
   // const defaultValues: UserProps | UserFormProps =
   //   (dv as unknown as UserProps) || {};
   const githubUsername =
-    searchParams.get("githubUsername") ||
-    session?.githubId ||
-    ("githubId" in defaultValues && defaultValues?.githubId) ||
-    ("githubDetails" in defaultValues && defaultValues?.githubDetails?.login);
+    searchParams.get("githubUsername") || session?.githubId;
   // TODO this should be based on access token. if we have access token then user is connected
   // console.log("defaultValues", defaultValues);
   const { watch, setError, setValue, handleSubmit, ...form } =
@@ -50,13 +48,13 @@ const FormNewUser = ({
   const userid = session?._id;
   const onSubmit: SubmitHandler<UserFormProps> = async (data) => {
     try {
-      data.contactMethodId = selectUserContactId(data);
+      data.contactMethodId = selectUserContactId(data) || session?.discordId;
       // console.log("data", JSON.stringify(data), JSON.stringify(defaultValues));
       if (JSON.stringify(data) === JSON.stringify(defaultValues)) {
         toast.success("Project Updated Successfully!", {
           autoClose: false,
         });
-        console.log("No change in data");
+        // console.log("No change in data");
         return;
       }
       // console.log("setting data", data);
@@ -68,7 +66,7 @@ const FormNewUser = ({
         setError,
         "Profile Updated Successfully"
       );
-      console.log("res", res, session);
+      // console.log("res", res, session);
       // if (!res && session) {
       //   throw new Error("Error in our server. Please try again later.");
       // }
@@ -105,7 +103,8 @@ const FormNewUser = ({
     },
     {
       label: "Skill Level:",
-      name: "Select what level you would give yourself for the skills you have in selected domain.",
+      name: "skillLevel",
+      desc: "Select what level you would give yourself for the skills you have in selected domain.",
       options: memberLevels as any,
     },
     {
@@ -199,10 +198,31 @@ const FormNewUser = ({
   // console.log("session", session);
   // console.log("errors", errors);
 
-  const handleConnectGitHub = () => {
+  const handleConnectGitHub = async () => {
     setGithubLoading(true);
+    const data: any = watch();
+    let isNew = false;
+    if (defaultValues && data && typeof defaultValues === "object") {
+      for (const key in data) {
+        if (
+          data[key] &&
+          JSON.stringify(data[key]) !=
+            JSON.stringify((defaultValues as any)[key])
+        ) {
+          console.log("isNew", key, data[key], (defaultValues as any)[key]);
+          isNew = true;
+        }
+      }
+      if (isNew) {
+        const ques = confirm(
+          "You have unsaved changes. Automatically save changes for me before continuing?"
+        );
+        if (ques) {
+          await handleSubmit(onSubmit)();
+        }
+      }
+    }
     // setting values before redirecting to github
-    setDefaultValues(watch()); // TODO needs testing
     const GITHUB_AUTH_URL = "https://github.com/login/oauth/authorize";
     const CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
     const CALLBACK_URL =
@@ -226,7 +246,7 @@ const FormNewUser = ({
       {
         <FormServer
           defaultValues={defaultValues}
-          isEdit={isEdit}
+          isNew={newUser == "true"}
           heading="Lets Create Your Profile"
           setValue={setValue}
           buttons={

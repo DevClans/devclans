@@ -1,24 +1,31 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
+import { Redis as Rd } from "@upstash/redis";
+import { isDev } from "./constants";
 // import { kv } from "@vercel/kv";
 
 // middleware is applied to all routes, use conditionals to select
 const cache = new Map();
-const ratelimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  timeout: 1000,
-  analytics: true,
-  ephemeralCache: cache,
-  limiter: Ratelimit.slidingWindow(80, "60 s"),
-});
+const ratelimit =
+  !isDev &&
+  new Ratelimit({
+    redis: Rd.fromEnv(),
+    timeout: 1000,
+    analytics: true,
+    ephemeralCache: cache,
+    limiter: Ratelimit.slidingWindow(80, "60 s"),
+  });
 export default withAuth(
   async function middleware(req: any) {
     // return NextResponse.next();
     console.log("Incoming request:", req.method, req.url, req.ip);
-    if (process.env.NODE_ENV === "development") {
+    if (isDev) {
       console.log("dev mode");
+      return NextResponse.next();
+    }
+    if (!ratelimit) {
+      console.error("middleware: ratelimit not initialized");
       return NextResponse.next();
     }
     const ip = req.ip ?? "127.0.0.1";

@@ -30,7 +30,8 @@ const Contact: FC = () => {
         data,
         { _id: true },
         setError,
-        "Email sent successfully"
+        "Email sent successfully",
+        false
       );
       // await sendEmail(data);
     } catch (error) {

@@ -13,6 +13,7 @@ import LogedOutScreen from "./LogedOutScreen";
 import { ButtonBlue } from ".";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 const FormNewProject = ({
   defaultValues: dv,
@@ -22,6 +23,7 @@ const FormNewProject = ({
   projectId?: string;
 }) => {
   const { data }: any = useSession();
+  const pathname = usePathname();
   const session = data?.user;
   const [projectId, setProjectId] = useState<string | undefined>(pid);
   if (
@@ -96,6 +98,7 @@ const FormNewProject = ({
         defaultValues={defaultValues}
         heading="Create A New Project"
         {...form}
+        isNew={Boolean(pathname.includes("/new"))}
         setValue={setValue}
         formId="projectForm"
         zodFormShape={zodProjectFormSchema.shape}

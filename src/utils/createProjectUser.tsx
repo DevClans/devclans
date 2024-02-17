@@ -6,13 +6,15 @@ export const createProjectUser = async (
   data: any,
   session: any,
   setError: any,
-  toastMessage?: string
+  toastMessage?: string,
+  needAuth = true
 ) => {
   try {
     console.log("inside handleSubmit");
     // Check if the user is authenticated
-    if (!(session && session?._id)) {
+    if (needAuth && !(session && session?._id)) {
       console.error("User is not authenticated.");
+      toast.error("You need to be logged in to perform this action");
       return;
     }
     const response = await fetch(`${urlApi + endpoint}`, {
@@ -20,7 +22,7 @@ export const createProjectUser = async (
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ data, id: session._id }),
+      body: JSON.stringify({ data, id: session?._id || "" }),
     });
     console.log("response", response.status, response.statusText);
     if (response.status > 200) {

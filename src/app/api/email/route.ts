@@ -24,11 +24,12 @@ export async function POST(request: NextRequest) {
       subject: `Message from ${data.name} (${data.email})`,
       text: data.message,
     };
-
+    console.log("mailOptions =>", mailOptions);
     const sendMailPromise = () =>
       new Promise<string>((resolve, reject) => {
         transport.sendMail(mailOptions, function (err) {
           if (!err) {
+            console.log("-- Email sent --");
             resolve("Email sent");
           } else {
             reject(err.message);
@@ -39,6 +40,7 @@ export async function POST(request: NextRequest) {
     await sendMailPromise();
     return NextResponse.json({ message: "Email sent" });
   } catch (err: any) {
+    console.error("-- Error sending email --", err);
     return NextResponse.json(
       { error: err },
       {
