@@ -50,7 +50,7 @@ const FormNewUser = ({
   const userid = session?._id;
   const onSubmit: SubmitHandler<UserFormProps> = async (data) => {
     try {
-      data.contactMethodId = selectUserContactId(data);
+      data.contactMethodId = selectUserContactId(data) || session?.discordId;
       // console.log("data", JSON.stringify(data), JSON.stringify(defaultValues));
       if (JSON.stringify(data) === JSON.stringify(defaultValues)) {
         toast.success("Project Updated Successfully!", {

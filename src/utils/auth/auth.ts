@@ -47,6 +47,8 @@ export const authOptions: NextAuthOptions = {
           email: profile.email,
           emailVerified: profile.verified,
           isMember: isMember,
+          contactMethod: "discord",
+          contactMethodId: id,
         };
       },
     }),

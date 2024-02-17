@@ -19,7 +19,7 @@ const selectUserContactId = (data: UserFormProps) => {
     return contactId;
   }
   // this will result in default i.e, discord
-  return "";
+  return null;
 };
 
 export default selectUserContactId;
