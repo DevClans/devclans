@@ -199,6 +199,7 @@ async function handler(
       }
     }
     const userId = isMongoId ? user : cachedId;
+    console.info("user profile being fetched =>", userId);
     if (!userId) {
       console.info("user not found in cache", userId);
       throw new Error("User not found " + userId);
@@ -243,7 +244,7 @@ async function handler(
       // get all details
       const u: UserProps | null = await getUserData(userId, "");
       if (!u) {
-        return NextResponse.json({ message: "User not found " + +userId });
+        return NextResponse.json({ message: "User not found " + userId });
       }
       Object.assign(userInfo, u);
       // add to cache by separating userSearchInfoKeys and other keys

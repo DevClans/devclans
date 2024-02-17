@@ -11,5 +11,5 @@ export default async function NewUser() {
       </h3>
     );
   }
-  return redirect("/user/" + sessionUser + "?mode=edit");
+  return redirect("/user/" + sessionUser + "?mode=edit?new=true");
 }

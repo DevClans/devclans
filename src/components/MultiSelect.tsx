@@ -55,9 +55,10 @@ export default function MultipleSelectChip({
   defaultValue?: string[];
   limit?: number;
 }) {
+  // console.log("defaultValue", defaultValue, name, options, limit);
   const theme = useTheme();
   const [personName, setPersonName] = React.useState<string[]>(
-    defaultValue || []
+    Array.isArray(defaultValue) ? defaultValue : []
   );
 
   const handleChange = (event: SelectChangeEvent<typeof personName>) => {
