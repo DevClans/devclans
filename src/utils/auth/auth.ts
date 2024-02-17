@@ -1,8 +1,6 @@
 import type { NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import { adapter } from "./adapterFunctions";
-// import { UserDiscordDetailsProps } from "@/types/mongo/user.types";
-// import { zodUserDiscordDetailsSchema } from "@/zod/zod.common";
 import { Fetch } from "../fetchApi";
 
 const isServerMember = async (discordId: string, token: string) => {
@@ -27,10 +25,10 @@ export const authOptions: NextAuthOptions = {
       },
       async profile(profile: any, tokens: any) {
         const { id } = profile;
-        const { access_token } = tokens;
         // console.log("tokens in profile", tokens);
-        const isMember = await isServerMember(id, access_token);
-        console.log("isMember in profile", isMember);
+        // ? not checking here as the limit is 5 per user and checking multiple times will lead to rate limit
+        // const isMember = await isServerMember(id, access_token);
+        // console.log("isMember in profile", isMember);
         // console.log("access token", tokens);
         // const isData = zodUserDiscordDetailsSchema.safeParse({
         //   ...profile,
@@ -46,7 +44,6 @@ export const authOptions: NextAuthOptions = {
           discordDetails: { ...profile, _id: id },
           email: profile.email,
           emailVerified: profile.verified,
-          isMember: isMember,
           contactMethod: "discord",
           contactMethodId: id,
         };
@@ -80,7 +77,7 @@ export const authOptions: NextAuthOptions = {
       }
       // console.log("signIn", user, account, profile, email, credentials);
       const isMember = await isServerMember(profile.id, account.access_token);
-      console.log("isMember", isMember);
+      console.log("isMember =>", isMember);
       if (!isMember) {
         return "/error?error=notMember";
       }

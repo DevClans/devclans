@@ -1,11 +1,21 @@
+import { redisGet, redisSet } from "@/redis/basicRedis";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-
+enum DiscordApi {
+  limit = "discordApiLimit",
+}
 async function isDiscordServerMember(
   accessToken: string,
-  serverId: string[]
+  serverId: string[],
+  userDiscordId: string
 ): Promise<boolean> {
   try {
+    // try getting limit from redis
+    const data = await redisGet(DiscordApi.limit, userDiscordId);
+    if (data) {
+      console.log("user rate limited by discord ", userDiscordId, data);
+      return false;
+    }
     for (const id of serverId) {
       const response = await fetch(
         `https://discord.com/api/users/@me/guilds/${id}/member`,
@@ -15,6 +25,36 @@ async function isDiscordServerMember(
           },
         }
       );
+      const discordApiLimit: Record<string, string | null> = {};
+      const remaining = response.headers.get("x-ratelimit-remaining");
+      console.log(
+        "discord guild response =>",
+        response.headers.get("x-ratelimit-limit"),
+        remaining,
+        response.headers.get("x-ratelimit-reset-after"),
+        response.headers.get("x-ratelimit-reset")
+      );
+      if (typeof remaining == "string" && parseInt(remaining) === 0) {
+        const resetAfter = response.headers.get("x-ratelimit-reset-after");
+        console.log("rate limited by discord", userDiscordId);
+        discordApiLimit["limit"] = response.headers.get("x-ratelimit-limit");
+        discordApiLimit["reset"] = response.headers.get("x-ratelimit-reset");
+        discordApiLimit["reset-after"] = resetAfter;
+        discordApiLimit["remaining"] = remaining;
+        console.log(
+          "setting discord limit in redis",
+          discordApiLimit,
+          "for user",
+          userDiscordId
+        );
+        await redisSet(
+          DiscordApi.limit,
+          userDiscordId,
+          discordApiLimit,
+          resetAfter ? parseInt(resetAfter) : 60
+        );
+        return false;
+      }
       const data = await response.json(); // Get the response data
       console.log("is member data = >", data); // Log the response data to see the details
       if (data && response.status === 200) {
@@ -50,12 +90,16 @@ async function checkServerMembership(req: NextRequest, res: NextResponse) {
     // Add regex validation check for accessToken
 
     const serverId = [
-      "1187795083387474000",
       "1171768226691162162",
+      "1187795083387474000",
       "1208061297858584606",
     ]; // Replace with the actual Discord server ID
     // "662267976984297473" id for false check
-    const isMember = await isDiscordServerMember(accessToken, serverId);
+    const isMember = await isDiscordServerMember(
+      accessToken,
+      serverId,
+      userDiscordId
+    );
 
     if (isMember) {
       return NextResponse.json({
