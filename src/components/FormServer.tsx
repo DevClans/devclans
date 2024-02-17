@@ -171,8 +171,8 @@ const FormServer = ({
           />
           <div className="w100 fcfs gap-1">
             <p className="w100 text-xs">
-              **Note: Your updates can take up to 6hrs to be publically
-              available.
+              **Note: Your changes can take upto <b>6hrs</b> to be available on{" "}
+              <b>Find Friends </b>page. Your profile will be updated instantly.
             </p>
             <ButtonSecondary
               label={buttonMessage || "Update"}
