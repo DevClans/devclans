@@ -8,13 +8,13 @@ async function isDiscordServerMember(
   accessToken: string,
   serverId: string[],
   userDiscordId: string
-): Promise<boolean> {
+): Promise<{ isMember: boolean; reason?: string }> {
   try {
     // try getting limit from redis
     const data = await redisGet(DiscordApi.limit, userDiscordId);
     if (data) {
       console.log("user rate limited by discord ", userDiscordId, data);
-      return false;
+      return { isMember: false, reason: "ratelimit" };
     }
     for (const id of serverId) {
       const response = await fetch(
@@ -53,18 +53,21 @@ async function isDiscordServerMember(
           discordApiLimit,
           resetAfter ? parseInt(resetAfter) : 60
         );
-        return false;
+        return { isMember: false, reason: "ratelimit" };
       }
       const data = await response.json(); // Get the response data
       console.log("is member data = >", data); // Log the response data to see the details
       if (data && response.status === 200) {
-        return typeof data == "object" && "user" in data;
+        return {
+          isMember: typeof data == "object" && "user" in data,
+          reason: "notMember",
+        };
       }
     }
-    return false;
+    return { isMember: false, reason: "notMember" };
   } catch (error) {
     console.error("Error checking server membership:", error);
-    return false;
+    return { isMember: false, reason: "serverError" };
   }
 }
 
@@ -95,28 +98,26 @@ async function checkServerMembership(req: NextRequest, res: NextResponse) {
       "1208061297858584606",
     ]; // Replace with the actual Discord server ID
     // "662267976984297473" id for false check
-    const isMember = await isDiscordServerMember(
+    const { isMember, reason } = await isDiscordServerMember(
       accessToken,
       serverId,
       userDiscordId
     );
-
-    if (isMember) {
-      return NextResponse.json({
-        message:
-          "User is a member of the required Discord server and has the specified Discord ID",
+    return NextResponse.json(
+      {
+        message: reason,
         isMember,
-      });
-    } else {
-      return NextResponse.json(
-        {
-          message:
-            "User is not a member of the required Discord server or does not have the specified Discord ID",
-          isMember,
-        },
-        { status: 403 }
-      );
-    }
+      },
+      {
+        status: isMember
+          ? 200
+          : reason === "ratelimit"
+          ? 429
+          : reason === "serverError"
+          ? 500
+          : 403,
+      }
+    );
   } catch (error) {
     console.error("Error checking server membership:", error);
     return NextResponse.json({ message: "Error checking server membership" });

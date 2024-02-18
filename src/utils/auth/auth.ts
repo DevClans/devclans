@@ -4,12 +4,12 @@ import { adapter } from "./adapterFunctions";
 import { Fetch } from "../fetchApi";
 
 const isServerMember = async (discordId: string, token: string) => {
-  const isMember = await Fetch({
+  return await Fetch({
     endpoint: `/middleware/checkServerMembership?discordId=${discordId}`,
     method: "GET",
     token: token,
+    needError: true,
   });
-  return isMember?.isMember;
 };
 
 export const authOptions: NextAuthOptions = {
@@ -21,10 +21,12 @@ export const authOptions: NextAuthOptions = {
       authorization: {
         params: {
           scope: "identify email guilds guilds.members.read",
+          prompt: "none",
         },
       },
       async profile(profile: any, tokens: any) {
         const { id } = profile;
+        // const { access_token, expires_in } = tokens;
         // console.log("tokens in profile", tokens);
         // ? not checking here as the limit is 5 per user and checking multiple times will lead to rate limit
         // const isMember = await isServerMember(id, access_token);
@@ -78,14 +80,15 @@ export const authOptions: NextAuthOptions = {
       // console.log("signIn", user, account, profile, email, credentials);
       const isMember = await isServerMember(profile.id, account.access_token);
       console.log("isMember =>", isMember);
-      if (!isMember) {
-        return "/error?error=notMember";
+      if (!isMember || !isMember?.isMember) {
+        return "/error?error=" + isMember?.message || "notMember";
       }
       return true;
     },
   },
   pages: {
     newUser: "/user/new",
+    error: "/error",
   },
   events: {
     signIn: async (message) => {

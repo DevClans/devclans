@@ -28,6 +28,7 @@ type FetchProps = {
   body?: any;
   revalidate?: false | number;
   cache?: "no-store" | "no-cache";
+  needError?: boolean;
 };
 
 export const Fetch = async ({
@@ -40,6 +41,7 @@ export const Fetch = async ({
   body,
   revalidate = false,
   cache,
+  needError = false,
 }: FetchProps) => {
   const options: Partial<FetchProps> = {
     method,
@@ -68,7 +70,10 @@ export const Fetch = async ({
     // console.log("options", options);
     const res = await fetch((baseUrl || urlApi) + (endpoint || ""), options);
     if (res.status > 200) {
-      throw new Error(res.statusText);
+      if (!needError) {
+        throw new Error(res.statusText);
+      }
+      return await res.json();
     }
     const data = await res.json();
     return data;
