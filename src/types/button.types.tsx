@@ -29,3 +29,14 @@ export type ButtonProps = {
 export type IconButtonProps = ButtonProps & {
   icon: React.ReactNode;
 };
+
+export type LinkWithIconProps = {
+  target?: string;
+  text: string;
+  icon?: React.ReactNode;
+  isBold?: boolean;
+  href?: string;
+  fontSize?: number;
+  iconLeft?: React.ReactNode;
+  color?: string;
+};

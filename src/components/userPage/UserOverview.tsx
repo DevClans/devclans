@@ -4,6 +4,8 @@ import { ProjectDetails } from "..";
 import GitHubGraph from "../GithubGraph";
 import { UserProps } from "@/types/mongo/user.types";
 import colors from "@/lib/colors";
+import LinkGithub from "../links/LinkGithub";
+import { Github } from "lucide-react";
 
 const UserOverview = ({
   data,
@@ -26,8 +28,14 @@ const UserOverview = ({
   return (
     <>
       <div id="overview" className="cardCommon gap-4 flex flex-col w100">
-        <h3>{username ? username + "'s" : ""} Activity</h3>
-        <GitHubGraph username={login || ""} />
+        <div className="w100 frcsb">
+          <h3>{username ? username + "'s" : ""} Activity</h3>
+          <LinkGithub
+            iconLeft={<Github size={12} color={colors.text} />}
+            href={login as string}
+          />
+        </div>
+        <GitHubGraph username={login} />
       </div>
       {typeof readme == "string" && (
         <ReactMarkdown className="cardCommon markdown">{readme}</ReactMarkdown>
