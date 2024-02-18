@@ -12,7 +12,22 @@ export const zodMongoId = z.union([
   }),
   z.instanceof(Types.ObjectId).transform((id) => id.toString()),
 ]);
-export const skillsSchema = z.array(z.enum(skills)).max(20);
+const commonString = z.string().trim();
+export const skillsSchema = z
+  .array(
+    z.string().refine(
+      (item) => {
+        if (typeof item == "string" && skills.includes(item as any)) {
+          return true;
+        }
+        return false;
+      },
+      {
+        message: "Invalid skill",
+      }
+    )
+  )
+  .max(20);
 export const zodRepoName = z
   .string()
   .trim()
@@ -115,7 +130,6 @@ export const zodProjectOwnerSchema = z.union([
 ]);
 
 export const stringSchema = z.string();
-
 const ownedProjects = z
   .array(
     z.object({
@@ -198,44 +212,39 @@ export const zodUserSearchInfoSchema = z.object({
   discordDetails: zodUserDiscordDetailsSchema,
   _id: z.any(),
 });
-
+export const usernameCheck = (min: number, max: number, error?: string) =>
+  commonString
+    .max(max)
+    .refine(
+      (item) => {
+        if (!item) {
+          return true;
+        }
+        if (
+          item.match(/^[a-zA-Z0-9_]+$/) &&
+          item.length > min &&
+          item.length < max
+        ) {
+          return true;
+        }
+        return false;
+      },
+      {
+        message:
+          error ||
+          `Invalid username: Username can include 0-9, a-z or A-Z and _ only. min ${min} and max ${max} characters.`,
+      }
+    )
+    .nullable()
+    .optional();
 export const zodUserDataCommonSchema = z.object({
   contactMethod: z.enum(contactMethods as any),
   contactMethodId: z.string().max(120).optional(),
   socials: z.object({
-    twitter: z
-      .string()
-      .nullable()
-      .refine(
-        (value) =>
-          value
-            ? (value.startsWith("https://x.com/") ||
-                value.startsWith("https://www.x.com/")) &&
-              value.length < 150
-            : true,
-        {
-          message: "Invalid Twitter URL! Must start with 'https://x.com/'.",
-        }
-      )
-      .optional(),
-    telegram: z.string().max(150).optional(),
-    linkedin: z
-      .string()
-      .nullable()
-      .refine(
-        (value) =>
-          value
-            ? (value.startsWith("https://linkedin.com/in/") ||
-                value.startsWith("https://www.linkedin.com/in/")) &&
-              value.length < 150
-            : true,
-        {
-          message: "Invalid URL!",
-        }
-      )
-      .optional(),
-    website: z
-      .string()
+    twitter: usernameCheck(3, 16),
+    telegram: usernameCheck(4, 33),
+    linkedin: usernameCheck(4, 31),
+    website: commonString
       .nullable()
       .refine(
         (value) =>
@@ -254,16 +263,7 @@ export const zodUserDataCommonSchema = z.object({
       message: "Invalid phone number!",
     })
     .optional(),
-  email: z
-    .string()
-    .email()
-    .min(10)
-    .max(100)
-    .nullable()
-    .refine((value) => (value ? /\S+@\S+\.\S+/.test(value) : true), {
-      message: "Invalid email address!",
-    })
-    .optional(),
+  email: z.string().email().max(100).nullable().optional(),
   questions: z.object({
     currentCompany: z.string().max(250).optional(),
     careerGoal: z
@@ -361,7 +361,6 @@ export const zodRepoDetailsSchema = z.object({
   contributing: z.string().max(3000).nullable().optional(),
   languages: z.record(z.number()),
 });
-const commonString = z.string().trim();
 export const zodProjectDetailsSchema = z.object({
   problem: z.string().min(3).max(180),
   challenges: z

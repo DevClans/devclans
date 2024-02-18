@@ -10,7 +10,7 @@ const ButtonLogin = () => {
   const [loading, setLoading] = useState(false);
   const { data: session }: any = useSession();
   useEffect(() => {
-    console.log("SESSION", session);
+    // console.log("SESSION", session);
     if (session?.error === "RefreshAccessTokenError") {
       signIn("discord", undefined, {
         prompt: "consent",

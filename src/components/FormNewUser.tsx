@@ -37,7 +37,7 @@ const FormNewUser = ({
   //   (dv as unknown as UserProps) || {};
   const githubUsername =
     searchParams.get("githubUsername") || session?.githubId;
-  // TODO this should be based on access token. if we have access token then user is connected
+  // TODO need a way to delete access token when it becomes invalid or regenrate it when needed
   // console.log("defaultValues", defaultValues);
   const { watch, setError, setValue, handleSubmit, ...form } =
     useForm<UserFormProps>({
@@ -79,6 +79,7 @@ const FormNewUser = ({
     }
   };
   const contactMethod = watch("contactMethod");
+  console.log("contactMethod", contactMethod);
   const commonClass: string = "w100";
 
   const fieldsArray: InputFieldProps[] = [
@@ -93,11 +94,11 @@ const FormNewUser = ({
       desc: "Enter a brief description about yourself.",
     },
     {
-      label: "Skills:",
+      label: "Tech Stack:",
       name: "skills",
       options: skills as any,
       multi: true,
-      desc: "Select your skills from the list.",
+      desc: "Select tech stack you use from the list.",
       limit: 10,
       // min: 3,
     },
@@ -137,38 +138,41 @@ const FormNewUser = ({
     {
       label: "Email:",
       name: "email",
-      condition: contactMethod === "email",
+      required: contactMethod === "email",
       desc: "Enter your email address.",
     },
     {
       label: "Phone Number:",
       name: "phone",
       type: "number",
-      condition: contactMethod === "whatsapp",
+      required: contactMethod === "whatsapp",
       desc: "Enter your phone number.",
     },
     {
       label: "Twitter Handle:",
       name: "socials.twitter",
-      condition: contactMethod === "twitter",
+      required: contactMethod === "twitter",
       desc: "Enter your Twitter handle.",
+      preText: "https://x.com/",
+    },
+    {
+      label: "Telegram :",
+      name: "socials.telegram",
+      required: contactMethod === "telegram",
+      desc: "Enter your Telegram username.",
     },
     {
       label: "LinkedIn Profile:",
       name: "socials.linkedin",
       desc: "Enter your LinkedIn profile URL.",
+      preText: "https://linkedin.com/in/",
     },
     {
       label: "Portfolio:",
       name: "socials.website",
       desc: "Enter your portfolio website URL.",
     },
-    {
-      label: "Telegram :",
-      name: "socials.telegram",
-      condition: contactMethod === "telegram",
-      desc: "Enter your Telegram username.",
-    },
+
     {
       label: "Career Goal:",
       name: "questions.careerGoal",
