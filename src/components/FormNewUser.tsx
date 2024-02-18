@@ -93,7 +93,7 @@ const FormNewUser = ({
       desc: "Enter a brief description about yourself.",
     },
     {
-      label: "Skills:",
+      label: "Technology Stack:",
       name: "skills",
       options: skills as any,
       multi: true,
@@ -102,7 +102,7 @@ const FormNewUser = ({
       // min: 3,
     },
     {
-      label: "Skill Level:",
+      label: "Proficiency Level:",
       name: "skillLevel",
       desc: "Select what level you would give yourself for the skills you have in selected domain.",
       options: memberLevels as any,

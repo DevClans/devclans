@@ -1,6 +1,7 @@
 "use client";
 import { ArrowLeftRounded, ArrowRightAltRounded } from "@mui/icons-material";
 import { IconGithub, IconTwitter, LightLine, MuiIconButton } from "..";
+
 const LeftMenuBottomBar = () => {
   const toogleActive = () => {
     const leftMenu = document.getElementById("leftMenuUser");
