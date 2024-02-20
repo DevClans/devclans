@@ -17,7 +17,7 @@ const Autocomplete = ({
   className,
 }: {
   options: string[];
-  label: string;
+  label: string | React.ReactNode;
   name?: string;
   isFilter?: boolean;
   setValue: any;
@@ -65,7 +65,7 @@ const Autocomplete = ({
       setValue(value);
       return;
     }
-    console.log("value", value, checked);
+    // console.log("value", value, checked);
     if (!checked) {
       // already selected, remove it
       removeValue(value);

@@ -84,15 +84,21 @@ const FormServer = ({
                   {...register(name as any)}
                   defaultValue={""}
                 >
-                  {options?.map((option: string, i: number) => (
-                    <option
-                      key={i}
-                      value={option}
-                      className={` ${commonClass}`}
-                    >
-                      {option}
+                  {Array.isArray(options) && options.length > 0 ? (
+                    options.map((option: string, i: number) => (
+                      <option
+                        key={i}
+                        value={option}
+                        className={` ${commonClass}`}
+                      >
+                        {option}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="" className={` ${commonClass}`}>
+                      No Values Found
                     </option>
-                  ))}
+                  )}
                 </select>
               );
               const multiSelectEle = (

@@ -20,6 +20,7 @@ type ContentType =
 
 type FetchProps = {
   endpoint: string;
+  redirect?: "follow" | "error" | "manual";
   method?: Method;
   baseUrl?: string;
   headers?: any;
@@ -42,9 +43,11 @@ export const Fetch = async ({
   revalidate = false,
   cache,
   needError = false,
+  redirect = "follow",
 }: FetchProps) => {
   const options: Partial<FetchProps> = {
     method,
+    redirect,
     headers: {
       // "cache-control": "no-store",
       "Content-Type": "application/json",

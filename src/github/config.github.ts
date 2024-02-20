@@ -10,9 +10,23 @@ export const getOctokit = async ({
 }) => {
   try {
     if (installationId) {
+      const appId = process.env.AUSPY_GITHUB_APP_ID;
+
+      const base64Key = process.env.AUSPY_GITHUB_PRIVATE_KEY;
+      if (!base64Key) {
+        throw new Error("Private Key not found");
+      }
+      // Decode the Base64-encoded key to binary data
+      const binaryKey = Buffer.from(base64Key, "base64");
+      // Convert the binary key to a string
+      const stringKey = binaryKey.toString("utf8");
+
+      if (!appId || !stringKey) {
+        throw new Error("App ID or Private Key not found");
+      }
       const app = new App({
-        appId: process.env.GITHUB_APP_ID || "",
-        privateKey: process.env.GITHUB_PRIVATE_KEY || "",
+        appId,
+        privateKey: stringKey,
       });
       return {
         api: await app.getInstallationOctokit(installationId),

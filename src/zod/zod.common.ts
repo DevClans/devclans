@@ -6,6 +6,14 @@ import { devStages } from "@/lib/devStages";
 import { contactMethods } from "@/lib/contactMethods";
 import { projectDomains } from "@/lib/domains";
 
+export const zodGithubInstallationId = z.union([
+  z
+    .string()
+    .min(5)
+    .max(9)
+    .transform((item) => parseInt(item)),
+  z.number().positive().max(100000000),
+]);
 export const zodMongoId = z.union([
   z.string().refine((value) => Types.ObjectId.isValid(value), {
     message: "something worong with object id",
@@ -37,15 +45,15 @@ export const zodRepoName = z
     (item) => {
       // Check if the string is empty or starts with the given string
       if (
-        item === "" ||
-        item.startsWith("https://github.com") ||
-        item.startsWith("https://www.github.com")
+        !item
+        // || item.startsWith("https://github.com") ||
+        // item.startsWith("https://www.github.com")
       ) {
         return true;
-      }
-      // Check if the string starts with "/"
-      if (item.startsWith("/")) {
-        const parts = item.substring(1).split("/");
+      } else {
+        const parts = (item.startsWith("/") ? item.substring(1) : item).split(
+          "/"
+        );
         // Check if there are at least two parts after splitting by "/"
         if (parts.length >= 2) {
           return true;
@@ -121,8 +129,9 @@ export const zodProjectOwnerSchema = z.union([
     githubId: z.string().min(1).max(50).optional(),
     githubDetails: z
       .object({
-        accessToken: zodGithubAccessToken,
-        login: z.string().min(1).max(50),
+        // installId: zodGithubInstallationId, // needed for user repos data
+        // accessToken: zodGithubAccessToken, // needed for user data
+        login: z.string().max(50).optional(),
       })
       .optional(),
   }),
@@ -158,11 +167,11 @@ export const zodUserGithubDetailsSchemaForFrontend = z.object({
   readme: z.string().max(3000).nullable().optional(),
 });
 
-export const zodUserGithubDetailsSchema = z
-  .object({
-    accessToken: z.string(),
-  })
-  .merge(zodUserGithubDetailsSchemaForFrontend);
+export const zodUserGithubDetailsSchema = zodUserGithubDetailsSchemaForFrontend;
+// z.object({
+//   accessToken: zodGithubAccessToken,
+// })
+// .merge(zodUserGithubDetailsSchemaForFrontend);
 
 export const zodUserDiscordDetailsSchema = z.object({
   _id: z.string().refine((value) => /^\d{17,19}$/.test(value), {
@@ -479,14 +488,14 @@ export const zodProjectFormSchema = z.object({
   domain: z.array(z.enum(projectDomains)).max(10),
 });
 
-export const zodProjectFormSchemaServer = zodProjectFormSchema
-  .omit({ repoName: true })
-  .extend({
-    repoName: zodRepoName
-      .transform((item) => item?.split("https://github.com")[1])
-      .nullable()
-      .optional(),
-  });
+export const zodProjectFormSchemaServer = zodProjectFormSchema;
+// .omit({ repoName: true })
+// .extend({
+//   repoName: zodRepoName
+//     .transform((item) => item?.split("https://github.com")[1])
+//     .nullable()
+//     .optional(),
+// });
 export const projectArraySchema = z.array(projectSchema).max(20);
 
 export const likeAndBkMarkSchema = z.object({

@@ -1,6 +1,6 @@
 export type InputFieldProps = {
   name: string;
-  label: string;
+  label: string | React.ReactNode;
   type?: string;
   desc?: string;
   options?: string[];
