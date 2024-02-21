@@ -9,6 +9,7 @@ const FilterAutocomplete = ({
   label: string;
 }) => {
   const { group: selected, onChange } = useFilters({ title: label });
+  console.log("selected here", selected, Array.from(selected));
   return (
     <Autocomplete
       isFilter={true}
