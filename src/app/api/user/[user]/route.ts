@@ -2,6 +2,7 @@ import { getOctokit } from "@/github/config.github";
 import getGithubReadme from "@/github/repos/gh.getReadme";
 import { UserModel } from "@/mongodb/models";
 import { redisGet, redisSet } from "@/redis/basicRedis";
+import redisClient from "@/redis/config";
 import updateAllCache from "@/redis/updateUserCache";
 import { projectSearchItemKeys } from "@/types/mongo/project.types";
 import {
@@ -102,9 +103,8 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
         if (getreadme) {
           // try getting readme from github api
           console.info("getting user github readme from github api");
-          const readme = await githubapi.api.request(
-            "GET /repos/{owner}/{repo}/contents/{path}",
-            {
+          const readme = await githubapi.api
+            .request("GET /repos/{owner}/{repo}/contents/{path}", {
               owner: githubUsername,
               repo: githubUsername,
               path: "README.md",
@@ -112,8 +112,11 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
               headers: {
                 "X-GitHub-Api-Version": "2022-11-28",
               },
-            }
-          );
+            })
+            .catch((error) => {
+              console.error("error getting readme from github api", error);
+              return error;
+            });
           console.info("readme from github", readme);
           if (readme.status == 200) {
             getreadme = false;
@@ -243,6 +246,8 @@ async function handler(
       // get all details
       const u: UserProps | null = await getUserData(userId, "");
       if (!u) {
+        // clear user id from cache
+        await redisClient.del(UserRedisKeys.ids + ":" + user);
         return NextResponse.json({ message: "User not found " + userId });
       }
       Object.assign(userInfo, u);
