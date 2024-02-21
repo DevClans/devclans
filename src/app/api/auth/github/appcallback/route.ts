@@ -9,7 +9,7 @@ import { UserRedisKeys } from "@/types/mongo/user.types";
 import dbConnect from "@/lib/dbConnect";
 
 // to add user install id and user repos
-export const handler = async (req: NextRequest) => {
+const handler = async (req: NextRequest) => {
   try {
     console.log(" start of github/appcallback");
     // const code = req.nextUrl.searchParams.get("code");

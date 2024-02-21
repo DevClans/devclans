@@ -1,7 +1,7 @@
 import { getInstalledReposFunc } from "@/utils/getInstalledReposFunc";
 import { NextRequest, NextResponse } from "next/server";
 
-export const handler = async (req: NextRequest) => {
+const handler = async (req: NextRequest) => {
   try {
     const reposData = await getInstalledReposFunc();
     return NextResponse.json({ message: "success", repos: reposData });
