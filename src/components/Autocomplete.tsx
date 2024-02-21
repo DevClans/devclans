@@ -28,6 +28,10 @@ const Autocomplete = ({
   const [selected, setSelected] = useState<string[]>(
     Array.isArray(defaultValue) ? defaultValue : []
   );
+  // console.log("selected", selected, defaultValue);
+  useEffect(() => {
+    if (Array.isArray(defaultValue) && isFilter) setSelected(defaultValue);
+  }, [defaultValue, isFilter]);
   const [search, setSearch] = useState("");
   const containerRef: any = useRef(null);
 
@@ -90,7 +94,7 @@ const Autocomplete = ({
         onClick={() => setShow(!show)}
       >
         {Array.isArray(selected) && selected.length > 0 ? (
-          selected?.map((skill, index) => (
+          selected.map((skill, index) => (
             <div
               key={index}
               className="frc gap-1 py-1 px-2 bg-border rounded-[10px]"
