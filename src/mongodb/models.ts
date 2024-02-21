@@ -17,7 +17,9 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
     discordId: { type: String, required: true },
     skillLevel: { type: String, enum: memberLevels, default: "beginner" },
     githubId: { type: String },
-    githubDetails: { type: userGithubDetailsSchema },
+    githubDetails: {
+      type: userGithubDetailsSchema,
+    },
     domain: {
       type: String,
       enum: projectDomains,

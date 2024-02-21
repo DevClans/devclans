@@ -12,6 +12,7 @@ import {
   UserSearchInfoProps,
   userSearchInfoKeys,
 } from "@/types/mongo/user.types";
+import { decrypt } from "@/utils/EncryptFunctions";
 import dbConnect from "@/utils/mongoose.config";
 import {
   zodUserGithubDetailsSchema,
@@ -29,7 +30,7 @@ const getUserData = async (user: string, select: string) => {
     const u: UserProps | null = await UserModel.findById(
       new Types.ObjectId(user)
     )
-      .select(select)
+      .select(select || " -githubDetails.accessToken -githubDetails.installId")
       .populate("ownedProjects", projectSearchItemKeys.join(" "))
       // TODO get only ids and check in cache and then get missing data if load increases
       .lean();
@@ -45,7 +46,10 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
     userInfo["githubDetails"] = userInfo["githubDetails"] || {};
     let userAccessToken =
       token || (await redisGet(UserRedisKeys.accessToken, userId));
-    console.info("getting user github data start");
+    console.info(
+      "getting user github data start=> userAccessTOken",
+      Boolean(userAccessToken)
+    );
     let githubUsername = "";
     let getreadme = true;
     let getData = true;
@@ -75,9 +79,15 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
         .lean();
       if (accessToken) {
         console.info("user access token found", accessToken);
-        userAccessToken = accessToken.githubDetails?.accessToken;
-        // TODO encrypt access token for cache
-        dataForCache["accessToken"] = userAccessToken;
+        userAccessToken = decrypt(accessToken.githubDetails?.accessToken);
+        if (userAccessToken) {
+          redisSet(
+            UserRedisKeys.accessToken,
+            userId,
+            userAccessToken,
+            3600 * 24 * 365
+          );
+        }
       }
     }
     if (userAccessToken) {
@@ -241,7 +251,6 @@ async function handler(
         }
       } catch (error) {
         console.error("error in user details data", error);
-        throw error;
       }
     } else {
       console.info("users cache miss", checkUserSearchInfoCache.error);

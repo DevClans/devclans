@@ -78,17 +78,15 @@ async function handler(req: Request) {
     //  we are getting entire data and updating entire cache. but this is not optimal. just getting updated info will be nicer.
 
     // fetching and add github data
-    getGithubData(
-      projectId,
-      { ...projectData, owner: updatedUser },
-      updatedUser?.githubDetails?.accessToken || ""
-    ).then((data) => {
-      if (data) {
-        console.log("Github data fetched");
-      } else {
-        console.log("Github data fetched failed");
+    getGithubData(projectId, { ...projectData, owner: updatedUser }).then(
+      (data) => {
+        if (data) {
+          console.log("Github data fetched");
+        } else {
+          console.log("Github data fetched failed");
+        }
       }
-    });
+    );
 
     console.log("Project successfully created");
 

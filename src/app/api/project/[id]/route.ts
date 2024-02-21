@@ -13,7 +13,7 @@ import {
   ProjectRedisKeys,
   projectSearchItemKeys,
 } from "@/types/mongo/project.types";
-import { UserProps, userTeamItemKeys } from "@/types/mongo/user.types";
+import { userTeamItemKeys } from "@/types/mongo/user.types";
 import { getGithubData } from "@/utils/getGithubDataForProject";
 import updateAllCache from "@/redis/updateUserCache";
 import { redisGet, redisSet } from "@/redis/basicRedis";
@@ -38,29 +38,7 @@ export async function GET(
     console.info("Fetching project details for id:", id);
     // check if project is in cache
     // * GETTING PROJECT DATA
-    let githubAccessToken = "";
     const project: ProjectProps | Record<string, any> = {};
-    const setGithubAccessToken = async (obj: ProjectProps) => {
-      if (obj.owner && "githubDetails" in obj.owner) {
-        githubAccessToken = obj.owner.githubDetails?.accessToken || "";
-        // remove from project
-        // delete obj.owner.githubDetails?.accessToken;
-      }
-    };
-    const setProjectDataRedis = async (obj: ProjectProps) => {
-      // TODO encrypt github access token
-      setGithubAccessToken(obj);
-      await redisSet(ProjectRedisKeys.data, id, {
-        ...obj,
-        owner: {
-          ...(obj.owner as Partial<UserProps>),
-          githubDetails: {
-            ...(obj.owner as Partial<UserProps>)?.githubDetails,
-            accessToken: githubAccessToken,
-          },
-        },
-      });
-    };
     console.info("Fetching project search info for id:", id);
     const projectString = await redisGet(ProjectRedisKeys.list, id);
     // console.info("Project found in cache:", project);
@@ -93,7 +71,6 @@ export async function GET(
     if (isProjectData.success) {
       console.info("projects data cache hit");
       // project data is in cache
-      setGithubAccessToken(projectData);
       Object.assign(project, projectData);
     } else {
       console.info("projects data cache miss", isProjectData.error);
@@ -170,7 +147,7 @@ const getProjectFromMongo = async (id: string, select = "") => {
       .populate([
         {
           path: "owner",
-          select: "githubDetails.accessToken githubDetails.login",
+          select: "githubDetails.login",
         },
         {
           path: "team",

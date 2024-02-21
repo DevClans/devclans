@@ -5,6 +5,7 @@ import { redisGet, redisSet } from "@/redis/basicRedis";
 import { UserProps, UserRedisKeys } from "@/types/mongo/user.types";
 import { zodGithubInstallationId, zodMongoId } from "@/zod/zod.common";
 import getServerSessionForServer from "./auth/getServerSessionForApp";
+import { decrypt } from "./EncryptFunctions";
 
 export const getInstallationId = async (userId?: string) => {
   let installId: number | undefined;
@@ -22,7 +23,9 @@ export const getInstallationId = async (userId?: string) => {
     const id: UserProps | null = await UserModel.findById(uid)
       .select("githubDetails.installId")
       .lean();
-    installId = id?.githubDetails?.installId;
+    installId = parseInt(
+      decrypt(id?.githubDetails?.installId?.toString() || "")
+    );
     if (installId) {
       console.log("install id from db hit");
       return installId;

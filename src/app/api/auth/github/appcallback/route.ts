@@ -7,6 +7,8 @@ import redisClient from "@/redis/config";
 import { zodGithubInstallationId, zodMongoId } from "@/zod/zod.common";
 import { UserRedisKeys } from "@/types/mongo/user.types";
 import dbConnect from "@/lib/dbConnect";
+import { encrypt } from "@/utils/EncryptFunctions";
+import { redisSet } from "@/redis/basicRedis";
 
 // to add user install id and user repos
 const handler = async (req: NextRequest) => {
@@ -41,7 +43,7 @@ const updateData = async (userId: string, installid: number, repos: any) => {
       { _id: userId },
       {
         $set: {
-          "githubDetails.installId": installid,
+          "githubDetails.installId": encrypt(installid.toString()),
           repos,
         },
       }
@@ -51,16 +53,22 @@ const updateData = async (userId: string, installid: number, repos: any) => {
     const pipeline = redisClient.pipeline();
     //   setting user repos in cache
     if (Array.isArray(repos) && repos.length) {
-      pipeline.set(UserRedisKeys.repos + ":" + userId, JSON.stringify(repos));
+      await redisSet(
+        UserRedisKeys.repos,
+        userId,
+        repos,
+        3600 * 24 * 365,
+        pipeline
+      );
     }
     //   setting user install id in cache
-    pipeline.set(
-      UserRedisKeys.installId + ":" + userId,
-      JSON.stringify(installid)
+    await redisSet(
+      UserRedisKeys.installId,
+      userId,
+      installid,
+      3600 * 24 * 365,
+      pipeline
     );
-    //   setting expiry for all keys
-    pipeline.expire(UserRedisKeys.installId + ":" + userId, 60 * 60 * 24 * 365); // 1 year
-    pipeline.expire(UserRedisKeys.repos + ":" + userId, 60 * 60 * 24 * 365); // 1 year. no need to change frequently
     await pipeline.exec();
   } catch (error) {
     console.error("error adding user github data in cache", error);
