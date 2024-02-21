@@ -66,7 +66,7 @@ export const userDiscordDetailsKeys: string[] = [
 export type UserGithubDetailsProps = z.infer<
   typeof zodUserGithubDetailsSchema
 > & {
-  installId: number;
+  installId: number | string;
   accessToken: string;
 };
 export const userGithubDetailsKeys: string[] = [

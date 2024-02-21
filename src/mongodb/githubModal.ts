@@ -16,7 +16,7 @@ export const userGithubDetailsSchema = new Schema<UserGithubDetailsProps>(
       },
     },
     installId: {
-      type: Number,
+      type: String,
       unique: true,
     },
     avatar_url: { type: String },
@@ -50,8 +50,3 @@ export const userGithubDetailsSchema = new Schema<UserGithubDetailsProps>(
   },
   { timestamps: true }
 );
-
-// Define a model using the schema
-//   const UserGithubDetails = mongoose.model<Document & UserGithubDetailsProps>('UserGithubDetails', userGithubDetailsSchema);
-
-//   export default UserGithubDetails;

@@ -1,7 +1,9 @@
 import dbConnect from "@/lib/dbConnect";
 import { UserModel } from "@/mongodb/models";
+import { redisSet } from "@/redis/basicRedis";
 import redisClient from "@/redis/config";
 import { UserProps, UserRedisKeys } from "@/types/mongo/user.types";
+import { encrypt } from "@/utils/EncryptFunctions";
 import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 import {
   zodMongoId,
@@ -86,7 +88,7 @@ export async function GET(req: NextRequest) {
     console.log(readmeData, "readmeData");
     const updateData: Partial<UserProps> = {
       githubId: userProfile.login,
-      githubDetails: { ...userProfile, accessToken: accessToken },
+      githubDetails: { ...userProfile, accessToken: encrypt(accessToken) },
     };
     if (readmeData?.content) {
       console.log("updating readme content");
@@ -119,27 +121,29 @@ export async function GET(req: NextRequest) {
         console.log("adding user github data in cache");
         const pipeline = redisClient.pipeline();
         // setting user search info in cache
-        pipeline.set(
-          UserRedisKeys.list + ":" + userid,
-          JSON.stringify(zodUserSearchInfoSchema.partial().parse(updatedUser))
+        await redisSet(
+          UserRedisKeys.list,
+          userid,
+          zodUserSearchInfoSchema.partial().parse(updatedUser),
+          60 * 60 * 3,
+          pipeline
         );
         // setting user github data in cache
-        pipeline.set(
-          UserRedisKeys.github + ":" + userid,
-          JSON.stringify(githubData.data)
+        await redisSet(
+          UserRedisKeys.github,
+          userid,
+          githubData.data,
+          60 * 60 * 3,
+          pipeline
         );
         // setting user access token in cache
-        pipeline.set(
-          UserRedisKeys.accessToken + ":" + userid,
-          JSON.stringify(accessToken)
+        await redisSet(
+          UserRedisKeys.accessToken,
+          userid,
+          accessToken,
+          60 * 60 * 24 * 365,
+          pipeline
         );
-        // setting expiry for all keys
-        pipeline.expire(
-          UserRedisKeys.accessToken + ":" + userid,
-          60 * 60 * 24 * 365
-        ); // 1 year as it doesn't change frequently
-        pipeline.expire(UserRedisKeys.list + ":" + userid, 60 * 60 * 3);
-        pipeline.expire(UserRedisKeys.github + ":" + userid, 60 * 60 * 3);
         await pipeline.exec();
       } else {
         console.error("github data not valid", githubData.error);
