@@ -1,9 +1,10 @@
 const page = () => {
   return (
-    <div>
-      <h2>GitHub Data Updated!</h2>
-      <p>
-        Reload <b>the form page</b> to view changes
+    <div className="mt-7">
+      <h2>Success : GitHub Data Updated 👍!</h2>
+      <p className="mt-1">
+        {`"If you don't see the changes`}, please try reloading{" "}
+        <b>the form page</b>.
       </p>
     </div>
   );
