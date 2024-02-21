@@ -75,7 +75,10 @@ export async function GET(
       console.info("projects search info cache hit");
       Object.assign(project, isProject.data);
     } else {
-      console.info("projects search info cache miss");
+      console.info(
+        "projects search info cache miss",
+        isProject.error || Boolean(projectString)
+      );
       getProjectSearchInfo = true;
     }
 
@@ -93,7 +96,7 @@ export async function GET(
       setGithubAccessToken(projectData);
       Object.assign(project, projectData);
     } else {
-      console.info("projects data cache miss");
+      console.info("projects data cache miss", isProjectData.error);
       getProjectData = true;
     }
 
@@ -145,17 +148,11 @@ export async function GET(
     }
 
     // * GETTING GITHUB DATA
-    await getGithubData(id, project, githubAccessToken);
+    await getGithubData(id, project);
     console.info("sending project", project);
 
     return NextResponse.json({
       data: project,
-      // files: {
-      //   readme: readme,
-      //   contributing: contributing,
-      // },
-      // languages: languagePercentages,
-      // Add more fields as needed
     });
   } catch (error) {
     console.error("Error fetching project details:", error);

@@ -9,23 +9,35 @@ import {
 import {
   stringSchema,
   zodGithubDataSchema,
+  zodGithubInstallationId,
   zodRepoDetailsSchema,
 } from "@/zod/zod.common";
 import axios from "axios";
 import { Types } from "mongoose";
+import { getInstallationId } from "./getInstalledReposFunc";
 
 export const getGithubData = async (
   projectId: string,
   project: any,
-  accessToken: string
+  installId?: number
 ) => {
   try {
     console.info("-- getting github data --");
     const projectData = zodGithubDataSchema.partial().parse(project);
-    const userAccessToken =
-      accessToken ||
-      (typeof projectData.owner != "string" &&
-        projectData.owner?.githubDetails?.accessToken);
+    const userId =
+      typeof projectData.owner == "string"
+        ? projectData.owner
+        : projectData.owner?._id;
+    console.log("owner of project", userId);
+    const installaId = await getInstallationId(userId);
+    const checkInstallId = zodGithubInstallationId.safeParse(
+      installId || installaId
+    );
+    console.log(
+      "found install id",
+      checkInstallId.success || checkInstallId.error
+    );
+    const userInstallId = checkInstallId.success ? checkInstallId.data : null;
     let readme: string | null = "";
     let contributing: string | null = "";
     let languagePercentages: { [key: string]: number } | null = null;
@@ -54,11 +66,13 @@ export const getGithubData = async (
     } else {
       console.info("fetching github data");
       // Fetch GitHub data
-      const reponameArr = projectData.repoName?.startsWith("/")
-        ? projectData.repoName.substring(1).split("/")
-        : projectData.repoName?.split("/");
+      const reponameArr = (
+        projectData.repoName?.startsWith("/")
+          ? projectData.repoName.substring(1)
+          : projectData.repoName
+      )?.split("/");
       if (!reponameArr || reponameArr?.length < 2) {
-        throw new Error("Invalid reponame");
+        throw new Error("Invalid reponame =>" + projectData.repoName);
       }
       const reponame = reponameArr[1];
       const usernameFromRepo = reponameArr[0];
@@ -75,16 +89,20 @@ export const getGithubData = async (
         return { readme, contributing, languagePercentages };
       }
       console.info("githubUrl =>", githubUrl);
-      console.info("userAccessToken", Boolean(userAccessToken));
-      if (userAccessToken) {
+      console.info("userAccessToken", Boolean(userInstallId));
+      if (userInstallId) {
         console.info("have access to user accesstoken");
         // TO GET: REPO INFO
-        githubapi = await getOctokit({ accessToken: userAccessToken });
+        githubapi = await getOctokit({ installationId: userInstallId });
 
         console.info("github api =>", githubapi?.type);
         // get github related data
         let data: any;
-        if (githubapi?.type == "auth" && username) {
+        if (
+          (githubapi?.type == "auth" || githubapi?.type == "app") &&
+          username
+        ) {
+          console.info("using github api for github info");
           data = await githubapi.api.request(`GET /repos/{owner}/{repo}`, {
             owner: username,
             repo: reponame,
@@ -121,7 +139,10 @@ export const getGithubData = async (
         ) {
           let commitsData: any;
           // if we have auth accesstoken then get using last commit else use axios
-          if (githubapi?.type == "auth" && username) {
+          if (
+            (githubapi?.type == "auth" || githubapi?.type == "app") &&
+            username
+          ) {
             console.info("using github api for last commit");
             commitsData = await githubapi.api.request(
               `GET /repos/{owner}/{repo}/commits/{ref}`,

@@ -17,6 +17,7 @@ import selectUserContactId from "@/lib/selectUserContactId";
 import LogedOutScreen from "./LogedOutScreen";
 import { toast } from "react-toastify";
 import { memberLevels } from "@/lib/memberLevel";
+import { handleGithubConnect } from "@/utils/handleConnectGithub";
 
 const FormNewUser = ({
   defaultValues: dv,
@@ -37,7 +38,7 @@ const FormNewUser = ({
   //   (dv as unknown as UserProps) || {};
   const githubUsername =
     searchParams.get("githubUsername") || session?.githubId;
-  // TODO this should be based on access token. if we have access token then user is connected
+  // TODO need a way to delete access token when it becomes invalid or regenrate it when needed
   // console.log("defaultValues", defaultValues);
   const { watch, setError, setValue, handleSubmit, ...form } =
     useForm<UserFormProps>({
@@ -79,6 +80,7 @@ const FormNewUser = ({
     }
   };
   const contactMethod = watch("contactMethod");
+  console.log("contactMethod", contactMethod);
   const commonClass: string = "w100";
 
   const fieldsArray: InputFieldProps[] = [
@@ -93,11 +95,11 @@ const FormNewUser = ({
       desc: "Enter a brief description about yourself.",
     },
     {
-      label: "Skills:",
+      label: "Tech Stack:",
       name: "skills",
       options: skills as any,
       multi: true,
-      desc: "Select your skills from the list.",
+      desc: "Select tech stack you use from the list.",
       limit: 10,
       // min: 3,
     },
@@ -137,38 +139,41 @@ const FormNewUser = ({
     {
       label: "Email:",
       name: "email",
-      condition: contactMethod === "email",
+      required: contactMethod === "email",
       desc: "Enter your email address.",
     },
     {
       label: "Phone Number:",
       name: "phone",
       type: "number",
-      condition: contactMethod === "whatsapp",
+      required: contactMethod === "whatsapp",
       desc: "Enter your phone number.",
     },
     {
       label: "Twitter Handle:",
       name: "socials.twitter",
-      condition: contactMethod === "twitter",
+      required: contactMethod === "twitter",
       desc: "Enter your Twitter handle.",
+      preText: "https://x.com/",
+    },
+    {
+      label: "Telegram :",
+      name: "socials.telegram",
+      required: contactMethod === "telegram",
+      desc: "Enter your Telegram username.",
     },
     {
       label: "LinkedIn Profile:",
       name: "socials.linkedin",
       desc: "Enter your LinkedIn profile URL.",
+      preText: "https://linkedin.com/in/",
     },
     {
       label: "Portfolio:",
       name: "socials.website",
       desc: "Enter your portfolio website URL.",
     },
-    {
-      label: "Telegram :",
-      name: "socials.telegram",
-      condition: contactMethod === "telegram",
-      desc: "Enter your Telegram username.",
-    },
+
     {
       label: "Career Goal:",
       name: "questions.careerGoal",
@@ -222,21 +227,9 @@ const FormNewUser = ({
         }
       }
     }
-    // setting values before redirecting to github
-    const GITHUB_AUTH_URL = "https://github.com/login/oauth/authorize";
-    const CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
-    const CALLBACK_URL =
-      process.env.NEXT_PUBLIC_GITHUB_CALLBACK_URL +
-      `${userid ? `?userid=${userid}` : ""}`; // both id and query works
-    // TODO encrypt the user id
-    // console.log("CLIENT_ID", CLIENT_ID, CALLBACK_URL);
-    const state = userid;
-    const SCOPES = "read:user,user:email,repo";
-    window.location.href = `${GITHUB_AUTH_URL}?client_id=${CLIENT_ID}&redirect_uri=${CALLBACK_URL}&scope=${SCOPES}${
-      state ? `&state=${state}` : ""
-    }`;
+    handleGithubConnect();
+    setGithubLoading(false);
   };
-  // console.log("contactMethod", contactMethod === "whatsapp");
 
   if (!session) {
     return <LogedOutScreen />;

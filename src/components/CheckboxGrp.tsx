@@ -1,5 +1,5 @@
 import { FilterSidebarProps } from "@/types";
-import Autocomplete from "./Autocomplete";
+import FilterAutocomplete from "./FilterAutocomplete";
 
 const CheckboxGrp = ({ data }: Partial<FilterSidebarProps>) => {
   return (
@@ -15,9 +15,9 @@ const CheckboxGrp = ({ data }: Partial<FilterSidebarProps>) => {
               title={heading || title || ""}
               sliderProps={sliderProps as SliderProps}
             /> */}
-            <Autocomplete
-              label={key || heading || title || ""}
+            <FilterAutocomplete
               options={data as string[]}
+              label={key || heading || title || ""}
             />
           </div>
         )

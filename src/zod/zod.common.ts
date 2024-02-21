@@ -6,13 +6,36 @@ import { devStages } from "@/lib/devStages";
 import { contactMethods } from "@/lib/contactMethods";
 import { projectDomains } from "@/lib/domains";
 
+export const zodGithubInstallationId = z.union([
+  z
+    .string()
+    .min(5)
+    .max(9)
+    .transform((item) => parseInt(item)),
+  z.number().positive().max(100000000),
+]);
 export const zodMongoId = z.union([
   z.string().refine((value) => Types.ObjectId.isValid(value), {
     message: "something worong with object id",
   }),
   z.instanceof(Types.ObjectId).transform((id) => id.toString()),
 ]);
-export const skillsSchema = z.array(z.enum(skills)).max(20);
+const commonString = z.string().trim();
+export const skillsSchema = z
+  .array(
+    z.string().refine(
+      (item) => {
+        if (typeof item == "string" && skills.includes(item as any)) {
+          return true;
+        }
+        return false;
+      },
+      {
+        message: "Invalid skill",
+      }
+    )
+  )
+  .max(20);
 export const zodRepoName = z
   .string()
   .trim()
@@ -22,15 +45,15 @@ export const zodRepoName = z
     (item) => {
       // Check if the string is empty or starts with the given string
       if (
-        item === "" ||
-        item.startsWith("https://github.com") ||
-        item.startsWith("https://www.github.com")
+        !item
+        // || item.startsWith("https://github.com") ||
+        // item.startsWith("https://www.github.com")
       ) {
         return true;
-      }
-      // Check if the string starts with "/"
-      if (item.startsWith("/")) {
-        const parts = item.substring(1).split("/");
+      } else {
+        const parts = (item.startsWith("/") ? item.substring(1) : item).split(
+          "/"
+        );
         // Check if there are at least two parts after splitting by "/"
         if (parts.length >= 2) {
           return true;
@@ -106,8 +129,9 @@ export const zodProjectOwnerSchema = z.union([
     githubId: z.string().min(1).max(50).optional(),
     githubDetails: z
       .object({
-        accessToken: zodGithubAccessToken,
-        login: z.string().min(1).max(50),
+        // installId: zodGithubInstallationId, // needed for user repos data
+        // accessToken: zodGithubAccessToken, // needed for user data
+        login: z.string().max(50).optional(),
       })
       .optional(),
   }),
@@ -115,14 +139,7 @@ export const zodProjectOwnerSchema = z.union([
 ]);
 
 export const stringSchema = z.string();
-
-const ownedProjects = z
-  .array(
-    z.object({
-      _id: stringSchema,
-    })
-  )
-  .max(30);
+const ownedProjects = z.array(zodMongoId).max(30);
 
 export const stringArraySchema = z.array(z.string()).max(20);
 // Define a custom refinement function to validate the hexadecimal color code with variable length
@@ -144,11 +161,11 @@ export const zodUserGithubDetailsSchemaForFrontend = z.object({
   readme: z.string().max(3000).nullable().optional(),
 });
 
-export const zodUserGithubDetailsSchema = z
-  .object({
-    accessToken: z.string(),
-  })
-  .merge(zodUserGithubDetailsSchemaForFrontend);
+export const zodUserGithubDetailsSchema = zodUserGithubDetailsSchemaForFrontend;
+// z.object({
+//   accessToken: zodGithubAccessToken,
+// })
+// .merge(zodUserGithubDetailsSchemaForFrontend);
 
 export const zodUserDiscordDetailsSchema = z.object({
   _id: z.string().refine((value) => /^\d{17,19}$/.test(value), {
@@ -198,44 +215,39 @@ export const zodUserSearchInfoSchema = z.object({
   discordDetails: zodUserDiscordDetailsSchema,
   _id: z.any(),
 });
-
+export const usernameCheck = (min: number, max: number, error?: string) =>
+  commonString
+    .max(max)
+    .refine(
+      (item) => {
+        if (!item) {
+          return true;
+        }
+        if (
+          item.match(/^[a-zA-Z0-9_]+$/) &&
+          item.length > min &&
+          item.length < max
+        ) {
+          return true;
+        }
+        return false;
+      },
+      {
+        message:
+          error ||
+          `Invalid username: Username can include 0-9, a-z or A-Z and _ only. min ${min} and max ${max} characters.`,
+      }
+    )
+    .nullable()
+    .optional();
 export const zodUserDataCommonSchema = z.object({
   contactMethod: z.enum(contactMethods as any),
   contactMethodId: z.string().max(120).optional(),
   socials: z.object({
-    twitter: z
-      .string()
-      .nullable()
-      .refine(
-        (value) =>
-          value
-            ? (value.startsWith("https://x.com/") ||
-                value.startsWith("https://www.x.com/")) &&
-              value.length < 150
-            : true,
-        {
-          message: "Invalid Twitter URL! Must start with 'https://x.com/'.",
-        }
-      )
-      .optional(),
-    telegram: z.string().max(150).optional(),
-    linkedin: z
-      .string()
-      .nullable()
-      .refine(
-        (value) =>
-          value
-            ? (value.startsWith("https://linkedin.com/in/") ||
-                value.startsWith("https://www.linkedin.com/in/")) &&
-              value.length < 150
-            : true,
-        {
-          message: "Invalid URL!",
-        }
-      )
-      .optional(),
-    website: z
-      .string()
+    twitter: usernameCheck(3, 16),
+    telegram: usernameCheck(4, 33),
+    linkedin: usernameCheck(4, 31),
+    website: commonString
       .nullable()
       .refine(
         (value) =>
@@ -254,16 +266,7 @@ export const zodUserDataCommonSchema = z.object({
       message: "Invalid phone number!",
     })
     .optional(),
-  email: z
-    .string()
-    .email()
-    .min(10)
-    .max(100)
-    .nullable()
-    .refine((value) => (value ? /\S+@\S+\.\S+/.test(value) : true), {
-      message: "Invalid email address!",
-    })
-    .optional(),
+  email: z.string().email().max(100).nullable().optional(),
   questions: z.object({
     currentCompany: z.string().max(250).optional(),
     careerGoal: z
@@ -277,8 +280,8 @@ export const zodUserDataCommonSchema = z.object({
 });
 export const zodUserDataSchema = z.object({
   discordId: z.string().min(5).max(50),
-  ownedProjects: z.array(ownedProjects).max(30),
-  contributedProjects: z.array(ownedProjects).max(30),
+  ownedProjects: ownedProjects,
+  contributedProjects: ownedProjects,
   createdAt: zodDateString,
   updatedAt: zodDateString,
   ...zodUserDataCommonSchema.shape,
@@ -361,7 +364,6 @@ export const zodRepoDetailsSchema = z.object({
   contributing: z.string().max(3000).nullable().optional(),
   languages: z.record(z.number()),
 });
-const commonString = z.string().trim();
 export const zodProjectDetailsSchema = z.object({
   problem: z.string().min(3).max(180),
   challenges: z
@@ -480,14 +482,14 @@ export const zodProjectFormSchema = z.object({
   domain: z.array(z.enum(projectDomains)).max(10),
 });
 
-export const zodProjectFormSchemaServer = zodProjectFormSchema
-  .omit({ repoName: true })
-  .extend({
-    repoName: zodRepoName
-      .transform((item) => item?.split("https://github.com")[1])
-      .nullable()
-      .optional(),
-  });
+export const zodProjectFormSchemaServer = zodProjectFormSchema;
+// .omit({ repoName: true })
+// .extend({
+//   repoName: zodRepoName
+//     .transform((item) => item?.split("https://github.com")[1])
+//     .nullable()
+//     .optional(),
+// });
 export const projectArraySchema = z.array(projectSchema).max(20);
 
 export const likeAndBkMarkSchema = z.object({

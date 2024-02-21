@@ -1,6 +1,6 @@
 export type InputFieldProps = {
   name: string;
-  label: string;
+  label: string | React.ReactNode;
   type?: string;
   desc?: string;
   options?: string[];
@@ -10,6 +10,7 @@ export type InputFieldProps = {
   limit?: number;
   required?: boolean;
   min?: number;
+  preText?: string;
 };
 export type FormClientProps = {
   zodSchema: any;

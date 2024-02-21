@@ -42,7 +42,8 @@ const getUserData = async (user: string, select: string) => {
 const getGithubData = async (userId: string, userInfo: any, token?: string) => {
   try {
     userInfo["githubDetails"] = userInfo["githubDetails"] || {};
-    let userAccessToken = token;
+    let userAccessToken =
+      token || (await redisGet(UserRedisKeys.accessToken, userId));
     console.info("getting user github data start");
     let githubUsername = "";
     let getreadme = true;
@@ -54,9 +55,6 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
       if (data.success) {
         console.info("user github cache hit");
         getData = false;
-        if (!userAccessToken) {
-          userAccessToken = data.data.accessToken;
-        }
         Object.assign(dataForCache, data.data);
         githubUsername = data.data.login;
         if (data.data.readme) {
@@ -82,11 +80,12 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
       }
     }
     if (userAccessToken) {
-      console.info("can get data from github api");
       // get data from github api
       const githubapi = await getOctokit({ accessToken: userAccessToken });
       if (githubapi && githubapi.type === "auth") {
+        console.info("can get data from github api");
         if (getData) {
+          console.info("getting user data from github api");
           // get github related data
           const githubData: any = await githubapi.api.request("GET /user", {
             headers: {

@@ -2,34 +2,33 @@ import dbConnect from "@/lib/dbConnect";
 import { UserModel } from "@/mongodb/models";
 import redisClient from "@/redis/config";
 import { UserProps, UserRedisKeys } from "@/types/mongo/user.types";
+import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 import {
+  zodMongoId,
   zodUserGithubDetailsSchema,
   zodUserSearchInfoSchema,
 } from "@/zod/zod.common";
 import { NextRequest, NextResponse } from "next/server";
 
+// to add user github id and user github details and access token
 export async function GET(req: NextRequest) {
-  const code = req.nextUrl.searchParams.get("code");
-  const userid = req.nextUrl.searchParams.get("userid");
-  const newParams = new URLSearchParams();
-  const baseUrl = req.nextUrl.origin + "/user/" + userid;
   try {
-    newParams.set("mode", "edit");
+    console.log("start of github/callback");
+    const code = req.nextUrl.searchParams.get("code");
+    const session: any = await getServerSessionForServer();
+    const userid = zodMongoId.parse(session?.user?._id);
     // console.log(code, "code", userid, "userid");
     if (!code) {
       console.error("code not found");
-      newParams.set("error", "code_not_found");
-      return NextResponse.redirect(baseUrl + "?" + newParams.toString());
+      throw new Error("code not found");
     }
 
-    const GITHUB_CLIENT_ID =
-      process.env.GITHUB_CLIENT_ID || process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
-    const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
+    const GITHUB_CLIENT_ID = process.env.AUSPY_GITHUB_CLIENT_ID;
+    const GITHUB_CLIENT_SECRET = process.env.AUSPY_GITHUB_CLIENT_SECRET;
     // console.log(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, "tokens");
     if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
       console.error("vars not set");
-      newParams.set("error", "vars_not_set");
-      return NextResponse.redirect(baseUrl + "?" + newParams.toString());
+      throw new Error("env vars not set");
     }
 
     // Exchange the code for a token
@@ -50,12 +49,12 @@ export async function GET(req: NextRequest) {
     );
 
     const tokenData = await tokenResponse.json();
+    console.log(tokenData, "tokenData");
     const accessToken = tokenData.access_token;
 
     if (!accessToken) {
       console.error("access token not found");
-      newParams.set("error", "access_token_not_found");
-      return NextResponse.redirect(baseUrl + "?" + newParams.toString());
+      throw new Error("access token not found");
     }
     // Fetch user profile
     const userProfileResponse = await fetch("https://api.github.com/user", {
@@ -71,8 +70,7 @@ export async function GET(req: NextRequest) {
     // send user github data to mongodb
     if (!userid) {
       console.error("userid not found");
-      newParams.set("error", "userid_not_found");
-      return NextResponse.redirect(baseUrl + "?" + newParams.toString());
+      throw new Error("userid not found");
     }
     // use access token to fetch user readme as well
     console.log("fetching user readme");
@@ -120,14 +118,26 @@ export async function GET(req: NextRequest) {
       if (githubData.success) {
         console.log("adding user github data in cache");
         const pipeline = redisClient.pipeline();
+        // setting user search info in cache
         pipeline.set(
           UserRedisKeys.list + ":" + userid,
           JSON.stringify(zodUserSearchInfoSchema.partial().parse(updatedUser))
         );
+        // setting user github data in cache
         pipeline.set(
           UserRedisKeys.github + ":" + userid,
           JSON.stringify(githubData.data)
         );
+        // setting user access token in cache
+        pipeline.set(
+          UserRedisKeys.accessToken + ":" + userid,
+          JSON.stringify(accessToken)
+        );
+        // setting expiry for all keys
+        pipeline.expire(
+          UserRedisKeys.accessToken + ":" + userid,
+          60 * 60 * 24 * 365
+        ); // 1 year as it doesn't change frequently
         pipeline.expire(UserRedisKeys.list + ":" + userid, 60 * 60 * 3);
         pipeline.expire(UserRedisKeys.github + ":" + userid, 60 * 60 * 3);
         await pipeline.exec();
@@ -139,11 +149,10 @@ export async function GET(req: NextRequest) {
     }
 
     console.log(updatedUser, "user");
-    newParams.set("githubUsername", userProfile.login);
-    const redirectUrl = `${baseUrl}?${newParams.toString()}`;
+    const redirectUrl = req.nextUrl.origin + `/github_connect/success`;
     return NextResponse.redirect(redirectUrl);
   } catch (error) {
     console.log(error, "error");
-    return NextResponse.redirect(baseUrl + "?error=internal_error");
+    return NextResponse.redirect(req.nextUrl.origin + "/github_connect/error");
   }
 }

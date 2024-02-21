@@ -1,9 +1,9 @@
 import { FormServerProps } from "@/types/form.types";
-import MultipleSelectChip from "./MultiSelect";
 import { ErrorMessage } from "@hookform/error-message";
 import { ButtonSecondary } from ".";
 import CommonHero from "./CommonHero";
 import EditableLIst from "./EditableLIst";
+import Autocomplete from "./Autocomplete";
 
 const FormServer = ({
   zodFormShape,
@@ -47,20 +47,16 @@ const FormServer = ({
                 name,
                 options,
                 type,
-                condition,
                 multi = false,
                 editableList,
                 desc,
                 limit,
                 required,
                 min,
+                preText,
               },
               i
             ) => {
-              // const conditions:any = {}
-              // if (typeof condition == "boolean" && condition) {
-              //   conditions.required = true
-              // }
               const splitName = name.split(".");
               const defaultValue =
                 splitName.length == 2
@@ -88,25 +84,40 @@ const FormServer = ({
                   {...register(name as any)}
                   defaultValue={""}
                 >
-                  {options?.map((option: string, i: number) => (
-                    <option
-                      key={i}
-                      value={option}
-                      className={` ${commonClass}`}
-                    >
-                      {option}
+                  {Array.isArray(options) && options.length > 0 ? (
+                    options.map((option: string, i: number) => (
+                      <option
+                        key={i}
+                        value={option}
+                        className={` ${commonClass}`}
+                      >
+                        {option || "Select"}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="" className={` ${commonClass}`}>
+                      No Values Found
                     </option>
-                  ))}
+                  )}
                 </select>
               );
               const multiSelectEle = (
-                <MultipleSelectChip
+                <Autocomplete
+                  className=" !p-3"
                   limit={limit}
-                  register={register}
-                  name={name as any}
-                  defaultValue={defaultValue}
                   options={options as string[]}
+                  label={label}
+                  name={name}
+                  setValue={setValue}
+                  defaultValue={defaultValue}
                 />
+                // <MultipleSelectChip
+                //   limit={limit}
+                //   register={register}
+                //   name={name as any}
+                //   defaultValue={defaultValue}
+                //   options={options as string[]}
+                // />
               );
               const inputEle = (
                 <input
@@ -115,14 +126,12 @@ const FormServer = ({
                   className={`${type == "checkbox" && "!w-fit"} ${commonClass}`}
                 />
               );
-              // console.log("condition", condition, name);
-              if (typeof condition == "boolean" && condition == false) {
+              if (typeof required == "boolean" && required == false) {
                 return null;
               }
               const isRequired =
                 required ||
                 (min && min > 0) ||
-                condition ||
                 (name.includes(".")
                   ? false
                   : zodFormShape[name as keyof typeof zodFormShape]
@@ -151,20 +160,33 @@ const FormServer = ({
                       </p>
                     )}
                   </div>
-                  {Boolean(editableList)
-                    ? editableListEle
-                    : Boolean(options)
-                    ? multi
-                      ? multiSelectEle
-                      : selectEle
-                    : type == "textarea"
-                    ? textareaEle
-                    : inputEle}
+                  <div className="w100 frc gap-2">
+                    <p className="text-subH ">{preText}</p>
+                    {Boolean(editableList)
+                      ? editableListEle
+                      : Boolean(options)
+                      ? multi
+                        ? multiSelectEle
+                        : selectEle
+                      : type == "textarea"
+                      ? textareaEle
+                      : inputEle}
+                  </div>
                   {/* </div> */}
                   <ErrorMessage
                     errors={errors}
                     name={name}
-                    render={({ message }) => <p className="error">{message}</p>}
+                    render={(val) => {
+                      // console.log("val", val);
+                      return (
+                        <p className="error">
+                          {val.message ||
+                            val.messages?.toString() ||
+                            errors[name]?.[0]?.message ||
+                            "Error in this field"}
+                        </p>
+                      );
+                    }}
                   />
                 </div>
               );

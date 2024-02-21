@@ -1,4 +1,5 @@
 import colors from "@/lib/colors";
+import { LinkWithIconProps } from "@/types";
 import Link from "next/link";
 
 const LinkWithIcon = ({
@@ -9,26 +10,19 @@ const LinkWithIcon = ({
   href,
   fontSize,
   iconLeft,
-}: {
-  target?: string;
-  text: string;
-  icon?: React.ReactNode;
-  isBold?: boolean;
-  href?: string;
-  fontSize?: number;
-  iconLeft?: React.ReactNode;
-}) => {
+  color,
+}: LinkWithIconProps) => {
   const commonStyle: React.CSSProperties = {
     fontSize: fontSize || 12,
     textDecorationLine: "underline",
     textTransform: "capitalize",
   };
   const boldStyle: React.CSSProperties = {
-    color: colors.primary,
+    color: color || colors.primary,
     fontWeight: 600,
   };
   const normalStyle: React.CSSProperties = {
-    color: colors.text,
+    color: color || colors.text,
     fontWeight: 400,
   };
   const props = {

@@ -20,12 +20,12 @@ const RandomInfoCard = ({
       <div className="cardHighlight fcc [&>*]:w-full w100 gap-2">
         <div className="frcsb">
           {t && <h3 className="text-highlight">{t}</h3>}
-          <div className="lg:flex items-center gap-1 text-subH hidden lg:visible">
+          {/* <div className="lg:flex items-center gap-1 text-subH hidden lg:visible">
             <Space size={16} />
             <p className="font-medium text-subH text-[10px]">
               Press Space For New Fact
             </p>
-          </div>
+          </div> */}
         </div>
         <p>{d}</p>
         {username && <h4 className="text-[11px]">{username}</h4>}

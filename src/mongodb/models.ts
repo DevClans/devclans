@@ -94,6 +94,11 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
     updatedAt: { type: Date, default: Date.now, required: true },
     discordDetails: { type: discordDetailsSchema },
     isMember: { type: Boolean, default: false },
+    repos: [
+      {
+        type: String,
+      },
+    ],
   },
   { timestamps: true }
 );
@@ -128,7 +133,7 @@ const projectSchema = new mongoose.Schema<ProjectProps>(
     //contributors:[{ type:String, default:[]}],
     topics: [{ type: String, default: [] }], // ml, android
     skills: [{ type: String, default: [] }], // tech: html, css
-    repoName: { type: String, default: "" },
+    repoName: { type: String, default: "", unique: true },
     likesCount: { type: Number, default: 0 },
     bookmarkCount: { type: Number, default: 0 },
     projectLinks: [{ type: String, default: [] }],
