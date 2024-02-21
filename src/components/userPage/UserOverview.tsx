@@ -6,17 +6,25 @@ import { UserProps } from "@/types/mongo/user.types";
 import colors from "@/lib/colors";
 import LinkGithub from "../links/LinkGithub";
 import { Github } from "lucide-react";
+import ConnectToGithub from "./ConnectToGithub";
+import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 
-const UserOverview = ({
+const UserOverview = async ({
   data,
   username,
   githubDetails,
+  _id,
 }: {
   data: ProjectDetailsItemProps[];
   username: string;
+  _id: string;
   githubDetails?: UserProps["githubDetails"];
 }) => {
+  const session: any = await getServerSessionForServer();
   const { readme, login } = githubDetails || {};
+  if (!login && session?.user?._id == _id) {
+    return <ConnectToGithub />;
+  }
   const removeHashTag = (str: string) => str?.replace("#", "") || "E2E8FF8C";
   const urlSettings = `&theme=transparent&bg_color=081121&title_color=${removeHashTag(
     colors.priDark

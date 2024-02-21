@@ -42,7 +42,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
     !userData ||
     (userData && ("error" in userData || "message" in userData))
   ) {
-    return <div>user not found</div>;
+    return <div className="mt-6">user not found</div>;
   }
 
   console.log("mode", mode, session?.user?._id, userData._id);
@@ -100,6 +100,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
   const ele: { [key: string]: JSX.Element } = {
     overview: (
       <UserOverview
+        _id={userData._id}
         data={test}
         username={displayName || username}
         githubDetails={userData["githubDetails"]}

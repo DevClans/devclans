@@ -6,7 +6,7 @@ export const handleGithubChangeRepos = async () => {
   window.open(url, "_blank");
 };
 
-export const handleGithubConnect = async () => {
+export const handleGithubConnect = () => {
   const clientID = z.string().parse(process.env.GH_CLIENT_ID);
   const redirect_uri = z
     .string()
