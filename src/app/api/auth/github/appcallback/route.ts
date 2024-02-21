@@ -10,6 +10,7 @@ import dbConnect from "@/lib/dbConnect";
 import { encrypt } from "@/utils/EncryptFunctions";
 import { redisSet } from "@/redis/basicRedis";
 
+export const dynamic = "force-dynamic";
 // to add user install id and user repos
 const handler = async (req: NextRequest) => {
   try {
@@ -21,6 +22,7 @@ const handler = async (req: NextRequest) => {
     console.log("found installId", installId);
     // const setupAction = req.nextUrl.searchParams.get("setup_action");
     const session: any = await getServerSessionForServer();
+    console.log("session in appcallback", session);
     const userId = zodMongoId.parse(session?.user?._id);
     // get installed repos
     const reposData = await getInstalledReposFunc(installId, false);
