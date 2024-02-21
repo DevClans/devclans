@@ -1,3 +1,4 @@
+"use client";
 import useFilters from "./CheckBoxItem";
 import Autocomplete from "./Autocomplete";
 const FilterAutocomplete = ({
