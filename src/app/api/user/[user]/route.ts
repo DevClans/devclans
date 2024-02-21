@@ -231,6 +231,8 @@ async function handler(
             "-" + userSearchInfoKeys.join(" -")
           ); // to get all fields except userSearchInfoKeys as they already exist in userInfo
           if (!u) {
+            // clear user id from cache
+            await redisClient.del(UserRedisKeys.ids + ":" + user);
             return NextResponse.json({ message: "User not found " + userId });
           }
           Object.assign(userInfo, u);
