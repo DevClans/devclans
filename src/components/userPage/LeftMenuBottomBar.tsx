@@ -46,7 +46,7 @@ const LeftMenuBottomBar = ({ links }: { links?: [string, string][] }) => {
                 ) {
                   return null;
                 }
-                const href = id.includes("https://")
+                const href = id.startsWith("https://")
                   ? id
                   : socialLinks[provider as keyof typeof socialLinks]?.(id);
                 if (!href.startsWith("https")) {
