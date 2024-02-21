@@ -34,7 +34,7 @@ const LeftMenuBottomBar = ({ links }: { links?: [string, string][] }) => {
           <div></div>
           {haveLinks && (
             <div className="frc h-full md:group-data-[state=active]/left:ml-4 gap-3 w100 md:group-data-[state=active]/left:border-r md:group-data-[state=not-active]/left:border-b md:group-data-[state=not-active]/left:pb-4 border-border md:group-data-[state=not-active]/left:flex-col">
-              {links?.map((link: string[], i: number) => {
+              {links.map((link: string[], i: number) => {
                 const [provider, id] =
                   Array.isArray(link) && link.length == 2 ? link : [null, null];
                 if (
@@ -46,9 +46,12 @@ const LeftMenuBottomBar = ({ links }: { links?: [string, string][] }) => {
                 ) {
                   return null;
                 }
-                const href = id.includes("https://")
-                  ? provider
+                const href = id.startsWith("https://")
+                  ? id
                   : socialLinks[provider as keyof typeof socialLinks]?.(id);
+                if (!href.startsWith("https")) {
+                  return null;
+                }
                 return (
                   <Link
                     key={i}
