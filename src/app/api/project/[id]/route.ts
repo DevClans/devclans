@@ -143,7 +143,7 @@ const getProjectFromMongo = async (id: string, select = "") => {
     const project: ProjectProps | null = await ProjectModel.findById(
       new Types.ObjectId(id)
     )
-      .select(select + "-repoDetails")
+      .select(select + " -repoDetails")
       .populate([
         {
           path: "owner",
