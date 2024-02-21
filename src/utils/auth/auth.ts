@@ -2,6 +2,8 @@ import type { NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import { adapter } from "./adapterFunctions";
 import { Fetch } from "../fetchApi";
+import { zodUserDiscordDetailsSchema } from "@/zod/zod.common";
+import { UserDiscordDetailsProps } from "@/types/mongo/user.types";
 
 const isServerMember = async (discordId: string, token: string) => {
   return await Fetch({
@@ -32,18 +34,23 @@ export const authOptions: NextAuthOptions = {
         // const isMember = await isServerMember(id, access_token);
         // console.log("isMember in profile", isMember);
         // console.log("access token", tokens);
-        // const isData = zodUserDiscordDetailsSchema.safeParse({
-        //   ...profile,
-        //   _id: id,
-        // });
-        // let discordDetails: UserDiscordDetailsProps | null = null;
+        const isData = zodUserDiscordDetailsSchema.safeParse({
+          ...profile,
+          _id: id,
+        });
+        let discordDetails: UserDiscordDetailsProps | false =
+          isData.success && isData.data;
+        console.log(
+          "discordDetails in profile",
+          isData.success || isData.error
+        );
         // if (!isData.success) throw new Error(isData.error.message);
         // discordDetails = isData.data;
         return {
           id: id,
           username: profile.username,
           discordId: id,
-          discordDetails: { ...profile, _id: id },
+          discordDetails: { ...(discordDetails || profile), _id: id },
           email: profile.email,
           emailVerified: profile.verified,
           contactMethod: "discord",

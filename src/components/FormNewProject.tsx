@@ -19,6 +19,7 @@ import {
   handleGithubChangeRepos,
   handleGithubConnect,
 } from "@/utils/handleConnectGithub";
+import ButtonConnectGithub from "./buttons/ButtonConnectGithub";
 
 const FormNewProject = ({
   defaultValues: dv,
@@ -28,7 +29,6 @@ const FormNewProject = ({
   projectId?: string;
 }) => {
   const { data }: any = useSession();
-  const [githubConnectStart, setGithubConnectStart] = useState(false);
   const pathname = usePathname();
   const session = data?.user;
   const repos = session?.repos;
@@ -113,15 +113,8 @@ const FormNewProject = ({
                 onClick={handleGithubChangeRepos}
               />
             ) : (
-              <ButtonBlue
-                label="Connect Github"
-                type="button"
-                loading={githubConnectStart}
+              <ButtonConnectGithub
                 style={{ height: 30, fontSize: 12, maxWidth: 150, padding: 0 }}
-                onClick={() => {
-                  setGithubConnectStart(true);
-                  handleGithubConnect();
-                }}
               />
             )}
           </div>
