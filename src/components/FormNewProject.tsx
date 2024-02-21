@@ -31,6 +31,7 @@ const FormNewProject = ({
   const [githubConnectStart, setGithubConnectStart] = useState(false);
   const pathname = usePathname();
   const session = data?.user;
+  const repos = session?.repos;
   const isUserConnected = Boolean(session?.githubId);
   const [projectId, setProjectId] = useState<string | undefined>(pid);
   const [defaultValues, setDefaultValues] = useState<Partial<ProjectFormProps>>(
@@ -96,6 +97,7 @@ const FormNewProject = ({
   );
   const updateRepofield = (repos: string[], label: boolean = false) => {
     const repoField = fieldsArray.find((f) => f.name === "repoName");
+    console.log("found repoField", repoField);
     if (repoField) {
       repoField.options = repos;
       if (label) {
@@ -132,6 +134,12 @@ const FormNewProject = ({
     return false;
   };
   useEffect(() => {
+    if (Array.isArray(repos) && repos.length > 0) {
+      updateRepofield([null, ...repos], true);
+    }
+  }, [repos]);
+
+  useEffect(() => {
     if (!isUserConnected) {
       updateRepofield([], true);
       return;
@@ -142,7 +150,6 @@ const FormNewProject = ({
       .then((res) => {
         console.log("res from getGHInstaddedRepos", res);
         if (res && res.repos) {
-          const repos = res.repos;
           updatedRepos = updateRepofield([null, ...repos]);
         }
       })

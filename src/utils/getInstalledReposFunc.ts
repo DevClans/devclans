@@ -54,7 +54,7 @@ export const getInstalledReposFunc = async (
     }
     console.log("repos from cache miss");
     const installId: number = zodGithubInstallationId.parse(
-      await getInstallationId(userId)
+      installationId || (await getInstallationId(userId))
     );
     console.log("getting octokit");
     const api = await getOctokit({ installationId: installId });

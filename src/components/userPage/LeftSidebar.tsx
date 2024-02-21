@@ -62,9 +62,11 @@ const LeftSidebar = async ({
               </p>
             )}
           </div>
-          <p className="md:group-data-[state=not-active]/left:hidden">
-            {bio || "I'm a full stack developer, I like to make things."}
-          </p>
+          {bio && (
+            <p className="md:group-data-[state=not-active]/left:hidden">
+              {bio}
+            </p>
+          )}
           <div className="frc md:group-data-[state=not-active]/left:flex-col w100 gap-2">
             {/* <ButtonBookmark
               className={`md:group-data-[state=not-active]/left:w-full md:group-data-[state=not-active]/left:justify-center`}

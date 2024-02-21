@@ -91,7 +91,7 @@ const FormServer = ({
                         value={option}
                         className={` ${commonClass}`}
                       >
-                        {option}
+                        {option || "Select"}
                       </option>
                     ))
                   ) : (

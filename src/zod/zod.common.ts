@@ -139,13 +139,7 @@ export const zodProjectOwnerSchema = z.union([
 ]);
 
 export const stringSchema = z.string();
-const ownedProjects = z
-  .array(
-    z.object({
-      _id: stringSchema,
-    })
-  )
-  .max(30);
+const ownedProjects = z.array(zodMongoId).max(30);
 
 export const stringArraySchema = z.array(z.string()).max(20);
 // Define a custom refinement function to validate the hexadecimal color code with variable length
@@ -286,8 +280,8 @@ export const zodUserDataCommonSchema = z.object({
 });
 export const zodUserDataSchema = z.object({
   discordId: z.string().min(5).max(50),
-  ownedProjects: z.array(ownedProjects).max(30),
-  contributedProjects: z.array(ownedProjects).max(30),
+  ownedProjects: ownedProjects,
+  contributedProjects: ownedProjects,
   createdAt: zodDateString,
   updatedAt: zodDateString,
   ...zodUserDataCommonSchema.shape,

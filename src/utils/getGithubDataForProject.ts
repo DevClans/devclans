@@ -33,7 +33,10 @@ export const getGithubData = async (
     const checkInstallId = zodGithubInstallationId.safeParse(
       installId || installaId
     );
-    console.log("found install id", checkInstallId.success);
+    console.log(
+      "found install id",
+      checkInstallId.success || checkInstallId.error
+    );
     const userInstallId = checkInstallId.success ? checkInstallId.data : null;
     let readme: string | null = "";
     let contributing: string | null = "";
@@ -95,7 +98,11 @@ export const getGithubData = async (
         console.info("github api =>", githubapi?.type);
         // get github related data
         let data: any;
-        if (githubapi?.type == "auth" && username) {
+        if (
+          (githubapi?.type == "auth" || githubapi?.type == "app") &&
+          username
+        ) {
+          console.info("using github api for github info");
           data = await githubapi.api.request(`GET /repos/{owner}/{repo}`, {
             owner: username,
             repo: reponame,
@@ -132,7 +139,10 @@ export const getGithubData = async (
         ) {
           let commitsData: any;
           // if we have auth accesstoken then get using last commit else use axios
-          if (githubapi?.type == "auth" && username) {
+          if (
+            (githubapi?.type == "auth" || githubapi?.type == "app") &&
+            username
+          ) {
             console.info("using github api for last commit");
             commitsData = await githubapi.api.request(
               `GET /repos/{owner}/{repo}/commits/{ref}`,

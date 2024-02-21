@@ -17,6 +17,7 @@ import selectUserContactId from "@/lib/selectUserContactId";
 import LogedOutScreen from "./LogedOutScreen";
 import { toast } from "react-toastify";
 import { memberLevels } from "@/lib/memberLevel";
+import { handleGithubConnect } from "@/utils/handleConnectGithub";
 
 const FormNewUser = ({
   defaultValues: dv,
@@ -226,7 +227,7 @@ const FormNewUser = ({
         }
       }
     }
-    handleConnectGitHub();
+    handleGithubConnect();
     setGithubLoading(false);
   };
 

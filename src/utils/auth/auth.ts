@@ -65,6 +65,7 @@ export const authOptions: NextAuthOptions = {
           user.discordDetails?.global_name || user.discordDetails?.username,
         avatar: user.discordDetails?.avatar,
         discordId: user.discordId,
+        repos: user.githubDetails?.installId && (user.repos || []),
         githubId:
           user.githubDetails?.accessToken &&
           (user.githubId || user.githubDetails?.login), // add githubId if user has connected github
