@@ -42,7 +42,7 @@ export default async function RootLayout({
   modal?: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
-  const googleAnalytics = process.env.NEXT_PUBLIC_GOOGLE_ADD_ID;
+  const googleAnalytics = process.env.GOOGLE_ADD_ID;
   return (
     <html lang="en" className={`${poppins.variable} ${bebas_neue.variable}`}>
       <Script
