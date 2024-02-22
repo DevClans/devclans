@@ -3,6 +3,7 @@ const nextConfig = {
   env: {
     GH_CLIENT_ID: process.env.AUSPY_GITHUB_CLIENT_ID,
     GH_REDIRECT_URI: process.env.AUSPY_GITHUB_REDIRECT_URI,
+    GOOGLE_ADD_ID: process.env.NEXT_PUBLIC_GOOGLE_ADD_ID,
   },
   images: {
     remotePatterns: [
