@@ -26,7 +26,7 @@ const bebas_neue = Bebas_Neue({
 });
 export const metadata: Metadata = {
   title: "Devclans",
-  description: "Connect with thousands of devzelopers from 100xdevs",
+  description: "Connect with thousands of developers from 100xdevs",
 };
 export const viewport: Viewport = {
   width: "device-width",
