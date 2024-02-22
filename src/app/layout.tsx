@@ -10,6 +10,7 @@ import { authOptions } from "@/utils/auth/auth";
 import { ToastContainer } from "react-toastify";
 import LightRays from "@/components/LightRays";
 import ReactQueryProvider from "@/lib/ReactQueryProvider";
+import Script from "next/script";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -25,7 +26,7 @@ const bebas_neue = Bebas_Neue({
 });
 export const metadata: Metadata = {
   title: "Devclans",
-  description: "Connect with thousands of developers from 100xdevs",
+  description: "Connect with thousands of devzelopers from 100xdevs",
 };
 export const viewport: Viewport = {
   width: "device-width",
@@ -41,8 +42,20 @@ export default async function RootLayout({
   modal?: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
+  const googleAnalytics = process.env.NEXT_PUBLIC_GOOGLE_ADD_ID;
   return (
     <html lang="en" className={`${poppins.variable} ${bebas_neue.variable}`}>
+      <Script
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalytics}`}
+      ></Script>
+      <Script id="google-analytics">
+        {`window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '${googleAnalytics}');`}
+      </Script>
       <body>
         <ReactQueryProvider>
           <SessionProvider session={session}>
