@@ -360,8 +360,8 @@ export const zodRepoDetailsSchema = z.object({
   lastCommit: zodDateString,
   created_at: zodDateString.optional(),
   updated_at: zodDateString.optional(),
-  readme: z.string().max(3000),
-  contributing: z.string().max(3000).nullable().optional(),
+  readme: z.string().max(10000),
+  contributing: z.string().max(10000).nullable().optional(),
   languages: z.record(z.number()),
 });
 export const zodProjectDetailsSchema = z.object({
