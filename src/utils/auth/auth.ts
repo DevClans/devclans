@@ -23,7 +23,7 @@ export const authOptions: NextAuthOptions = {
       authorization: {
         params: {
           scope: "identify email guilds guilds.members.read",
-          prompt: "none",
+          // prompt: "consent",
         },
       },
       async profile(profile: any, tokens: any) {
