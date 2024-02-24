@@ -158,7 +158,7 @@ export const zodUserGithubDetailsSchemaForFrontend = z.object({
   bio: z.string().trim().max(500).nullable().optional(),
   twitter_username: z.string().trim().max(50).nullable().optional(),
   login: z.string().min(1).trim(),
-  readme: z.string().max(3000).nullable().optional(),
+  readme: z.string().max(10000).nullable().optional(),
 });
 
 export const zodUserGithubDetailsSchema = zodUserGithubDetailsSchemaForFrontend;
