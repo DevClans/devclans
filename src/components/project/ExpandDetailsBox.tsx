@@ -3,6 +3,8 @@ import { ExpandDetailsBoxProps } from "@/types/toggleList.types";
 import { IconCollapse, IconExpand, IconReadme } from "@/components";
 import colors from "@/lib/colors";
 import ReactMarkdown from "react-markdown";
+import sanitize from "rehype-sanitize";
+
 // import { useMemo } from "react";
 const ExpandDetailsBox = ({
   heading,
@@ -40,7 +42,9 @@ const ExpandDetailsBox = ({
       </summary>
       <div className={`p-5 ${isActive ? "pt-0" : ""}`}>
         {isActive ? (
-          <ReactMarkdown className={`markdown`}>{data}</ReactMarkdown>
+          <ReactMarkdown rehypePlugins={[sanitize]} className={`markdown`}>
+            {data}
+          </ReactMarkdown>
         ) : (
           <>
             {/* <ReactMarkdown>{data.substring(0, 100)}</ReactMarkdown>
