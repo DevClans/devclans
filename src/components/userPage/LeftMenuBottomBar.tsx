@@ -67,7 +67,7 @@ const LeftMenuBottomBar = ({ links }: { links?: [string, string][] }) => {
             </div>
           )}
           <MuiIconButton
-            className="hidden md:flex !text-text md:group-data-[state=not-active]/left:w-full md:group-data-[state=active]/left:mr-2"
+            className=" !hidden md:!flex  !text-text md:group-data-[state=not-active]/left:w-full md:group-data-[state=active]/left:mr-2"
             onClick={() => {
               toogleActive();
             }}

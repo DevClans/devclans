@@ -8,7 +8,7 @@ import LinkGithub from "../links/LinkGithub";
 import { Github } from "lucide-react";
 import ConnectToGithub from "./ConnectToGithub";
 import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
-
+import sanitize from "rehype-sanitize";
 const UserOverview = async ({
   data,
   username,
@@ -46,7 +46,12 @@ const UserOverview = async ({
         <GitHubGraph username={login} />
       </div>
       {typeof readme == "string" && (
-        <ReactMarkdown className="cardCommon markdown">{readme}</ReactMarkdown>
+        <ReactMarkdown
+          rehypePlugins={[sanitize]}
+          className="cardCommon markdown"
+        >
+          {readme}
+        </ReactMarkdown>
       )}
       {login && (
         <div className="cardCommon  fcfs gap-2">
