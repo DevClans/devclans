@@ -133,7 +133,7 @@ export type ContactDetailsProps =
   | {
       name: string;
       contactId: string;
-      contactMethod: keyof typeof contactMethodsMap;
+      contactMethod?: keyof typeof contactMethodsMap;
       icon?: any;
     };
 

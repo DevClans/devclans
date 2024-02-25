@@ -90,10 +90,10 @@ const LeftSidebar = async ({
                 label={"Ask A Question"}
                 contact={[
                   {
-                    name: username,
-                    contactMethod,
-                    contactMethodId,
-                  } as unknown as ContactDetailsProps,
+                    name: username || displayName,
+                    contactMethod: contactMethod,
+                    contactId: contactMethodId || (rest?.discordId as string),
+                  },
                 ]}
               />
             )}
