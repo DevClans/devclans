@@ -15,10 +15,7 @@ import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { getGHInstaddedRepos } from "@/utils/getInstalledRepos";
-import {
-  handleGithubChangeRepos,
-  handleGithubConnect,
-} from "@/utils/handleConnectGithub";
+import { handleGithubChangeRepos } from "@/utils/handleConnectGithub";
 import ButtonConnectGithub from "./buttons/ButtonConnectGithub";
 
 const FormNewProject = ({
@@ -127,32 +124,41 @@ const FormNewProject = ({
     return false;
   };
   useEffect(() => {
-    if (Array.isArray(repos) && repos.length > 0) {
-      updateRepofield([null, ...repos], true);
-    }
-  }, [repos]);
-
-  useEffect(() => {
+    updateRepofield(["Loading..."], true);
     if (!isUserConnected) {
       updateRepofield([], true);
       return;
     }
-    let updatedRepos = false;
-    updateRepofield(["Loading..."], true);
-    getGHInstaddedRepos(session?._id)
-      .then((res) => {
-        console.log("res from getGHInstaddedRepos", res);
-        if (res && res.repos) {
-          updatedRepos = updateRepofield([null, ...repos]);
-        }
-      })
-      .finally(() => {
-        if (!updatedRepos) {
-          console.log("null,[...repos] not updated");
-          updateRepofield([]);
-        }
-      });
-  }, [session?._id, isUserConnected]);
+    if (Array.isArray(repos) && repos.length > 0) {
+      updateRepofield([null, ...repos], true);
+    } else {
+      if (Array.isArray(repos)) {
+        updateRepofield([], true);
+      }
+    }
+  }, [repos, isUserConnected]);
+
+  // useEffect(() => {
+  //   if (!isUserConnected) {
+  //     updateRepofield([], true);
+  //     return;
+  //   }
+  //   let updatedRepos = false;
+  //   updateRepofield(["Loading..."], true);
+  //   getGHInstaddedRepos(session?._id)
+  //     .then((res) => {
+  //       console.log("res from getGHInstaddedRepos", res);
+  //       if (res && res.repos) {
+  //         updatedRepos = updateRepofield([null, ...repos]);
+  //       }
+  //     })
+  //     .finally(() => {
+  //       if (!updatedRepos) {
+  //         console.log("null,[...repos] not updated");
+  //         updateRepofield([]);
+  //       }
+  //     });
+  // }, [session?._id, isUserConnected]);
 
   if (!session) {
     return <LogedOutScreen />;
