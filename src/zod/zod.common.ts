@@ -215,7 +215,12 @@ export const zodUserSearchInfoSchema = z.object({
   discordDetails: zodUserDiscordDetailsSchema,
   _id: z.any(),
 });
-export const usernameCheck = (min: number, max: number, error?: string) =>
+export const usernameCheck = (
+  min: number,
+  max: number,
+  regex: RegExp = /^[a-zA-Z0-9_]+$/,
+  error?: string
+) =>
   commonString
     .max(max)
     .refine(
@@ -223,11 +228,7 @@ export const usernameCheck = (min: number, max: number, error?: string) =>
         if (!item) {
           return true;
         }
-        if (
-          item.match(/^[a-zA-Z0-9_]+$/) &&
-          item.length > min &&
-          item.length < max
-        ) {
+        if (item.match(regex) && item.length > min && item.length < max) {
           return true;
         }
         return false;
@@ -246,7 +247,7 @@ export const zodUserDataCommonSchema = z.object({
   socials: z.object({
     twitter: usernameCheck(3, 16),
     telegram: usernameCheck(4, 33),
-    linkedin: usernameCheck(4, 31),
+    linkedin: usernameCheck(4, 31, /^[a-zA-Z0-9_-]+$/),
     website: commonString
       .nullable()
       .refine(
