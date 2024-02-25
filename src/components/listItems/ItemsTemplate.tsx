@@ -1,5 +1,5 @@
 import { PageProps } from "@/types/page.types";
-import { ButtonBlue, ButtonConnect, ButtonSecondary, ChipGroup } from "..";
+import { ButtonBlue, ButtonSecondary, ChipGroup } from "..";
 import Link from "next/link";
 
 type ItemsTemplateProps = Partial<PageProps> & {
@@ -67,7 +67,7 @@ const ItemsTemplate = ({
           <ChipGroup
             arr={chipArr || []}
             searchParams={searchParams}
-            baseUrl={`explore/${baseUrl}s`}
+            baseUrl={`/explore${baseUrl}s`}
           />
         </div>
         {/* CONTACT AND CALL TO ACTIONS */}
