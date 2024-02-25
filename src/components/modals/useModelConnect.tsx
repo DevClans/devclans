@@ -18,10 +18,10 @@ const useModalConnect = ({ isActive = false, team }: ModalConnectProps) => {
   const [open, setOpen] = useState(isActive);
   const [selectedUser, setSelectedUser] = useState<ContactDetailsProps>();
   const handleSend = (user: ContactDetailsProps) => {
-    console.log("connecting to user =>", user);
     const a =
       user &&
       contactMethodsMap[user.contactMethod || "discord"](user.contactId);
+    console.log("connecting to user =>", a);
     const newTab = a && window.open(a, "_blank", "noopener,noreferrer");
     if (newTab) {
       newTab.opener = null;
@@ -69,7 +69,7 @@ const useModalConnect = ({ isActive = false, team }: ModalConnectProps) => {
                       <p className="text-highlight">
                         {member.name}
                         <span className="text-text ml-1">
-                          - {member.contactMethod}
+                          - {member.contactMethod || "discord"}
                         </span>
                       </p>
                     }
