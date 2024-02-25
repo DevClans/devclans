@@ -112,8 +112,9 @@ pre {
 }
 
 .markdown {
-  @apply fcfs gap-2 pt-4;
+  @apply fcfs gap-2;
   h1 {
+    text-align: left;
     margin-top: 25px;
     margin-bottom: 5px;
     font-size: 36px;

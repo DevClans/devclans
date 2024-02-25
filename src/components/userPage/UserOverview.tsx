@@ -1,4 +1,3 @@
-import ReactMarkdown from "react-markdown";
 import { ProjectDetailsItemProps } from "@/types/toggleList.types";
 import { ProjectDetails } from "..";
 import GitHubGraph from "../GithubGraph";
@@ -8,7 +7,8 @@ import LinkGithub from "../links/LinkGithub";
 import { Github } from "lucide-react";
 import ConnectToGithub from "./ConnectToGithub";
 import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
-import sanitize from "rehype-sanitize";
+import { sanitizeReadme } from "@/utils/sanitizeReadme";
+
 const UserOverview = async ({
   data,
   username,
@@ -33,6 +33,7 @@ const UserOverview = async ({
   )}&cache_seconds=86400&border_radius=10&text_bold=false&include_all_commits=true&ring_color=${removeHashTag(
     colors.priDark
   )}&rank_icon=percentile&card_width=390`;
+  const readmePurified = await sanitizeReadme(readme);
   return (
     <>
       <div id="overview" className="cardCommon gap-4 flex flex-col w100">
@@ -45,13 +46,11 @@ const UserOverview = async ({
         </div>
         <GitHubGraph username={login} />
       </div>
-      {typeof readme == "string" && (
-        <ReactMarkdown
-          rehypePlugins={[sanitize]}
+      {typeof readme == "string" && typeof readmePurified == "string" && (
+        <div
           className="cardCommon markdown"
-        >
-          {readme}
-        </ReactMarkdown>
+          dangerouslySetInnerHTML={{ __html: readmePurified }}
+        />
       )}
       {login && (
         <div className="cardCommon  fcfs gap-2">
