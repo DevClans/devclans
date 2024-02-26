@@ -22,11 +22,38 @@ import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 import { Fetch } from "@/utils/fetchApi";
 import { userSchema } from "@/zod/zod.common";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
 type UserPageProps = {
   params: { id: string };
   searchParams: { tab?: string; mode?: string };
 };
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const id = params?.id;
+  const user: UserProps | null = await Fetch({
+    endpoint: `/user/${id}`,
+  });
+  if (!user || (user && ("error" in user || "message" in user))) {
+    console.error("User not found in open graph image");
+    return {};
+  }
+  const { username: title, bio } = user;
+  return {
+    title,
+    description: bio,
+    openGraph: {
+      title,
+      description: bio,
+    },
+    twitter: {
+      title,
+      description: bio,
+    },
+  };
+}
 
 const page = async ({ params, searchParams }: UserPageProps) => {
   const session: any = await getServerSessionForServer();

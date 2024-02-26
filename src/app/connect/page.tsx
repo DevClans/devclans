@@ -1,13 +1,18 @@
 import FormConnect from "@/components/FormConnect";
 import { Metadata } from "next";
-
+const description =
+  "Want to give an suggestion? report a bug? or even talk to us regarding anything? Fill out the form and we will reply within 48hrs.";
+const title = "Connect";
 export const metadata: Metadata = {
-  title: "Connect",
+  title,
+  description,
   openGraph: {
-    title: "Connect",
+    title,
+    description,
   },
   twitter: {
-    title: "Connect",
+    title,
+    description,
   },
 };
 
