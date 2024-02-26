@@ -43,6 +43,10 @@ const AboutUsPage: React.FC = () => {
       bio: "a full-stack engineer who is obsessed with building & breaking things while dedicating a part of his time as a teaching assistant at 100xDevs. x/twitter is hands down the best place to connect with him.",
       links: [
         "https://x.com/siddhantxh",
+        "https://github.com/sidxh",
+        "https://www.linkedin.com/in/siddhantxh/",
+        "mailto:totallysiddhant@gmail.com",
+        // "https://www.siddhantxh.com/"
       ],
     },
   ];

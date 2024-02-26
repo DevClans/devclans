@@ -49,6 +49,9 @@ export const selectIconForLinks = (link: string, size?: number) => {
     case link.includes("linkedin"):
       type = "linkedin";
       break;
+    case link.includes("mail"):
+        type = "email";
+    break;
     case link.includes("facebook"):
       type = "facebook";
       break;
