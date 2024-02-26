@@ -7,8 +7,8 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 export const size = {
-  width: 1080,
-  height: 567,
+  width: 1200,
+  height: 630,
 };
 export const contentType = "image/png";
 export default async function Image({ params }: { params: { id: string } }) {
@@ -35,8 +35,8 @@ export default async function Image({ params }: { params: { id: string } }) {
   }
   return new ImageResponse(
     (
-      <div className="relative w-full h-full fccc">
-        <LightRays />
+      <div className="relative w-full h-full bg-bg fccc">
+        {/* <LightRays />
         <ProductImg
           src={avtr}
           alt={username}
@@ -55,7 +55,7 @@ export default async function Image({ params }: { params: { id: string } }) {
         <p className="text-subH text text-4xl mt-2">
           devclans.com/
           <span className="text-primary font-semibold">{username}</span>
-        </p>
+        </p> */}
       </div>
     ),
     {
