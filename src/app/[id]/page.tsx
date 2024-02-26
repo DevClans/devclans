@@ -21,6 +21,7 @@ import type {
 import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 import { Fetch } from "@/utils/fetchApi";
 import { userSchema } from "@/zod/zod.common";
+import { notFound } from "next/navigation";
 
 type UserPageProps = {
   params: { id: string };
@@ -42,7 +43,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
     !userData ||
     (userData && ("error" in userData || "message" in userData))
   ) {
-    return <div className="mt-6">user not found</div>;
+    return notFound();
   }
 
   console.log("mode", mode, session?.user?._id, userData._id);

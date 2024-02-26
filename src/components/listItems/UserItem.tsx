@@ -78,7 +78,7 @@ const UserItem = async ({
         detailHeading={"Skill Level"}
         detailDesc={skillLevel as string}
         chipArr={skills}
-        baseUrl={"/user"}
+        baseUrl={""}
         _id={_id?.toString()}
         desc={bio || ""}
       />

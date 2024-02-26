@@ -6,6 +6,7 @@ import userAvatar from "@/lib/userAvatar";
 import { PageProps } from "@/types/page.types";
 import LeftSiderbarTopItem from "./LeftSiderbarTopItem";
 import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
+import { editProfile } from "@/paths";
 
 const LeftSidebar = async ({
   username,
@@ -77,7 +78,7 @@ const LeftSidebar = async ({
               // <Link href="/project/new">Create Project</Link>
               <ButtonSecondary
                 disabled={session && session.user._id !== _id}
-                href={`/user/${_id}?mode=edit`}
+                href={editProfile(_id)}
                 className="text-center"
                 label={"Edit Profile"}
               />

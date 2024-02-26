@@ -26,9 +26,7 @@ export const urlUser = ({
   onlyEndpoint?: boolean;
 }) => {
   const endpoint =
-    username || id
-      ? `/user${username ? "/" + username : id ? "/" + id : ""}`
-      : "";
+    username || id ? `/${username ? "/" + username : id ? "/" + id : ""}` : "";
   if (onlyEndpoint) {
     return endpoint;
   }
