@@ -5,6 +5,17 @@ import { PageProps } from "@/types/page.types";
 import { stringify } from "querystring";
 import ToolBox from "@/components/ToolBox";
 import InfiniteScroll from "@/components/InfiniteScroll";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Find Friends",
+  openGraph: {
+    title: "Find Friends",
+  },
+  twitter: {
+    title: "Find Friends",
+  },
+};
 
 const Users = async ({ params, searchParams }: Partial<PageProps>) => {
   const str = stringify(searchParams);

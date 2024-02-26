@@ -1,3 +1,9 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Success - Github",
+};
+
 const page = () => {
   return (
     <div className="mt-7">

@@ -1,5 +1,10 @@
 import { PageProps } from "@/types/page.types";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Error",
+};
 
 const page = ({ searchParams }: PageProps) => {
   const error = searchParams?.error?.toString().toLowerCase();
