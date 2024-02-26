@@ -37,19 +37,20 @@ export async function generateMetadata({
     endpoint: `/user/${id}`,
   });
   if (!user || (user && ("error" in user || "message" in user))) {
-    console.error("User not found in open graph image");
+    console.error("User not found in generateMetadata");
     return {};
   }
   const { username: title, bio } = user;
+  const titleIs = `@${title}`;
   return {
-    title,
+    title: titleIs,
     description: bio,
     openGraph: {
-      title,
+      title: titleIs,
       description: bio,
     },
     twitter: {
-      title,
+      title: titleIs,
       description: bio,
     },
   };

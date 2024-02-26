@@ -11,6 +11,7 @@ import { ToastContainer } from "react-toastify";
 import LightRays from "@/components/LightRays";
 import ReactQueryProvider from "@/lib/ReactQueryProvider";
 import Script from "next/script";
+import { urlBase } from "@/constants";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -28,7 +29,7 @@ const description =
   "Discover & Connect with thousands of devs. Explore projects, find mentors, and team up with potential co-founders, all within the 100xdevs cohort.";
 const title = "Devclans";
 const img = {
-  url: "https://www.devclans.com/metaImg.png",
+  url: urlBase + "/metaImg.png",
   width: 1200,
   height: 630,
   alt: "Visit us at https://www.devclans.com | Devclans",
@@ -57,6 +58,7 @@ export const metadata: Metadata = {
     },
     card: "summary_large_image",
     description,
+    creator: "@devclans",
     images: [img],
   },
 };

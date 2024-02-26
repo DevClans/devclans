@@ -1,4 +1,3 @@
-import { FetchProjectProps } from "@/types/fetch.types";
 import {
   ProjectProps,
   ProjectRepoDetailsProps,
