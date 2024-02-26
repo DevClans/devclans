@@ -5,7 +5,7 @@ import { UserProps } from "@/types/mongo/user.types";
 import { Fetch } from "@/utils/fetchApi";
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
+// export const runtime = "edge";
 export const size = {
   width: 1200,
   height: 630,
@@ -36,7 +36,7 @@ export default async function Image({ params }: { params: { id: string } }) {
   return new ImageResponse(
     (
       <div className="relative w-full h-full bg-bg fccc">
-        {/* <LightRays />
+        <LightRays />
         <ProductImg
           src={avtr}
           alt={username}
@@ -55,7 +55,7 @@ export default async function Image({ params }: { params: { id: string } }) {
         <p className="text-subH text text-4xl mt-2">
           devclans.com/
           <span className="text-primary font-semibold">{username}</span>
-        </p> */}
+        </p>
       </div>
     ),
     {
