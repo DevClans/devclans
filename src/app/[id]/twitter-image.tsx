@@ -36,7 +36,7 @@ export default async function Image({ params }: { params: { id: string } }) {
   return new ImageResponse(
     (
       <div className="relative w-full h-full bg-bg fccc">
-        {/* <LightRays />
+        <LightRays />
         <ProductImg
           src={avtr}
           alt={username}
@@ -50,7 +50,7 @@ export default async function Image({ params }: { params: { id: string } }) {
             borderRadius: "40px",
             objectFit: "cover",
           }}
-        /> */}
+        />
         <h1 className="text-[54px] mt-15">@{username}</h1>
         <p className="text-subH text text-4xl mt-2">
           devclans.com/

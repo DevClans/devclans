@@ -12,6 +12,7 @@ import LightRays from "@/components/LightRays";
 import ReactQueryProvider from "@/lib/ReactQueryProvider";
 import Script from "next/script";
 import { urlBase } from "@/constants";
+import { URL } from "url";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -39,6 +40,7 @@ export const metadata: Metadata = {
     default: title,
     template: `%s | Devclans`,
   },
+  metadataBase: new URL(urlBase),
   description,
   openGraph: {
     title: {
