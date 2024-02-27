@@ -4,16 +4,12 @@ import { PageProps } from "@/types/page.types";
 import { stringify } from "querystring";
 import ProjectItems from "@/components/project/ProjectItems";
 import { Metadata } from "next";
+import { generateCommonMetadata } from "@/utils/generateMetadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateCommonMetadata({
   title: "Find Projects",
-  openGraph: {
-    title: "Find Projects",
-  },
-  twitter: {
-    title: "Find Projects",
-  },
-};
+  urlEndpoint: "/explore/projects",
+});
 
 const Projects = async ({ params, searchParams }: Partial<PageProps>) => {
   const str = stringify(searchParams);

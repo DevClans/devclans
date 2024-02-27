@@ -22,32 +22,33 @@ import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 import { Fetch } from "@/utils/fetchApi";
 import { userSchema } from "@/zod/zod.common";
 import { notFound } from "next/navigation";
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
+import { urlBase } from "@/constants";
 
 type UserPageProps = {
   params: { id: string };
   searchParams: { tab?: string; mode?: string };
 };
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: PageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
   const id = params?.id;
   const user: UserProps | null = await Fetch({
     endpoint: `/user/${id}`,
   });
-  if (!user || (user && ("error" in user || "message" in user))) {
-    console.error("User not found in generateMetadata");
-    return {};
-  }
-  const { username: title, bio } = user;
+  const { username: title, bio } = user || {};
   const titleIs = `@${title}`;
+  const previousImages = (await parent).openGraph?.images || [];
   return {
     title: titleIs,
     description: bio,
     openGraph: {
       title: titleIs,
       description: bio,
+      url: `${urlBase}/${title}`,
+      images: previousImages,
     },
     twitter: {
       title: titleIs,

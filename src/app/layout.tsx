@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     },
     type: "website",
     locale: "en_IE",
-    url: "https://www.devclans.com",
+    url: urlBase,
     images: [img],
   },
   twitter: {
