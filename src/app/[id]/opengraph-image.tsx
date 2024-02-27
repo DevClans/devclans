@@ -1,5 +1,3 @@
-import { LightRays } from "@/components";
-import ProductImg from "@/components/project/ProjectImg";
 import userAvatar from "@/lib/userAvatar";
 import { UserProps } from "@/types/mongo/user.types";
 import { Fetch } from "@/utils/fetchApi";
@@ -10,6 +8,7 @@ export const size = {
   width: 1200,
   height: 630,
 };
+
 export const contentType = "image/png";
 export default async function Image({ params }: { params: { id: string } }) {
   const id = params?.id;
@@ -36,16 +35,28 @@ export default async function Image({ params }: { params: { id: string } }) {
   return new ImageResponse(
     (
       <div className="relative w-full h-full bg-bg fccc">
-        <LightRays />
-        <ProductImg
+        <div
+          style={{
+            zIndex: -100,
+          }}
+        >
+          <img
+            src={"/homeHeroBg.png"}
+            alt="home background"
+            style={{ maxHeight: 840 }}
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <img
           src={avtr}
-          alt={username}
-          fill={true}
-          isUser={true}
           height={240}
           width={240}
-          className="w-full h-full"
+          className={`card xl:max-h-[255px] xl:max-w-[428px] w-full h-full`}
           style={{
+            padding: 5,
+            background:
+              "linear-gradient(139deg, rgba(23, 55, 120, 0.30) 1.39%, rgba(25, 55, 113, 0.30) 100%)",
+            backdropFilter: "blur(41.04999923706055px)",
             aspectRatio: "1/1",
             borderRadius: "40px",
             objectFit: "cover",

@@ -1,8 +1,15 @@
 import { LightLine } from "@/components";
 import { selectIconForLinks } from "@/lib/socialIcons";
+import { generateCommonMetadata } from "@/utils/generateMetadata";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+
+export const metadata: Metadata = generateCommonMetadata({
+  title: "About Devclans",
+  urlEndpoint: "/about",
+});
 
 const AboutUsPage: React.FC = () => {
   const commonImageProps = {
@@ -26,7 +33,7 @@ const AboutUsPage: React.FC = () => {
         "https://linktr.ee/kshetezvinayak",
       ],
     },
-      {
+    {
       name: "Satvik Manchanda",
       src: "https://avatars.githubusercontent.com/u/101499823?v=4",
       bio: "A person defined by his curiosity and thirst for learning. I buy more books than I can finish. I sign up for more online courses then I can complete. I believe that if you stop learning new things you stop doing great and useful things.",
@@ -245,7 +252,6 @@ const TeamMember = ({
     </div>
   );
 };
-
 
 // The Problem
 // We believe intra-cohort networking is broken today —over 20,000 developers in various sub-channels of 1 discord server. Now, although discord is a great communication channel, it is not as great a collaborative platform.

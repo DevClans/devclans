@@ -1,15 +1,11 @@
 import ListPages from "@/components/ListPages";
+import { generateCommonMetadata } from "@/utils/generateMetadata";
 import { Metadata } from "next";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateCommonMetadata({
   title: "Likes",
-  openGraph: {
-    title: "Likes",
-  },
-  twitter: {
-    title: "Likes",
-  },
-};
+  urlEndpoint: "/likes",
+});
 
 const page = () => {
   return (
