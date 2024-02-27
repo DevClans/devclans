@@ -22,7 +22,7 @@ export default async function generateUserMetaImg({
     });
     if (!user || (user && ("error" in user || "message" in user))) {
       console.error("User not found in twitter image");
-      return null;
+      throw new Error("User not found in metadata image");
     }
     const {
       username,
@@ -33,9 +33,9 @@ export default async function generateUserMetaImg({
       discordImg: avatar,
       discordId: discordId || disID,
     });
-    if (!(username && avtr)) {
-      console.error("Username or avatar not found in open graph image");
-      return null;
+    if (!username) {
+      console.error("Username not found in open graph image");
+      throw new Error("Username not found in open graph image");
     }
     const usernm = `@${username}`;
     console.log("generating user meta image", username);
@@ -80,25 +80,27 @@ export default async function generateUserMetaImg({
               }}
             />
           </div>
-          <img
-            src={avtr}
-            height={280}
-            width={280}
-            style={{
-              border: "1px solid #132341",
-              boxShadow:
-                "0px 4px 5.3px 0px rgba(20, 26, 37, 0.2) inset, 0px -4px 3px 0px rgba(6, 12, 24, 0.1) inset",
-              padding: 5,
-              height: 280,
-              width: 280,
-              background:
-                "linear-gradient(139deg, rgba(23, 55, 120, 0.30) 1.39%, rgba(25, 55, 113, 0.30) 100%)",
-              backdropFilter: "blur(41.04999923706055px)",
-              aspectRatio: "1/1",
-              borderRadius: "40px",
-              objectFit: "cover",
-            }}
-          />
+          {avtr && (
+            <img
+              src={avtr}
+              height={280}
+              width={280}
+              style={{
+                border: "1px solid #132341",
+                boxShadow:
+                  "0px 4px 5.3px 0px rgba(20, 26, 37, 0.2) inset, 0px -4px 3px 0px rgba(6, 12, 24, 0.1) inset",
+                padding: 5,
+                height: 280,
+                width: 280,
+                background:
+                  "linear-gradient(139deg, rgba(23, 55, 120, 0.30) 1.39%, rgba(25, 55, 113, 0.30) 100%)",
+                backdropFilter: "blur(41.04999923706055px)",
+                aspectRatio: "1/1",
+                borderRadius: "40px",
+                objectFit: "cover",
+              }}
+            />
+          )}
           <h1
             style={{
               fontSize: "54px",
