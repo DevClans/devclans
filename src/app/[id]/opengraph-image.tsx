@@ -1,3 +1,4 @@
+import { urlBase } from "@/constants";
 import userAvatar from "@/lib/userAvatar";
 import { UserProps } from "@/types/mongo/user.types";
 import { Fetch } from "@/utils/fetchApi";
@@ -41,7 +42,7 @@ export default async function Image({ params }: { params: { id: string } }) {
           }}
         >
           <img
-            src={"/homeHeroBg.png"}
+            src={urlBase + "/homeHeroBg.png"}
             alt="home background"
             style={{ maxHeight: 840 }}
             className="w-full h-full object-cover"
