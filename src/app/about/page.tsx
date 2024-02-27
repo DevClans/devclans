@@ -36,13 +36,25 @@ const AboutUsPage: React.FC = () => {
     {
       name: "Satvik Manchanda",
       src: "https://avatars.githubusercontent.com/u/101499823?v=4",
-      bio: "Full Stack Developer",
+      bio: "A person defined by his curiosity and thirst for learning. I buy more books than I can finish. I sign up for more online courses then I can complete. I believe that if you stop learning new things you stop doing great and useful things.",
+      links: [
+        "https://twitter.com/SatvikManchanda",
+        "https://github.com/Satvik1769",
+        "https://www.linkedin.com/in/satvikmanchanda/",
+        "https://linktr.ee/Satvik1769",
+      ],
     },
     {
       name: "Siddhant | TA Rayleigh",
       src: "https://i.postimg.cc/YqhWJH9c/photo-2024-02-15-20-00-57.jpg",
       bio: "a full-stack engineer who is obsessed with building & breaking things while dedicating a part of his time as a teaching assistant at 100xDevs. x/twitter is hands down the best place to connect with him.",
-      links: ["https://x.com/siddhantxh"],
+      links: [
+        "https://x.com/siddhantxh",
+        "https://github.com/sidxh",
+        "https://www.linkedin.com/in/siddhantxh/",
+        "mailto:totallysiddhant@gmail.com",
+        // "https://www.siddhantxh.com/"
+      ],
     },
   ];
   const data = [

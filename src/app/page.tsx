@@ -2,7 +2,7 @@ import Hero from "@/components/home/Hero";
 import { generateCommonMetadata } from "@/utils/generateMetadata";
 import { Metadata } from "next";
 
-const title = "Devclans | Find Developers, Mentors, and Co-founders";
+const title = "Devclans | Find Devs, Mentors, and Co-founders";
 export const metadata: Metadata = generateCommonMetadata({
   title,
   titleAbsolute: true,
