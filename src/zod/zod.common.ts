@@ -207,7 +207,21 @@ export const zodUserSearchInfoSchema = z.object({
     .nullable()
     .optional(),
   skills: skillsSchema,
-  // githubDetails: userGithubDetailsSchema,
+  githubDetails: z
+    .object({
+      avatar_url: z
+        .string()
+        .nullable()
+        .refine((item: string | null) => {
+          if (!item) {
+            return true;
+          } else {
+            return item.startsWith("https://avatars.githubusercontent.com");
+          }
+        }),
+    })
+    .optional()
+    .nullable(),
   githubId: z.string().max(50).optional(),
   bio: stringSchema.min(10).max(100),
   username: zodDiscordUsername,

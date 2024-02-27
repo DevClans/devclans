@@ -238,7 +238,10 @@ async function handler(
           // get some details
           const u: UserProps | UserSearchInfoProps | null = await getUserData(
             userId,
-            "-" + userSearchInfoKeys.join(" -")
+            "-githubDetails -" +
+              userSearchInfoKeys
+                .filter((item) => !item.includes("githubDetails"))
+                .join(" -")
           ); // to get all fields except userSearchInfoKeys as they already exist in userInfo
           if (!u) {
             // clear user id from cache
