@@ -340,7 +340,7 @@ export const userSchema = z.object({
 
 export const zodProjectSearchInfoSchema = z.object({
   title: z.string().min(3).max(50),
-  desc: z.string().min(10).max(180),
+  desc: z.string().min(10).max(200),
   skills: skillsSchema,
   team: zodTeamContactSchema.partial().array().optional(),
   skillLevel: z
@@ -461,7 +461,7 @@ export const zodGithubDataSchema = z.object({
 });
 export const zodProjectFormSchema = z.object({
   title: z.string().trim().min(3).max(50),
-  desc: z.string().min(10).max(180),
+  desc: z.string().min(10).max(200),
   skills: skillsSchema,
   team: zodUserTeamItemSchema.optional(),
   skillLevel: z

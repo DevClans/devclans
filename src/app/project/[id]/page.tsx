@@ -36,17 +36,46 @@ export async function generateMetadata({
     console.error("Project not found in open graph image");
     return {};
   }
-  const { title, desc: description } = data;
+  const { title, desc: description, imgs, skills, repoDetails, domain } = data;
+  const img =
+    Array.isArray(imgs) && imgs.length > 0
+      ? imgs[0]
+      : "https://devclans.com/metaImg.png";
   return {
     title,
     description,
+    keywords: [
+      title,
+      "devclans",
+      domain,
+      ...skills,
+      ...(repoDetails?.topics || []),
+    ].slice(0, 10),
     openGraph: {
       title,
       description,
+      url: `https://devclans.com/project/${id}`,
+      images: [
+        {
+          url: img,
+          width: 1200,
+          height: 630,
+          alt: `View ${title} at https://www.devclans.com | Devclans`,
+        },
+      ],
     },
     twitter: {
       title,
       description,
+      card: "summary_large_image",
+      images: [
+        {
+          url: img,
+          width: 1200,
+          height: 630,
+          alt: `View ${title} at https://www.devclans.com | Devclans | Find devs, projects, and mentors`,
+        },
+      ],
     },
   };
 }
