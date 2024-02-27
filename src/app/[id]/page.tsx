@@ -41,7 +41,7 @@ export async function generateMetadata(
   const { username: title, bio, domain, skills, discordDetails } = user || {};
   const titleIs = `@${title}`;
   const previousImages = (await parent).openGraph?.images || [];
-  const keywords = [titleIs, ...(skills || [])].slice(0, 10);
+  const keywords = [title as string, ...(skills || [])].slice(0, 10);
   if (domain) {
     keywords.push(domain);
   }
@@ -50,19 +50,23 @@ export async function generateMetadata(
   }
   // add some common keywords
   Array.prototype.push.apply(keywords, ["user", "profile", "devclans"]);
+  const description = bio
+    ? bio.substring(0, 120) + ". | View more at Devclans"
+    : `View ${titleIs} at Devclans`;
   return {
     title: titleIs,
-    description: bio,
+    description,
     keywords,
     openGraph: {
       title: titleIs,
-      description: bio,
+      description,
       url: `${urlBase}/${title}`,
       images: previousImages,
     },
     twitter: {
       title: titleIs,
-      description: bio,
+      description,
+      card: "summary_large_image",
     },
   };
 }

@@ -36,11 +36,14 @@ export async function generateMetadata({
     console.error("Project not found in open graph image");
     return {};
   }
-  const { title, desc: description, imgs, skills, repoDetails, domain } = data;
+  const { title, desc, imgs, skills, repoDetails, domain } = data;
   const img =
     Array.isArray(imgs) && imgs.length > 0
       ? imgs[0]
       : "https://devclans.com/metaImg.png";
+  const description = desc
+    ? desc.substring(0, 120) + ". | View more at Devclans"
+    : `View ${title} at Devclans`;
   return {
     title,
     description,

@@ -1,10 +1,6 @@
 import { PageProps } from "@/types/page.types";
 import Link from "next/link";
 const navigation = [
-  // {
-  //   name: "Home",
-  //   href: "/",
-  // },
   {
     name: "Find Projects",
     href: "/explore/projects",
@@ -17,7 +13,7 @@ const navigation = [
     name: "About 100xDevs",
     href: "https://100xdevs.com/",
     target: "_blank",
-    rel: "noopener noreferrer",
+    rel: "noopener noreferrer nofollow",
   },
   {
     name: "About Us",
