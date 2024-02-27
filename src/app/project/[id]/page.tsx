@@ -19,7 +19,37 @@ import {
   zodRepoName,
   zodTeamContactSchema,
 } from "@/zod/zod.common";
+import { Metadata } from "next";
 import { z } from "zod";
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const id = params?.id;
+  const {
+    projectData: data,
+  }: {
+    projectData: FetchProjectProps["data"] | null;
+    renderLanguages: ProjectRepoDetailsProps["languages"];
+  } = await ProjectData(id as string);
+  if (!data) {
+    console.error("Project not found in open graph image");
+    return {};
+  }
+  const { title, desc: description } = data;
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+    },
+    twitter: {
+      title,
+      description,
+    },
+  };
+}
 
 const Page = async ({
   params,

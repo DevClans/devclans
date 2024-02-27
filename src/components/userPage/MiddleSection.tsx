@@ -6,6 +6,7 @@ import { ButtonProps } from "@/types";
 import userQuestions from "@/lib/userQuestions";
 import { UserQuestionsProps } from "@/types/mongo/user.types";
 import { PageProps } from "@/types/page.types";
+import { urlUser } from "@/constants";
 
 const MiddleSection = ({
   questions,
@@ -22,7 +23,8 @@ const MiddleSection = ({
   const id = params?.id;
   const arr = userQuestions({ questions });
   const data = arr.length > 2 ? arr.slice(0, 2) : [];
-  const hrefFun = (tab: string) => `/user/${id}${tab ? `?tab=${tab}` : ""}`;
+  const hrefFun = (tab: string) =>
+    urlUser({ username: `${id}${tab ? `?tab=${tab}` : ""}` });
   const sections: ButtonProps[] = [
     {
       label: "Overview",

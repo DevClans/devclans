@@ -21,11 +21,40 @@ import type {
 import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 import { Fetch } from "@/utils/fetchApi";
 import { userSchema } from "@/zod/zod.common";
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
 type UserPageProps = {
   params: { id: string };
   searchParams: { tab?: string; mode?: string };
 };
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const id = params?.id;
+  const user: UserProps | null = await Fetch({
+    endpoint: `/user/${id}`,
+  });
+  if (!user || (user && ("error" in user || "message" in user))) {
+    console.error("User not found in generateMetadata");
+    return {};
+  }
+  const { username: title, bio } = user;
+  const titleIs = `@${title}`;
+  return {
+    title: titleIs,
+    description: bio,
+    openGraph: {
+      title: titleIs,
+      description: bio,
+    },
+    twitter: {
+      title: titleIs,
+      description: bio,
+    },
+  };
+}
 
 const page = async ({ params, searchParams }: UserPageProps) => {
   const session: any = await getServerSessionForServer();
@@ -42,7 +71,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
     !userData ||
     (userData && ("error" in userData || "message" in userData))
   ) {
-    return <div className="mt-6">user not found</div>;
+    return notFound();
   }
 
   console.log("mode", mode, session?.user?._id, userData._id);

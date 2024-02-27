@@ -3,6 +3,17 @@ import { Fetch } from "@/utils/fetchApi";
 import { PageProps } from "@/types/page.types";
 import { stringify } from "querystring";
 import ProjectItems from "@/components/project/ProjectItems";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Find Projects",
+  openGraph: {
+    title: "Find Projects",
+  },
+  twitter: {
+    title: "Find Projects",
+  },
+};
 
 const Projects = async ({ params, searchParams }: Partial<PageProps>) => {
   const str = stringify(searchParams);

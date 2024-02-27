@@ -103,7 +103,7 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
               "X-GitHub-Api-Version": "2022-11-28",
             },
           });
-          console.info("user data from github", githubData);
+          console.info("user data from github", Boolean(githubData?.data));
           githubUsername = githubData.data.login;
           Object.assign(
             dataForCache,
