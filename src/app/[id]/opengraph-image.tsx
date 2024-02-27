@@ -33,9 +33,18 @@ export default async function Image({ params }: { params: { id: string } }) {
     console.error("Username or avatar not found in open graph image");
     return null;
   }
+  console.log("added user opengraph image", username);
   return new ImageResponse(
     (
-      <div className="relative w-full h-full bg-bg fccc">
+      <div
+        className="relative w-full h-full bg-bg"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <div
           style={{
             zIndex: -100,
