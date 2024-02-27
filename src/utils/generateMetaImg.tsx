@@ -44,6 +44,8 @@ export default async function generateUserMetaImg({
         <div
           className="relative w-full h-full bg-bg"
           style={{
+            maxWidth: "1200px",
+            maxHeight: "630px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
@@ -52,7 +54,10 @@ export default async function generateUserMetaImg({
         >
           <div
             style={{
-              zIndex: -100,
+              zIndex: 0,
+              position: "absolute",
+              top: 0,
+              left: 0,
               display: "flex",
             }}
           >
@@ -70,6 +75,8 @@ export default async function generateUserMetaImg({
             className={`card xl:max-h-[255px] xl:max-w-[428px] w-full h-full`}
             style={{
               padding: 5,
+              height: 240,
+              width: 240,
               background:
                 "linear-gradient(139deg, rgba(23, 55, 120, 0.30) 1.39%, rgba(25, 55, 113, 0.30) 100%)",
               backdropFilter: "blur(41.04999923706055px)",
