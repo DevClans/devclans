@@ -59,7 +59,7 @@ const LeftSidebar = async ({
             </h1>
             {username && (
               <p className="text-subH md:group-data-[state=not-active]/left:hidden  w100 text-ellipsis overflow-hidden">
-                {username}
+                @{username}
               </p>
             )}
           </div>

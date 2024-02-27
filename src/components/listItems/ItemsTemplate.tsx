@@ -67,7 +67,7 @@ const ItemsTemplate = ({
           <ChipGroup
             arr={chipArr || []}
             searchParams={searchParams}
-            baseUrl={`/explore${baseUrl}s`}
+            baseUrl={`/explore${baseUrl ? baseUrl + "s" : "users"}`}
           />
         </div>
         {/* CONTACT AND CALL TO ACTIONS */}

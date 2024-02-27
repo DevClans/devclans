@@ -20,7 +20,6 @@ export default async function NewUser() {
   return redirect(
     urlUser({
       username: sessionUser + "?mode=edit&new=true",
-      onlyEndpoint: true,
     })
   );
 }

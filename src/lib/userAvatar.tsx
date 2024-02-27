@@ -12,7 +12,7 @@ const userAvatar = async ({
 }: {
   avatar?: string;
   discordImg?: string | null;
-  gitubImg?: string;
+  gitubImg?: string | null;
   userProps?: Partial<UserProps>;
   discordId?: string;
 }): Promise<string> => {

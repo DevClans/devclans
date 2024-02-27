@@ -76,7 +76,7 @@ export async function generateMetadata({
           url: img,
           width: 1200,
           height: 630,
-          alt: `View ${title} at https://www.devclans.com | Devclans | Find devs, projects, and mentors`,
+          alt: `View ${title} at Devclans`,
         },
       ],
     },

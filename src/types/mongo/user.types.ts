@@ -118,7 +118,7 @@ export const userSearchInfoKeys: string[] = [
   "bio",
   "skills",
   "discordDetails",
-  "githubDetails",
+  "githubDetails.avatar_url",
   "skillLevel",
   "username",
   "_id",
