@@ -38,12 +38,22 @@ export async function generateMetadata(
   const user: UserProps | null = await Fetch({
     endpoint: `/user/${id}`,
   });
-  const { username: title, bio } = user || {};
+  const { username: title, bio, domain, skills, discordDetails } = user || {};
   const titleIs = `@${title}`;
   const previousImages = (await parent).openGraph?.images || [];
+  const keywords = [titleIs, ...(skills || [])].slice(0, 10);
+  if (domain) {
+    keywords.push(domain);
+  }
+  if (discordDetails?.global_name) {
+    keywords.push(discordDetails.global_name);
+  }
+  // add some common keywords
+  Array.prototype.push.apply(keywords, ["user", "profile", "devclans"]);
   return {
     title: titleIs,
     description: bio,
+    keywords,
     openGraph: {
       title: titleIs,
       description: bio,
