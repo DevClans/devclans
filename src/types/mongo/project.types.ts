@@ -27,7 +27,7 @@ export type ProjectProps = ProjectTeamProps & {
   _id: mongoose.Types.ObjectId;
   title: string;
   desc: string;
-  domain: ProjectDomainType;
+  domain: ProjectDomainType[];
   owner: mongoose.Types.ObjectId | Partial<UserProps>;
   contributors: mongoose.Types.ObjectId[] | Partial<UserProps>[];
   topics: string[];

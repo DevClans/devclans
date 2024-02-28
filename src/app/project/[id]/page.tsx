@@ -50,8 +50,8 @@ export async function generateMetadata({
     keywords: [
       title,
       "devclans",
-      domain,
-      ...skills,
+      ...(domain || []),
+      ...(skills || []),
       ...(repoDetails?.topics || []),
     ].slice(0, 10),
     openGraph: {
