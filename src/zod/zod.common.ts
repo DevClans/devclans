@@ -363,7 +363,7 @@ export const zodProjectSearchInfoSchema = z.object({
     .enum(memberLevels as any)
     .nullable()
     .optional(),
-  imgs: z.array(z.string()).max(5).default([]),
+  imgs: z.array(z.string()).max(10).default([]),
   _id: zodMongoId,
   owner: zodProjectOwnerSchema,
 });
