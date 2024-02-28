@@ -1,6 +1,7 @@
 export const projectDomains = [
   "android",
   "web",
+  "web3",
   "ios",
   "ml",
   "ar/vr",
