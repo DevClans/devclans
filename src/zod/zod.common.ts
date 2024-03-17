@@ -475,11 +475,12 @@ export const zodGithubDataSchema = z.object({
   owner: projectSchema.shape["owner"],
   repoName: zodRepoName,
 });
-export const zodProjectFormSchema = z.object({
+export const zodProjectFormSchema:any = z.object({
   title: z.string().trim().min(3).max(50),
   desc: z.string().min(10).max(200),
   skills: skillsSchema,
   team: zodUserTeamItemSchema.optional(),
+  teamCode: z.string().optional().nullable(),
   skillLevel: z
     .enum(memberLevels as any)
     .nullable()
