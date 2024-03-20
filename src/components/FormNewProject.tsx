@@ -126,13 +126,16 @@ const FormNewProject = ({
   useEffect(() => {
     updateRepofield(["Loading..."], true);
     if (!isUserConnected) {
+      console.log("user not connected");
       updateRepofield([], true);
       return;
     }
     if (Array.isArray(repos) && repos.length > 0) {
+      console.log("user is connected and has some repos");
       updateRepofield([null, ...repos], true);
     } else {
       if (Array.isArray(repos)) {
+        console.log("user  is connected but has no repos yet");
         updateRepofield([], true);
       }
     }

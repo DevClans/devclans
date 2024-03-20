@@ -15,7 +15,10 @@ export const dynamic = "force-dynamic";
 const handler = async (req: NextRequest) => {
   try {
     console.log(" start of github/appcallback");
-    // const code = req.nextUrl.searchParams.get("code");
+    const code = req.nextUrl.searchParams.get("code");
+    const setupAction = req.nextUrl.searchParams.get("setup_action");
+    console.log(setupAction, code);
+    console.log(req.nextUrl.searchParams.get("installation_id"))
     const installId = zodGithubInstallationId.parse(
       req.nextUrl.searchParams.get("installation_id")
     );
@@ -26,6 +29,7 @@ const handler = async (req: NextRequest) => {
     const userId = zodMongoId.parse(session?.user?._id);
     // get installed repos
     const reposData = await getInstalledReposFunc(installId, false);
+    console.log(reposData)
     // get user profile
     await updateData(userId, installId, reposData);
     console.log("success of github/appcallback, redirecting");

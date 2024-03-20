@@ -2,17 +2,19 @@
 import { z } from "zod";
 
 export const handleGithubChangeRepos = async () => {
-  const url = `https://github.com/apps/devclans/installations/new`;
+  const url = `https://github.com/apps/repogiver/installations/new`;
   window.open(url, "_blank");
 };
 
 export const handleGithubConnect = () => {
   const clientID = z.string().parse(process.env.GH_CLIENT_ID);
+  console.log(clientID);
   const redirect_uri = z
     .string()
     .startsWith("http")
     .max(150)
     .parse(process.env.GH_REDIRECT_URI);
+    console.log(redirect_uri);
   const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirect_uri}`;
 
   // Open the URL in a new tab

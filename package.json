@@ -28,6 +28,7 @@
     "axios": "^1.6.5",
     "bson": "^6.2.0",
     "fast-json-stable-stringify": "^2.1.0",
+    "fs": "0.0.1-security",
     "github-calendar": "^2.3.2",
     "github-calendar-graph": "^0.2.8",
     "ioredis": "^5.3.2",
