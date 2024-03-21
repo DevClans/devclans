@@ -51,12 +51,20 @@ export const dummyProjectFormSchemaFields: InputFieldProps[] = [
     name: "devStage",
     options: devStages,
   },
+
+  {
+    label: 'Team Code',
+    desc: 'Generate a team code to allow others to join your project team.',
+    name: 'teamCode',
+    type: 'text',
+    readOnly: true, // Make the field read-only
+  },
+
   // {
-  //   label: "Team",
-  //   desc: "Select the team members involved in the project.",
-  //   name: "team",
-  //   // Assuming zodUserTeamItemSchema is defined elsewhere
-  //   // and represents the schema for team members
+  //   label: 'Team Members',
+  //   desc: 'Enter the Discord IDs of team members, separated by commas (e.g., @rahul, @sunil, @priya).',
+  //   name: 'teamMembers',
+  //   type: 'text',
   // },
 
   // {

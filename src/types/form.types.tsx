@@ -11,6 +11,7 @@ export type InputFieldProps = {
   required?: boolean;
   min?: number;
   preText?: string;
+  readOnly?: boolean
 };
 export type FormClientProps = {
   zodSchema: any;

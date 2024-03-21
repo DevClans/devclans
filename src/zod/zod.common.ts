@@ -31,7 +31,7 @@ export const skillsSchema = z
         return false;
       },
       {
-        message: "Invalid skill",
+        message: "Invalid Tech Stack",
       }
     )
   )
@@ -147,8 +147,10 @@ const isValidHexColorVariableLength = (value: any) => {
   if (!value) {
     return true;
   }
-  const hexString = value.toString(16); // Convert integer to hexadecimal string
-  return /^#?([0-9A-F]{6}|[0-9A-F]{7}|[0-9A-F]{8})$/i.test(hexString); // Regular expression to validate hexadecimal color code with variable length
+  const hexString = value.toString();
+  return /^#?([0-9A-F]{5}|[0-9A-F]{6}|[0-9A-F]{7}|[0-9A-F]{8})$/i.test(
+    hexString
+  ); // Regular expression to validate hexadecimal color code with variable length
 };
 export const zodUserGithubDetailsSchemaForFrontend = z.object({
   avatar_url: z.string().optional(),
@@ -357,11 +359,12 @@ export const zodProjectSearchInfoSchema = z.object({
   desc: z.string().min(10).max(200),
   skills: skillsSchema,
   team: zodTeamContactSchema.partial().array().optional(),
+  teamCode:z.string(),
   skillLevel: z
     .enum(memberLevels as any)
     .nullable()
     .optional(),
-  imgs: z.array(z.string()).max(5).default([]),
+  imgs: z.array(z.string()).max(10).default([]),
   _id: zodMongoId,
   owner: zodProjectOwnerSchema,
 });
@@ -473,11 +476,12 @@ export const zodGithubDataSchema = z.object({
   owner: projectSchema.shape["owner"],
   repoName: zodRepoName,
 });
-export const zodProjectFormSchema = z.object({
+export const zodProjectFormSchema:any = z.object({
   title: z.string().trim().min(3).max(50),
   desc: z.string().min(10).max(200),
   skills: skillsSchema,
   team: zodUserTeamItemSchema.optional(),
+  teamCode: z.string().optional().nullable(),
   skillLevel: z
     .enum(memberLevels as any)
     .nullable()

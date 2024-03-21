@@ -12,11 +12,8 @@ export const getInstallationId = async (userId?: string) => {
   try {
     const uid = zodMongoId.parse(userId);
     console.log("getting install id from cache");
-    console.log("uid: ",uid)
     const cacheInstallId = await redisGet(UserRedisKeys.installId, uid);
-    console.log(cacheInstallId);
     installId = parseInt(cacheInstallId || "");
-    console.log(cacheInstallId);
     // if not in cache, get installation id from github
     if (installId) {
       console.log("install id from cache hit", installId);
@@ -26,11 +23,9 @@ export const getInstallationId = async (userId?: string) => {
     const id: UserProps | null = await UserModel.findById(uid)
       .select("githubDetails.installId")
       .lean();
-      console.log("id after lean: ",id)
     installId = parseInt(
       decrypt(id?.githubDetails?.installId?.toString() || "")
     );
-    console.log(installId);
     if (installId) {
       console.log("install id from db hit: ", installId);
       return installId;
@@ -64,7 +59,6 @@ export const getInstalledReposFunc = async (
     const installId: number = zodGithubInstallationId.parse(
       installationId || (await getInstallationId(userId))
     );
-    console.log("This is installId:", installId);
     console.log("getting octokit");
     const api = await getOctokit({ installationId: installId });
     
@@ -72,14 +66,12 @@ export const getInstalledReposFunc = async (
       console.log("error getting octokit");
       throw new Error("Error getting octokit");
     }
-    console.log("getting repos");
 
     const repos = await api.api.request("GET /installation/repositories", {
       headers: {
         "X-GitHub-Api-Version": "2022-11-28",
       },
     });
-    console.log(repos);
     if (repos.status !== 200) {
       console.log("error getting repos");
       throw new Error("Error getting repos");

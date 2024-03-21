@@ -55,7 +55,7 @@ export const authOptions: NextAuthOptions = {
           emailVerified: profile.verified,
           contactMethod: "discord",
           contactMethodId: id,
-          createdAt: new Date().toISOString(),
+          createdAt: new Date(),
         };
       },
     }),

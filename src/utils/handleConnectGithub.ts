@@ -8,13 +8,11 @@ export const handleGithubChangeRepos = async () => {
 
 export const handleGithubConnect = () => {
   const clientID = z.string().parse(process.env.GH_CLIENT_ID);
-  console.log(clientID);
   const redirect_uri = z
     .string()
     .startsWith("http")
     .max(150)
     .parse(process.env.GH_REDIRECT_URI);
-    console.log(redirect_uri);
   const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientID}&redirect_uri=${redirect_uri}`;
 
   // Open the URL in a new tab

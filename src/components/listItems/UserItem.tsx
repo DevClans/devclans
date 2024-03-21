@@ -32,6 +32,7 @@ const UserItem = async ({
     discordImg: disAvatar,
     discordId: disID,
     gitubImg: githubDetails?.avatar_url,
+    discordSize: 512,
   });
   const displayName = selectUserDisplayName({
     username: usernm,

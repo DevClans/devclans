@@ -23,6 +23,7 @@ const ProjectHero = ({
   repoDetails,
   video,
   repoName,
+  teamCode
 }: Omit<ProjectProps, "repoDetails"> &
   PageProps & {
     repoDetails: Partial<ProjectRepoDetailsProps>;
@@ -31,7 +32,10 @@ const ProjectHero = ({
     title,
     desc,
     _id,
+    teamCode,
+    
   };
+  console.log("This is the teamCode: ",data.teamCode);
   const videoLink = convertVideoLinkToEmbed(video);
   return (
     <div className="card2 py-[30px] w100 fcfs gap-[30px] px-5">
@@ -50,6 +54,7 @@ const ProjectHero = ({
           <div className="fcfs gap-5 max-w-[540px]">
             <h1 className="text-4xl text-left ">{data.title}</h1>
             <p>{data.desc}</p>
+            <h3>Team Code: {data.teamCode}</h3>
             {/* chips */}
             <ChipGroup
               arr={skills}

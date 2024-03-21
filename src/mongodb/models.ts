@@ -136,6 +136,7 @@ const projectSchema = new mongoose.Schema<ProjectProps>(
     topics: [{ type: String, default: [] }], // ml, android
     skills: [{ type: String, default: [] }], // tech: html, css
     repoName: { type: String, default: "", unique: true },
+    teamCode: { type: String, required: true, unique: true },
     likesCount: { type: Number, default: 0 },
     bookmarkCount: { type: Number, default: 0 },
     projectLinks: [{ type: String, default: [] }],
