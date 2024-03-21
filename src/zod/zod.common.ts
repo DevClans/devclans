@@ -375,7 +375,7 @@ export const zodRepoDetailsSchema = z.object({
   watchers: z.number().max(1000000),
   topics: z.array(z.string()).max(20).default([]).optional(),
   commits: z.number().max(10000).optional(),
-  lastCommit: zodDateString,
+  lastCommit: zodDateString.optional(),
   created_at: zodDateString.optional(),
   updated_at: zodDateString.optional(),
   readme: z.string().max(10000),
