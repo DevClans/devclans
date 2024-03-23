@@ -21,11 +21,55 @@ import type {
 import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 import { Fetch } from "@/utils/fetchApi";
 import { userSchema } from "@/zod/zod.common";
+import { notFound } from "next/navigation";
+import type { Metadata, ResolvingMetadata } from "next";
+import { urlBase } from "@/constants";
 
 type UserPageProps = {
   params: { id: string };
   searchParams: { tab?: string; mode?: string };
 };
+
+export async function generateMetadata(
+  { params }: PageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const id = params?.id;
+  const user: UserProps | null = await Fetch({
+    endpoint: `/user/${id}`,
+  });
+  const { username: title, bio, domain, skills, discordDetails } = user || {};
+  const titleIs = `@${title}`;
+  const previousImages = (await parent).openGraph?.images || [];
+  const keywords = [title as string, ...(skills || [])].slice(0, 10);
+  if (domain) {
+    keywords.push(domain);
+  }
+  if (discordDetails?.global_name) {
+    keywords.push(discordDetails.global_name);
+  }
+  // add some common keywords
+  Array.prototype.push.apply(keywords, ["user", "profile", "devclans"]);
+  const description = bio
+    ? bio.substring(0, 120) + ". | View more at Devclans"
+    : `View ${titleIs} at Devclans`;
+  return {
+    title: titleIs,
+    description,
+    keywords,
+    openGraph: {
+      title: titleIs,
+      description,
+      url: `${urlBase}/${title}`,
+      images: previousImages,
+    },
+    twitter: {
+      title: titleIs,
+      description,
+      card: "summary_large_image",
+    },
+  };
+}
 
 const page = async ({ params, searchParams }: UserPageProps) => {
   const session: any = await getServerSessionForServer();
@@ -42,7 +86,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
     !userData ||
     (userData && ("error" in userData || "message" in userData))
   ) {
-    return <div>user not found</div>;
+    return notFound();
   }
 
   console.log("mode", mode, session?.user?._id, userData._id);
@@ -100,6 +144,7 @@ const page = async ({ params, searchParams }: UserPageProps) => {
   const ele: { [key: string]: JSX.Element } = {
     overview: (
       <UserOverview
+        _id={userData._id}
         data={test}
         username={displayName || username}
         githubDetails={userData["githubDetails"]}

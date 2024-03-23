@@ -1,5 +1,11 @@
 import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
+import { urlUser } from "@/constants";
+
+export const metadata: Metadata = {
+  title: "Update User",
+};
 
 export default async function NewUser() {
   const session: any = await getServerSessionForServer();
@@ -11,5 +17,9 @@ export default async function NewUser() {
       </h3>
     );
   }
-  return redirect("/user/" + sessionUser + "?mode=edit");
+  return redirect(
+    urlUser({
+      username: sessionUser + "?mode=edit&new=true",
+    })
+  );
 }

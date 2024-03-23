@@ -32,6 +32,7 @@ export type UserProps = UserTeamItemProps &
     questions: UserQuestionsProps;
     createdAt: Date;
     updatedAt: Date;
+    repos: string[];
   };
 export type UserQuestionsProps = {
   currentCompany?: string;
@@ -62,9 +63,15 @@ export const userDiscordDetailsKeys: string[] = [
   "email",
 ];
 
-export type UserGithubDetailsProps = z.infer<typeof zodUserGithubDetailsSchema>;
+export type UserGithubDetailsProps = z.infer<
+  typeof zodUserGithubDetailsSchema
+> & {
+  installId: number | string;
+  accessToken: string;
+};
 export const userGithubDetailsKeys: string[] = [
   "accessToken",
+  "installId",
   "refreshToken",
   "avatar_url",
   "node_id",
@@ -111,7 +118,7 @@ export const userSearchInfoKeys: string[] = [
   "bio",
   "skills",
   "discordDetails",
-  "githubDetails",
+  "githubDetails.avatar_url",
   "skillLevel",
   "username",
   "_id",
@@ -126,7 +133,7 @@ export type ContactDetailsProps =
   | {
       name: string;
       contactId: string;
-      contactMethod: keyof typeof contactMethodsMap;
+      contactMethod?: keyof typeof contactMethodsMap;
       icon?: any;
     };
 
@@ -138,6 +145,9 @@ export enum UserRedisKeys {
   discord = "userDiscord",
   search = "userSearch",
   ids = "userIds",
+  installId = "userGHInstallId",
+  repos = "userRepos",
+  accessToken = "userGHAccessToken",
 }
 export type UserFormProps = z.infer<typeof zodUserFormSchema>;
 export type LookingForMembersProps = {

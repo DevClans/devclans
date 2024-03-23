@@ -17,6 +17,7 @@ export async function getDataQuery(
     return NextResponse.json({ error: "no request" });
   }
   const isProject = type === "projects";
+  console.log("type",isProject);
   const Enum = isProject ? ProjectRedisKeys : UserRedisKeys;
   type Props = typeof isProject extends true ? ProjectProps : UserProps;
   try {

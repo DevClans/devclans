@@ -83,6 +83,10 @@ export default function AccountMenu({
       title: "Edit Profile",
       link: editProfile(userState?._id as string),
     },
+    {
+      title:"Join Team",
+      link:"/join-team"
+    }
   ];
   const handleClose = () => {
     setAnchorEl(null);

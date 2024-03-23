@@ -1,7 +1,7 @@
 "use client";
 import { CircularProgress } from "@mui/material";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import UserAvatarMenu from "../AvatarMenu";
@@ -9,7 +9,14 @@ import UserAvatarMenu from "../AvatarMenu";
 const ButtonLogin = () => {
   const [loading, setLoading] = useState(false);
   const { data: session }: any = useSession();
-
+  useEffect(() => {
+    // console.log("SESSION", session);
+    if (session?.error === "RefreshAccessTokenError") {
+      signIn("discord", undefined, {
+        prompt: "consent",
+      }); // Force sign in to hopefully resolve error
+    }
+  }, [session]);
   const handleLogin = async () => {
     setLoading(true);
     await signIn();

@@ -20,6 +20,7 @@ type ContentType =
 
 type FetchProps = {
   endpoint: string;
+  redirect?: "follow" | "error" | "manual";
   method?: Method;
   baseUrl?: string;
   headers?: any;
@@ -28,6 +29,7 @@ type FetchProps = {
   body?: any;
   revalidate?: false | number;
   cache?: "no-store" | "no-cache";
+  needError?: boolean;
 };
 
 export const Fetch = async ({
@@ -40,9 +42,12 @@ export const Fetch = async ({
   body,
   revalidate = false,
   cache,
+  needError = false,
+  redirect = "follow",
 }: FetchProps) => {
   const options: Partial<FetchProps> = {
     method,
+    redirect,
     headers: {
       // "cache-control": "no-store",
       "Content-Type": "application/json",
@@ -68,7 +73,10 @@ export const Fetch = async ({
     // console.log("options", options);
     const res = await fetch((baseUrl || urlApi) + (endpoint || ""), options);
     if (res.status > 200) {
-      throw new Error(res.statusText);
+      if (!needError) {
+        throw new Error(res.statusText);
+      }
+      return await res.json();
     }
     const data = await res.json();
     return data;

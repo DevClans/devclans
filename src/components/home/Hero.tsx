@@ -10,10 +10,12 @@ const Hero = () => {
             find Cohort study <span className="h1Highlight">Buddy</span>
           </h1>
           <p
-            className="text-center lg:text-left text-base lg:text-[20px]"
+            className="text-center max-w-[500px] md:max-w-[700px] lg:max-w-[780px] leading-6 lg:leading-7 text-base lg:text-[20px]"
             style={{}}
           >
-            Connect with thousands of developers from the 100xdevs cohort
+            Discover & Connect with thousands of devs. Explore projects, find
+            mentors, and team up with potential co-founders, all within 100xdevs
+            cohort.
           </p>
         </div>
         <ButtonHero />

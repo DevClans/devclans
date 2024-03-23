@@ -16,7 +16,12 @@ export const getGithubReadmeNew = async ({
 }) => {
   try {
     let readmeData: any;
-    if (githubApi.type == "auth" && username && repoName) {
+    if (
+      githubApi &&
+      (githubApi.type == "auth" || githubApi.type == "app") &&
+      username &&
+      repoName
+    ) {
       let data: any;
       console.info("fetching from github with auth for", type);
       if (type == "languages") {
@@ -56,7 +61,7 @@ export const getGithubReadmeNew = async ({
         console.error("githubUrl not found");
         return null;
       }
-      console.info("fetching from github wihtout auth for", type);
+      console.info("fetching from github wihtout auth for", type, githubUrl);
       // README
       const readmeUrl = `${githubUrl}/${type}`;
 

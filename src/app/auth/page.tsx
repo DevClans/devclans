@@ -1,4 +1,10 @@
 import { PageProps } from "@/types/page.types";
+import { Metadata } from "next";
+import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Login",
+};
 
 const page = ({ searchParams }: PageProps) => {
   const error = searchParams?.error;
@@ -10,7 +16,7 @@ const page = ({ searchParams }: PageProps) => {
       </div>
     );
   }
-  return <></>;
+  return redirect("/api/auth/signin");
 };
 
 export default page;

@@ -6,6 +6,12 @@ import { InputFieldProps } from "@/types/form.types";
 
 export const dummyProjectFormSchemaFields: InputFieldProps[] = [
   {
+    label: "Select GitHub Repository",
+    desc: "Choose the GitHub repository for your project. If you don't see your repository, make sure you have installed the app in your GitHub account. You can also update the list of repositories by clicking the button above.",
+    name: "repoName",
+    options: [],
+  },
+  {
     label: "Title",
     desc: "What would you like to call your project?",
     name: "title",
@@ -45,19 +51,22 @@ export const dummyProjectFormSchemaFields: InputFieldProps[] = [
     name: "devStage",
     options: devStages,
   },
-  // {
-  //   label: "Team",
-  //   desc: "Select the team members involved in the project.",
-  //   name: "team",
-  //   // Assuming zodUserTeamItemSchema is defined elsewhere
-  //   // and represents the schema for team members
-  // },
+
   {
-    label: "Repository Github Link",
-    desc: "Paste the github link to your project repository. (if available)",
-    name: "repoName",
-    // TODO can add default value here while creating a new project. and ask user to just add ending value
+    label: 'Team Code',
+    desc: 'Generate a team code to allow others to join your project team.',
+    name: 'teamCode',
+    type: 'text',
+    readOnly: true, // Make the field read-only
   },
+
+  // {
+  //   label: 'Team Members',
+  //   desc: 'Enter the Discord IDs of team members, separated by commas (e.g., @rahul, @sunil, @priya).',
+  //   name: 'teamMembers',
+  //   type: 'text',
+  // },
+
   // {
   //   label: "Images",
   //   desc: "Upload images related to your project.",

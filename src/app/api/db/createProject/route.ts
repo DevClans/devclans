@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import { UserModel, ProjectModel } from "@/mongodb/models";
-import { zodMongoId, zodProjectFormSchemaServer } from "@/zod/zod.common";
-import updateAllCache from "@/redis/updateUserCache";
+import {
+  zodMongoId,
+  zodProjectFormSchemaServer,
+  zodUserDataSchema,
+} from "@/zod/zod.common";
 import { getGithubData } from "@/utils/getGithubDataForProject";
 import { UserRedisKeys } from "@/types/mongo/user.types";
 import { redisGet, redisSet } from "@/redis/basicRedis";
+import { z } from "zod";
 
 async function handler(req: Request) {
   try {
@@ -41,18 +45,22 @@ async function handler(req: Request) {
       { $push: { ownedProjects: projectId } },
       { new: true } // Return the updated document
     )
-      .select(
-        "githubId githubDetails.accessToken githubDetails.username githubDetails.login"
-      )
+      .select("githubId githubDetails.username githubDetails.login")
       .lean();
     console.log("Updated user profile:", updatedUser);
     // update user cache
     console.log("getting user data cache...");
     try {
-      const userdata = await redisGet(UserRedisKeys.data, userid);
+      const userdata: z.infer<typeof zodUserDataSchema> = await redisGet(
+        UserRedisKeys.data,
+        userid
+      );
       if (!userdata) throw new Error("no user data found in cache");
       console.log("updating user data in cache in createProject");
-      if (userdata.ownedProjects) {
+      if (
+        Array.isArray(userdata.ownedProjects) &&
+        userdata.ownedProjects.length > 0
+      ) {
         if (userdata.ownedProjects.includes(projectId)) {
           console.log("project already exists in user data");
           throw new Error("project already exists in user data");
@@ -70,17 +78,15 @@ async function handler(req: Request) {
     //  we are getting entire data and updating entire cache. but this is not optimal. just getting updated info will be nicer.
 
     // fetching and add github data
-    getGithubData(
-      projectId,
-      { ...projectData, owner: updatedUser },
-      updatedUser?.githubDetails?.accessToken || ""
-    ).then((data) => {
-      if (data) {
-        console.log("Github data fetched");
-      } else {
-        console.log("Github data fetched failed");
+    getGithubData(projectId, { ...projectData, owner: updatedUser }).then(
+      (data) => {
+        if (data) {
+          console.log("Github data fetched");
+        } else {
+          console.log("Github data fetched failed");
+        }
       }
-    });
+    );
 
     console.log("Project successfully created");
 

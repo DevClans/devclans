@@ -1,5 +1,6 @@
 import { Types } from "mongoose";
 
+export const isDev = process.env.NODE_ENV === "development";
 export const urlBase =
   process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 export const urlApi = urlBase + "/api";
@@ -25,9 +26,7 @@ export const urlUser = ({
   onlyEndpoint?: boolean;
 }) => {
   const endpoint =
-    username || id
-      ? `/user${username ? "/" + username : id ? "/" + id : ""}`
-      : "";
+    username || id ? `/${username ? "/" + username : id ? "/" + id : ""}` : "";
   if (onlyEndpoint) {
     return endpoint;
   }

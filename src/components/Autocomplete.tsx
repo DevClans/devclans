@@ -5,20 +5,33 @@ import FilterDialogItem from "./FilterDialogItem";
 import SearchBox from "./SearchBox";
 import { X } from "lucide-react";
 import colors from "@/lib/colors";
-import useFilters from "./CheckBoxItem";
 
 const Autocomplete = ({
   options,
   label,
+  setValue,
+  defaultValue,
+  isFilter = false,
+  limit,
+  name,
+  className,
 }: {
   options: string[];
-  label: string;
-}) => {
-  // FILTER REALTED THINGS
-  const { group: selected, onChange } = useFilters({ title: label });
-  // BELOW THIS IS INDEPENDENT COMPONENT
+  label: string | React.ReactNode;
+  name?: string;
+  isFilter?: boolean;
+  setValue: any;
+  defaultValue?: string[];
+  limit?: number;
+} & { className?: string }) => {
   const [show, setShow] = useState(false);
-  // const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [selected, setSelected] = useState<string[]>(
+    Array.isArray(defaultValue) ? defaultValue : []
+  );
+  // console.log("selected", selected, defaultValue);
+  useEffect(() => {
+    if (Array.isArray(defaultValue) && isFilter) setSelected(defaultValue);
+  }, [defaultValue, isFilter]);
   const [search, setSearch] = useState("");
   const containerRef: any = useRef(null);
 
@@ -42,18 +55,32 @@ const Autocomplete = ({
   }, []); // Empty dependency array ensures this effect runs only once
 
   const removeValue = (value: string) => {
-    // setSelected((prev) => (prev.delete(value), new Set(prev)));
-    onChange(value);
+    if (isFilter) {
+      setValue(value);
+      return;
+    }
+    const newVal = [...selected].filter((item) => item !== value);
+    setValue(name, newVal);
+    setSelected(newVal);
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    onChange(value);
-    // if (checked) {
-    //   // already selected, remove it
-    //   removeValue(value);
-    // } else {
-    //   setSelected((prev) => new Set(prev.add(value)));
-    // }
+    const { value, checked } = e.target;
+    if (isFilter) {
+      setValue(value);
+      return;
+    }
+    // console.log("value", value, checked);
+    if (!checked) {
+      // already selected, remove it
+      removeValue(value);
+    } else {
+      if ((limit && selected.length >= limit) || selected.includes(value)) {
+        return;
+      }
+      const newVal = [...selected, value];
+      setValue(name, newVal);
+      setSelected(newVal);
+    }
   };
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -61,11 +88,13 @@ const Autocomplete = ({
   return (
     <div className="relative w100" ref={containerRef}>
       <div
-        className="card2 !rounded-[10px] p-1 px-2 frc flex-wrap gap-1 min-h-[40px]"
+        className={`card2  frc flex-wrap gap-1 min-h-[40px] ${
+          className || "!rounded-[10px] p-1 px-2"
+        }`}
         onClick={() => setShow(!show)}
       >
-        {selected.size > 0 ? (
-          Array.from(selected)?.map((skill, index) => (
+        {Array.isArray(selected) && selected.length > 0 ? (
+          selected.map((skill, index) => (
             <div
               key={index}
               className="frc gap-1 py-1 px-2 bg-border rounded-[10px]"
@@ -91,7 +120,7 @@ const Autocomplete = ({
             .sort()
             .map((skill, index) => (
               <FilterDialogItem
-                active={selected.has(skill)}
+                active={selected.includes(skill)}
                 key={index}
                 onChange={handleChange}
                 label={skill}

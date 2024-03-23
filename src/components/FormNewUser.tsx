@@ -17,6 +17,7 @@ import selectUserContactId from "@/lib/selectUserContactId";
 import LogedOutScreen from "./LogedOutScreen";
 import { toast } from "react-toastify";
 import { memberLevels } from "@/lib/memberLevel";
+import { handleGithubConnect } from "@/utils/handleConnectGithub";
 
 const FormNewUser = ({
   defaultValues: dv,
@@ -25,21 +26,19 @@ const FormNewUser = ({
 }) => {
   const isEdit = false;
   const searchParams = useSearchParams();
+  const newUser = searchParams.get("new");
   const { data }: any = useSession();
   const session = data?.user;
   const [githubLoading, setGithubLoading] = useState(false);
   const [defaultValues, setDefaultValues] = useState<UserProps | UserFormProps>(
     (dv as unknown as UserProps) || {}
   );
-  console.log("defaultValues", defaultValues);
+  // console.log("defaultValues", defaultValues);
   // const defaultValues: UserProps | UserFormProps =
   //   (dv as unknown as UserProps) || {};
   const githubUsername =
-    searchParams.get("githubUsername") ||
-    session?.githubId ||
-    ("githubId" in defaultValues && defaultValues?.githubId) ||
-    ("githubDetails" in defaultValues && defaultValues?.githubDetails?.login);
-  // TODO this should be based on access token. if we have access token then user is connected
+    searchParams.get("githubUsername") || session?.githubId;
+  // TODO need a way to delete access token when it becomes invalid or regenrate it when needed
   // console.log("defaultValues", defaultValues);
   const { watch, setError, setValue, handleSubmit, ...form } =
     useForm<UserFormProps>({
@@ -50,13 +49,13 @@ const FormNewUser = ({
   const userid = session?._id;
   const onSubmit: SubmitHandler<UserFormProps> = async (data) => {
     try {
-      data.contactMethodId = selectUserContactId(data);
+      data.contactMethodId = selectUserContactId(data) || session?.discordId;
       // console.log("data", JSON.stringify(data), JSON.stringify(defaultValues));
       if (JSON.stringify(data) === JSON.stringify(defaultValues)) {
         toast.success("Project Updated Successfully!", {
           autoClose: false,
         });
-        console.log("No change in data");
+        // console.log("No change in data");
         return;
       }
       // console.log("setting data", data);
@@ -68,7 +67,7 @@ const FormNewUser = ({
         setError,
         "Profile Updated Successfully"
       );
-      console.log("res", res, session);
+      // console.log("res", res, session);
       // if (!res && session) {
       //   throw new Error("Error in our server. Please try again later.");
       // }
@@ -81,6 +80,7 @@ const FormNewUser = ({
     }
   };
   const contactMethod = watch("contactMethod");
+  console.log("contactMethod", contactMethod);
   const commonClass: string = "w100";
 
   const fieldsArray: InputFieldProps[] = [
@@ -95,17 +95,18 @@ const FormNewUser = ({
       desc: "Enter a brief description about yourself.",
     },
     {
-      label: "Skills:",
+      label: "Tech Stack:",
       name: "skills",
       options: skills as any,
       multi: true,
-      desc: "Select your skills from the list.",
+      desc: "Select tech stack you use from the list.",
       limit: 10,
       // min: 3,
     },
     {
       label: "Skill Level:",
-      name: "Select what level you would give yourself for the skills you have in selected domain.",
+      name: "skillLevel",
+      desc: "Select what level you would give yourself for the skills you have in selected domain.",
       options: memberLevels as any,
     },
     {
@@ -138,38 +139,41 @@ const FormNewUser = ({
     {
       label: "Email:",
       name: "email",
-      condition: contactMethod === "email",
+      required: contactMethod === "email",
       desc: "Enter your email address.",
     },
     {
       label: "Phone Number:",
       name: "phone",
       type: "number",
-      condition: contactMethod === "whatsapp",
+      required: contactMethod === "whatsapp",
       desc: "Enter your phone number.",
     },
     {
       label: "Twitter Handle:",
       name: "socials.twitter",
-      condition: contactMethod === "twitter",
+      required: contactMethod === "twitter",
       desc: "Enter your Twitter handle.",
+      preText: "https://x.com/",
+    },
+    {
+      label: "Telegram :",
+      name: "socials.telegram",
+      required: contactMethod === "telegram",
+      desc: "Enter your Telegram username.",
     },
     {
       label: "LinkedIn Profile:",
       name: "socials.linkedin",
       desc: "Enter your LinkedIn profile URL.",
+      preText: "https://linkedin.com/in/",
     },
     {
       label: "Portfolio:",
       name: "socials.website",
       desc: "Enter your portfolio website URL.",
     },
-    {
-      label: "Telegram :",
-      name: "socials.telegram",
-      condition: contactMethod === "telegram",
-      desc: "Enter your Telegram username.",
-    },
+
     {
       label: "Career Goal:",
       name: "questions.careerGoal",
@@ -199,24 +203,33 @@ const FormNewUser = ({
   // console.log("session", session);
   // console.log("errors", errors);
 
-  const handleConnectGitHub = () => {
+  const handleConnectGitHub = async () => {
     setGithubLoading(true);
-    // setting values before redirecting to github
-    setDefaultValues(watch()); // TODO needs testing
-    const GITHUB_AUTH_URL = "https://github.com/login/oauth/authorize";
-    const CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
-    const CALLBACK_URL =
-      process.env.NEXT_PUBLIC_GITHUB_CALLBACK_URL +
-      `${userid ? `?userid=${userid}` : ""}`; // both id and query works
-    // TODO encrypt the user id
-    // console.log("CLIENT_ID", CLIENT_ID, CALLBACK_URL);
-    const state = userid;
-    const SCOPES = "read:user,user:email,repo";
-    window.location.href = `${GITHUB_AUTH_URL}?client_id=${CLIENT_ID}&redirect_uri=${CALLBACK_URL}&scope=${SCOPES}${
-      state ? `&state=${state}` : ""
-    }`;
+    const data: any = watch();
+    let isNew = false;
+    if (defaultValues && data && typeof defaultValues === "object") {
+      for (const key in data) {
+        if (
+          data[key] &&
+          JSON.stringify(data[key]) !=
+            JSON.stringify((defaultValues as any)[key])
+        ) {
+          console.log("isNew", key, data[key], (defaultValues as any)[key]);
+          isNew = true;
+        }
+      }
+      if (isNew) {
+        const ques = confirm(
+          "You have unsaved changes. Automatically save changes for me before continuing?"
+        );
+        if (ques) {
+          await handleSubmit(onSubmit)();
+        }
+      }
+    }
+    handleGithubConnect();
+    setGithubLoading(false);
   };
-  // console.log("contactMethod", contactMethod === "whatsapp");
 
   if (!session) {
     return <LogedOutScreen />;
@@ -226,7 +239,7 @@ const FormNewUser = ({
       {
         <FormServer
           defaultValues={defaultValues}
-          isEdit={isEdit}
+          isNew={newUser == "true"}
           heading="Lets Create Your Profile"
           setValue={setValue}
           buttons={

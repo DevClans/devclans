@@ -1,5 +1,5 @@
 import { PageProps } from "@/types/page.types";
-import { ButtonBlue, ButtonConnect, ButtonSecondary, ChipGroup } from "..";
+import { ButtonBlue, ButtonSecondary, ChipGroup } from "..";
 import Link from "next/link";
 
 type ItemsTemplateProps = Partial<PageProps> & {
@@ -40,8 +40,8 @@ const ItemsTemplate = ({
         <div className="fcfs gap-2 w100">
           {detailsHeader && <div className="frcsb w100">{detailsHeader}</div>}
           {title && (
-            <Link href={url}>
-              <h2>{title}</h2>
+            <Link href={url} className="w100">
+              <h2 className="w100 overflow-hidden text-ellipsis">{title}</h2>
             </Link>
           )}
           {desc && (
@@ -67,7 +67,7 @@ const ItemsTemplate = ({
           <ChipGroup
             arr={chipArr || []}
             searchParams={searchParams}
-            baseUrl={`explore/${baseUrl}s`}
+            baseUrl={`/explore${baseUrl ? baseUrl + "s" : "users"}`}
           />
         </div>
         {/* CONTACT AND CALL TO ACTIONS */}

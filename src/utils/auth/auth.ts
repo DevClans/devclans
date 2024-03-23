@@ -1,17 +1,17 @@
 import type { NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import { adapter } from "./adapterFunctions";
-// import { UserDiscordDetailsProps } from "@/types/mongo/user.types";
-// import { zodUserDiscordDetailsSchema } from "@/zod/zod.common";
 import { Fetch } from "../fetchApi";
+import { zodUserDiscordDetailsSchema } from "@/zod/zod.common";
+import { UserDiscordDetailsProps } from "@/types/mongo/user.types";
 
 const isServerMember = async (discordId: string, token: string) => {
-  const isMember = await Fetch({
+  return await Fetch({
     endpoint: `/middleware/checkServerMembership?discordId=${discordId}`,
     method: "GET",
     token: token,
+    needError: true,
   });
-  return isMember?.isMember;
 };
 
 export const authOptions: NextAuthOptions = {
@@ -23,30 +23,39 @@ export const authOptions: NextAuthOptions = {
       authorization: {
         params: {
           scope: "identify email guilds guilds.members.read",
+          // prompt: "consent",
         },
       },
       async profile(profile: any, tokens: any) {
         const { id } = profile;
-        const { access_token } = tokens;
+        // const { access_token, expires_in } = tokens;
         // console.log("tokens in profile", tokens);
-        const isMember = await isServerMember(id, access_token);
-        console.log("isMember in profile", isMember);
+        // ? not checking here as the limit is 5 per user and checking multiple times will lead to rate limit
+        // const isMember = await isServerMember(id, access_token);
+        // console.log("isMember in profile", isMember);
         // console.log("access token", tokens);
-        // const isData = zodUserDiscordDetailsSchema.safeParse({
-        //   ...profile,
-        //   _id: id,
-        // });
-        // let discordDetails: UserDiscordDetailsProps | null = null;
+        const isData = zodUserDiscordDetailsSchema.safeParse({
+          ...profile,
+          _id: id,
+        });
+        let discordDetails: UserDiscordDetailsProps | false =
+          isData.success && isData.data;
+        console.log(
+          "discordDetails in profile",
+          isData.success || isData.error
+        );
         // if (!isData.success) throw new Error(isData.error.message);
         // discordDetails = isData.data;
         return {
           id: id,
           username: profile.username,
           discordId: id,
-          discordDetails: { ...profile, _id: id },
+          discordDetails: { ...(discordDetails || profile), _id: id },
           email: profile.email,
           emailVerified: profile.verified,
-          isMember: isMember,
+          contactMethod: "discord",
+          contactMethodId: id,
+          createdAt: new Date(),
         };
       },
     }),
@@ -64,6 +73,7 @@ export const authOptions: NextAuthOptions = {
           user.discordDetails?.global_name || user.discordDetails?.username,
         avatar: user.discordDetails?.avatar,
         discordId: user.discordId,
+        repos: user.githubDetails?.installId && (user.repos || []),
         githubId:
           user.githubDetails?.accessToken &&
           (user.githubId || user.githubDetails?.login), // add githubId if user has connected github
@@ -78,15 +88,16 @@ export const authOptions: NextAuthOptions = {
       }
       // console.log("signIn", user, account, profile, email, credentials);
       const isMember = await isServerMember(profile.id, account.access_token);
-      console.log("isMember", isMember);
-      if (!isMember) {
-        return "/error?error=notMember";
+      console.log("isMember =>", isMember);
+      if (!isMember || !isMember?.isMember) {
+        return "/error?error=" + isMember?.message || "notMember";
       }
       return true;
     },
   },
   pages: {
     newUser: "/user/new",
+    error: "/error",
   },
   events: {
     signIn: async (message) => {

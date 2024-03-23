@@ -2,6 +2,7 @@ import { getOctokit } from "@/github/config.github";
 import getGithubReadme from "@/github/repos/gh.getReadme";
 import { UserModel } from "@/mongodb/models";
 import { redisGet, redisSet } from "@/redis/basicRedis";
+import redisClient from "@/redis/config";
 import updateAllCache from "@/redis/updateUserCache";
 import { projectSearchItemKeys } from "@/types/mongo/project.types";
 import {
@@ -11,6 +12,7 @@ import {
   UserSearchInfoProps,
   userSearchInfoKeys,
 } from "@/types/mongo/user.types";
+import { decrypt } from "@/utils/EncryptFunctions";
 import dbConnect from "@/utils/mongoose.config";
 import {
   zodUserGithubDetailsSchema,
@@ -28,7 +30,7 @@ const getUserData = async (user: string, select: string) => {
     const u: UserProps | null = await UserModel.findById(
       new Types.ObjectId(user)
     )
-      .select(select)
+      .select(select || " -githubDetails.accessToken -githubDetails.installId")
       .populate("ownedProjects", projectSearchItemKeys.join(" "))
       // TODO get only ids and check in cache and then get missing data if load increases
       .lean();
@@ -42,8 +44,12 @@ const getUserData = async (user: string, select: string) => {
 const getGithubData = async (userId: string, userInfo: any, token?: string) => {
   try {
     userInfo["githubDetails"] = userInfo["githubDetails"] || {};
-    let userAccessToken = token;
-    console.info("getting user github data start");
+    let userAccessToken =
+      token || (await redisGet(UserRedisKeys.accessToken, userId));
+    console.info(
+      "getting user github data start=> userAccessTOken",
+      Boolean(userAccessToken)
+    );
     let githubUsername = "";
     let getreadme = true;
     let getData = true;
@@ -54,9 +60,6 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
       if (data.success) {
         console.info("user github cache hit");
         getData = false;
-        if (!userAccessToken) {
-          userAccessToken = data.data.accessToken;
-        }
         Object.assign(dataForCache, data.data);
         githubUsername = data.data.login;
         if (data.data.readme) {
@@ -76,24 +79,31 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
         .lean();
       if (accessToken) {
         console.info("user access token found", accessToken);
-        userAccessToken = accessToken.githubDetails?.accessToken;
-        // TODO encrypt access token for cache
-        dataForCache["accessToken"] = userAccessToken;
+        userAccessToken = decrypt(accessToken.githubDetails?.accessToken);
+        if (userAccessToken) {
+          redisSet(
+            UserRedisKeys.accessToken,
+            userId,
+            userAccessToken,
+            3600 * 24 * 365
+          );
+        }
       }
     }
     if (userAccessToken) {
-      console.info("can get data from github api");
       // get data from github api
       const githubapi = await getOctokit({ accessToken: userAccessToken });
       if (githubapi && githubapi.type === "auth") {
+        console.info("can get data from github api");
         if (getData) {
+          console.info("getting user data from github api");
           // get github related data
           const githubData: any = await githubapi.api.request("GET /user", {
             headers: {
               "X-GitHub-Api-Version": "2022-11-28",
             },
           });
-          console.info("user data from github", githubData);
+          console.info("user data from github", Boolean(githubData?.data));
           githubUsername = githubData.data.login;
           Object.assign(
             dataForCache,
@@ -103,9 +113,8 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
         if (getreadme) {
           // try getting readme from github api
           console.info("getting user github readme from github api");
-          const readme = await githubapi.api.request(
-            "GET /repos/{owner}/{repo}/contents/{path}",
-            {
+          const readme = await githubapi.api
+            .request("GET /repos/{owner}/{repo}/contents/{path}", {
               owner: githubUsername,
               repo: githubUsername,
               path: "README.md",
@@ -113,8 +122,11 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
               headers: {
                 "X-GitHub-Api-Version": "2022-11-28",
               },
-            }
-          );
+            })
+            .catch((error) => {
+              console.error("error getting readme from github api", error);
+              return error;
+            });
           console.info("readme from github", readme);
           if (readme.status == 200) {
             getreadme = false;
@@ -199,6 +211,7 @@ async function handler(
       }
     }
     const userId = isMongoId ? user : cachedId;
+    console.info("user profile being fetched =>", userId);
     if (!userId) {
       console.info("user not found in cache", userId);
       throw new Error("User not found " + userId);
@@ -225,9 +238,14 @@ async function handler(
           // get some details
           const u: UserProps | UserSearchInfoProps | null = await getUserData(
             userId,
-            "-" + userSearchInfoKeys.join(" -")
+            "-githubDetails -" +
+              userSearchInfoKeys
+                .filter((item) => !item.includes("githubDetails"))
+                .join(" -")
           ); // to get all fields except userSearchInfoKeys as they already exist in userInfo
           if (!u) {
+            // clear user id from cache
+            await redisClient.del(UserRedisKeys.ids + ":" + user);
             return NextResponse.json({ message: "User not found " + userId });
           }
           Object.assign(userInfo, u);
@@ -236,14 +254,15 @@ async function handler(
         }
       } catch (error) {
         console.error("error in user details data", error);
-        throw error;
       }
     } else {
       console.info("users cache miss", checkUserSearchInfoCache.error);
       // get all details
       const u: UserProps | null = await getUserData(userId, "");
       if (!u) {
-        return NextResponse.json({ message: "User not found " + +userId });
+        // clear user id from cache
+        await redisClient.del(UserRedisKeys.ids + ":" + user);
+        return NextResponse.json({ message: "User not found " + userId });
       }
       Object.assign(userInfo, u);
       // add to cache by separating userSearchInfoKeys and other keys

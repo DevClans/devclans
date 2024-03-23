@@ -19,6 +19,7 @@ const UserItem = async ({
   githubId,
   _id,
   searchParams,
+  githubDetails,
 }: UserSearchInfoProps & Partial<PageProps>) => {
   const {
     avatar: disAvatar,
@@ -30,12 +31,15 @@ const UserItem = async ({
     avatar,
     discordImg: disAvatar,
     discordId: disID,
+    gitubImg: githubDetails?.avatar_url,
+    discordSize: 512,
   });
   const displayName = selectUserDisplayName({
     username: usernm,
     discordUsername: global_name,
     userProps: { discordDetails },
   });
+
   const username = usernm || disUsername;
   const url = urlUser({ username: usernm, id: _id?.toString() });
   return (
@@ -60,14 +64,23 @@ const UserItem = async ({
         }
         detailsHeader={
           <>
-            <Link href={url}>
-              <h2>{displayName || "Username"}</h2>
-            </Link>
-            <ProjectIconGroup
-              showLabels={false}
-              url={url}
-              message={msgSharingUser(displayName)}
-            />
+            <div className="fcfs w100 overflow-hidden">
+              <div className="frcsb w100">
+                <Link href={url}>
+                  <h2>{displayName || username}</h2>
+                </Link>
+                <ProjectIconGroup
+                  showLabels={false}
+                  url={url}
+                  message={msgSharingUser(displayName)}
+                />
+              </div>
+              {username && (
+                <p className="text-subH w100 text-ellipsis overflow-hidden">
+                  @{username}
+                </p>
+              )}
+            </div>
           </>
         }
         rightMessage={
@@ -78,7 +91,7 @@ const UserItem = async ({
         detailHeading={"Skill Level"}
         detailDesc={skillLevel as string}
         chipArr={skills}
-        baseUrl={"/user/"}
+        baseUrl={""}
         _id={_id?.toString()}
         desc={bio || ""}
       />

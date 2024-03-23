@@ -5,13 +5,19 @@ export const userGithubDetailsSchema = new Schema<UserGithubDetailsProps>(
   {
     accessToken: {
       type: String,
-      required: true,
+      // required: function (this: any) {
+      //   return !this.installId;
+      // },
       validate: {
         validator: function (value: string) {
           return /^[A-Za-z0-9]+$/.test(value); // Example: Only alphanumeric characters allowed
         },
         message: (props: any) => `${props.value} is not a valid accessToken!`,
       },
+    },
+    installId: {
+      type: String,
+      unique: true,
     },
     avatar_url: { type: String },
     node_id: { type: String },
@@ -44,8 +50,3 @@ export const userGithubDetailsSchema = new Schema<UserGithubDetailsProps>(
   },
   { timestamps: true }
 );
-
-// Define a model using the schema
-//   const UserGithubDetails = mongoose.model<Document & UserGithubDetailsProps>('UserGithubDetails', userGithubDetailsSchema);
-
-//   export default UserGithubDetails;

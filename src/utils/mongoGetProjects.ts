@@ -1,7 +1,7 @@
 import { ProjectModel, UserModel } from "@/mongodb/models";
 import { projectSearchItemKeys } from "@/types/mongo/project.types";
 import { mongoFilter } from "./mongoFilter";
-import { userSearchInfoKeys } from "@/types/mongo/user.types";
+import { userSearchInfoKeys, userTeamItemKeys } from "@/types/mongo/user.types";
 
 export const mongoProjects = async ({
   filterQuery = {},
@@ -25,7 +25,7 @@ export const mongoProjects = async ({
       query["published"] = true;
     }
     console.log("mongo query", JSON.stringify(query));
-    const dbData = await model
+    const queryChain = model
       .find(query)
       .select(
         model == ProjectModel
@@ -36,6 +36,10 @@ export const mongoProjects = async ({
       .skip((page - 1) * 20)
       .limit(20)
       .lean();
+    if (model == ProjectModel) {
+      queryChain.populate("team", userTeamItemKeys.join(" "));
+    }
+    const dbData = await queryChain.exec();
     return dbData;
   } catch (error) {
     console.log(error);

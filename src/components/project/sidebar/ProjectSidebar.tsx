@@ -6,6 +6,7 @@ import {
   Avatar,
 } from "@/components";
 import LinkGithub from "@/components/links/LinkGithub";
+import { urlUser } from "@/constants";
 import colors from "@/lib/colors";
 import { ListItemProps } from "@/types/list.types";
 import { UserSidebarProps } from "@/types/mongo/project.types";
@@ -22,7 +23,7 @@ const ProjectSidebar = ({
       return (
         _id && {
           text: username || "",
-          href: "/user/" + _id,
+          href: urlUser({ username, id: _id.toString() }),
           startIcon: (
             <Avatar
               style={{

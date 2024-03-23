@@ -19,7 +19,70 @@ import {
   zodRepoName,
   zodTeamContactSchema,
 } from "@/zod/zod.common";
+import { Metadata } from "next";
 import { z } from "zod";
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const id = params?.id;
+  const {
+    projectData: data,
+  }: {
+    projectData: FetchProjectProps["data"] | null;
+    renderLanguages: ProjectRepoDetailsProps["languages"];
+  } = await ProjectData(id as string);
+  if (!data) {
+    console.error("Project not found in open graph image");
+    return {};
+  }
+  console.log("This us Data:",data)
+  const { title, desc, imgs, skills, repoDetails, domain } = data;
+  const img =
+    Array.isArray(imgs) && imgs.length > 0
+      ? imgs[0]
+      : "https://devclans.com/metaImg.png";
+  const description = desc
+    ? desc.substring(0, 120) + ". | View more at Devclans"
+    : `View ${title} at Devclans`;
+  return {
+    title,
+    description,
+    keywords: [
+      title,
+      "devclans",
+      ...(domain || []),
+      ...(skills || []),
+      ...(repoDetails?.topics || []),
+    ].slice(0, 10),
+    openGraph: {
+      title,
+      description,
+      url: `https://devclans.com/project/${id}`,
+      images: [
+        {
+          url: img,
+          width: 1200,
+          height: 630,
+          alt: `View ${title} at https://www.devclans.com | Devclans`,
+        },
+      ],
+    },
+    twitter: {
+      title,
+      description,
+      card: "summary_large_image",
+      images: [
+        {
+          url: img,
+          width: 1200,
+          height: 630,
+          alt: `View ${title} at Devclans`,
+        },
+      ],
+    },
+  };
+}
 
 const Page = async ({
   params,

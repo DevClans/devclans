@@ -3,7 +3,7 @@ import colors from "@/lib/colors";
 import { useState } from "react";
 import GitHubCalendar from "react-github-calendar";
 
-const GitHubGraph = ({ username }: { username: string }) => {
+const GitHubGraph = ({ username }: { username?: string | null }) => {
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear);
   const removeHashTag = (str: string) => str?.replace("#", "") || "E2E8FF8C";
@@ -33,7 +33,7 @@ const GitHubGraph = ({ username }: { username: string }) => {
           }}
         />
       </div>
-      <GitHubCalendar username={"auspy" || username} year={year} />
+      <GitHubCalendar username={username} year={year} />
       <img
         className="mt-2"
         src={`https://github-readme-activity-graph-ashen.vercel.app/graph?username=${username}&theme=github-compact&bg_color=081121&title_color=${removeHashTag(

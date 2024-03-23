@@ -10,9 +10,14 @@ import { dummyProjectFormSchemaFields } from "@/dummy/dummy.project.form";
 import { createProjectUser } from "@/utils/createProjectUser";
 import ImageUpload from "./ImageUpload";
 import LogedOutScreen from "./LogedOutScreen";
-import { ButtonBlue } from ".";
+import { ButtonBlue, ButtonSecondary } from ".";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { getGHInstaddedRepos } from "@/utils/getInstalledRepos";
+import { handleGithubChangeRepos } from "@/utils/handleConnectGithub";
+import ButtonConnectGithub from "./buttons/ButtonConnectGithub";
+import { generateTeamCode } from "@/utils/generateTeamCode";
 
 const FormNewProject = ({
   defaultValues: dv,
@@ -21,16 +26,13 @@ const FormNewProject = ({
   defaultValues?: Partial<ProjectFormProps>;
   projectId?: string;
 }) => {
+  const [teamCode, setTeamCode] = useState<string>('');
   const { data }: any = useSession();
+  const pathname = usePathname();
   const session = data?.user;
+  const repos = session?.repos;
+  const isUserConnected = Boolean(session?.githubId);
   const [projectId, setProjectId] = useState<string | undefined>(pid);
-  if (
-    dv?.repoName &&
-    (dv?.repoName?.startsWith("/") ||
-      !dv?.repoName?.startsWith("https://github.com"))
-  ) {
-    dv.repoName = "https://github.com" + dv.repoName;
-  }
   const [defaultValues, setDefaultValues] = useState<Partial<ProjectFormProps>>(
     dv || {}
   );
@@ -39,15 +41,30 @@ const FormNewProject = ({
       defaultValues: defaultValues as any,
       resolver: zodResolver(zodProjectFormSchema),
     });
-  // console.log("defaultValues", watch());
+  console.log("defaultValues", watch("repoName"));
+
+  const handleGenerateTeamCode = () => {
+    const code = generateTeamCode();
+    console.log("This is the Team code",code);
+    setTeamCode(code);
+    setValue('teamCode', code);
+  };
+
   const onSubmit: SubmitHandler<ProjectFormProps> = async (data) => {
     try {
+      // const a = zodProjectFormSchema.parse(data);
+      // console.log("a", a);
+      // return
       if (JSON.stringify(data) === JSON.stringify(defaultValues)) {
         toast.success("Project Updated Successfully");
         return;
       }
       setDefaultValues(data);
       console.log("clicked");
+      const formData: ProjectFormProps = {
+        ...data,
+        teamCode: teamCode || null,
+      };
       // const dt = zodProjectFormSchema.parse(data);
       // console.log(dt);
       // return;
@@ -56,7 +73,7 @@ const FormNewProject = ({
         : "/db/createProject";
       const res = await createProjectUser(
         url,
-        data,
+        formData,
         session,
         setError,
         projectId
@@ -83,9 +100,82 @@ const FormNewProject = ({
   //   console.log("clicked");
 
   // }
+
   const commonClass: string = "w100";
 
-  const fieldsArray: InputFieldProps[] = dummyProjectFormSchemaFields;
+  const [fieldsArray, setFieldsArray] = useState<InputFieldProps[]>(
+    dummyProjectFormSchemaFields
+  );
+  const updateRepofield = (repos: string[], label: boolean = false) => {
+    const repoField = fieldsArray.find((f) => f.name === "repoName");
+    console.log("found repoField", repoField);
+    if (repoField) {
+      repoField.options = repos;
+      if (label) {
+        repoField.label = (
+          <div className="frc gap-2">
+            {`Select Github Repository`}
+
+            {isUserConnected ? (
+              <ButtonSecondary
+                type="button"
+                style={{ height: 30, fontSize: 12, maxWidth: 150 }}
+                label={"Change Github Repos"}
+                onClick={handleGithubChangeRepos}
+              />
+            ) : (
+              <ButtonConnectGithub
+                style={{ height: 30, fontSize: 12, maxWidth: 150, padding: 0 }}
+              />
+            )}
+          </div>
+        );
+      }
+      console.log("repoField", repoField);
+      setFieldsArray([...fieldsArray]);
+      return true;
+    }
+    return false;
+  };
+  useEffect(() => {
+    updateRepofield(["Loading..."], true);
+    if (!isUserConnected) {
+      console.log("user not connected");
+      updateRepofield([], true);
+      return;
+    }
+    if (Array.isArray(repos) && repos.length > 0) {
+      console.log("user is connected and has some repos");
+      updateRepofield([null, ...repos], true);
+    } else {
+      if (Array.isArray(repos)) {
+        console.log("user  is connected but has no repos yet");
+        updateRepofield([], true);
+      }
+    }
+  }, [repos, isUserConnected]);
+
+  // useEffect(() => {
+  //   if (!isUserConnected) {
+  //     updateRepofield([], true);
+  //     return;
+  //   }
+  //   let updatedRepos = false;
+  //   updateRepofield(["Loading..."], true);
+  //   getGHInstaddedRepos(session?._id)
+  //     .then((res) => {
+  //       console.log("res from getGHInstaddedRepos", res);
+  //       if (res && res.repos) {
+  //         updatedRepos = updateRepofield([null, ...repos]);
+  //       }
+  //     })
+  //     .finally(() => {
+  //       if (!updatedRepos) {
+  //         console.log("null,[...repos] not updated");
+  //         updateRepofield([]);
+  //       }
+  //     });
+  // }, [session?._id, isUserConnected]);
 
   if (!session) {
     return <LogedOutScreen />;
@@ -96,6 +186,7 @@ const FormNewProject = ({
         defaultValues={defaultValues}
         heading="Create A New Project"
         {...form}
+        isNew={Boolean(pathname.includes("/new"))}
         setValue={setValue}
         formId="projectForm"
         zodFormShape={zodProjectFormSchema.shape}
@@ -115,6 +206,21 @@ const FormNewProject = ({
                 href={projectId && `/project/${projectId}`}
               />
             )}
+             <div>
+              <label>
+                <input
+                  type="checkbox"
+                  onChange={handleGenerateTeamCode}
+                  checked={teamCode !== ''}
+                />
+                Generate Team Code
+              </label>
+              {teamCode && (
+                <div>
+                  <p>Team Code: {teamCode}</p>
+                </div>
+              )}
+            </div>
           </div>
         }
         buttonMessage={projectId ? "Update Project" : "Create Project"}

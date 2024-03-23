@@ -1,7 +1,10 @@
 "use client";
 import { ArrowLeftRounded, ArrowRightAltRounded } from "@mui/icons-material";
-import { IconGithub, IconTwitter, LightLine, MuiIconButton } from "..";
-const LeftMenuBottomBar = () => {
+import { LightLine, MuiIconButton } from "..";
+import Link from "next/link";
+import { selectIconForLinks, socialLinks } from "@/lib/socialIcons";
+
+const LeftMenuBottomBar = ({ links }: { links?: [string, string][] }) => {
   const toogleActive = () => {
     const leftMenu = document.getElementById("leftMenuUser");
     const userBtn = document.getElementsByClassName("userBtn")[0];
@@ -22,17 +25,49 @@ const LeftMenuBottomBar = () => {
         : leftMenu.setAttribute("data-state", "active");
     }
   };
+  const haveLinks = Array.isArray(links) && links.length > 0;
   return (
     <>
-      <div className="hidden md:visible md:flex flex-col items-start w100 gap-2 md:group-data-[state=not-active]/left:px-2">
-        <LightLine />
+      <div className="flex p-3 md:p-0 flex-col items-start w100 gap-2 md:group-data-[state=not-active]/left:px-2">
+        {<LightLine />}
         <div className="frcsb md:group-data-[state=not-active]/left:flex-col gap-2 w100 ">
-          <div className="frc h-full md:group-data-[state=active]/left:ml-4 gap-3 w100 md:group-data-[state=active]/left:border-r md:group-data-[state=not-active]/left:border-b md:group-data-[state=not-active]/left:pb-4 border-border md:group-data-[state=not-active]/left:flex-col">
-            <IconGithub />
-            <IconTwitter className="" />
-          </div>
+          <div></div>
+          {haveLinks && (
+            <div className="frc h-full md:group-data-[state=active]/left:ml-4 gap-3 w100 md:group-data-[state=active]/left:border-r md:group-data-[state=not-active]/left:border-b md:group-data-[state=not-active]/left:pb-4 border-border md:group-data-[state=not-active]/left:flex-col">
+              {links.map((link: string[], i: number) => {
+                const [provider, id] =
+                  Array.isArray(link) && link.length == 2 ? link : [null, null];
+                if (
+                  !(
+                    id &&
+                    provider &&
+                    socialLinks[provider as keyof typeof socialLinks]
+                  )
+                ) {
+                  return null;
+                }
+                const href = id.startsWith("https://")
+                  ? id
+                  : socialLinks[provider as keyof typeof socialLinks]?.(id);
+                if (!href.startsWith("https")) {
+                  return null;
+                }
+                return (
+                  <Link
+                    key={i}
+                    href={href}
+                    target="_blank"
+                    className=""
+                    rel="noreferrer"
+                  >
+                    {selectIconForLinks(href, 20)}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
           <MuiIconButton
-            className="!text-text md:group-data-[state=not-active]/left:w-full md:group-data-[state=active]/left:mr-2"
+            className=" !hidden md:!flex  !text-text md:group-data-[state=not-active]/left:w-full md:group-data-[state=active]/left:mr-2"
             onClick={() => {
               toogleActive();
             }}

@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {
-    NEXT_PUBLIC_GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
-    NEXT_PUBLIC_GITHUB_CALLBACK_URL: process.env.GITHUB_CALLBACK_URL,
+    GH_CLIENT_ID: process.env.AUSPY_GITHUB_CLIENT_ID,
+    GH_REDIRECT_URI: process.env.AUSPY_GITHUB_REDIRECT_URI,
+    GOOGLE_ADD_ID: process.env.NEXT_PUBLIC_GOOGLE_ADD_ID,
   },
   images: {
     remotePatterns: [
@@ -16,7 +17,7 @@ const nextConfig = {
       "cdn.discordapp.com",
       "github-readme-activity-graph.vercel.app",
       "example.com",
-      "i.postimg.cc"
+      "i.postimg.cc",
     ],
   },
   async headers() {
