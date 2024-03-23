@@ -24,6 +24,7 @@ const ExpandDetailsBox = ({
   }, [data]);
   return (
     <div className="card2 w100 border-t-0">
+ 
       <summary
         onClick={() => {
           setActive(!isActive);
