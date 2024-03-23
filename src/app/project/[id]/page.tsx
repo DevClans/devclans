@@ -36,6 +36,7 @@ export async function generateMetadata({
     console.error("Project not found in open graph image");
     return {};
   }
+  console.log("This us Data:",data)
   const { title, desc, imgs, skills, repoDetails, domain } = data;
   const img =
     Array.isArray(imgs) && imgs.length > 0

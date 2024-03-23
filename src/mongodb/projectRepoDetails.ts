@@ -12,8 +12,7 @@ const projectRepoSchema = new Schema<ProjectRepoDetailsMongoProps>({
     default: [],
     validate: [arrayMaxLengthValidator, "Topics array exceeds maximum length"],
   },
-  commits: { type: Number, required: true, min: 0 },
-  lastCommit: { type: Date, required: true },
+  lastCommit: { type: Date,default: Date.now },
   readme: {
     type: String,
     validate: [textLengthValidator, "Readme text exceeds maximum length"],

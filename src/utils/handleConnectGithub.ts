@@ -2,7 +2,7 @@
 import { z } from "zod";
 
 export const handleGithubChangeRepos = async () => {
-  const url = `https://github.com/apps/devclans/installations/new`;
+  const url = `https://github.com/apps/repogiver/installations/new`;
   window.open(url, "_blank");
 };
 

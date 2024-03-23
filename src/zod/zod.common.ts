@@ -359,6 +359,7 @@ export const zodProjectSearchInfoSchema = z.object({
   desc: z.string().min(10).max(200),
   skills: skillsSchema,
   team: zodTeamContactSchema.partial().array().optional(),
+  teamCode:z.string(),
   skillLevel: z
     .enum(memberLevels as any)
     .nullable()
@@ -374,7 +375,7 @@ export const zodRepoDetailsSchema = z.object({
   watchers: z.number().max(1000000),
   topics: z.array(z.string()).max(20).default([]).optional(),
   commits: z.number().max(10000).optional(),
-  lastCommit: zodDateString,
+  lastCommit: zodDateString.optional(),
   created_at: zodDateString.optional(),
   updated_at: zodDateString.optional(),
   readme: z.string().max(10000),
@@ -475,11 +476,12 @@ export const zodGithubDataSchema = z.object({
   owner: projectSchema.shape["owner"],
   repoName: zodRepoName,
 });
-export const zodProjectFormSchema = z.object({
+export const zodProjectFormSchema:any = z.object({
   title: z.string().trim().min(3).max(50),
   desc: z.string().min(10).max(200),
   skills: skillsSchema,
   team: zodUserTeamItemSchema.optional(),
+  teamCode: z.string().optional().nullable(),
   skillLevel: z
     .enum(memberLevels as any)
     .nullable()

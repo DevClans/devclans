@@ -17,6 +17,7 @@ import { usePathname } from "next/navigation";
 import { getGHInstaddedRepos } from "@/utils/getInstalledRepos";
 import { handleGithubChangeRepos } from "@/utils/handleConnectGithub";
 import ButtonConnectGithub from "./buttons/ButtonConnectGithub";
+import { generateTeamCode } from "@/utils/generateTeamCode";
 
 const FormNewProject = ({
   defaultValues: dv,
@@ -25,6 +26,7 @@ const FormNewProject = ({
   defaultValues?: Partial<ProjectFormProps>;
   projectId?: string;
 }) => {
+  const [teamCode, setTeamCode] = useState<string>('');
   const { data }: any = useSession();
   const pathname = usePathname();
   const session = data?.user;
@@ -40,6 +42,14 @@ const FormNewProject = ({
       resolver: zodResolver(zodProjectFormSchema),
     });
   console.log("defaultValues", watch("repoName"));
+
+  const handleGenerateTeamCode = () => {
+    const code = generateTeamCode();
+    console.log("This is the Team code",code);
+    setTeamCode(code);
+    setValue('teamCode', code);
+  };
+
   const onSubmit: SubmitHandler<ProjectFormProps> = async (data) => {
     try {
       // const a = zodProjectFormSchema.parse(data);
@@ -51,6 +61,10 @@ const FormNewProject = ({
       }
       setDefaultValues(data);
       console.log("clicked");
+      const formData: ProjectFormProps = {
+        ...data,
+        teamCode: teamCode || null,
+      };
       // const dt = zodProjectFormSchema.parse(data);
       // console.log(dt);
       // return;
@@ -59,7 +73,7 @@ const FormNewProject = ({
         : "/db/createProject";
       const res = await createProjectUser(
         url,
-        data,
+        formData,
         session,
         setError,
         projectId
@@ -126,13 +140,16 @@ const FormNewProject = ({
   useEffect(() => {
     updateRepofield(["Loading..."], true);
     if (!isUserConnected) {
+      console.log("user not connected");
       updateRepofield([], true);
       return;
     }
     if (Array.isArray(repos) && repos.length > 0) {
+      console.log("user is connected and has some repos");
       updateRepofield([null, ...repos], true);
     } else {
       if (Array.isArray(repos)) {
+        console.log("user  is connected but has no repos yet");
         updateRepofield([], true);
       }
     }
@@ -189,6 +206,21 @@ const FormNewProject = ({
                 href={projectId && `/project/${projectId}`}
               />
             )}
+             <div>
+              <label>
+                <input
+                  type="checkbox"
+                  onChange={handleGenerateTeamCode}
+                  checked={teamCode !== ''}
+                />
+                Generate Team Code
+              </label>
+              {teamCode && (
+                <div>
+                  <p>Team Code: {teamCode}</p>
+                </div>
+              )}
+            </div>
           </div>
         }
         buttonMessage={projectId ? "Update Project" : "Create Project"}

@@ -8,7 +8,7 @@ import getServerSessionForServer from "./auth/getServerSessionForApp";
 import { decrypt } from "./EncryptFunctions";
 
 export const getInstallationId = async (userId?: string) => {
-  let installId: number | undefined;
+  let installId: number ;
   try {
     const uid = zodMongoId.parse(userId);
     console.log("getting install id from cache");
@@ -16,7 +16,7 @@ export const getInstallationId = async (userId?: string) => {
     installId = parseInt(cacheInstallId || "");
     // if not in cache, get installation id from github
     if (installId) {
-      console.log("install id from cache hit");
+      console.log("install id from cache hit", installId);
       return installId;
     }
     console.log("install id from cache miss");
@@ -27,10 +27,10 @@ export const getInstallationId = async (userId?: string) => {
       decrypt(id?.githubDetails?.installId?.toString() || "")
     );
     if (installId) {
-      console.log("install id from db hit");
+      console.log("install id from db hit: ", installId);
       return installId;
     }
-    console.log("install id from db miss");
+    console.log("install id from db miss: ", installId);
     return installId;
   } catch (error) {
     console.error("error in getInstallationId", error);
@@ -61,11 +61,12 @@ export const getInstalledReposFunc = async (
     );
     console.log("getting octokit");
     const api = await getOctokit({ installationId: installId });
+    
     if (!(api && api.type === "app")) {
       console.log("error getting octokit");
       throw new Error("Error getting octokit");
     }
-    console.log("getting repos");
+
     const repos = await api.api.request("GET /installation/repositories", {
       headers: {
         "X-GitHub-Api-Version": "2022-11-28",
@@ -99,6 +100,7 @@ export const getInstalledReposFunc = async (
       },
     });
     return reposData;
+  
   } catch (error) {
     console.error("error in getInstalledReposFunc", error);
     return;
