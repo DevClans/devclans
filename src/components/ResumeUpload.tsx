@@ -4,18 +4,22 @@ import { UploadDropzone } from "@/utils/uploadthing";
 import { useState } from "react";
 
 const ResumeUpload = ({
-  setValue,
-  defaultResumeUrl,
-}: {
-  setValue: any;
-  defaultResumeUrl?: string;
-}) => {
-  const [resumeUrl, setResumeUrl] = useState<string>(defaultResumeUrl || "");
-
-  const handleUploadComplete = (res: any) => {
-    setResumeUrl(res[0].url);
-    setValue("resume", res[0].url);
-  };
+    setValue,
+    defaultResumeUrl,
+    onResumeUpload, // Add this prop
+  }: {
+    setValue: any;
+    defaultResumeUrl?: string;
+    onResumeUpload: (resumeUrl: string) => void; // Add this type
+  }) => {
+    const [resumeUrl, setResumeUrl] = useState<string>(defaultResumeUrl || "");
+  
+    const handleUploadComplete = (res: any) => {
+      const uploadedResumeUrl = res[0].url;
+      setResumeUrl(uploadedResumeUrl);
+      setValue("resume", uploadedResumeUrl);
+      onResumeUpload(uploadedResumeUrl); // Call the callback function with the uploaded resume URL
+    };
 
   return (
     <div className="fcfs gap-2 w100">
