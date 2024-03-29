@@ -250,7 +250,12 @@ const FormNewUser = ({
           setValue={setValue}
           buttons={
             <div className="fcfs w100 gap-2">
-            <ResumeUpload setValue={setValue} defaultResumeUrl={defaultValues.resume} />
+            {/* <ResumeUpload setValue={setValue} defaultResumeUrl={defaultValues.resume} /> */}
+            <ResumeUpload
+              setValue={setValue}
+              defaultResumeUrl={defaultValues.resume}
+              onResumeUpload={(resumeUrl) => setResumeUrl(resumeUrl)}
+            />
             <ButtonBlue
               disabled={Boolean(githubUsername)}
               loading={githubLoading}
