@@ -310,6 +310,7 @@ export const zodUserFormSchemaObj = z.object({
     .optional(),
   skills: skillsSchema.min(3),
   bio: stringSchema.min(10).max(100),
+  resume: z.string().optional(),
   ...zodUserDataCommonSchema.shape,
 });
 export const zodUserFormSuperRefine = (value: any, context: any) => {

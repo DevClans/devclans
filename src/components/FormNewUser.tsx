@@ -18,6 +18,8 @@ import LogedOutScreen from "./LogedOutScreen";
 import { toast } from "react-toastify";
 import { memberLevels } from "@/lib/memberLevel";
 import { handleGithubConnect } from "@/utils/handleConnectGithub";
+import { UploadDropzone } from "@/utils/uploadthing";
+import ResumeUpload from "./ResumeUpload";
 
 const FormNewUser = ({
   defaultValues: dv,
@@ -33,6 +35,7 @@ const FormNewUser = ({
   const [defaultValues, setDefaultValues] = useState<UserProps | UserFormProps>(
     (dv as unknown as UserProps) || {}
   );
+  const [resumeUrl, setResumeUrl] = useState<string>("");
   // console.log("defaultValues", defaultValues);
   // const defaultValues: UserProps | UserFormProps =
   //   (dv as unknown as UserProps) || {};
@@ -50,15 +53,15 @@ const FormNewUser = ({
   const onSubmit: SubmitHandler<UserFormProps> = async (data) => {
     try {
       data.contactMethodId = selectUserContactId(data) || session?.discordId;
-      // console.log("data", JSON.stringify(data), JSON.stringify(defaultValues));
+      data.resume = resumeUrl; // Add the resume URL to the data object
+
       if (JSON.stringify(data) === JSON.stringify(defaultValues)) {
         toast.success("Project Updated Successfully!", {
           autoClose: false,
         });
-        // console.log("No change in data");
         return;
       }
-      // console.log("setting data", data);
+
       setDefaultValues(data);
       const res = await createProjectUser(
         `/user/${userid}/update`,
@@ -67,10 +70,6 @@ const FormNewUser = ({
         setError,
         "Profile Updated Successfully"
       );
-      // console.log("res", res, session);
-      // if (!res && session) {
-      //   throw new Error("Error in our server. Please try again later.");
-      // }
       return data;
     } catch (error: any) {
       console.error("error in onSubmit of FormNewUser", error);
@@ -183,6 +182,13 @@ const FormNewUser = ({
       limit: 3,
       // min: 1,
     },
+    // {
+    //   label: "Upload Resume:",
+    //   name: "resume",
+    //   type: "file",
+    //   accept: "application/pdf",
+    //   desc: "Upload your resume in PDF format.",
+    // },
   ];
 
   // Type assertion
@@ -243,6 +249,8 @@ const FormNewUser = ({
           heading="Lets Create Your Profile"
           setValue={setValue}
           buttons={
+            <div className="fcfs w100 gap-2">
+            <ResumeUpload setValue={setValue} defaultResumeUrl={defaultValues.resume} />
             <ButtonBlue
               disabled={Boolean(githubUsername)}
               loading={githubLoading}
@@ -256,6 +264,7 @@ const FormNewUser = ({
               }
               onClick={handleConnectGitHub}
             />
+            </div>
           }
           {...form}
           zodFormShape={userFormShape}

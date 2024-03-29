@@ -33,6 +33,7 @@ export type UserProps = UserTeamItemProps &
     createdAt: Date;
     updatedAt: Date;
     repos: string[];
+    resume?: string;
   };
 export type UserQuestionsProps = {
   currentCompany?: string;

@@ -101,6 +101,7 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
         type: String,
       },
     ],
+    resume: { type: String, default: "" },
   },
   { timestamps: true }
 );
