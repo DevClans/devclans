@@ -1,5 +1,7 @@
 import * as crypto from "crypto";
 
+// to generate key openssl rand -hex 32
+
 export const encrypt = (text: string): string => {
   try {
     if (!text) {

@@ -97,8 +97,6 @@ export default async function RootLayout({
         <ReactQueryProvider>
           <SessionProvider session={session}>
             {modal}
-            <Header />
-            <LightRays />
             {children}
           </SessionProvider>
           <ToastContainer

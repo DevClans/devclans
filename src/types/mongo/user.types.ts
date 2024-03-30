@@ -148,6 +148,7 @@ export enum UserRedisKeys {
   installId = "userGHInstallId",
   repos = "userRepos",
   accessToken = "userGHAccessToken",
+  links = "userLinks",
 }
 export type UserFormProps = z.infer<typeof zodUserFormSchema>;
 export type LookingForMembersProps = {

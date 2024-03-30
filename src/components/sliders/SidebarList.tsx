@@ -8,6 +8,7 @@ const SidebarList = ({
   list,
   onlyList,
   needIconBg = true,
+  className,
 }: SidebarListProps) => {
   if (!list || (Array.isArray(list) && list.length == 0)) {
     return null;
@@ -31,11 +32,12 @@ const SidebarList = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {needIconBg ? (
-                  <IconWithBg icon={item.startIcon} />
-                ) : (
-                  item.startIcon
-                )}
+                {item.startIcon &&
+                  (needIconBg ? (
+                    <IconWithBg icon={item.startIcon} />
+                  ) : (
+                    item.startIcon
+                  ))}
                 <p className="lg:max-w-[180px] overflow-hidden text-ellipsis">
                   {item.text || item.href}
                 </p>
@@ -53,7 +55,7 @@ const SidebarList = ({
     </div>
   );
   if (onlyList) return listEle;
-  return <div className="cardGrad w100">{listEle}</div>;
+  return <div className={"cardGrad w100 " + className}>{listEle}</div>;
 };
 
 export default SidebarList;

@@ -33,24 +33,6 @@
   flex-shrink: 0;
 }
 
-// #btnHeroContainer:hover {
-//   @apply fccc;
-//   .hero-animation-glow {
-//     animation-play-state: paused;
-//     // height: 100%;
-//     // width: 100%;
-//     // rotate: 0deg;
-//     bottom: 0;
-//     left: 0;
-//   }
-//   .hero-preview-animation-line {
-//     animation-play-state: paused;
-//     opacity: 0;
-//   }
-//   #btnHero {
-//   }
-// }
-
 @keyframes hero-preview-animation-line {
   // bottom left
   from {

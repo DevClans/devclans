@@ -10,7 +10,7 @@ export const discordImgUrl = (
     (size ? `?size=${size}` : "")
   );
 };
-const userAvatar = async ({
+const userAvatar = ({
   avatar,
   discordImg,
   gitubImg,
@@ -24,7 +24,7 @@ const userAvatar = async ({
   userProps?: Partial<UserProps>;
   discordId?: string;
   discordSize?: number;
-}): Promise<string> => {
+}): string => {
   const avtr = avatar || userProps?.avatar;
   const dId = discordId || userProps?.discordDetails?._id;
   const dc = discordImg || userProps?.discordDetails?.avatar;

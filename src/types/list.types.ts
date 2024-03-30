@@ -10,6 +10,7 @@ export type SidebarListProps = {
   list: ListItemProps[];
   onlyList?: boolean;
   needIconBg?: boolean;
+  className?: string;
 };
 
 export type InfoWithIconProps = {

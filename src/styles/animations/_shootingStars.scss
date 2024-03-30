@@ -1,0 +1,126 @@
+.starsContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+  overflow: hidden;
+}
+.star {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  background: linear-gradient(
+    180deg,
+    #78a5fd 0%,
+    #3076ff 28.5%,
+    #003eb6 62%,
+    rgba(9, 26, 59, 0.54) 100%
+  );
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px #78a5fd1f, 0 0 0 8px #3076ff0d, 0 0 20px #003eb608;
+  animation: animate 3s linear infinite;
+}
+.star::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  opacity: 0.3;
+  transform: translateY(-50%);
+  width: 300px;
+  height: 1px;
+  background: linear-gradient(
+    51deg,
+    #78a5fd 0%,
+    #3076ff 5.5%,
+    #003eb6 50%,
+    rgba(9, 26, 59, 0.54) 100%
+  );
+}
+@keyframes animate {
+  0% {
+    transform: rotate(315deg) translateX(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: rotate(315deg) translateX(-1000px);
+    opacity: 0;
+  }
+}
+
+.star:nth-child(1) {
+  top: 0;
+  right: 0;
+  left: initial;
+  animation-delay: 0s;
+  animation-duration: 1s;
+}
+.star:nth-child(2) {
+  top: 29%;
+  right: 5%;
+  left: initial;
+  animation-delay: 0.2s;
+  animation-duration: 3s;
+}
+.star:nth-child(3) {
+  top: 50%;
+  right: 0px;
+  left: initial;
+  animation-delay: 0.4s;
+  animation-duration: 2s;
+}
+.star:nth-child(4) {
+  top: 35%;
+  right: 8%;
+  left: initial;
+  animation-delay: 0.6s;
+  animation-duration: 1.5s;
+}
+.star:nth-child(5) {
+  top: 16%;
+  right: 12%;
+  left: initial;
+  animation-delay: 0.8s;
+  animation-duration: 2.5s;
+}
+.star:nth-child(6) {
+  top: 45%;
+  right: 20%;
+  left: initial;
+  animation-delay: 1s;
+  animation-duration: 3s;
+}
+.star:nth-child(7) {
+  top: 20%;
+  right: 0px;
+  left: initial;
+  animation-delay: 1.2s;
+  animation-duration: 1.75s;
+}
+.star:nth-child(8) {
+  top: 0%;
+  right: 25%;
+  left: initial;
+  animation-delay: 1.4s;
+  animation-duration: 1.25s;
+}
+.star:nth-child(9) {
+  top: 14%;
+  right: 30%;
+  left: initial;
+  animation-delay: 0.75s;
+  animation-duration: 2.25s;
+}
+.star:nth-child(10) {
+  top: 0px;
+  right: 55%;
+  left: initial;
+  animation-delay: 2.75s;
+  animation-duration: 2.75s;
+}

@@ -24,6 +24,8 @@ import { userSchema } from "@/zod/zod.common";
 import { notFound } from "next/navigation";
 import type { Metadata, ResolvingMetadata } from "next";
 import { urlBase } from "@/constants";
+import Link from "next/link";
+import { Header, LightLine, LightRays } from "@/components";
 
 type UserPageProps = {
   params: { id: string };
@@ -71,7 +73,20 @@ export async function generateMetadata(
   };
 }
 
-const page = async ({ params, searchParams }: UserPageProps) => {
+const page = async (props: UserPageProps) => {
+  return (
+    <>
+      <Header />
+      <LightRays />
+      <LightLine />
+      <div className="fcc container relative -z-10 gap-6  w100">
+        <UserPage {...props} />
+      </div>
+    </>
+  );
+};
+
+const UserPage = async ({ params, searchParams }: UserPageProps) => {
   const session: any = await getServerSessionForServer();
   const { id } = params; // this is can be username or mongo id now
   const tab: string = (searchParams?.tab as string) || "overview";
@@ -227,6 +242,7 @@ const Common = ({
         questions={questions}
         searchParams={searchParams}
       >
+        <Link href={`/${username}/linktree`}>View Linktree</Link>
         {children}
       </MiddleSection>
       {/* right sidebar */}

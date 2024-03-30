@@ -14,7 +14,7 @@ import {
 
 export const socialIcons: any = (props: any) => {
   return {
-    discord: "discord",
+    discord: <Globe {...props} />,
     email: <Mail {...props} />,
     whatsapp: <WhatsApp {...props} />,
     telegram: <Telegram {...props} />,
@@ -50,8 +50,8 @@ export const selectIconForLinks = (link: string, size?: number) => {
       type = "linkedin";
       break;
     case link.includes("mail"):
-        type = "email";
-    break;
+      type = "email";
+      break;
     case link.includes("facebook"):
       type = "facebook";
       break;
