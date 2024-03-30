@@ -30,7 +30,7 @@ const ProductImg = ({
   }
   const imageProps = {
     src: src,
-    className: `card xl:max-h-[255px] xl:max-w-[428px] ${className}`,
+    className: `card xl:max-h-[255px] xl:max-w-[428px] flex-shrink-0 ${className}`,
     alt: alt || "test",
     ...imgProps,
     style: {
