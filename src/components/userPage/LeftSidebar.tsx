@@ -20,7 +20,7 @@ const LeftSidebar = async ({
   ...rest
 }: Partial<UserProps> & PageProps & { displayName: string }) => {
   const session: any = await getServerSessionForServer();
-  const avatar = await userAvatar({ userProps: rest });
+  const avatar = await userAvatar({ userProps: rest, discordSize: 512 });
   return (
     <>
       <div
