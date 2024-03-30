@@ -20,6 +20,7 @@ import { memberLevels } from "@/lib/memberLevel";
 import { handleGithubConnect } from "@/utils/handleConnectGithub";
 import { UploadDropzone } from "@/utils/uploadthing";
 import ResumeUpload from "./ResumeUpload";
+import { pageTheme } from "@/lib/pageTheme";
 
 const FormNewUser = ({
   defaultValues: dv,
@@ -101,6 +102,12 @@ const FormNewUser = ({
       desc: "Select tech stack you use from the list.",
       limit: 10,
       // min: 3,
+    },
+    {
+      label: "Page Theme:",
+      name: "pageTheme",
+      desc: "Select the Theme that you want your Developer Page to have.",
+      options: pageTheme as any,
     },
     {
       label: "Skill Level:",
