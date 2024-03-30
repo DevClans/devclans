@@ -1,4 +1,5 @@
 // import { IconGithub, IconTwitter } from "@/components";
+import LogoIcon from "@/components/LogoIcon";
 import { Telegram, WhatsApp } from "@mui/icons-material";
 import {
   Linkedin,
@@ -26,6 +27,9 @@ export const socialIcons: any = (props: any) => {
     github: <Github {...props} />,
     twitter: <Twitter {...props} />,
     website: <Globe {...props} />,
+    devclans: (
+      <LogoIcon {...props} width={props.size || 16} height={props.size || 16} />
+    ),
   };
 };
 
@@ -69,6 +73,9 @@ export const selectIconForLinks = (link: string, size?: number) => {
       break;
     case link.includes("telegram") || link.includes("t.me"):
       type = "telegram";
+      break;
+    case link.includes("devclans"):
+      type = "devclans";
       break;
     default:
       type = "website";

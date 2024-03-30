@@ -78,6 +78,10 @@ const page = async ({ params }: PageProps) => {
       href: `https://discord.com/users/${data.discordId}`,
     });
   }
+  links.push({
+    text: "Devclans",
+    href: `https://devclans.com/${id.data}`,
+  });
   return (
     <div className="w100 relative fcc min-h-screen overflow-hidden">
       <LightRays imgClassName="scale" opacity={0.8} style={{}} />
