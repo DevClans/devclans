@@ -1,0 +1,49 @@
+@import "./colorful/colors.scss";
+@import "./colorful/patterns.scss";
+
+#cfHero {
+  background-color: var(--cf-yellow);
+  height: clamp(196px, 50vh, 400px);
+  position: relative;
+  overflow: hidden;
+}
+
+#cfHeroCircle {
+  animation: zoomOnScroll;
+  animation-timeline: scroll(root);
+}
+
+.bgText {
+  font-family: var(--abril, "Abril Fatface");
+  font-size: 64px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  color: var(--cf-dark);
+  line-height: 50px;
+}
+
+.linkCard {
+  border-radius: 10px;
+  border: 3px solid #141414;
+  box-shadow: 4px 6px 0px 0px #000;
+}
+
+.bgText > div:nth-child(2n) > span {
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: var(--cf-dark);
+  color: transparent;
+}
+
+a.linkCard {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  &:hover {
+    box-shadow: 7px 9px 0px 0px #141414;
+    transform: translate(-3px, -3px);
+    opacity: 1 !important;
+  }
+  &:active {
+    box-shadow: unset !important;
+    transform: translate(3px, 3px) !important;
+  }
+}

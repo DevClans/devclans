@@ -1,0 +1,44 @@
+@keyframes moveRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+@keyframes moveLeft {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.moveLeft {
+  animation: moveLeft 60s linear infinite;
+}
+.moveRight {
+  animation: moveRight 60s linear infinite;
+}
+
+@keyframes moveRightOnScroll {
+  to {
+    transform: translateX(40%);
+  }
+}
+@keyframes moveLeftOnScroll {
+  to {
+    transform: translateX(-40%);
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .moveRightOnScroll {
+    animation: moveRightOnScroll linear;
+    animation-timeline: scroll(root);
+  }
+  .moveLeftOnScroll {
+    animation: moveLeftOnScroll linear;
+    animation-timeline: scroll(root);
+  }
+}

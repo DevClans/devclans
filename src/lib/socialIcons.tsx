@@ -16,7 +16,7 @@ import {
 export const socialIcons: any = (props: any) => {
   return {
     discord: <Globe {...props} />,
-    email: <Mail {...props} />,
+    email: <Mail strokeWidth={2} {...props} />,
     whatsapp: <WhatsApp {...props} />,
     telegram: <Telegram {...props} />,
     linkedin: <Linkedin {...props} />,
@@ -28,14 +28,36 @@ export const socialIcons: any = (props: any) => {
     twitter: <Twitter {...props} />,
     website: <Globe {...props} />,
     devclans: (
-      <LogoIcon {...props} width={props.size || 16} height={props.size || 16} />
+      <LogoIcon
+        {...props}
+        width={props.size || 16}
+        height={props.size || 16}
+        className={props.className + ` ${props.isDark ? "invert" : ""}`}
+      />
     ),
   };
 };
 
-export const selectIconForLinks = (link: string, size?: number) => {
+export const selectIconForLinks = (
+  link: string,
+  size?: number,
+  justName = false,
+  {
+    isDark = false,
+    className,
+  }: {
+    isDark?: boolean;
+    className?: string;
+  } = {
+    isDark: false,
+    className: "",
+  }
+) => {
   if (!link) {
-    return socialIcons({ size: size || 16 }).website;
+    if (justName) {
+      return "website";
+    }
+    return socialIcons({ size: size || 16, isDark, className }).website;
   }
 
   let type = "website";
@@ -80,8 +102,10 @@ export const selectIconForLinks = (link: string, size?: number) => {
     default:
       type = "website";
   }
-
-  return socialIcons({ size: size || 16 })[type];
+  if (justName) {
+    return type;
+  }
+  return socialIcons({ size: size || 16, isDark, className })[type];
 };
 
 type SocialLinkFunction = (username: string) => string;

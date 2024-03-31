@@ -112,3 +112,20 @@ body {
     white-space: normal;
   }
 }
+
+::-webkit-scrollbar-thumb {
+  background-color: #ff7543;
+  opacity: 1;
+  background-size: 9px 9px;
+  background-image: repeating-linear-gradient(
+    45deg,
+    #fff 0,
+    #fff 0.9px,
+    #ff7543 0,
+    #ff7543 50%
+  );
+}
+
+::-webkit-scrollbar-track {
+  background-color: #ffd0be;
+}

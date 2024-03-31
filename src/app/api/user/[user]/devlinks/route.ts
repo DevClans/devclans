@@ -31,6 +31,7 @@ const handler = async (
           githubId: 1,
           socials: 1,
           email: 1,
+          theme: 1,
           "discordDetails.avatar": 1,
           "discordDetails.username": 1,
           "discordDetails.global_name": 1,
@@ -39,7 +40,7 @@ const handler = async (
           ownedProjects: 1,
         }
       )
-        .populate("ownedProjects", "title desc _id imgs")
+        .populate("ownedProjects", "title desc _id imgs skills domain")
         .lean()) as Partial<UserProps> | null;
       // ! this data is already stored in different areas, we are repeating it here. will need to change this as users increase
       // set in cache

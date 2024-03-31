@@ -81,7 +81,10 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
   const googleAnalytics = process.env.GOOGLE_ADD_ID;
   return (
-    <html lang="en" className={`${poppins.variable} ${bebas_neue.variable}`}>
+    <html
+      lang="en"
+      className={`${poppins.variable} select-none scroll-smooth ${bebas_neue.variable}`}
+    >
       <Script
         async
         src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalytics}`}

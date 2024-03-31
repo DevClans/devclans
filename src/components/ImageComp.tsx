@@ -6,9 +6,13 @@ import { useState } from "react";
 const ImageComp = ({
   src,
   isUser = false,
+  showErrorImg = true,
   ...rest
-}: ImageProps & { isUser?: boolean }) => {
+}: ImageProps & { isUser?: boolean; showErrorImg?: boolean }) => {
   const [error, setError] = useState(false);
+  if (!showErrorImg && error) {
+    return null;
+  }
   return (
     <>
       <Image

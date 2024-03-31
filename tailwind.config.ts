@@ -17,6 +17,21 @@ export const tailwindColors = {
   red: "#D64343",
 };
 
+export const colorfulThemeColors = {
+  cfYellow: "#f9df09",
+  cfCyan: "#31dddd",
+  cfOrangeLight: "#ffbb64",
+  cfGreenLight: "#dcffb7",
+  cfPinkLight: "#ffb7b7",
+  cfBlueLight: "#b7e1ff",
+  cfPurpleCircle: "rgba(129, 9, 249, 0.59)",
+  cfPurple: "#6c0ce5",
+  cfBlue: "#4e94fc",
+  cfRed: "#fc4e78",
+  cfCyanLight: "#01f3ff",
+  cfDark: "#141414",
+};
+
 export default withUt({
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -40,7 +55,7 @@ export default withUt({
         "6": "25px",
         "7": "30px",
       },
-      colors: tailwindColors,
+      colors: { ...tailwindColors, ...colorfulThemeColors },
     },
   },
   plugins: [],

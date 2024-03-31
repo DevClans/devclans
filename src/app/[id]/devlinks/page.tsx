@@ -8,6 +8,8 @@ import {
 import ImageComp from "@/components/ImageComp";
 import ShootingStars from "@/components/ShootingStars";
 import ProductImg from "@/components/project/ProjectImg";
+import ThemeBasic from "@/components/themes/ThemeBasic";
+import ThemeColorful from "@/components/themes/ThemeColorful";
 import userAvatar from "@/lib/userAvatar";
 import { ListItemProps } from "@/types/list.types";
 import { ProjectProps } from "@/types/mongo/project.types";
@@ -26,9 +28,12 @@ const page = async ({ params }: PageProps) => {
   }
   const data = await Fetch({ endpoint: `/user/${id.data}/devlinks` });
   console.log(data);
-  if (data?.error) {
+  if (data?.error || !data) {
     return notFound();
   }
+  const theme = data?.theme;
+  const isFunky = true;
+  // theme === "funky";
   const username = data?.discordDetails?.username;
   const displayName = data?.discordDetails?.global_name;
   const avatar = userAvatar({
@@ -37,11 +42,33 @@ const page = async ({ params }: PageProps) => {
     gitubImg: data?.githubDetails?.avatar_url,
     userProps: data,
   });
-  const links: (string | ListItemProps)[] = Object.values(
-    data?.socials || {}
-  ).filter(Boolean) as (string | ListItemProps)[];
+  const links: (string | ListItemProps)[] = Object.values(data?.socials || {})
+    .filter(Boolean)
+    .map((item) => {
+      if (typeof item != "string") {
+        return item;
+      }
+      if (item.includes("linkedin")) {
+        return {
+          text: "Linkedin",
+          href: item,
+        };
+      } else if (item.includes("twitter")) {
+        return {
+          text: "Twitter",
+          href: item,
+        };
+      }
+      return item;
+    }) as (string | ListItemProps)[];
   const projectLinks: (string | ListItemProps)[] = data?.ownedProjects?.map(
     (project: ProjectProps) => ({
+      skills: project.skills,
+      imgs:
+        Array.isArray(project.imgs) && project.imgs.length > 0
+          ? project.imgs
+          : [],
+      desc: project.desc,
       text: project.title,
       href: `/project/${project._id}`,
       startIcon: project.imgs?.[0] && (
@@ -79,57 +106,21 @@ const page = async ({ params }: PageProps) => {
     });
   }
   links.push({
-    text: "Devclans",
+    text: "Devclans | The Dev Profile",
     href: `https://devclans.com/${id.data}`,
   });
-  return (
-    <div className="w100 relative fcc min-h-screen overflow-hidden">
-      <LightRays imgClassName="scale" opacity={0.8} style={{}} />
-      <ShootingStars />
-      <div className="max-w-[600px] w100 fcc p-3 mt-6 mb-[15vh] gap-6">
-        <ProductImg
-          src={avatar}
-          isUser={true}
-          className={`-mb-3`}
-          style={{
-            alignSelf: "center",
-            aspectRatio: "1/1",
-            objectFit: "cover",
-            height: "120px",
-            width: "120px",
-            borderRadius: "20px",
-          }}
-        />
-        <div className=" w100 fcc overflow-hidden">
-          <h1
-            className={` text-[36px] !text-left text-ellipsis overflow-hidden`}
-          >
-            {displayName || username}
-          </h1>
-          {username && (
-            <p className="text-subH text-ellipsis overflow-hidden">
-              @{username}
-            </p>
-          )}
-        </div>
-        <ProjectLinks
-          className="!backdrop-blur"
-          heading={"Socials"}
-          links={links}
-        />
-        <ProjectLinks
-          className="!backdrop-blur"
-          links={projectLinks}
-          needIconBg={false}
-        />
-        <ButtonHero
-          href="/"
-          className="fixed bottom-[5vh]"
-          label="Create Your Devlink"
-        />
-      </div>
-    </div>
-  );
+  const themeProps = {
+    avatar: avatar,
+    displayName: displayName,
+    username: username,
+    links: links,
+    projectLinks: projectLinks,
+  };
+  if (theme == "colorful") {
+    return <ThemeColorful {...themeProps} />;
+  } else {
+    return <ThemeBasic {...themeProps} />;
+  }
 };
 
 export default page;

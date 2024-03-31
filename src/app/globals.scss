@@ -13,6 +13,10 @@
 @import "../styles/githubGraph.scss";
 @import "../styles/animations/scale.scss";
 @import "../styles/animations/shootingStars.scss";
+@import "../styles/animations/move.scss";
+@import "../styles/animations/fade.scss";
+@import "../styles/animations/colorChange.scss";
+@import "../styles/animations/zoomOnScroll.scss";
 
 :root {
   --border: #132341;
@@ -39,7 +43,7 @@
 
 body {
   background-color: var(--bg) !important;
-  color: var(--text) !important;
+  color: var(--text);
   position: relative;
   z-index: 0;
 }

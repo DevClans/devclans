@@ -1,0 +1,21 @@
+@keyframes colorChange {
+  from {
+    background-color: var(--cf-yellow);
+  }
+  20% {
+    background-color: var(--cf-orange-light);
+  }
+  50% {
+    background-color: var(--cf-purple-light);
+  }
+  80% {
+    background-color: var(--cf-blue-light);
+  }
+  to {
+    background-color: var(--cf-yellow);
+  }
+}
+
+.colorChange {
+  animation: colorChange 30s ease-in-out infinite;
+}

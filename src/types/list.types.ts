@@ -5,6 +5,11 @@ export type ListItemProps = {
   text: string;
   href?: string;
 };
+export type ListProjectProps = ListItemProps & {
+  desc: string;
+  skills: string[];
+  imgs: string[];
+};
 export type SidebarListProps = {
   heading: string;
   list: ListItemProps[];

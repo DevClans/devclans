@@ -15,6 +15,7 @@ const ButtonLink = ({
   loading = false,
   replace,
   title,
+  icon,
   onChange,
   ...rest
 }: ButtonProps) => {
@@ -38,13 +39,19 @@ const ButtonLink = ({
       <Link
         title={(typeof label == "string" && label) || title || "Link Button"}
         replace={replace}
-        className={`fccc button ${className}`}
+        className={`frc gap-2 button ${className} text-nowrap`}
         onClick={handleClick}
         style={{ ...style }}
         href={href}
         {...rest}
       >
-        {!loading ? label || "Link Button" : progress}
+        {!loading ? (
+          <>
+            {icon && icon} {label || "Link Button"}
+          </>
+        ) : (
+          progress
+        )}
       </Link>
     );
   }

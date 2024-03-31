@@ -28,7 +28,7 @@ const SidebarList = ({
             >
               <Link
                 href={item.href || item.text}
-                className="frc gap-[10px] hover"
+                className="frc gap-[10px] hover w-full"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -38,7 +38,7 @@ const SidebarList = ({
                   ) : (
                     item.startIcon
                   ))}
-                <p className="lg:max-w-[180px] overflow-hidden text-ellipsis">
+                <p className="lg:max-w-[90%] overflow-hidden text-ellipsis">
                   {item.text || item.href}
                 </p>
               </Link>
