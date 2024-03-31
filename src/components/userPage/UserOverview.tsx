@@ -14,11 +14,13 @@ const UserOverview = async ({
   username,
   githubDetails,
   _id,
+  leetcode,
 }: {
   data: ProjectDetailsItemProps[];
   username: string;
   _id: string;
   githubDetails?: UserProps["githubDetails"];
+  leetcode:string;
 }) => {
   const session: any = await getServerSessionForServer();
   const { readme, login } = githubDetails || {};
@@ -44,7 +46,7 @@ const UserOverview = async ({
             href={login as string}
           />
         </div>
-        <GitHubGraph username={login} />
+        <GitHubGraph username={login} leetcode={leetcode}/>
       </div>
       {typeof readme == "string" && typeof readmePurified == "string" && (
         <div

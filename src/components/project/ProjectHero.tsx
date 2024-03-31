@@ -15,6 +15,7 @@ import handleCopy from "@/utils/copyText";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import { redirect } from "next/dist/server/api-utils";
 interface User {
   _id?: string;
   name?: string | null;
@@ -89,6 +90,7 @@ useEffect(() => {
                     <h1 className="text-4xl text-left ">{data.title}</h1>
                     <p>{data.desc}</p>
                     { data.owner?._id === userDetails &&
+                      data.teamCode ?(
                    
                     <div className="cardHeader p-3 md:p-5 w100">
                     <div className="frfssb bg-">
@@ -98,6 +100,15 @@ useEffect(() => {
                    <Image src="/copy.png" alt="Copy" width={20} height={20} onClick={()=>{handleCopy(data.teamCode); SetCopied(true)}} />
                     </div>
                     </div>
+                    ):
+               
+                    (
+                      <div className="flex flex-col">
+                        <h2> Generate Team Code</h2>
+                        <p> You can generate a team code to share with your team members. </p>
+                        <button className= "bg-primary gap-y-0 frc flex-wrap px-1 w100 /h-[50px] py-2 rounded-[10px] text-sm my-2 " onClick={() => { window.location.href=`http://localhost:3000/project/${data._id}?mode=edit` }}>Generate Team Code</button>
+                      </div>
+                    )
                
           }
                     {/* chips */}

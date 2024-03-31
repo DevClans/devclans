@@ -224,6 +224,7 @@ export const zodUserSearchInfoSchema = z.object({
     })
     .optional()
     .nullable(),
+    leetcode: z.string().optional(),
   githubId: z.string().max(50).optional(),
   bio: stringSchema.min(10).max(100),
   username: zodDiscordUsername,
@@ -310,6 +311,7 @@ export const zodUserFormSchemaObj = z.object({
     .optional(),
   skills: skillsSchema.min(3),
   bio: stringSchema.min(10).max(100),
+  leetcode: z.string().optional(),
   ...zodUserDataCommonSchema.shape,
 });
 export const zodUserFormSuperRefine = (value: any, context: any) => {

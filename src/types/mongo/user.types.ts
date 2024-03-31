@@ -27,6 +27,7 @@ export type UserProps = UserTeamItemProps &
       linkedin: string;
       website: string;
     };
+    leetcode:string;
     ownedProjects: mongoose.Types.ObjectId[];
     contributedProjects: mongoose.Types.ObjectId[];
     questions: UserQuestionsProps;

@@ -28,6 +28,8 @@ export async function POST(req: NextRequest,res:NextResponse) {
     if(userId){
     project.team.push(userId);
     await project.save();
+
+    
     return NextResponse.json({ message: 'Joined team successfully' });
     }
     else{
