@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema<UserMongoProps>(
     githubDetails: {
       type: userGithubDetailsSchema,
     },
+    leetcode:{ type:String , unique:true,required:false },
     domain: {
       type: String,
       enum: projectDomains,

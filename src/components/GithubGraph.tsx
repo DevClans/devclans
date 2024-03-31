@@ -2,8 +2,9 @@
 import colors from "@/lib/colors";
 import { useState } from "react";
 import GitHubCalendar from "react-github-calendar";
+import LeetCodeStats from "./LeetCodeStats";
 
-const GitHubGraph = ({ username }: { username?: string | null }) => {
+const GitHubGraph = ({ username, leetcode}: { username?: string | null , leetcode?:string | null }) => {
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(currentYear);
   const removeHashTag = (str: string) => str?.replace("#", "") || "E2E8FF8C";
@@ -45,6 +46,7 @@ const GitHubGraph = ({ username }: { username?: string | null }) => {
         )}&point=${removeHashTag(colors.text)}&hide_border=true`}
         alt={`${username}'s github activity graph`}
       />
+      <LeetCodeStats username="Satvik1769" />
     </div>
   );
 };

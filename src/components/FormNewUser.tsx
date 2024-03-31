@@ -49,6 +49,7 @@ const FormNewUser = ({
   const userid = session?._id;
   const onSubmit: SubmitHandler<UserFormProps> = async (data) => {
     try {
+      console.log("Clicked update button")
       data.contactMethodId = selectUserContactId(data) || session?.discordId;
       // console.log("data", JSON.stringify(data), JSON.stringify(defaultValues));
       if (JSON.stringify(data) === JSON.stringify(defaultValues)) {
@@ -60,6 +61,7 @@ const FormNewUser = ({
       }
       // console.log("setting data", data);
       setDefaultValues(data);
+      console.log("Data from form is ", data);
       const res = await createProjectUser(
         `/user/${userid}/update`,
         data,
@@ -102,6 +104,11 @@ const FormNewUser = ({
       desc: "Select tech stack you use from the list.",
       limit: 10,
       // min: 3,
+    },
+    {
+      label: "Leetcode:",
+      name: "leetcode",
+      desc: "The LeetCode Username of user.",
     },
     {
       label: "Skill Level:",

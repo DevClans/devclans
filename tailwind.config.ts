@@ -15,6 +15,8 @@ export const tailwindColors = {
   cardBg1: "#020D23",
   green: "#2da519",
   red: "#D64343",
+  blueRing:"#d5e5fb",
+  card:"#081121",
 };
 
 export default withUt({
