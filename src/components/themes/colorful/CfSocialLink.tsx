@@ -24,7 +24,7 @@ const CfSocialLink = ({
   const href = isStr ? link : link["href"] || "/";
   const icon = selectIconForLinks(href, undefined, false, {
     className:
-      "text-cfDark lg:h-[20px] lg:w-[20px] stroke-[2.5px] " +
+      "text-cfDark lg:h-[24px] lg:w-[24px] stroke-[2.5px] " +
       (href.includes("devclans") ? "invert" : ""),
   });
   const haveDesc = isProject && typeof link == "object" && (link as any)?.desc;
@@ -79,8 +79,8 @@ const CfSocialLink = ({
           <div
             className={`  ${
               isProject
-                ? "uppercase text-lg font-bold"
-                : "font-semibold text-sm lg:text-lg"
+                ? "uppercase text-lg lg:text-2xl font-bold"
+                : "font-semibold text-sm lg:text-2xl"
             }`}
           >
             {isStr ? selectIconForLinks(link, undefined, true) : link["text"]}
@@ -107,7 +107,7 @@ const CfSocialLink = ({
         } `}
       >
         {haveDesc && (
-          <p className="!text-cfDark pt-3 lg:pt-0 italic lg:not-italic font-medium  lg:font-regular">
+          <p className="lg:w-[250px] !text-cfDark pt-3 lg:pt-0 italic lg:text-left  lg:not-italic font-medium  lg:font-regular">
             {(link as any).desc?.substring(0, 50)}
           </p>
         )}
