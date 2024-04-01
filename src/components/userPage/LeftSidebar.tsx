@@ -79,7 +79,7 @@ const LeftSidebar = async ({
               <ButtonSecondary
                 disabled={session && session.user._id !== _id}
                 href={editProfile(_id)}
-                className="text-center"
+                className="text-center justify-center"
                 label={"Edit Profile"}
               />
             ) : (

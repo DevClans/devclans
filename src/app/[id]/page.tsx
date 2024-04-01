@@ -242,7 +242,6 @@ const Common = ({
         questions={questions}
         searchParams={searchParams}
       >
-        <Link href={`/${username}/linktree`}>View Linktree</Link>
         {children}
       </MiddleSection>
       {/* right sidebar */}
