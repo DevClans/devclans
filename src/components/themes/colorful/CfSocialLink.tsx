@@ -48,7 +48,7 @@ const CfSocialLink = ({
             <div
               className="absolute z-10 h-full w-full"
               style={{
-                background: `linear-gradient(180deg,transparent 75%,var(${color}) 100%)`,
+                background: `linear-gradient(180deg,transparent 60%,var(${color}) 98%)`,
               }}
             />
 

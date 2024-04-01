@@ -42,3 +42,13 @@
     animation-timeline: scroll(root);
   }
 }
+@supports not (animation-timeline: scroll()) {
+  .moveRightOnScroll {
+    animation: moveRightOnScroll 30s linear infinite;
+    animation-timeline: scroll(root);
+  }
+  .moveLeftOnScroll {
+    animation: moveLeftOnScroll 30s linear infinite;
+    animation-timeline: scroll(root);
+  }
+}

@@ -17,7 +17,7 @@ const CfMovingBanner = ({
   }
   return (
     <div
-      className={`${className} ${
+      className={`${className} max-w-screen overflow-hidden ${
         isHeading
           ? "bg-cfDark text-white py-4 lg:py-10 fade-in sticky top-0 z-10"
           : "bgText"
@@ -40,7 +40,7 @@ const CfMovingBanner = ({
                uppercase ${
                  isHeading
                    ? "font-semibold text-base lg:text-2xl flex-shrink-0"
-                   : "lg:text-[130px] lg:leading-[98px]"
+                   : "lg:text-[130px] lg:leading-[101px]"
                }`}
               key={index}
             >
