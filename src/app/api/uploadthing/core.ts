@@ -15,6 +15,19 @@ export const ourFileRouter = {
       console.log("file url", file.url);
       return { uploadedBy: metadata.userId };
     }),
+
+  // Add the resumeUploader endpoint
+  resumeUploader: f({ pdf: { maxFileSize: "2MB", maxFileCount: 1 } })
+    .middleware(async ({ req }) => {
+      const user = await auth(req);
+      if (!user) throw new Error("Unauthorized");
+      return { userId: user.id };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("Resume upload complete for userId:", metadata.userId);
+      console.log("Resume file url", file.url);
+      return { uploadedBy: metadata.userId };
+    }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

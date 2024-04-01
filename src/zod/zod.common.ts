@@ -5,6 +5,7 @@ import { memberLevels } from "@/lib/memberLevel";
 import { devStages } from "@/lib/devStages";
 import { contactMethods } from "@/lib/contactMethods";
 import { projectDomains } from "@/lib/domains";
+import { pageTheme } from "@/lib/pageTheme";
 
 export const zodGithubInstallationId = z.union([
   z
@@ -204,6 +205,10 @@ export const zodUserDiscordDetailsSchema = z.object({
   // Add other properties and validations as needed
 });
 export const zodUserSearchInfoSchema = z.object({
+  pageTheme: z
+    .enum(pageTheme as any)
+    .nullable()
+    .optional(),
   skillLevel: z
     .enum(memberLevels as any)
     .nullable()
@@ -304,12 +309,17 @@ export const zodUserDataSchema = z.object({
   ...zodUserDataCommonSchema.shape,
 });
 export const zodUserFormSchemaObj = z.object({
+  pageTheme: z
+    .enum(pageTheme as any)
+    .nullable()
+    .optional(),
   skillLevel: z
     .enum(memberLevels as any)
     .nullable()
     .optional(),
   skills: skillsSchema.min(3),
   bio: stringSchema.min(10).max(100),
+  resume: z.string().optional(),
   ...zodUserDataCommonSchema.shape,
 });
 export const zodUserFormSuperRefine = (value: any, context: any) => {
