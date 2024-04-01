@@ -9,7 +9,7 @@ const CfImage = ({
   ...props
 }: ImageProps & { username?: string; displayName?: string }) => {
   return (
-    <div className="rounded-[5px] absolute justify-self-center w-fit fcc bg-white p-1 lg:pb-3">
+    <div className="rounded-[5px] absolute left-1/2 -translate-x-1/2 bottom-3 lg:bottom-10 w-fit fcc bg-white p-1 lg:pb-3">
       <ImageComp
         isUser={true}
         alt={alt || "profile of user"}
