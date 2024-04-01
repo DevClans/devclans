@@ -32,7 +32,7 @@ export const socialIcons: any = (props: any) => {
         {...props}
         width={props.size || 16}
         height={props.size || 16}
-        className={props.className + ` ${props.isDark ? "invert" : ""}`}
+        className={props.className}
       />
     ),
   };
@@ -57,7 +57,10 @@ export const selectIconForLinks = (
     if (justName) {
       return "website";
     }
-    return socialIcons({ size: size || 16, isDark, className }).website;
+    return socialIcons({
+      size: size || 16,
+      className: `${className}`,
+    }).website;
   }
 
   let type = "website";
@@ -105,7 +108,10 @@ export const selectIconForLinks = (
   if (justName) {
     return type;
   }
-  return socialIcons({ size: size || 16, isDark, className })[type];
+  return socialIcons({
+    size: size || 16,
+    className: `${className}`,
+  })[type];
 };
 
 type SocialLinkFunction = (username: string) => string;

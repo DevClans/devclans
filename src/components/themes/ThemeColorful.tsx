@@ -5,6 +5,7 @@ import "../../styles/themes/colorful.scss";
 import CfMovingBanner from "./colorful/CfMovingBanner";
 import CfSocials from "./colorful/CfSocials";
 import ButtonHover from "../buttons/ButtonHover";
+import Link from "next/link";
 
 const abril = Abril_Fatface({
   subsets: ["latin"],
@@ -37,7 +38,18 @@ const ThemeColorful = ({
       )}
       <ButtonHover />
       {/* attribution */}
-      <div className=""></div>
+      <div className="px-4 py-3 w-full text-center lg:text-left">
+        <p className="max-w-[800px]">
+          Thanks to Subaash for letting us use his awesome design.{" "}
+          <Link
+            className=" text-white inline-block underline underline-offset-1"
+            href={"https://subaash.vercel.app/"}
+          >
+            Click here
+          </Link>{" "}
+          to visit his website.
+        </p>
+      </div>
     </div>
   );
 };

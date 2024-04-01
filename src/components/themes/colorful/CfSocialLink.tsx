@@ -23,8 +23,9 @@ const CfSocialLink = ({
   const isStr = typeof link === "string";
   const href = isStr ? link : link["href"] || "/";
   const icon = selectIconForLinks(href, undefined, false, {
-    isDark: true,
-    className: " lg:h-[20px] lg:w-[20px] stroke-[2.5px]",
+    className:
+      "text-cfDark lg:h-[20px] lg:w-[20px] stroke-[2.5px] " +
+      (href.includes("devclans") ? "invert" : ""),
   });
   const haveDesc = isProject && typeof link == "object" && (link as any)?.desc;
   const color = colors[index % colors.length];

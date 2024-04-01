@@ -116,7 +116,10 @@ const page = async ({ params }: PageProps) => {
     links: links,
     projectLinks: projectLinks,
   };
-  if (theme == "colorful") {
+  if (
+    true
+    // theme == "colorful"
+  ) {
     return <ThemeColorful {...themeProps} />;
   } else {
     return <ThemeBasic {...themeProps} />;
