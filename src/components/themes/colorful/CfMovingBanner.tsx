@@ -19,7 +19,7 @@ const CfMovingBanner = ({
     <div
       className={`${className} max-w-screen overflow-hidden ${
         isHeading
-          ? "bg-cfDark text-white py-4 lg:py-10 fade-in sticky top-0 z-10"
+          ? "bg-cfDark text-white py-4 lg:py-10 fade-in sticky top-0 z-20"
           : "bgText"
       }`}
     >
@@ -27,7 +27,7 @@ const CfMovingBanner = ({
         <div
           className={`${
             isHeading
-              ? "moveLeftOnScroll z-10"
+              ? "moveLeftOnScroll"
               : i % 2 == 0
               ? "moveRight"
               : "moveLeft"
