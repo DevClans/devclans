@@ -95,7 +95,7 @@ useEffect(() => {
                   
                     <h3 className="mx-1">Team Code: </h3>
                     <h3 className="mx-2">{data.teamCode}</h3>
-                   <Image src="/copy.png" alt="Copy" width={20} height={20} onClick={()=>{handleCopy(data.teamCode); SetCopied(true)}} />
+                   <Image src="/copy.png" alt="Copy" width={20} height={20} onClick={()=>{handleCopy(data.teamCode || ""); SetCopied(true)}} />
                     </div>
                     </div>
                
