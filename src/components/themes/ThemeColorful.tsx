@@ -24,11 +24,11 @@ const ThemeColorful = ({
   return (
     <div className={`${abril.variable} w100 min-h-screen`}>
       <CfHero avatar={avatar} displayName={displayName} username={username} />
-      <CfMovingBanner text="My Socials" rowCount={1} colCount={15} />
+      <CfMovingBanner text="My Socials" rowCount={1} colCount={20} />
       <CfSocials links={links} className={haveProjects ? "" : "min-h-[60vh]"} />
       {haveProjects && (
         <>
-          <CfMovingBanner text="My Projects" rowCount={1} colCount={15} />
+          <CfMovingBanner text="My Projects" rowCount={1} colCount={20} />
           <CfSocials
             isProject={true}
             links={projectLinks}
