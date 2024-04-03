@@ -10,6 +10,7 @@ import ShootingStars from "@/components/ShootingStars";
 import ProductImg from "@/components/project/ProjectImg";
 import ThemeBasic from "@/components/themes/ThemeBasic";
 import ThemeColorful from "@/components/themes/ThemeColorful";
+import ThemeLight from "@/components/themes/ThemeLight";
 import userAvatar from "@/lib/userAvatar";
 import { ListItemProps } from "@/types/list.types";
 import { ProjectProps } from "@/types/mongo/project.types";
@@ -42,25 +43,45 @@ const page = async ({ params }: PageProps) => {
     gitubImg: data?.githubDetails?.avatar_url,
     userProps: data,
   });
-  const links: (string | ListItemProps)[] = Object.values(data?.socials || {})
+  const links: ListItemProps[] = Object.values(data?.socials || {})
     .filter(Boolean)
     .map((item) => {
-      if (typeof item != "string") {
-        return item;
-      }
-      if (item.includes("linkedin")) {
-        return {
-          text: "Linkedin",
-          href: item,
-        };
-      } else if (item.includes("twitter")) {
-        return {
-          text: "Twitter",
-          href: item,
-        };
+      if (typeof item === "string") {
+        const handleName = item;
+        if (item.includes("linkedin")) {
+          return {
+            text: "Linkedin",
+            href: item,
+            handleName: item.split("/").pop(),
+          };
+        } else if (item.includes("twitter")) {
+          return {
+            text: "Twitter",
+            href: item,
+            handleName: item.split("/").pop(),
+          };
+        } else if (item.includes("discord")) {
+          return {
+            text: "Discord",
+            href: item,
+            handleName: item.split("/").pop(),
+          };
+        } else if (item.includes("devclans.com")) {
+          return {
+            text: "Devclans | The Dev Profile",
+            href: item,
+            handleName: item.split("/").pop(),
+          };
+        } else {
+          return {
+            text: item,
+            href: item,
+            handleName,
+          };
+        }
       }
       return item;
-    }) as (string | ListItemProps)[];
+    }) as ListItemProps[];
   const projectLinks: (string | ListItemProps)[] = data?.ownedProjects?.map(
     (project: ProjectProps) => ({
       skills: project.skills,
@@ -105,10 +126,6 @@ const page = async ({ params }: PageProps) => {
       href: `https://discord.com/users/${data.discordId}`,
     });
   }
-  links.push({
-    text: "Devclans | The Dev Profile",
-    href: `https://devclans.com/${id.data}`,
-  });
   const themeProps = {
     avatar: avatar,
     displayName: displayName,
@@ -118,8 +135,10 @@ const page = async ({ params }: PageProps) => {
   };
   if (theme == "colorful") {
     return <ThemeColorful {...themeProps} />;
-  } else {
+  } else if (theme == "basic") {
     return <ThemeBasic {...themeProps} />;
+  } else {
+    return <ThemeLight {...themeProps} />;
   }
 };
 
