@@ -39,7 +39,7 @@ const ButtonLink = ({
       <Link
         title={(typeof label == "string" && label) || title || "Link Button"}
         replace={replace}
-        className={`frc gap-2 button ${className} text-nowrap`}
+        className={`frc gap-2 button ${className} justify-center text-nowrap`}
         onClick={handleClick}
         style={{ ...style }}
         href={href}

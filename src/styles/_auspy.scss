@@ -9,9 +9,6 @@ body {
 }
 @tailwind components;
 @layer components {
-  .fcc {
-    @apply flex flex-col items-center;
-  }
   .fccc {
     @apply fcc justify-center;
   }
@@ -20,6 +17,9 @@ body {
   }
   .frc {
     @apply flex flex-row items-center;
+  }
+  .fcc {
+    @apply flex flex-col items-center;
   }
   .frcsb {
     @apply frc justify-between;
