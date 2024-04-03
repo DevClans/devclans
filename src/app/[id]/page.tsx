@@ -24,8 +24,9 @@ import { userSchema } from "@/zod/zod.common";
 import { notFound } from "next/navigation";
 import type { Metadata, ResolvingMetadata } from "next";
 import { urlBase } from "@/constants";
-import Link from "next/link";
 import { Header, LightLine, LightRays } from "@/components";
+import { headers } from "next/headers";
+import Devlinks from "@/components/Devlinks";
 
 type UserPageProps = {
   params: { id: string };
@@ -74,6 +75,11 @@ export async function generateMetadata(
 }
 
 const page = async (props: UserPageProps) => {
+  const header = headers().get("x-wildcard");
+  if (header === "links") {
+    return Devlinks(props);
+  }
+  console.log("some value", header);
   return (
     <>
       <Header />

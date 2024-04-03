@@ -161,7 +161,7 @@ const FormServer = ({
                     )}
                   </div>
                   <div className="w100 frc gap-2">
-                    <p className="text-subH ">{preText}</p>
+                    {preText && <p className="text-subH ">{preText}</p>}
                     {Boolean(editableList)
                       ? editableListEle
                       : Boolean(options)

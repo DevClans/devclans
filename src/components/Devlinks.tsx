@@ -1,13 +1,4 @@
-import {
-  ButtonHero,
-  IconWithBg,
-  LightRays,
-  ProjectImg,
-  ProjectLinks,
-} from "@/components";
 import ImageComp from "@/components/ImageComp";
-import ShootingStars from "@/components/ShootingStars";
-import ProductImg from "@/components/project/ProjectImg";
 import ThemeBasic from "@/components/themes/ThemeBasic";
 import ThemeColorful from "@/components/themes/ThemeColorful";
 import userAvatar from "@/lib/userAvatar";
@@ -16,10 +7,9 @@ import { ProjectProps } from "@/types/mongo/project.types";
 import { PageProps } from "@/types/page.types";
 import { Fetch } from "@/utils/fetchApi";
 import { zodDiscordUsername } from "@/zod/zod.common";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 
-const page = async ({ params }: PageProps) => {
+const Devlinks = async ({ params }: PageProps) => {
   const user = params?.id;
   // only works for discord id
   const id = zodDiscordUsername.safeParse(user);
@@ -123,4 +113,4 @@ const page = async ({ params }: PageProps) => {
   }
 };
 
-export default page;
+export default Devlinks;

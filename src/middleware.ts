@@ -1,5 +1,5 @@
 import { withAuth } from "next-auth/middleware";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis as Rd } from "@upstash/redis";
 import { isDev } from "./constants";
@@ -17,16 +17,32 @@ const ratelimit =
     limiter: Ratelimit.slidingWindow(80, "60 s"),
   });
 export default withAuth(
-  async function middleware(req: any) {
+  async function middleware(req: NextRequest) {
     // return NextResponse.next();
-    console.log("Incoming request:", req.method, req.url, req.ip);
+    const host = req.headers.get("host");
+    const wild = host?.split(".")[0];
+    const headerVals = new Headers(req.headers);
+    headerVals.set("x-wildcard", wild ?? "none");
+    const res = {
+      request: {
+        headers: headerVals,
+      },
+    };
+    console.log(
+      "Incoming request:",
+      host,
+      req.method,
+      req.url,
+      req.ip,
+      headerVals
+    );
     if (isDev) {
       console.log("dev mode");
-      return NextResponse.next();
+      return NextResponse.next(res);
     }
     if (!ratelimit) {
       console.error("middleware: ratelimit not initialized");
-      return NextResponse.next();
+      return NextResponse.next(res);
     }
     const ip = req.ip ?? "127.0.0.1";
     const { success, pending, limit, reset, remaining } = await ratelimit.limit(
@@ -41,7 +57,7 @@ export default withAuth(
       remaining
     );
     return success
-      ? NextResponse.next()
+      ? NextResponse.next(res)
       : NextResponse.json(
           { error: "rate limit exceeded" },
           { status: 429, statusText: "Rate imit exceeded" }
@@ -104,5 +120,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/api/:path*"],
+  matcher: ["/api/:path*", "/[id]"],
 };
