@@ -3,7 +3,6 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis as Rd } from "@upstash/redis";
 import { isDev } from "./constants";
 import { getToken } from "next-auth/jwt";
-import { zodDiscordUsername } from "./zod/zod.common";
 // import { kv } from "@vercel/kv";
 
 export const config = {
@@ -109,9 +108,8 @@ export default async function middleware(req: NextRequest) {
   if (hostname == `links.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
     console.log("links subdomain");
     const username = path.split("/").length > 1 && path.split("/")[1];
-    const isUsername = zodDiscordUsername.safeParse(username);
-    if (isUsername.success) {
-      console.log("isUsername", isUsername.data, req.url, path);
+    if (username) {
+      console.log("isUsername", username, req.url, path);
       return NextResponse.rewrite(new URL(`${path}/links`, req.url));
     }
   }
