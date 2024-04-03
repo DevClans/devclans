@@ -76,6 +76,10 @@ export default function AccountMenu({
       link: "/likes",
     },
     {
+      title: "My Devlinks",
+      link: "https://links.devclans.com/" + userState?.username,
+    },
+    {
       title: "View Profile",
       link: userUrl,
     },
