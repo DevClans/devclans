@@ -11,11 +11,13 @@ import { discordDetailsSchema } from "./discordModel";
 import { userGithubDetailsSchema } from "./githubModal";
 import projectRepoSchema from "./projectRepoDetails";
 import { projectDomains } from "@/lib/domains";
+import { pageTheme } from "@/lib/pageTheme";
 
 const userSchema = new mongoose.Schema<UserMongoProps>(
   {
     discordId: { type: String, required: true },
     skillLevel: { type: String, enum: memberLevels, default: "beginner" },
+    pageTheme: { type: String, enum: pageTheme, default: "notebook" },
     githubId: { type: String },
     githubDetails: {
       type: userGithubDetailsSchema,
