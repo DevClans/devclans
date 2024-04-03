@@ -1,9 +1,22 @@
-import { withAuth } from "next-auth/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis as Rd } from "@upstash/redis";
 import { isDev } from "./constants";
+import { getToken } from "next-auth/jwt";
+import { zodDiscordUsername } from "./zod/zod.common";
 // import { kv } from "@vercel/kv";
+
+export const config = {
+  matcher: [
+    /*
+     * Match all paths except for:
+     * 1. /_next (Next.js internals)
+     * 2. /_static (inside /public)
+     * 3. all root files inside /public (e.g. /favicon.ico)
+     */
+    "/((?!_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)",
+  ],
+};
 
 // middleware is applied to all routes, use conditionals to select
 const cache = new Map();
@@ -16,109 +29,92 @@ const ratelimit =
     ephemeralCache: cache,
     limiter: Ratelimit.slidingWindow(80, "60 s"),
   });
-export default withAuth(
-  async function middleware(req: NextRequest) {
-    // return NextResponse.next();
-    const host = req.headers.get("host");
-    const wild = host?.split(".")[0];
-    const headerVals = new Headers(req.headers);
-    headerVals.set("x-wildcard", wild ?? "none");
-    const res = {
-      request: {
-        headers: headerVals,
-      },
-    };
-    console.log(
-      "Incoming request:",
-      host,
-      req.method,
-      req.url,
-      req.ip,
-      headerVals
-    );
-    if (isDev) {
-      console.log("dev mode");
-      return NextResponse.next(res);
+
+export default async function middleware(req: NextRequest) {
+  const url = req.nextUrl;
+  const isApi = url.pathname.startsWith("/api");
+  const headerVals = new Headers(req.headers);
+
+  console.log(
+    "Incoming request:",
+    // host,
+    req.method,
+    url.pathname,
+    req.ip
+  );
+
+  // STOP ACCESS TO API
+  if (isApi) {
+    console.log("API request:", url.pathname);
+    const accessNeeded = headerVals?.get("x-d-a")
+      ? headerVals.get("x-d-a") == "an"
+      : true;
+    console.log("accessNeeded", accessNeeded);
+    if (
+      accessNeeded &&
+      !(
+        url.pathname.startsWith("/api/uploadthing") ||
+        url.pathname.startsWith("/api/auth/session")
+      )
+    ) {
+      const session = await getToken({ req });
+      if (!session) {
+        return NextResponse.json(
+          { error: "access denied" },
+          { status: 401, statusText: "Unauthorized" }
+        );
+      }
     }
-    if (!ratelimit) {
-      console.error("middleware: ratelimit not initialized");
-      return NextResponse.next(res);
-    }
-    const ip = req.ip ?? "127.0.0.1";
-    const { success, pending, limit, reset, remaining } = await ratelimit.limit(
-      ip
-    );
-    console.log(
-      "ratelimit: within limit?",
-      success,
-      await pending,
-      limit,
-      reset,
-      remaining
-    );
-    return success
-      ? NextResponse.next(res)
-      : NextResponse.json(
+    // RATELIMITING THE API
+    if (ratelimit) {
+      const ip = req.ip ?? "127.0.0.1";
+      const { success, pending, limit, reset, remaining } =
+        await ratelimit.limit(ip);
+
+      console.log(
+        "ratelimit: within limit?",
+        success,
+        await pending,
+        limit,
+        reset,
+        remaining
+      );
+      if (!success) {
+        return NextResponse.json(
           { error: "rate limit exceeded" },
           { status: 429, statusText: "Rate imit exceeded" }
         );
-    // // const session = await getSession({ req }); //not working
-  },
-  {
-    callbacks: {
-      authorized: ({ req, token }) => {
-        // console.log("token", token);
-        // if (
-        //   req.nextUrl.pathname.startsWith("/user/") &&
-        //   req.nextUrl.searchParams.get("mode") == "edit"
-        // ) {
-        //   if (!token) {
-        //     return false;
-        //   }
-        //   if (req.nextUrl.pathname.split("user/")[1] != token?.id) {
-        //     return false;
-        //   }
-        // }
-
-        // return true;
-        if (
-          req.nextUrl.pathname.startsWith("/api/uploadthing") ||
-          req.nextUrl.pathname.startsWith("/api/auth/session")
-        ) {
-          return true;
-        }
-        console.log("authorized", req.nextUrl.pathname, token);
-        const nextSession =
-          req.cookies.get("next-auth.session-token") ||
-          req.cookies.get("__Secure-next-auth.session-token");
-        // console.log(
-        //   "nextSession",
-        //   nextSession,
-        //   jwtToken,
-        //   req.nextUrl.pathname
-        // );
-        // console.log("oken", token);
-        const headers: any = req.headers;
-        // console.log(headers, "headers", headers?.get("x-d-a"));
-        const accessNeeded = headers?.get("x-d-a")
-          ? headers.get("x-d-a") == "an"
-          : true;
-        console.log("accessNeeded", accessNeeded);
-        if (
-          req.nextUrl.pathname.startsWith("/api") &&
-          accessNeeded &&
-          !nextSession
-        ) {
-          console.log("access not allowed");
-          return false;
-        }
-        console.log("access allowed");
-        return true;
-      },
-    },
+      }
+    }
   }
-);
 
-export const config = {
-  matcher: ["/api/:path*", "/[id]"],
-};
+  // Get hostname of request (e.g. demo.vercel.pub, demo.localhost:3000)
+  let hostname = req.headers
+    .get("host")!
+    .replace(".localhost:3000", `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
+
+  // special case for Vercel preview deployment URLs
+  if (
+    hostname.includes("---") &&
+    hostname.endsWith(`.${process.env.NEXT_PUBLIC_VERCEL_DEPLOYMENT_SUFFIX}`)
+  ) {
+    console.log("Vercel preview deployment URL", hostname);
+    hostname = `${hostname.split("---")[0]}.${
+      process.env.NEXT_PUBLIC_ROOT_DOMAIN
+    }`;
+  }
+
+  const path = `${url.pathname}`;
+  // rewrites for app pages
+  if (hostname == `links.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
+    console.log("links subdomain");
+    const username = path.split("/").length > 1 && path.split("/")[1];
+    const isUsername = zodDiscordUsername.safeParse(username);
+    if (isUsername.success) {
+      console.log("isUsername", isUsername.data, req.url, path);
+      return NextResponse.rewrite(new URL(`${path}/links`, req.url));
+    }
+  }
+
+  return NextResponse.next();
+}
