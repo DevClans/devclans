@@ -44,26 +44,26 @@ export default async function middleware(req: NextRequest) {
 
   // STOP ACCESS TO API
   if (isApi) {
-    console.log("API request:", url.pathname);
-    const accessNeeded = headerVals?.get("x-d-a")
-      ? headerVals.get("x-d-a") == "an"
-      : true;
-    console.log("accessNeeded", accessNeeded);
-    if (
-      accessNeeded &&
-      !(
-        url.pathname.startsWith("/api/uploadthing") ||
-        url.pathname.startsWith("/api/auth/session")
-      )
-    ) {
-      const session = await getToken({ req });
-      if (!session) {
-        return NextResponse.json(
-          { error: "access denied" },
-          { status: 401, statusText: "Unauthorized" }
-        );
-      }
-    }
+    // console.log("API request:", url.pathname);
+    // const accessNeeded = headerVals?.get("x-d-a")
+    //   ? headerVals.get("x-d-a") == "an"
+    //   : true;
+    // console.log("accessNeeded", accessNeeded);
+    // if (
+    //   accessNeeded &&
+    //   !(
+    //     url.pathname.startsWith("/api/uploadthing") ||
+    //     url.pathname.startsWith("/api/auth/session")
+    //   )
+    // ) {
+    //   const session = await getToken({ req });
+    //   if (!session) {
+    //     return NextResponse.json(
+    //       { error: "access denied" },
+    //       { status: 401, statusText: "Unauthorized" }
+    //     );
+    //   }
+    // }
     // RATELIMITING THE API
     if (ratelimit) {
       const ip = req.ip ?? "127.0.0.1";
@@ -105,7 +105,10 @@ export default async function middleware(req: NextRequest) {
 
   const path = `${url.pathname}`;
   // rewrites for app pages
-  if (hostname == `links.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
+  if (
+    hostname == `links.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}` &&
+    path.split("/").length == 2
+  ) {
     console.log("links subdomain");
     const username = path.split("/").length > 1 && path.split("/")[1];
     if (username) {

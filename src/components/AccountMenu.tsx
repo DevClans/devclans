@@ -7,7 +7,7 @@ import Link from "next/link";
 import colors from "@/lib/colors";
 import { LightLine } from ".";
 import { editProfile } from "@/paths";
-import { urlUser } from "@/constants";
+import { urlBase, urlUser } from "@/constants";
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -77,7 +77,7 @@ export default function AccountMenu({
     },
     {
       title: "My Devlinks",
-      link: "https://links.devclans.com/" + userState?.username,
+      link: "/" + userState?.username + "/links",
     },
     {
       title: "View Profile",

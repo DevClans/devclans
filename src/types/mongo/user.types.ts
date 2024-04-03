@@ -10,12 +10,14 @@ import {
 import mongoose, { Types } from "mongoose";
 import { z } from "zod";
 import { ProjectProps } from "./project.types";
+import { PageThemeType } from "@/lib/pageTheme";
 
 // Define the User interface extending mongoose.Document
 export type UserProps = UserTeamItemProps &
   UserSearchInfoProps & {
     isMember?: boolean;
     skillLevel?: MemberLevelType;
+    theme?: PageThemeType;
     domain?: ProjectDomainType; // domain you are currenty studying
     bio?: string;
     githubDetails: UserGithubDetailsProps;

@@ -18,6 +18,7 @@ import LogedOutScreen from "./LogedOutScreen";
 import { toast } from "react-toastify";
 import { memberLevels } from "@/lib/memberLevel";
 import { handleGithubConnect } from "@/utils/handleConnectGithub";
+import { pageTheme } from "@/lib/pageTheme";
 
 const FormNewUser = ({
   defaultValues: dv,
@@ -102,6 +103,12 @@ const FormNewUser = ({
       desc: "Select tech stack you use from the list.",
       limit: 10,
       // min: 3,
+    },
+    {
+      label: "Devlinks Theme:",
+      name: "theme",
+      desc: "Select the Theme that you want your Developer Links Page to have.",
+      options: pageTheme as any,
     },
     {
       label: "Skill Level:",

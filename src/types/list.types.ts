@@ -4,6 +4,7 @@ export type ListItemProps = {
   onEndIconClick?: (text: string) => Promise<any>;
   text: string;
   href?: string;
+  handleName?: string;
 };
 export type ListProjectProps = ListItemProps & {
   desc: string;

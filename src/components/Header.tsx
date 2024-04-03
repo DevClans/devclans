@@ -12,19 +12,21 @@ const Header = ({ searchParams }: PageProps) => {
     <div
       id="header"
       data-ishome="false"
-      className="frcsb data-[ishome=false]:backdrop-blur-[8px] container w-full py-2 relative z-30 "
+      className="fcc data-[ishome=false]:backdrop-blur-[8px] w-screen py-2 relative z-30 "
       style={{}}
     >
-      <Logo />
-      <Navigation className="hidden lg:flex" searchParams={searchParams} />
-      <div className="frc gap-2 ">
-        <IconWithBg title={"Create Project"} href="/project/new">
-          <FilePlus2 size={20} color={colors.subH} />
-        </IconWithBg>
-        <ButtonLogin />
-        <ButtonMenuToggle className="visible lg:!hidden" />
+      <div className="container frcsb">
+        <Logo />
+        <Navigation className="hidden lg:flex" searchParams={searchParams} />
+        <div className="frc gap-2 ">
+          <IconWithBg title={"Create Project"} href="/project/new">
+            <FilePlus2 size={20} color={colors.subH} />
+          </IconWithBg>
+          <ButtonLogin />
+          <ButtonMenuToggle className="visible lg:!hidden" />
+        </div>
+        <OpenMenu />
       </div>
-      <OpenMenu />
     </div>
   );
 };
