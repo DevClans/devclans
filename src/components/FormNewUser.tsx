@@ -105,9 +105,9 @@ const FormNewUser = ({
       // min: 3,
     },
     {
-      label: "Page Theme:",
+      label: "Devlinks Theme:",
       name: "theme",
-      desc: "Select the Theme that you want your Developer Page to have.",
+      desc: "Select the Theme that you want your Developer Links Page to have.",
       options: pageTheme as any,
     },
     {

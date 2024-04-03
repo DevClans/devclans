@@ -8,6 +8,8 @@ import { PageProps } from "@/types/page.types";
 import { Fetch } from "@/utils/fetchApi";
 import { zodDiscordUsername } from "@/zod/zod.common";
 import { notFound } from "next/navigation";
+import ThemeLight from "./themes/ThemeLight";
+import { PageThemeType } from "@/lib/pageTheme";
 
 const Devlinks = async ({ params }: PageProps) => {
   const user = params?.id;
@@ -99,6 +101,7 @@ const Devlinks = async ({ params }: PageProps) => {
     text: "Devclans | The Dev Profile",
     href: `https://devclans.com/${id.data}`,
   });
+
   const themeProps = {
     avatar: avatar,
     displayName: displayName,
@@ -106,11 +109,14 @@ const Devlinks = async ({ params }: PageProps) => {
     links: links,
     projectLinks: projectLinks,
   };
-  if (theme == "colorful") {
-    return <ThemeColorful {...themeProps} />;
-  } else {
-    return <ThemeBasic {...themeProps} />;
-  }
+  const themes: {
+    [key in PageThemeType as string]: JSX.Element;
+  } = {
+    notebook: <ThemeLight {...themeProps} />,
+    chroma: <ThemeColorful {...themeProps} />,
+    lunar: <ThemeBasic {...themeProps} />,
+  };
+  return themes[theme && theme in themes ? theme : "lunar"];
 };
 
 export default Devlinks;
