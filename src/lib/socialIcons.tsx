@@ -59,7 +59,7 @@ export const selectIconForLinks = (
     }
     return socialIcons({
       size: size || 16,
-      className: `${className}`,
+      className: `${className} ${isDark ? "text-black" : ""}`,
     }).website;
   }
 

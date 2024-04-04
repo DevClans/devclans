@@ -32,6 +32,13 @@ export const colorfulThemeColors = {
   cfDark: "#141414",
 };
 
+export const notebookThemeColors = {
+  nbDark: "#141414",
+  nbBlue: "#399ae1",
+  nbDottedLineColor: "#c7c7c7",
+  nbLGrey: "#e1e1e1",
+};
+
 export default withUt({
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -55,7 +62,11 @@ export default withUt({
         "6": "25px",
         "7": "30px",
       },
-      colors: { ...tailwindColors, ...colorfulThemeColors },
+      colors: {
+        ...tailwindColors,
+        ...colorfulThemeColors,
+        ...notebookThemeColors,
+      },
     },
   },
   plugins: [],
