@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis as Rd } from "@upstash/redis";
-import { isDev } from "./constants";
+import { isDev, urlApi, urlBase } from "./constants";
 import { getToken } from "next-auth/jwt";
 // import { kv } from "@vercel/kv";
 
@@ -31,7 +31,8 @@ const ratelimit =
 
 export default async function middleware(req: NextRequest) {
   const url = req.nextUrl;
-  const isApi = url.pathname.startsWith("/api");
+  const isApi =
+    url.pathname.startsWith("/api") && !url.pathname.includes("/auth");
   const headerVals = new Headers(req.headers);
 
   console.log(
@@ -44,7 +45,7 @@ export default async function middleware(req: NextRequest) {
 
   // STOP ACCESS TO API
   if (isApi) {
-    // console.log("API request:", url.pathname);
+    console.log("API request:", url.pathname);
     // const accessNeeded = headerVals?.get("x-d-a")
     //   ? headerVals.get("x-d-a") == "an"
     //   : true;
@@ -105,16 +106,19 @@ export default async function middleware(req: NextRequest) {
 
   const path = `${url.pathname}`;
   // rewrites for app pages
-  if (
-    hostname == `links.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}` &&
-    path.split("/").length == 2
-  ) {
+  if (hostname == `links.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
     console.log("links subdomain");
-    const username = path.split("/").length > 1 && path.split("/")[1];
-    if (username) {
-      console.log("isUsername", username, req.url, path);
-      return NextResponse.rewrite(new URL(`${path}/links`, req.url));
+    if (path.split("/").length == 2) {
+      const username = path.split("/").length > 1 && path.split("/")[1];
+      if (username) {
+        console.log("isUsername", username, req.url, path);
+        return NextResponse.rewrite(new URL(`${path}/links`, req.url));
+      }
     }
+    // else if (path.includes("/auth")) {
+    //   console.log("redirecting to ", new URL(path, urlBase));
+    //   return NextResponse.redirect(new URL(path, urlBase));
+    // }
   }
 
   return NextResponse.next();

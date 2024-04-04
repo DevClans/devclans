@@ -1,5 +1,35 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  redirects: async () => {
+    return [
+      {
+        source: "/api/auth/:path*",
+        permanent: true,
+        has: [
+          {
+            type: "host",
+            value: "links." + process.env.NEXT_PUBLIC_ROOT_DOMAIN,
+          },
+        ],
+        destination: process.env.NEXT_PUBLIC_SITE_URL + "/api/auth/:path*",
+      },
+    ];
+  },
+  // rewrites: async () => {
+  //   console.log("rewriting");
+  //   return [
+  //     {
+  //       source: "/:path",
+  //       destination: "/:path/links",
+  //       has: [
+  //         {
+  //           type: "host",
+  //           value: "links." + process.env.NEXT_PUBLIC_ROOT_DOMAIN,
+  //         },
+  //       ],
+  //     },
+  //   ];
+  // },
   env: {
     GH_CLIENT_ID: process.env.AUSPY_GITHUB_CLIENT_ID,
     GH_REDIRECT_URI: process.env.AUSPY_GITHUB_REDIRECT_URI,
