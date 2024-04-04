@@ -1,0 +1,69 @@
+:root {
+  --shadow-text: 0px 4px 0px hsl(0, 0%, 8%);
+  --nb-blue: #399ae1;
+  --nb-dark: #141414;
+  --nb-dotted-line-color: #c7c7c7;
+  --nb-lGrey: #e1e1e1;
+}
+h1 {
+  text-shadow: var(--shadow-text);
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: var(--dark);
+  color: var(--nb-blue);
+  -webkit-text-fill-color: var(--nb-blue);
+  color: #141414;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+body,
+p {
+  color: var(--dark);
+  font-weight: 500;
+}
+
+.ngCard {
+  border: 2px solid var(--nb-dark);
+  box-shadow: 4px 4px 0px 0px #141414;
+  border-radius: 5px;
+}
+
+a.ngCard {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  &:hover {
+    box-shadow: 6px 6px 0px 0px #141414;
+    transform: translate(-2px, -2px);
+    opacity: 1 !important;
+  }
+  &:active {
+    box-shadow: unset !important;
+    transform: translate(2px, 2px) !important;
+  }
+}
+.ngCard {
+  & > .arrowIcons > * {
+    transform: translateX(-20px);
+  }
+
+  & > .arrowIcons > *:first-child {
+    display: none;
+  }
+
+  &:hover {
+    // & > .arrowIcons > :first-child {
+    //   display: block;
+    // }
+    & > .arrowIcons > * {
+      transform: translateX(-2px);
+      display: block;
+    }
+    // & > .arrowIcons > *:first-child {
+    //   transform: translateX(-20px);
+    //   display: block;
+    // }
+    // & > .arrowIcons > *:last-child {
+    //   transform: translateX(-10px);
+    // }
+  }
+}

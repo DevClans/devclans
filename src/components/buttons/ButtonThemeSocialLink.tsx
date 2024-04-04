@@ -1,95 +1,98 @@
-"use client"
+"use client";
 
 import { ListItemProps } from "@/types/list.types";
 import { IconWithBg } from "@/components";
 import { selectIconForLinks } from "@/lib/socialIcons";
 import copyToClipboard from "@/lib/copyToClipboard";
+import ButtonLinkIcon from "./ButtonLinkIcon";
+import Link from "next/link";
+import { ArrowUpRight, ChevronRight } from "lucide-react";
 
 interface SocialLinkButtonProps extends ListItemProps {
-  handleName?: string;
+  // handleName?: string;
 }
 
 const SocialLinkButton = ({
   text,
   href,
   handleName,
+  startIcon,
   onEndIconClick,
 }: SocialLinkButtonProps) => {
   const icon = selectIconForLinks(href || "");
-
+  if (!href) {
+    return null;
+  }
   return (
-    <a
+    <Link
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center justify-between bg-white text-cfDark px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border-2 border-b-4 border-r-4 border-black"
+      className="ngCard flex items-center justify-between bg-white text-nbDark p-4"
     >
-      <div className="flex items-center mr-auto">
-        {icon && <IconWithBg className="mr-2 text-cfDark">{icon}</IconWithBg>}
-        <span className="font-bold">{text}</span>
+      <div className="flex items-center mr-auto text-nbDark">
+        {startIcon && startIcon}
+        <span className="font-bold ml-2">{text}</span>
       </div>
-      {handleName && <span className="text-[12px]">{handleName}</span>}
-    </a>
+      {/* {handleName && <span className="text-[12px]">{handleName}</span>} */}
+      <div className="arrowIcons relative min-w-10 min-h-4 flex flex-row  overflow-hidden text-nbDark">
+        <ChevronRight
+          // style={{
+          //   color: "red",
+          // }}
+          size={20}
+          className="absolute"
+          strokeWidth={2.5}
+        />
+        <ChevronRight
+          size={20}
+          strokeWidth={2.5}
+          className="transition-all absolute left-4 duration-300 text-nbDark"
+        />
+      </div>
+    </Link>
   );
 };
 
 interface SocialLinksProps {
-    socialLinks: (string | ListItemProps)[];
-  }
-  
-  const SocialLinks = ({ socialLinks }: SocialLinksProps) => {
-    const linked: (string | SocialLinkButtonProps)[] = socialLinks.map((item) => {
-      if (typeof item === "string") {
-        if (item.includes("linkedin")) {
-          const handleName = item.split("/").pop();
-          return {
-            text: "LinkedIn",
-            href: item,
-            handleName,
-          };
-        } else if (item.includes("mailto")) {
-          const handleName = item.split(":")[1];
-          return {
-            text: "Email",
-            href: item,
-            handleName,
-          };
-        }  else if (item.includes("devclans")) {
-            const handleName = item.split("/").pop();
-            return {
-              text: "Devclans | The Dev Profile",
-              href: item,
-              handleName,
-            };
-          } else if (item.includes("discord")) {
-            const handleName = item.split("/").pop();
-            return {
-              text: "Discord",
-              href: item,
-              handleName,
-            };
-        } else if (item.includes("twitter")) {
-          const handleName = item.split("/").pop();
-          return {
-            text: "Twitter",
-            href: item,
-            handleName,
-          };
-        }
+  socialLinks: (string | ListItemProps)[];
+}
+
+const SocialLinks = ({ socialLinks }: SocialLinksProps) => {
+  const linked: ListItemProps[] = socialLinks.map(
+    (link: string | ListItemProps) => {
+      let data: Partial<ListItemProps> = {
+        onEndIconClick: copyToClipboard,
+      };
+      if (typeof link == "string") {
+        data["text"] = link?.split(".com/")?.[1];
+        data["href"] = link;
+        data["startIcon"] = selectIconForLinks(link, 20, false, {
+          className: "stroke-2",
+        });
+        data["endIcon"] = <ButtonLinkIcon text={link} />;
+      } else {
+        data = {
+          startIcon: selectIconForLinks(link.href!, 20, false, {
+            className:
+              "stroke-2 " + (link.href?.includes("devclans") ? "invert" : ""),
+          }),
+          endIcon: <ButtonLinkIcon text={link.text} />,
+          ...link,
+          onEndIconClick: copyToClipboard,
+        };
       }
-      return item;
-    });
-  
-    return (
-      <div className="flex flex-col gap-4">
-        {linked.map((link, index) => (
-          <SocialLinkButton
-            key={index}
-            {...(typeof link === "object" ? link : { href: link, text: link })}
-          />
-        ))}
-      </div>
-    );
-  };
-  
-  export default SocialLinks;
+      return data as ListItemProps;
+    }
+  );
+
+  return (
+    <div className="flex flex-col gap-4">
+      {linked.map((link, index) => (
+        <SocialLinkButton key={index} {...link} />
+      ))}
+    </div>
+  );
+};
+
+export default SocialLinks;

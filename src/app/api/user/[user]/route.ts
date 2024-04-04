@@ -24,6 +24,7 @@ import {
 } from "@/zod/zod.common";
 import { Types } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
+import { ZodError } from "zod";
 
 const getUserData = async (user: string, select: string) => {
   try {
@@ -165,8 +166,11 @@ const getGithubData = async (userId: string, userInfo: any, token?: string) => {
       console.info("adding user github data in cache", dataForCache, userId);
       redisSet(UserRedisKeys.github, userId, dataForCache);
     }
-  } catch (error) {
-    console.error("error in user getgithubdata", error);
+  } catch (error: any | ZodError) {
+    console.error(
+      "error in user getgithubdata",
+      error?.message || (error as ZodError)?.issues
+    );
   }
 };
 const setUseridInCache = async (username: string, id: string) => {
@@ -240,7 +244,9 @@ async function handler(
             userId,
             "-githubDetails -" +
               userSearchInfoKeys
-                .filter((item) => !item.includes("githubDetails"))
+                .filter(
+                  (item) => !item.includes("githubDetails") && item != "_id"
+                )
                 .join(" -")
           ); // to get all fields except userSearchInfoKeys as they already exist in userInfo
           if (!u) {
@@ -256,7 +262,7 @@ async function handler(
         console.error("error in user details data", error);
       }
     } else {
-      console.info("users cache miss", checkUserSearchInfoCache.error);
+      console.info("users cache miss", checkUserSearchInfoCache.error?.issues);
       // get all details
       const u: UserProps | null = await getUserData(userId, "");
       if (!u) {
