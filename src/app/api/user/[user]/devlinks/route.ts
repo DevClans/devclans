@@ -1,9 +1,8 @@
 import dbConnect from "@/lib/dbConnect";
 import { UserModel } from "@/mongodb/models";
 import { redisGet, redisSet } from "@/redis/basicRedis";
-import { projectSearchItemKeys } from "@/types/mongo/project.types";
 import { UserProps, UserRedisKeys } from "@/types/mongo/user.types";
-import { zodDiscordUsername, zodMongoId } from "@/zod/zod.common";
+import { zodDiscordUsername } from "@/zod/zod.common";
 import { NextResponse } from "next/server";
 
 const handler = async (

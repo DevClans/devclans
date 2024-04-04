@@ -146,27 +146,27 @@ const FormNewUser = ({
     {
       label: "Email:",
       name: "email",
-      required: contactMethod === "email",
+      // required: contactMethod === "email",
       desc: "Enter your email address.",
     },
     {
       label: "Phone Number:",
       name: "phone",
       type: "number",
-      required: contactMethod === "whatsapp",
+      // required: contactMethod === "whatsapp",
       desc: "Enter your phone number.",
     },
     {
       label: "Twitter Handle:",
       name: "socials.twitter",
-      required: contactMethod === "twitter",
+      // required: contactMethod === "twitter",
       desc: "Enter your Twitter handle.",
       preText: "https://x.com/",
     },
     {
       label: "Telegram :",
       name: "socials.telegram",
-      required: contactMethod === "telegram",
+      // required: contactMethod === "telegram",
       desc: "Enter your Telegram username.",
     },
     {

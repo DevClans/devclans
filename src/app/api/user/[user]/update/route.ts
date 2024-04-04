@@ -43,13 +43,13 @@ export async function POST(
       { $set: userDetails },
       { new: true }
     );
-    console.log("Updated user profile:", updatedUser);
+    console.log("Updated user profile:", Boolean(updatedUser));
     // clear the cache if exists
     if (!updatedUser) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
     console.log("Update user data cache...");
-    await updateAllCache(userId, updatedUser);
+    await updateAllCache(userId, updatedUser, "users", false, true);
     console.log("User data cache updated");
     // we can also add the data here in cache
     return NextResponse.json({ success: true });

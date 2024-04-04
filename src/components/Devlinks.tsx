@@ -10,6 +10,7 @@ import { zodDiscordUsername } from "@/zod/zod.common";
 import { notFound } from "next/navigation";
 import ThemeLight from "./themes/ThemeLight";
 import { PageThemeType } from "@/lib/pageTheme";
+import getServerSessionForServer from "@/utils/auth/getServerSessionForApp";
 
 const Devlinks = async ({ params }: PageProps) => {
   const user = params?.id;
@@ -18,13 +19,17 @@ const Devlinks = async ({ params }: PageProps) => {
   if (!id.success) {
     return notFound();
   }
-  const data = await Fetch({ endpoint: `/user/${id.data}/devlinks` });
+  const session: any = await getServerSessionForServer();
+  const data = await Fetch({
+    endpoint: `/user/${id.data}/devlinks`,
+    revalidate: session?.user?._id === id && 0,
+  });
   console.log(data);
   if (data?.error || !data) {
     return notFound();
   }
   const theme = data?.theme;
-  const isFunky = true;
+  console.log(theme, "theme");
   // theme === "funky";
   const username = data?.discordDetails?.username;
   const displayName = data?.discordDetails?.global_name;
@@ -116,7 +121,7 @@ const Devlinks = async ({ params }: PageProps) => {
     chroma: <ThemeColorful {...themeProps} />,
     lunar: <ThemeBasic {...themeProps} />,
   };
-  return themes[theme && theme in themes ? theme : "lunar"];
+  return themes[theme || "lunar"];
 };
 
 export default Devlinks;

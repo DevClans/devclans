@@ -205,7 +205,7 @@ export const zodUserDiscordDetailsSchema = z.object({
   // Add other properties and validations as needed
 });
 export const zodUserSearchInfoSchema = z.object({
-  pageTheme: z
+  theme: z
     .enum(pageTheme as any)
     .nullable()
     .optional(),
@@ -234,7 +234,7 @@ export const zodUserSearchInfoSchema = z.object({
   username: zodDiscordUsername,
   avatar: z.string().optional(),
   discordDetails: zodUserDiscordDetailsSchema,
-  _id: z.any(),
+  _id: zodMongoId,
 });
 export const usernameCheck = (
   min: number,
@@ -309,7 +309,7 @@ export const zodUserDataSchema = z.object({
   ...zodUserDataCommonSchema.shape,
 });
 export const zodUserFormSchemaObj = z.object({
-  pageTheme: z
+  theme: z
     .enum(pageTheme as any)
     .nullable()
     .optional(),
@@ -544,4 +544,24 @@ export const zodContactForm = z.object({
   email: z.string().email().max(100).optional(),
   name: z.string().max(50).optional(),
   message: z.string().min(3).max(2000),
+});
+
+export const zodUserTheme = z.object({
+  theme: zodUserSearchInfoSchema.shape["theme"],
+  discordId: zodDiscordUsername,
+  githubId: zodUserSearchInfoSchema.shape["githubId"],
+  socials: zodUserFormSchemaObj.shape["socials"],
+  email: zodUserFormSchemaObj.shape["email"],
+  discordDetails: zodUserDiscordDetailsSchema.pick({
+    avatar: true,
+    username: true,
+    global_name: true,
+  }),
+  githubDetails: zodUserGithubDetailsSchema.pick({
+    avatar_url: true,
+    login: true,
+  }),
+  ownedProjects: zodUserDataSchema.shape["ownedProjects"],
+  username: zodDiscordUsername,
+  _id: zodMongoId,
 });
