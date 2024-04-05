@@ -92,7 +92,7 @@ const UserItem = async ({
         detailDesc={skillLevel as string}
         chipArr={skills}
         baseUrl={""}
-        _id={_id?.toString()}
+        _id={usernm || _id?.toString()}
         desc={bio || ""}
       />
     </>
