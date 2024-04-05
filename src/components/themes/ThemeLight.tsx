@@ -1,13 +1,8 @@
-import { LightRays, ProjectLinks } from "@/components";
-import ShootingStars from "@/components/ShootingStars";
-import ButtonNormal from "@/components/buttons/ButtonNormal";
 import SocialLinks from "@/components/buttons/ButtonThemeSocialLink";
-import SocialLinkButton from "@/components/buttons/ButtonThemeSocialLink";
 import ProductImg from "@/components/project/ProjectImg";
 import NbMovingBannerNormal from "@/components/themes/light/NbMovingBannerNormal";
 import DottedLines from "@/components/themes/light/DottedLines";
 import { ThemeType } from "@/types";
-import { ListItemProps } from "@/types/list.types";
 import "../../styles/themes/notebook.scss";
 import ButtonHover from "../buttons/ButtonHover";
 
@@ -24,7 +19,10 @@ const ThemeLight = ({
 
   return (
     <>
-      <div className="w100 relative fcc min-h-screen overflow-hidden bg-[#F0F0F0]">
+      <div
+        id="notebook"
+        className="w100 relative fcc min-h-screen overflow-hidden bg-[#F0F0F0]"
+      >
         <div className="relative w-full py-7 fcc bg-nbLGrey overflow-hidden">
           <DottedLines />
           <ProductImg
