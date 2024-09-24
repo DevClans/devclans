@@ -9,7 +9,6 @@ try {
 } catch (error) {
   console.error("Failed to create MongoDB adapter:", error);
   // Provide a fallback or throw an error based on your requirements
-  throw new Error("Failed to initialize authentication adapter");
 }
 
 export { adapter };
