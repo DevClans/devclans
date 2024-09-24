@@ -1,7 +1,15 @@
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
-import mongoClient from "../mongodb.config";
+import clientPromise from "../mongodb.config";
 import { Adapter } from "next-auth/adapters";
 
-const adapter = MongoDBAdapter(mongoClient) as Adapter;
+let adapter: Adapter;
+
+try {
+  adapter = MongoDBAdapter(clientPromise) as Adapter;
+} catch (error) {
+  console.error("Failed to create MongoDB adapter:", error);
+  // Provide a fallback or throw an error based on your requirements
+  throw new Error("Failed to initialize authentication adapter");
+}
 
 export { adapter };
